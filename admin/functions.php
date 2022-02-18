@@ -335,7 +335,7 @@ if(isset($_POST['caf-special-security'])) {
  <li><?php echo esc_html__ ('15. New Tabs Filter Layout Added.','category-ajax-filter'); ?></li>
  <li><?php echo esc_html__ ('16. Scroll to top of filter after pagination click.','category-ajax-filter'); ?></li>
  <li><?php echo esc_html__ ('17. Search Field added to search through posts.','category-ajax-filter'); ?></li>
- <li class="button"><a href="https://trustyplugins.com" target="_blank"><span class="dashicons dashicons-visibility"></span> View Demo</a><a href="https://trustyplugins.com" target="_blank"><span class="dashicons dashicons-download"></span> Buy Now</a></li>
+ <li class="button"><a href="https://trustyplugins.com" target="_blank"><span class="dashicons dashicons-visibility"></span><?php echo esc_html__ ('View Demo','category-ajax-filter');?></a><a href="https://trustyplugins.com" target="_blank"><span class="dashicons dashicons-download"></span><?php echo esc_html__ ('Buy Now','category-ajax-filter');?></a></li>
 </ul>
 <?php
   }
