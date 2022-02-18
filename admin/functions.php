@@ -319,22 +319,22 @@ if(isset($_POST['caf-special-security'])) {
    ?>
 <ul class='caf-pro-features'>
  <li><?php echo esc_html__('1. Multiple Taxonomy Selection/Filter', 'category-ajax-filter'); ?> <a href='https://caf.trustyplugins.com/multiple-taxonomy-filter/' style='color:#fff;text-decoration:underline;' target='_blank'>Demo</a>.</li>
- <li>2. Multiple Taxonomy Dropdown/Filter <a href='https://caf.trustyplugins.com/multiple-taxonomy-dropdown-filter/' style='color:#fff;text-decoration:underline;' target='_blank'>Demo</a>.</li>
- <li>3. Select Default Category on first Page load.</li>
- <li>4. Overwrite Layout in Your theme's folder.</li>
- <li>5. 10 More Post Layouts.</li>
- <li>6. Multiple Checkbox Filter Layout.</li>
- <li>7. Support Multiple Section on same page.</li>
- <li>8. Sort Posts Settings.</li>
- <li>9. Load More Posts added in Pagination.</li>
- <li>10. Google Fonts List Added.</li>
- <li>11. More Filter/Action Hooks for developers.</li>
- <li>12. 1 On Demand Layout For new user.</li>
- <li>13. Translation Settings for Default Strings.</li>
- <li>14. 50+ Post Animation effects Added.</li>
- <li>15. New Tabs Filter Layout Added.</li>
- <li>16. Scroll to top of filter after pagination click.</li>
- <li>17. Search Field added to search through posts.</li>
+ <li><?php echo esc_html__ ('2. Multiple Taxonomy Dropdown/Filter','category-ajax-filter') ?> <a href='https://caf.trustyplugins.com/multiple-taxonomy-dropdown-filter/' style='color:#fff;text-decoration:underline;' target='_blank'>Demo</a>.</li>
+ <li><?php echo esc_html__ ('3. Select Default Category on first Page load.','category-ajax-filter'); ?></li>
+ <li><?php echo esc_html__ ("4. Overwrite Layout in Your theme's folder.","category-ajax-filter" );?></li>
+ <li><?php echo esc_html__ ('5. 10 More Post Layouts.','category-ajax-filter'); ?></li>
+ <li><?php echo esc_html__ ('6. Multiple Checkbox Filter Layout.','category-ajax-filter'); ?></li>
+ <li><?php echo esc_html__ ('7. Support Multiple Section on same page.','category-ajax-filter'); ?></li>
+ <li><?php echo esc_html__ ('8. Sort Posts Settings.','category-ajax-filter'); ?></li>
+ <li><?php echo esc_html__ ('9. Load More Posts added in Pagination.','category-ajax-filter'); ?></li>
+ <li><?php echo esc_html__ ('10. Google Fonts List Added.','category-ajax-filter'); ?></li>
+ <li><?php echo esc_html__ ('11. More Filter/Action Hooks for developers.','category-ajax-filter'); ?></li>
+ <li><?php echo esc_html__ ('12. 1 On Demand Layout For new user.','category-ajax-filter'); ?></li>
+ <li><?php echo esc_html__ ('13. Translation Settings for Default Strings.','category-ajax-filter'); ?></li>
+ <li><?php echo esc_html__ ('14. 50+ Post Animation effects Added.','category-ajax-filter'); ?></li>
+ <li><?php echo esc_html__ ('15. New Tabs Filter Layout Added.','category-ajax-filter'); ?></li>
+ <li><?php echo esc_html__ ('16. Scroll to top of filter after pagination click.','category-ajax-filter'); ?></li>
+ <li><?php echo esc_html__ ('17. Search Field added to search through posts.','category-ajax-filter'); ?></li>
  <li class="button"><a href="https://trustyplugins.com" target="_blank"><span class="dashicons dashicons-visibility"></span> View Demo</a><a href="https://trustyplugins.com" target="_blank"><span class="dashicons dashicons-download"></span> Buy Now</a></li>
 </ul>
 <?php
