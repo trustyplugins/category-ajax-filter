@@ -317,7 +317,7 @@ if(isset($_POST['caf-special-security'])) {
 
  	public function caf_side_meta_box() {
    ?>
-<ul class='caf-pro-features'>
+<ul class='caf-pro-features'> 
  <li><?php echo esc_html__('1. Multiple Taxonomy Selection/Filter', 'category-ajax-filter'); ?> <a href='https://caf.trustyplugins.com/multiple-taxonomy-filter/' style='color:#fff;text-decoration:underline;' target='_blank'>Demo</a>.</li>
  <li><?php echo esc_html__ ('2. Multiple Taxonomy Dropdown/Filter','category-ajax-filter') ?> <a href='https://caf.trustyplugins.com/multiple-taxonomy-dropdown-filter/' style='color:#fff;text-decoration:underline;' target='_blank'>Demo</a>.</li>
  <li><?php echo esc_html__ ('3. Select Default Category on first Page load.','category-ajax-filter'); ?></li>
