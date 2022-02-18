@@ -209,7 +209,7 @@ public function tc_caf_add_custom_list_before_filter() {
 return esc_html__('Everything','category-ajax-filter');
 }
 public function tc_caf_custom_title_before_sidebar_filter() {
-return _e('<h2>Categories</h2>','category-ajax-filter');
+return _e('Categories','category-ajax-filter');
 
 }
  public function tc_caf_filter_order_by($terms_sel) {

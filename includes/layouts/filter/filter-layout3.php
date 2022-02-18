@@ -1,7 +1,9 @@
 <div id="caf-filter-layout3" class='caf-filter-layout data-target-div<?php echo esc_attr($b)." ".esc_attr($flsr); ?>'>
 
 <?php
+	echo "<h2>";
 	echo apply_filters('tc_caf_custom_title_before_sidebar_filter',array($caf_filter,'tc_caf_custom_title_before_sidebar_filter'));
+	echo "</h2>";
 	?>
 	 <?php do_action("caf_after_filter_layout",$id,$b); ?>
 <ul class="caf-filter-container caf-filter-layout3">
