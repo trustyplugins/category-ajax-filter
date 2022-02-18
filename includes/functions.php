@@ -226,8 +226,9 @@ return 'All';
 
 }
 class CAF_ajax_pagination {
-	public function caf_ajax_pager($query = null,$paged = 1,$caf_post_layout,$caf_pagi_type,$filter_id) {
-  //echo $caf_pagi_type;
+	public function caf_ajax_pager($query,$paged,$caf_post_layout,$caf_pagi_type,$filter_id) {
+    //echo $caf_pagi_type;
+       // $filter_id
   if(class_exists("TC_CAF_PRO")) {
   $caf_pagination_status='on';
 if(get_post_meta($filter_id,'caf_pagination_status')) {
@@ -250,7 +251,7 @@ if(get_post_meta($filter_id,'caf_pagination_status')) {
  }
  }
  
-  public function caf_number_pagination ($query = null,$paged = 1,$caf_post_layout,$caf_pagi_type,$filter_id) {
+  public function caf_number_pagination ($query,$paged,$caf_post_layout,$caf_pagi_type,$filter_id) {
    if (!$query)
         return;
   $prev_text='Prev';

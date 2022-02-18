@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Category Ajax Filter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-12 10:54+0000\n"
+"POT-Creation-Date: 2022-02-18 07:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -13,10 +13,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.5.5; wp-5.8.3\n"
+"X-Loco-Version: 2.5.8; wp-5.9\n"
 "X-Domain: category-ajax-filter"
 
-#: includes/functions.php:206
+#: includes/functions.php:212
 msgid "<h2>Categories</h2>"
 msgstr ""
 
@@ -28,11 +28,11 @@ msgstr ""
 msgid "Add Extra Classes"
 msgstr ""
 
-#: admin/functions.php:244
+#: admin/functions.php:247
 msgid "Add Extra Classes to Post"
 msgstr ""
 
-#: admin/functions.php:244 admin/tabs/advanced.php:3
+#: admin/functions.php:247 admin/tabs/advanced.php:3
 msgid "Advanced"
 msgstr ""
 
@@ -40,11 +40,11 @@ msgstr ""
 msgid "All"
 msgstr ""
 
-#: admin/functions.php:256
+#: admin/functions.php:259
 msgid "Analytics"
 msgstr ""
 
-#: admin/functions.php:238 admin/tabs/appearance.php:2
+#: admin/functions.php:241 admin/tabs/appearance.php:2
 msgid "Appearance"
 msgstr ""
 
@@ -60,7 +60,7 @@ msgstr ""
 msgid "Category Ajax Filter"
 msgstr ""
 
-#: admin/functions.php:256
+#: admin/functions.php:259
 msgid "Check your filter analytics"
 msgstr ""
 
@@ -84,12 +84,16 @@ msgstr ""
 msgid "Directly paste this shortcode in your page template"
 msgstr ""
 
-#: admin/functions.php:226
+#: admin/functions.php:229
 msgid "Documentation"
 msgstr ""
 
 #: admin/tabs/appearance.php:103
 msgid "Empty Results Text"
+msgstr ""
+
+#: admin/tabs/advanced.php:47
+msgid "Enable Nonce"
 msgstr ""
 
 #: admin/tabs/layouts.php:21
@@ -106,7 +110,7 @@ msgid ""
 "filter."
 msgstr ""
 
-#: includes/functions.php:203
+#: includes/functions.php:209
 msgid "Everything"
 msgstr ""
 
@@ -145,15 +149,15 @@ msgstr ""
 msgid "Font Size"
 msgstr ""
 
-#: admin/functions.php:232
+#: admin/functions.php:235
 msgid "General"
 msgstr ""
 
-#: admin/functions.php:226 admin/tabs/general.php:3
+#: admin/functions.php:229 admin/tabs/general.php:3
 msgid "General Settings"
 msgstr ""
 
-#: admin/functions.php:247
+#: admin/functions.php:250
 msgid "Get Your shortcode"
 msgstr ""
 
@@ -161,7 +165,7 @@ msgstr ""
 msgid "https://trustyplugins.com"
 msgstr ""
 
-#: includes/functions.php:200
+#: includes/functions.php:206
 msgid "I want to check out "
 msgstr ""
 
@@ -173,7 +177,7 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-#: admin/functions.php:250 admin/tabs/import.php:6
+#: admin/functions.php:253 admin/tabs/import.php:6
 msgid "Import Layout"
 msgstr ""
 
@@ -181,11 +185,11 @@ msgstr ""
 msgid "Import Layout From Demo Site"
 msgstr ""
 
-#: admin/functions.php:250
+#: admin/functions.php:253
 msgid "Import Layout from Demo Site"
 msgstr ""
 
-#: admin/functions.php:235 admin/tabs/layouts.php:2
+#: admin/functions.php:238 admin/tabs/layouts.php:2
 msgid "Layouts"
 msgstr ""
 
@@ -195,6 +199,11 @@ msgstr ""
 
 #: admin/tabs/appearance.php:143
 msgid "New Tab"
+msgstr ""
+
+#: admin/tabs/advanced.php:47
+msgid ""
+"Now you can enable/disable nonce while performing ajax request on frontend."
 msgstr ""
 
 #: admin/tabs/appearance.php:167
@@ -225,7 +234,7 @@ msgstr ""
 msgid "Post Layout"
 msgstr ""
 
-#: admin/functions.php:235 admin/functions.php:238
+#: admin/functions.php:238 admin/functions.php:241
 msgid "Post Layout, Filter Layout"
 msgstr ""
 
@@ -241,7 +250,7 @@ msgstr ""
 msgid "Post Title Font "
 msgstr ""
 
-#: admin/functions.php:232
+#: admin/functions.php:235
 msgid "Post Type, Categories"
 msgstr ""
 
@@ -283,6 +292,10 @@ msgstr ""
 
 #: admin/tabs/appearance.php:6
 msgid "Section Background"
+msgstr ""
+
+#: admin/tabs/advanced.php:36
+msgid "Security"
 msgstr ""
 
 #: admin/tabs/appearance.php:12
@@ -373,7 +386,7 @@ msgstr ""
 msgid "Set image thumbnail size."
 msgstr ""
 
-#: admin/functions.php:247 admin/tabs/shortcode.php:2
+#: admin/functions.php:250 admin/tabs/shortcode.php:2
 msgid "Shortcode"
 msgstr ""
 
@@ -405,7 +418,7 @@ msgstr ""
 msgid "This class will add to every post of the results."
 msgstr ""
 
-#: admin/functions.php:241
+#: admin/functions.php:244
 msgid "Title, Description Fonts"
 msgstr ""
 
@@ -413,7 +426,7 @@ msgstr ""
 msgid "Trusty Plugins"
 msgstr ""
 
-#: admin/functions.php:241 admin/tabs/typography.php:3
+#: admin/functions.php:244 admin/tabs/typography.php:3
 msgid "Typography"
 msgstr ""
 
