@@ -318,7 +318,7 @@ if(isset($_POST['caf-special-security'])) {
  	public function caf_side_meta_box() {
    ?>
 <ul class='caf-pro-features'>
- <li>1. Multiple Taxonomy Selection/Filter <a href='https://caf.trustyplugins.com/multiple-taxonomy-filter/' style='color:#fff;text-decoration:underline;' target='_blank'>Demo</a>.</li>
+ <li><?php echo esc_html__('1. Multiple Taxonomy Selection/Filter', 'category-ajax-filter'); ?> <a href='https://caf.trustyplugins.com/multiple-taxonomy-filter/' style='color:#fff;text-decoration:underline;' target='_blank'>Demo</a>.</li>
  <li>2. Multiple Taxonomy Dropdown/Filter <a href='https://caf.trustyplugins.com/multiple-taxonomy-dropdown-filter/' style='color:#fff;text-decoration:underline;' target='_blank'>Demo</a>.</li>
  <li>3. Select Default Category on first Page load.</li>
  <li>4. Overwrite Layout in Your theme's folder.</li>
