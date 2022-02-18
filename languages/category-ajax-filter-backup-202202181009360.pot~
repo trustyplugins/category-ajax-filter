@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Category Ajax Filter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-18 10:09+0000\n"
+"POT-Creation-Date: 2022-02-18 10:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -118,10 +118,6 @@ msgstr ""
 
 #: admin/functions.php:338
 msgid "Buy Now"
-msgstr ""
-
-#: admin/functions.php:207
-msgid "CAF Pro Features"
 msgstr ""
 
 #: admin/tabs/typography.php:53 admin/tabs/typography.php:123

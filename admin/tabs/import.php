@@ -20,7 +20,7 @@
     <label for="import-layout" class="col-sm-12 col-form-label"><?php echo esc_html__('Import Layout From Demo Site','category-ajax-filter');?><span class="info"><?php echo esc_html__('Directly paste the exported JSON code from Demo Site','category-ajax-filter');?></span></label>
     <div class="col-sm-12">
    <textarea name="import-caf-layout" id="import-caf-layout" class="form-control" style="height:250px"></textarea>
-		<input type="button" name="import-layout" id="import-layout-button" value="Import" class="form-control">
+		<input type="button" name="import-layout" id="import-layout-button" value="<?php echo esc_html__('Import','category-ajax-filter');?>" class="form-control">
 	</div>
 		
 	</div>

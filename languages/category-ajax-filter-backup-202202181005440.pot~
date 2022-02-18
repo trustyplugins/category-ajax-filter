@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Category Ajax Filter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-18 10:09+0000\n"
+"POT-Creation-Date: 2022-02-18 09:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -84,6 +84,10 @@ msgstr ""
 msgid "9. Load More Posts added in Pagination."
 msgstr ""
 
+#: includes/functions.php:212
+msgid "<h2>Categories</h2>"
+msgstr ""
+
 #: admin/tabs/advanced.php:19
 msgid "Add Css Class"
 msgstr ""
@@ -116,20 +120,8 @@ msgstr ""
 msgid "Background Color"
 msgstr ""
 
-#: admin/functions.php:338
-msgid "Buy Now"
-msgstr ""
-
-#: admin/functions.php:207
-msgid "CAF Pro Features"
-msgstr ""
-
 #: admin/tabs/typography.php:53 admin/tabs/typography.php:123
 msgid "Capitalize"
-msgstr ""
-
-#: includes/functions.php:212
-msgid "Categories"
 msgstr ""
 
 #. Name of the plugin
@@ -508,8 +500,4 @@ msgstr ""
 
 #: admin/tabs/typography.php:52 admin/tabs/typography.php:122
 msgid "Uppercase"
-msgstr ""
-
-#: admin/functions.php:338
-msgid "View Demo"
 msgstr ""

@@ -199,12 +199,12 @@ if(isset($_POST['caf-special-security'])) {
 	}
 
 	public function add_post_metabox() {
-		add_meta_box( 'caf_top_meta_box' , __('Settings'), array($this,'caf_top_meta_box'), 'caf_posts', 'normal', 'core'/*,array()*/);
+		add_meta_box( 'caf_top_meta_box' , __('Settings','category-ajax-filter'), array($this,'caf_top_meta_box'), 'caf_posts', 'normal', 'core'/*,array()*/);
   if(class_exists('TC_CAF_PRO')) {
-   add_meta_box( 'caf_side_meta_box_pro' , __('CAF Announcements'), 'caf_side_meta_box_pro', 'caf_posts', 'side', 'core'/*,array()*/); 
+   add_meta_box( 'caf_side_meta_box_pro' , __('CAF Announcements','category-ajax-filter'), 'caf_side_meta_box_pro', 'caf_posts', 'side', 'core'/*,array()*/); 
    }
    else {
-  	add_meta_box( 'caf_side_meta_box' , __('CAF Pro Features'), array($this,'caf_side_meta_box'), 'caf_posts', 'side', 'core'/*,array()*/);
+  	add_meta_box( 'caf_side_meta_box' , __('CAF Pro Features','category-ajax-filter'), array($this,'caf_side_meta_box'), 'caf_posts', 'side', 'core'/*,array()*/);
    }
 	}
 	
