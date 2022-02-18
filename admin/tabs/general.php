@@ -10,7 +10,9 @@
 	<div class='col-sm-12 row-bottom'>
 	<!-- FORM GROUP -->
 	<div class="form-group row">
-    <label for="custom-post-type-select" class="col-sm-12 col-form-label"><?php echo esc_html__('Custom Post Type','category-ajax-filter'); ?><span class="info"><?php echo esc_html__('Select your post type to filter. Deaflut: Post','category-ajax-filter'); ?></span></label>
+    <label for="custom-post-type-select" class="col-sm-12 col-form-label"><?php echo esc_html__('Custom Post Type','category-ajax-filter'); ?><span class="info">
+       <?php echo esc_html__('Select your post type to filter. Deaflut: Post','category-ajax-filter'); ?>
+        </span></label>
     <div class="col-sm-12">
     <select class="form-control tc_caf_object_field tc_caf_select" data-field-type='select' id="custom-post-type-select" name="custom-post-type-select">
 	<option value="post"><?php echo esc_html__('Post','category-ajax-filter'); ?></option>

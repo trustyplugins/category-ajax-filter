@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Category Ajax Filter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-18 09:44+0000\n"
+"POT-Creation-Date: 2022-02-18 07:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -15,74 +15,6 @@ msgstr ""
 "X-Generator: Loco https://localise.biz/\n"
 "X-Loco-Version: 2.5.8; wp-5.9\n"
 "X-Domain: category-ajax-filter"
-
-#: admin/functions.php:321
-msgid "1. Multiple Taxonomy Selection/Filter"
-msgstr ""
-
-#: admin/functions.php:330
-msgid "10. Google Fonts List Added."
-msgstr ""
-
-#: admin/functions.php:331
-msgid "11. More Filter/Action Hooks for developers."
-msgstr ""
-
-#: admin/functions.php:332
-msgid "12. 1 On Demand Layout For new user."
-msgstr ""
-
-#: admin/functions.php:333
-msgid "13. Translation Settings for Default Strings."
-msgstr ""
-
-#: admin/functions.php:334
-msgid "14. 50+ Post Animation effects Added."
-msgstr ""
-
-#: admin/functions.php:335
-msgid "15. New Tabs Filter Layout Added."
-msgstr ""
-
-#: admin/functions.php:336
-msgid "16. Scroll to top of filter after pagination click."
-msgstr ""
-
-#: admin/functions.php:337
-msgid "17. Search Field added to search through posts."
-msgstr ""
-
-#: admin/functions.php:322
-msgid "2. Multiple Taxonomy Dropdown/Filter"
-msgstr ""
-
-#: admin/functions.php:323
-msgid "3. Select Default Category on first Page load."
-msgstr ""
-
-#: admin/functions.php:324
-msgid "4. Overwrite Layout in Your theme's folder."
-msgstr ""
-
-#: admin/functions.php:325
-msgid "5. 10 More Post Layouts."
-msgstr ""
-
-#: admin/functions.php:326
-msgid "6. Multiple Checkbox Filter Layout."
-msgstr ""
-
-#: admin/functions.php:327
-msgid "7. Support Multiple Section on same page."
-msgstr ""
-
-#: admin/functions.php:328
-msgid "8. Sort Posts Settings."
-msgstr ""
-
-#: admin/functions.php:329
-msgid "9. Load More Posts added in Pagination."
-msgstr ""
 
 #: includes/functions.php:212
 msgid "<h2>Categories</h2>"
@@ -104,7 +36,7 @@ msgstr ""
 msgid "Advanced"
 msgstr ""
 
-#: admin/tabs/general.php:82
+#: admin/tabs/general.php:80
 msgid "All"
 msgstr ""
 
@@ -282,7 +214,7 @@ msgstr ""
 msgid "Pagination Type"
 msgstr ""
 
-#: admin/tabs/general.php:18
+#: admin/tabs/general.php:16
 msgid "Post"
 msgstr ""
 
@@ -418,7 +350,7 @@ msgstr ""
 msgid "Select Properties for post title."
 msgstr ""
 
-#: admin/tabs/general.php:79
+#: admin/tabs/general.php:77
 msgid "Select Terms that you want to show on frontend. Deaflut: 5/ASC ORDER"
 msgstr ""
 
@@ -434,11 +366,11 @@ msgstr ""
 msgid "Select Your Post Layout Design"
 msgstr ""
 
-#: admin/tabs/general.php:14
+#: admin/tabs/general.php:13
 msgid "Select your post type to filter. Deaflut: Post"
 msgstr ""
 
-#: admin/tabs/general.php:45
+#: admin/tabs/general.php:43
 msgid "Select your taxonomy from dropdown. Deaflut: Category"
 msgstr ""
 
@@ -470,11 +402,11 @@ msgstr ""
 msgid "Shortcode Options"
 msgstr ""
 
-#: admin/tabs/general.php:45
+#: admin/tabs/general.php:43
 msgid "Taxonomy"
 msgstr ""
 
-#: admin/tabs/general.php:79
+#: admin/tabs/general.php:77
 msgid "Terms"
 msgstr ""
 
