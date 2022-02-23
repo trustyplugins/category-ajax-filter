@@ -2,7 +2,7 @@
 /*
 Plugin Name: Category Ajax Filter
 Description: Filter posts/custom post types by category without page reload.Easy to sort/filter and display posts on page with Ajax. It Supports Divi, Elementor and other page builders.
-Version: 1.9.5
+Version: 1.9.6
 Author: Trusty Plugins
 Author URI: https://trustyplugins.com
 License: GPL3
@@ -14,7 +14,7 @@ Domain Path: /languages
 defined( 'ABSPATH' ) or die( 'No tircks please!' );
 /*---- CONFIGURATION >>>> DEFINE CURRENT VERSION ----*/
 if (!defined('CAF_CURRENT_VERSION')){
-    define('CAF_CURRENT_VERSION', '1.9.5');
+    define('CAF_CURRENT_VERSION', '1.9.6');
 }
 if (!defined('CAF_OPTIONS')){
     define('CAF_OPTIONS', 'Category Ajax Filter');
@@ -46,7 +46,7 @@ class TC_CAF_Plugin {
 			define( 'TC_CAF_PATH', plugin_dir_path( __FILE__ ) );
 		}
 		if ( ! defined( 'TC_CAF_PLUGIN_VERSION' ) ) {
-			define( 'TC_CAF_PLUGIN_VERSION','1.9.5' );
+			define( 'TC_CAF_PLUGIN_VERSION','1.9.6' );
 		}
 	}
 }
