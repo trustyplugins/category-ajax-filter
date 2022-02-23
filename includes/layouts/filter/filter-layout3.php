@@ -65,8 +65,9 @@ if(class_exists("TC_CAF_PRO")) {
  $cl='active';
  }
  }
- 
+ if($caf_all_ed=='enable') {
 echo '<li><a href="#" data-id="'.esc_attr($trm1).'" data-main-id="flt" class="'.esc_attr($cl).'" data-target-div="data-target-div'.esc_attr($b).'"><span class="post_count">'.esc_html($post_count_all).'</span>'.esc_attr($all_text).'&nbsp;<i class="fa fa-angle-double-right"></i></a></li>';
+ }
 foreach ($terms_sel as $term) {
 $term_data=get_term($term);
 if($term_data) {

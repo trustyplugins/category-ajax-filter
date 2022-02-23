@@ -82,6 +82,9 @@ $("#app-tab-content").find(href).addClass('active');
 
 
 /*---- Start Function For CUSTOM POST TYPE SELECT ----*/
+	
+
+	
 
 $("#caf_top_meta_box #custom-post-type-select").change(function(){
 

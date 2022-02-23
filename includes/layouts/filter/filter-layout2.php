@@ -19,9 +19,11 @@
     "result">';
 	echo apply_filters('tc_caf_add_custom_list_before_filter',array($caf_filter,'tc_caf_add_custom_list_before_filter'),$id);	
 	echo'</span><span class="arrow-down"><i class="fa fa-angle-down" aria-hidden="true"></i></span><span class="arrow-up" style="display: none;"><i class="fa fa-angle-up" aria-hidden="true"></i></span><ul>';
+		if($caf_all_ed=='enable') {
 	echo '<li><a href="#" data-id="'.esc_attr($trm1).'" data-main-id="flt" class="caf-mb-3 active dfl" data-target-div="data-target-div'.esc_attr($b).'">';
 	echo apply_filters('tc_caf_add_custom_list_before_filter','tc_caf_add_custom_list_before_filter',$id);	
 	echo'</a></li>';
+		}
     $terms_sel=apply_filters('tc_caf_filter_order_by',$terms_sel,$id);	   
 foreach ($terms_sel as $term) {
 $term_data=get_term($term);

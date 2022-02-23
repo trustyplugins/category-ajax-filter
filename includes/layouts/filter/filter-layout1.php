@@ -2,6 +2,7 @@
 <div id="caf-filter-layout1" class='caf-filter-layout data-target-div<?php echo esc_attr($b)." ".esc_attr($flsr);?>'>
 <ul class="caf-filter-container caf-filter-layout1">
 <?php
+//echo $caf_all_ed;
 if($terms_sel) {
  //var_dump($terms_sel_tax);
 $total_terms=count($terms_sel);
@@ -9,9 +10,11 @@ $total_terms=count($terms_sel);
  $terms_sel=apply_filters('tc_caf_filter_order_by',$terms_sel,$id);
  if(class_exists("TC_CAF_PRO")) {
   $trm1=implode(',',$terms_sel_tax);
+	 
  }
   else {
   $trm1=implode(',',$terms_sel);
+
   }
 $all_text="All";
 $all_text=apply_filters('tc_caf_filter_all_text',$all_text,$id);
@@ -19,12 +22,14 @@ $all_text=apply_filters('tc_caf_filter_all_text',$all_text,$id);
   $cl='active';
  }
  else {
- if($caf_default_term=='all') {
+ if($caf_default_term=='all'){
  $cl='active';
  }
  }
-echo '<li class="caf-mb-4"><a href="#" data-id="'.esc_attr($trm1).'" data-main-id="flt" class="'.esc_attr($cl).'" data-target-div="data-target-div'.esc_attr($b).'">'.esc_attr($all_text).'</a></li>';
- 
+	
+	if($caf_all_ed=='enable') {
+echo '<li class="caf-mb-4"><a href="#" data-id="'.esc_attr($trm1).'" data-main-id="flt" class=" abc '.esc_attr($cl).'" data-target-div="data-target-div'.esc_attr($b).'">'.esc_attr($all_text).'</a></li>';
+	}
 foreach ($terms_sel as $key=>$term) {
 $term_data=get_term($term);
 if($term_data) {
@@ -33,7 +38,7 @@ if($term_data) {
   if($caf_filter_more_btn=="on") {
  $more_link_val=$caf_filter_more_val;
 if($key==$more_link_val) {
-   echo "<li class='caf-mb-4 more'><span>+More</span><ul>";
+   echo "<li class='caf-mb-4 more'><span>More +</span><ul>";
     }
  }
  if($caf_default_term==$term_data->taxonomy."___".$term_data->term_id) {$cl='active';} else {$cl='';} 
