@@ -84,29 +84,29 @@ Yes you can select specific terms of any taxonomy.
 
  == Changelog ==
 
-= 1.9.6 = (24/02/2021)
+= 1.9.6 = (24/02/2022) 
 * Missing String Translation functions added (Loco Translate)
 * PRO Compatible Version (7.6)
-
-= 1.9.5 = (08/02/2021)
+ 
+= 1.9.5 = (08/02/2022)
 * Fixed Console Error
 
-= 1.9.4 = (05/02/2021)
+= 1.9.4 = (05/02/2022)
 * Fixed (Posts found: parsererror) , New Setting option Added to enable/disable Nonce from plugin settings under 'Advanced Tab'(advanced->security)
 
-= 1.9.3 = (04/02/2021)
+= 1.9.3 = (04/02/2022)
 * Conflict fixed (jQuery is not defined)
 * Language Translation file added (Russian:RU:Русский)
 
-= 1.9.2 = (24/01/2021)
+= 1.9.2 = (24/01/2022)
 * Compatible with Wordpress 5.9
 
 
-= 1.9.1 = (12/01/2021)
+= 1.9.1 = (12/01/2022)
 
 * Whitespace Fixed (Header information)
 
-= 1.9 = (12/01/2021)
+= 1.9 = (12/01/2022)
 
 * Compatible with Loco Translate
 * Admin Area translatable
