@@ -16,7 +16,7 @@ $link=get_the_permalink();
  $caf_content= preg_replace('#\[[^\]]+\]#', '',$caf_content);
  $c_length=apply_filters('tc_caf_excerpt_length',30,$id);
  $caf_content=wp_trim_words($caf_content,$c_length);
-if($image[0]) {
+if(isset($image[0])) {
 echo "<a href='".esc_url($link)."' target='".esc_attr($caf_link_target)."' class='caf-f-img'><div class='caf-featured-img-box' style='background:url(".esc_url($image[0])."
 )'></div></a>";
 }

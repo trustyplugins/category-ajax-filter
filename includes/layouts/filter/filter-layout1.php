@@ -2,20 +2,17 @@
 <div id="caf-filter-layout1" class='caf-filter-layout data-target-div<?php echo esc_attr($b)." ".esc_attr($flsr);?>'>
 <ul class="caf-filter-container caf-filter-layout1">
 <?php
-//echo $caf_all_ed;
 if($terms_sel) {
- //var_dump($terms_sel_tax);
 $total_terms=count($terms_sel);
  $total_terms_1=$total_terms-1;
  $terms_sel=apply_filters('tc_caf_filter_order_by',$terms_sel,$id);
  if(class_exists("TC_CAF_PRO")) {
   $trm1=implode(',',$terms_sel_tax);
-	 
- }
+ } 
   else {
   $trm1=implode(',',$terms_sel);
-
   }
+ echo "flayout".$caf_default_term;
 $all_text="All";
 $all_text=apply_filters('tc_caf_filter_all_text',$all_text,$id);
  if(!class_exists("TC_CAF_PRO")) {
