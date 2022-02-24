@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/jasveer
 Tags: Ajax Filter,Divi, Ajax posts, category posts ,Elementor
 Requires at least: 4.8
 Tested up to: 5.9
-Stable tag: 1.9.5
+Stable tag: 1.9.6
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -83,6 +83,11 @@ Yes you can select specific terms of any taxonomy.
 3. screenshot-3.png
 
  == Changelog ==
+
+= 1.9.6 = (08/02/2021) 
+* Missing String Translation functions added (Loco Translate)
+* PRO Compatible Version (7.6)
+
 
 = 1.9.5 = (08/02/2021)
 * Fixed Console Error
