@@ -12,7 +12,7 @@ $total_terms=count($terms_sel);
   else {
   $trm1=implode(',',$terms_sel);
   }
- echo "flayout".$caf_default_term;
+ //echo "flayout".$caf_default_term;
 $all_text="All";
 $all_text=apply_filters('tc_caf_filter_all_text',$all_text,$id);
  if(!class_exists("TC_CAF_PRO")) {
