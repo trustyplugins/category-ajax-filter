@@ -15,8 +15,7 @@
 	<ul class="dropdown">
     <li class="init" value="1000"><span>';
 	echo apply_filters('tc_caf_add_custom_span_before_filter',array($caf_filter,'tc_caf_add_custom_span_before_filter'),$id);
-	echo'</span><span class=
-    "result">';
+	echo'</span><span class="result">';
 	echo apply_filters('tc_caf_add_custom_list_before_filter',array($caf_filter,'tc_caf_add_custom_list_before_filter'),$id);	
 	echo'</span><span class="arrow-down"><i class="fa fa-angle-down" aria-hidden="true"></i></span><span class="arrow-up" style="display: none;"><i class="fa fa-angle-up" aria-hidden="true"></i></span><ul>';
 		if($caf_all_ed=='enable') {

@@ -9,6 +9,7 @@ global $post;
 	$caf_post_id=get_the_ID();
 	$title= get_the_title();
 	$image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), $caf_image_size );
+	//var_dump($image);
 	$link=get_the_permalink();
  //var_dump($post);
  $caf_content=$post->post_excerpt;
@@ -22,7 +23,9 @@ global $post;
  $pcl='';
  if($caf_link_target=='popup') {$pcl='caf-popup'; $target='';}
  else {$target="target='".$caf_link_target."'"; }
-	if($image[0]) {
+	
+	
+	if(isset($image[0])) {
 	echo "<a href='".esc_url($link)."' $target class='$pcl' data-id='".esc_attr($post->ID)."'><span class='caf-featured-img-box' style='background:url(".esc_url($image[0]).")'></span></a>";
 }
 else{
