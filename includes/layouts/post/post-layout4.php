@@ -41,7 +41,7 @@ echo "<div class='caf-meta-content-cats'>";
  else {
 	$cats=get_the_terms($caf_post_id,$tax);
  }
- //var_dump($cats);
+ if(is_array($cats)) {
 	foreach ($cats as $index=>$cat) {
 		if($index<3) {
   if(class_exists("TC_CAF_PRO")) {
@@ -55,8 +55,7 @@ echo "<div class='caf-meta-content-cats'>";
 	echo "<li><a href='".esc_url($clink)."' target='_blank'>".esc_html($cat->name)."</a></li>";  
    }
   }
-  
-  
+	}
 	}
 	echo "</ul>";
 echo "</div>";

@@ -13,6 +13,8 @@ if(is_array($tax)) {
 	$cats=get_the_terms($caf_post_id,$tax);
  }
 //var_dump($cats);
+$cats_class='';
+if(is_array($cats)) {
 if(isset($cats)) {
  if(class_exists("TC_CAF_PRO")) {
  $cats_class=$cats[0][0]->name;
@@ -22,7 +24,7 @@ if(isset($cats)) {
  }
  $cats_class = str_replace(' ', '_', $cats_class);
  $cats_class="tp_".$cats_class;
-} else {$cats_class='';}
+} else {$cats_class='';} }
 //$cats_class='';
 ?>
 <article id="caf-post-layout3" class="caf-post-layout1 caf-col-md-<?php echo esc_attr($caf_desktop_col); ?> caf-col-md-tablet<?php echo esc_attr($caf_tablet_col); ?> caf-col-md-mobile<?php echo esc_attr($caf_mobile_col); ?> caf-mb-5 <?php echo esc_attr($caf_special_post_class); ?> <?php echo esc_attr($caf_post_animation); ?> <?php echo esc_attr($cats_class); ?> " data-post-id="<?php echo esc_attr(get_the_id()); ?>">
@@ -50,6 +52,7 @@ echo "<div id='manage-post-area'>";
 if((class_exists("TC_CAF_PRO") && $caf_post_cats=="show") ||  !class_exists("TC_CAF_PRO")) { 
 echo "<div class='caf-meta-content-cats'>";
 echo "<ul class='caf-mb-0'>";
+	if(is_array($cats)) {
   foreach ($cats as $index=>$cat) {
 		if($index<3) {
    if(class_exists("TC_CAF_PRO")) {
@@ -64,6 +67,7 @@ echo "<ul class='caf-mb-0'>";
 		}
   }
   }
+}
 echo "</ul>";
 echo "</div>";
 }

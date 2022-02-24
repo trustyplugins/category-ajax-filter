@@ -90,6 +90,7 @@ $response = [
  endif;
 do_action("tc_caf_additional_css_layout1");
 if(class_exists("TC_CAF_PRO")) {
+//	echo $caf_post_desc_font;
  echo "<style>
 ".$target_div." #caf-post-layout1 .caf-content {font-family:".$caf_post_desc_font.";text-transform:".$caf_post_desc_transform.";font-size:".$caf_post_desc_font_size."px;}
 </style>";

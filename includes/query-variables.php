@@ -172,19 +172,3 @@ $caf_special_post_class=get_post_meta($id,'caf_special_post_class',true);
 
 }
 
-/*---- GENERATE INLINE CSS ----*/
-
-/*echo "<style>
-
-#caf-post-layout1 .caf-post-title a { font-size: ".$caf_post_title_font_size."px !important;}
-
-#caf-post-layout1 .caf-post-title h2 { font-size: ".$caf_post_title_font_size."px !important;}
-
-#caf-post-layout1 .caf-content { font-size: ".$caf_post_desc_font_size."px !important;}
-
-
-
-echo </style>";*/
-
-//var_dump($qry);
-

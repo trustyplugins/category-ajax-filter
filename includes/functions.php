@@ -21,7 +21,7 @@ class CAF_shortcode_render {
 		}	
 		$pt=get_post_type($id);
 		include TC_CAF_PATH.'includes/front-variables.php';
-  wp_enqueue_script("jquery");
+        wp_enqueue_script("jquery");
 		wp_enqueue_script( 'tc-caf-frontend-scripts'); 
 		$post_style=("tc-caf-".$caf_post_layout);
 		$filter_style=("tc-caf-".$caf_filter_layout);	

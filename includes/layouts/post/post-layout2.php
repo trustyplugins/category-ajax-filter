@@ -37,7 +37,10 @@ if(is_array($tax)) {
  }
  else {
 	$cats=get_the_terms($caf_post_id,$tax);
+	 //echo $tax.$caf_post_id;
  }
+//	 var_dump($cats);
+	 if(is_array($cats)) {
 	foreach ($cats as $index=>$cat) {
 		if($index<3) {
    if(class_exists("TC_CAF_PRO")) {
@@ -54,6 +57,7 @@ if(is_array($tax)) {
 	}
 	echo "</ul>";
 echo "</div>";
+ }
  }
 echo "<div class='caf-post-title'><a href='".esc_url($link)."' target='".esc_attr($caf_link_target)."'><h2>".esc_html($title)."</h2></a></div>";
   if((class_exists("TC_CAF_PRO") && $caf_post_author=="show" || $caf_post_date=="show") ||  !class_exists("TC_CAF_PRO")) { 
