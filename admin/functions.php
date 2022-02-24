@@ -350,7 +350,7 @@ public function __construct() {
 	add_action('wp_enqueue_scripts', array($this,'tc_caf_enqueue_scripts'));
 	}
 	public function conditionally_add_scripts_and_styles($posts){
-		//var_dump($posts);
+	//var_dump($posts);
 		if (empty($posts)) return $posts;
 		$shortcode_found = false; // use this flag to see if styles and scripts need to be enqueued
 		$short_id=array();
@@ -359,6 +359,7 @@ public function __construct() {
 			//echo stripos($post->post_content,'[caf_filter');
 			//$html = str_get_html($post->post_content);
 			if (stripos($post->post_content, '[caf_filter') !== false) {
+				//echo "yes";
 				$str=get_string_between($post->post_content,"[caf_filter id=","]");
 				if($str) {
 					if(strpos($str, "'")!==false) { 
@@ -378,7 +379,6 @@ public function __construct() {
 		}
 
 		if ($shortcode_found) {
-			//var_dump($short_id);
 			$caf_post_layout='post-layout1';
 			$caf_filter_layout='filter-layout1';
 			foreach($short_id as $id) {
@@ -390,7 +390,6 @@ public function __construct() {
 	}		
 		wp_enqueue_style('tc-caf-common-style', TC_CAF_URL.'/assets/css/common/common.min.css','',TC_CAF_PLUGIN_VERSION);	
 		wp_enqueue_style('tc-caf-'.$caf_post_layout, TC_CAF_URL.'/assets/css/post/"'.$caf_post_layout.'".min.css','',TC_CAF_PLUGIN_VERSION);
-
 		wp_enqueue_style('tc-caf-'.$caf_filter_layout, TC_CAF_URL.'/assets/css/filter/"'.$caf_filter_layout.'".min.css','',TC_CAF_PLUGIN_VERSION);		
 	}
 			wp_enqueue_style('tc-caf-font-awesome-style',TC_CAF_URL . 'assets/css/fontawesome/css/font-awesome.min.css','',TC_CAF_PLUGIN_VERSION,'all');

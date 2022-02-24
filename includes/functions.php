@@ -16,11 +16,11 @@ class CAF_shortcode_render {
 		 'id' => '',
 		 ), $atts );
 		 $id=$atts['id'];
+		include TC_CAF_PATH.'includes/front-variables.php';
 		if(get_post_meta($id,'caf_cpt_value')) {
 		$caf_cpt_value=get_post_meta($id,'caf_cpt_value',true);
 		}	
 		$pt=get_post_type($id);
-		include TC_CAF_PATH.'includes/front-variables.php';
         wp_enqueue_script("jquery");
 		wp_enqueue_script( 'tc-caf-frontend-scripts'); 
 		$post_style=("tc-caf-".$caf_post_layout);
@@ -28,9 +28,27 @@ class CAF_shortcode_render {
 		wp_enqueue_style('tc-caf-common-style');
 		wp_enqueue_style($filter_style);
 		wp_enqueue_style($post_style);
-		wp_enqueue_style('tc-caf-font-awesome-style');	
+		wp_enqueue_style('tc-caf-font-awesome-style');
+		wp_enqueue_style('dynamic-style-'.$caf_filter_layout,
+        TC_CAF_URL.'/assets/css/dynamic-styles.css');
+		if($caf_filter_layout=='filter-layout1') {
+	    include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout1-css.php";	
+		}
+		if($caf_filter_layout=='filter-layout2') {
+	    include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout2-css.php";	
+			}
+		   //echo $filter_css;
+			
+		
 		if(($id && !empty($id) && get_post_type($id)=='caf_posts'))  {
 		if($caf_filter_layout=='filter-layout3') {$cl='sidebar';} else {$cl='';}
+			
+			 //var_dump($tax);
+			if(is_array($tax)) {
+			$tax=implode(",",$tax);
+			}
+			//var_dump($tax);
+			
 		echo '<div id="caf-post-layout-container" class="caf-post-layout-container '.$cl.' '.$caf_filter_layout.' '.$caf_post_layout.' data-target-div'.$b.'" data-post-type="'.$caf_cpt_value.'" data-tax="'.$tax.'" data-terms="'.$trm.'" data-per-page="'.$caf_per_page.'" data-selected-terms="'.$trm.'" data-filter-id="'.$id.'" data-post-layout="'.$caf_post_layout.'" data-target-div="data-target-div'.$b.'">';	
 		if($caf_filter_status=='on')
 		{
