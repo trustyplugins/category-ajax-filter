@@ -88,7 +88,7 @@ Yes you can select specific terms of any taxonomy.
 * Missing String Translation functions added (Loco Translate)
 * PRO Compatible Version (7.6)
  
-= 1.9.5 = (08/02/2022)
+= 1.9.5 = (08/02/2022) 
 * Fixed Console Error
 
 = 1.9.4 = (05/02/2022)
