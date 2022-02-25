@@ -133,6 +133,8 @@ if( !isset( $_POST['nonce'] ) || !wp_verify_nonce( $_POST['nonce'], 'tc_caf_ajax
     $per_page  = intval($_POST['params']['per-page']);
 	$caf_post_layout  = sanitize_text_field($_POST['params']['caf-post-layout']);
 	$target_div  = sanitize_text_field($_POST['params']['data-target-div']);
+        
+
 	if($per_page=='-1') {$per_page='5';}
 	/*** Check if term exists ***/
 	$terms=explode(',',$term);
