@@ -1,16 +1,15 @@
 <div id="caf-filter-layout3" class='caf-filter-layout data-target-div<?php echo esc_attr($b)." ".esc_attr($flsr); ?>'>
-
 <?php
 	echo "<h2>";
 	echo apply_filters('tc_caf_custom_title_before_sidebar_filter',array($caf_filter,'tc_caf_custom_title_before_sidebar_filter'));
 	echo "</h2>";
 	?>
-	 <?php do_action("caf_after_filter_layout",$id,$b); ?>
+<?php do_action("caf_after_filter_layout",$id,$b); ?>
 <ul class="caf-filter-container caf-filter-layout3">
 <?php
 if($terms_sel) {
 //var_dump($terms_sel);
-    $terms_sel=apply_filters('tc_caf_filter_order_by',$terms_sel,$id);
+$terms_sel=apply_filters('tc_caf_filter_order_by',$terms_sel,$id);
  if(class_exists("TC_CAF_PRO")) {
   if(is_array($tax)) {
    //var_dump($terms);
@@ -34,8 +33,7 @@ if($terms_sel) {
   //'cat' => $term_id,
   'post_type' => $caf_cpt_value,
   'tax_query' => $tax_qry);
- }
- 
+ } 
  else {
 $args = array(
   //'cat' => $term_id,
@@ -77,8 +75,7 @@ if($term_data) {
  }
  else {
   $cl='';
- }
- 
+ } 
 $term_id=$term_data->term_id;
 $term_tx=$term_data->taxonomy;
 //echo $caf_cpt_value;
@@ -115,5 +112,4 @@ echo "<li><a href='#' class='".esc_attr($cl)."' data-id='".esc_attr($data_id)."'
 }	
 ?>
 </ul>
-
 </div>

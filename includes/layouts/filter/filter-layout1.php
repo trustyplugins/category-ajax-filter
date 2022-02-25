@@ -22,8 +22,7 @@ $all_text=apply_filters('tc_caf_filter_all_text',$all_text,$id);
  $cl='active';
  }
  }
-	
-	if($caf_all_ed=='enable') {
+if($caf_all_ed=='enable') {
 echo '<li class="caf-mb-4"><a href="#" data-id="'.esc_attr($trm1).'" data-main-id="flt" class=" abc '.esc_attr($cl).'" data-target-div="data-target-div'.esc_attr($b).'">'.esc_attr($all_text).'</a></li>';
 	}
 foreach ($terms_sel as $key=>$term) {
@@ -54,9 +53,7 @@ if(isset($trc)) {
   if(isset($trc[$term_data->term_id])) {
  $ic=$trc[$term_data->term_id];
    }
-}
- 
- 
+} 
 echo "<li class='caf-mb-4'><a href='#' data-id='".esc_attr($data_id)."' data-main-id='flt' data-target-div='data-target-div".esc_attr($b)."' class='".esc_attr($cl)."'>";
  if(class_exists("TC_CAF_PRO") && $ic) {
  echo "<i class='$ic caf-front-ic'></i>";

@@ -62,59 +62,33 @@ $caf_post_layout=get_post_meta($id,'caf_post_layout',true);
 if(get_post_meta($id,'caf_col_opt')) {
 $caf_col_opt=get_post_meta($id,'caf_col_opt',true);
 }
-
 if($caf_col_opt['caf_col_desktop']) {
-
 $caf_desktop_col=12/$caf_col_opt['caf_col_desktop'];	
 $caf_desktop_col_val=$caf_col_opt['caf_col_desktop'];
 }
-
 if($caf_col_opt['caf_col_tablet']) {
-
 $caf_tablet_col=12/$caf_col_opt['caf_col_tablet'];	
- $caf_tablet_col_val=$caf_col_opt['caf_col_tablet'];	
-
+$caf_tablet_col_val=$caf_col_opt['caf_col_tablet'];	
 }
-
 if($caf_col_opt['caf_col_mobile']) {
-
 $caf_mobile_col=12/$caf_col_opt['caf_col_mobile'];	
- $caf_mobile_col_val=$caf_col_opt['caf_col_mobile'];	
-
+$caf_mobile_col_val=$caf_col_opt['caf_col_mobile'];	
 }
-
-
-
 if(get_post_meta($id,'caf_post_primary_color')) {
-
 $caf_post_primary_color=get_post_meta($id,'caf_post_primary_color',true);
-
 }
-
 if(get_post_meta($id,'caf_post_sec_color')) {
-
 $caf_post_sec_color=get_post_meta($id,'caf_post_sec_color',true);
-
 }
-
 if(get_post_meta($id,'caf_post_sec_color2')) {
-
 $caf_post_sec_color2=get_post_meta($id,'caf_post_sec_color2',true);
-
 }
-
 if(get_post_meta($id,'caf_image_size')) {
-
 $caf_image_size=get_post_meta($id,'caf_image_size',true);
-
 }
-
 if(get_post_meta($id,'caf_post_animation')) {
-
 $caf_post_animation=get_post_meta($id,'caf_post_animation',true);
-
 }
-
 if(get_post_meta($id,'caf_empty_res')) {
 $caf_empty_res=get_post_meta($id,'caf_empty_res',true);
 }
@@ -136,19 +110,15 @@ $caf_post_rd=get_post_meta($id,'caf_post_rd',true);
 if(get_post_meta($id,'caf_post_dsc')) {
 $caf_post_dsc=get_post_meta($id,'caf_post_dsc',true);
 }
-
 if(get_post_meta($id,'caf_link_target')) {
 $caf_link_target=get_post_meta($id,'caf_link_target',true);
 if($caf_link_target=="new_window") {$caf_link_target='_blank';}
 else if($caf_link_target=="same_window") {$caf_link_target='_parent';}
- else if($caf_link_target=="popup") {$caf_link_target='popup';}
+else if($caf_link_target=="popup") {$caf_link_target='popup';}
 else {$caf_link_target='_parent';}
 }
-
 if(get_post_meta($id,'caf_per_page')) {
-
 $caf_per_page=get_post_meta($id,'caf_per_page',true);
-
 }
 
 /*---- TYPOGRAPHY TAB SUBMITTED VARIABLE VALUES ----*/
@@ -161,13 +131,9 @@ $caf_post_title_transform=get_post_meta($id,'caf_post_title_transform',true);
 if(get_post_meta($id,'caf_post_title_font_size')) {
 $caf_post_title_font_size=get_post_meta($id,'caf_post_title_font_size',true);
 }
-
-
 /*---- ADVANCED TAB SUBMITTED VARIABLE VALUES ----*/
 
 if(get_post_meta($id,'caf_special_post_class')) {
-
 $caf_special_post_class=get_post_meta($id,'caf_special_post_class',true);
-
 }
 

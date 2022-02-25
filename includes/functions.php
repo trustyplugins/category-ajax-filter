@@ -47,15 +47,13 @@ class CAF_shortcode_render {
 		//echo $post_css;
 		if(($id && !empty($id) && get_post_type($id)=='caf_posts'))  {
 		if($caf_filter_layout=='filter-layout3') {$cl='sidebar';} else {$cl='';}
-			
 			 //var_dump($tax);
 			if(is_array($tax)) {
 			$tax=implode(",",$tax);
 			}
-			//var_dump($tax);
-			
-		echo '<div id="caf-post-layout-container" class="caf-post-layout-container '.$cl.' '.$caf_filter_layout.' '.$caf_post_layout.' data-target-div'.$b.'" data-post-type="'.$caf_cpt_value.'" data-tax="'.$tax.'" data-terms="'.$trm.'" data-per-page="'.$caf_per_page.'" data-selected-terms="'.$trm.'" data-filter-id="'.$id.'" data-post-layout="'.$caf_post_layout.'" data-target-div="data-target-div'.$b.'">';	
-		if($caf_filter_status=='on')
+			//var_dump($tax);	
+		echo '<div id="caf-post-layout-container" class="caf-post-layout-container '.$cl.' '.$caf_filter_layout.' '.$caf_post_layout.' data-target-div'.$b.'" data-post-type="'.$caf_cpt_value.'" data-tax="'.$tax.'" data-terms="'.$trm.'" data-per-page="'.$caf_per_page.'" data-selected-terms="'.$trm.'" data-filter-id="'.$id.'" data-post-layout="'.$caf_post_layout.'" data-target-div="data-target-div'.$b.'">';
+        if($caf_filter_status=='on')
 		{
 		if($caf_filter_layout && strlen($caf_filter_layout)>13 ) {
 		$filepath=TC_CAF_PATH."includes/layouts/filter/".$caf_filter_layout.".php";
@@ -67,7 +65,7 @@ class CAF_shortcode_render {
 		}
 		}
 		}
-			if($caf_post_layout=='post-layout1') {
+		if($caf_post_layout=='post-layout1') {
 	    include TC_CAF_PATH."/includes/layouts/dynamic-css/post-layout1-css.php";	
 			}
 		if($caf_post_layout=='post-layout2') {
@@ -133,8 +131,6 @@ if( !isset( $_POST['nonce'] ) || !wp_verify_nonce( $_POST['nonce'], 'tc_caf_ajax
     $per_page  = intval($_POST['params']['per-page']);
 	$caf_post_layout  = sanitize_text_field($_POST['params']['caf-post-layout']);
 	$target_div  = sanitize_text_field($_POST['params']['data-target-div']);
-        
-
 	if($per_page=='-1') {$per_page='5';}
 	/*** Check if term exists ***/
 	$terms=explode(',',$term);
@@ -162,11 +158,10 @@ if( !isset( $_POST['nonce'] ) || !wp_verify_nonce( $_POST['nonce'], 'tc_caf_ajax
     endif;
 	endif;
     $default_order_by='title';
-$default_order_by=apply_filters('tc_caf_filter_posts_order_by',$default_order_by);
-  $default_order="asc";
-  $default_order=apply_filters('tc_caf_filter_posts_order',$default_order);
-        
-	/*** Setup query ***/
+    $default_order_by=apply_filters('tc_caf_filter_posts_order_by',$default_order_by);
+    $default_order="asc";
+    $default_order=apply_filters('tc_caf_filter_posts_order',$default_order);
+    /*** Setup query ***/
     $args = [
         'paged'          => $page,
         'post_type'      => $post_type,
@@ -214,29 +209,19 @@ public function get_caf_content2($caf_post_id,$words) {
   $content = preg_replace('#\[[^\]]+\]#', '',$content);
 	 $content=wp_trim_words($content,$words);
  	return $content;
+} 
 }
- 
-}
-
-
-
 
 class CAF_front_filter {
  public function __construct() {
      
-add_filter('tc_caf_add_custom_list_before_filter',array($this,'tc_caf_add_custom_list_before_filter'),5);
-     
-add_filter('tc_caf_add_custom_span_before_filter',array($this,'tc_caf_add_custom_span_before_filter'),5);
-     
-add_filter('tc_caf_custom_title_before_sidebar_filter',array($this,'tc_caf_custom_title_before_sidebar_filter'),5);	
-     
+add_filter('tc_caf_add_custom_list_before_filter',array($this,'tc_caf_add_custom_list_before_filter'),5);    
+add_filter('tc_caf_add_custom_span_before_filter',array($this,'tc_caf_add_custom_span_before_filter'),5);    
+add_filter('tc_caf_custom_title_before_sidebar_filter',array($this,'tc_caf_custom_title_before_sidebar_filter'),5);	    
 add_filter('tc_caf_filter_order_by',array($this,'tc_caf_filter_order_by'),5,1); 
-add_filter('tc_caf_filter_all_text',array($this,'tc_caf_filter_all_text'),5,1); 
-     
+add_filter('tc_caf_filter_all_text',array($this,'tc_caf_filter_all_text'),5,1);    
 add_filter('tc_caf_filter_posts_order_by',array($this,'tc_caf_filter_posts_order_by'),5,1); 
-  add_filter('tc_caf_filter_posts_order',array($this,'tc_caf_filter_posts_order'),5,1); 
-  
- 
+add_filter('tc_caf_filter_posts_order',array($this,'tc_caf_filter_posts_order'),5,1); 
   }
  
 public function tc_caf_add_custom_span_before_filter() {
@@ -261,7 +246,6 @@ return 'asc';
  public function tc_caf_filter_all_text($all_text) {
 return 'All';
 }
-
 }
 class CAF_ajax_pagination {
 	public function caf_ajax_pager($query,$paged,$caf_post_layout,$caf_pagi_type,$filter_id) {
@@ -288,7 +272,6 @@ if(get_post_meta($filter_id,'caf_pagination_status')) {
    }
  }
  }
- 
   public function caf_number_pagination ($query,$paged,$caf_post_layout,$caf_pagi_type,$filter_id) {
    if (!$query)
         return;
@@ -314,9 +297,6 @@ if(get_post_meta($filter_id,'caf_pagination_status')) {
         </ul>
     <?php endif;
   }
-  
-  
- 
 }
 new CAF_get_filter_posts();
 

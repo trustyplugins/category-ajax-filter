@@ -19,12 +19,9 @@ global $post;
  $caf_content= preg_replace('#\[[^\]]+\]#', '',$caf_content);
  $c_length=apply_filters('tc_caf_excerpt_length',30,$id);
  $caf_content=wp_trim_words($caf_content,$c_length);
- 
  $pcl='';
  if($caf_link_target=='popup') {$pcl='caf-popup'; $target='';}
  else {$target="target='".$caf_link_target."'"; }
-	
-	
 	if(isset($image[0])) {
 	echo "<a href='".esc_url($link)."' $target class='$pcl' data-id='".esc_attr($post->ID)."'><span class='caf-featured-img-box' style='background:url(".esc_url($image[0]).")'></span></a>";
 }
@@ -32,7 +29,6 @@ else{
 $image=TC_CAF_URL.'assets/img/unnamed.jpg';
 echo "<a href='".esc_url($link)."' $target class='".esc_attr($pcl)."' data-id='".esc_attr($post->ID)."'><span class='caf-featured-img-box' style='background:url(".esc_url($image).")'></span></a>";
 }
- 
 echo "<div id='manage-post-area'>";
 echo "<div class='caf-post-title'><a href='".esc_url($link)."' $target class='".esc_attr($pcl)."' data-id='".esc_attr($post->ID)."'><h2>".esc_attr($title)."</h2></a></div>";	
  if((class_exists("TC_CAF_PRO") && $caf_post_author=="show" || $caf_post_date=="show" || $caf_post_comments=="show") ||  !class_exists("TC_CAF_PRO")) { 

@@ -93,9 +93,7 @@ echo "</div>";
 </article>
 <?php
 endwhile;
-
 /**** Pagination*****/
-
 if(isset($_POST["params"]["load_more"])) {
  //do something
 }

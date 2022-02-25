@@ -39,7 +39,7 @@ if(is_array($tax)) {
 	$cats=get_the_terms($caf_post_id,$tax);
 	 //echo $tax.$caf_post_id;
  }
-//	 var_dump($cats);
+    //var_dump($cats);
 	 if(is_array($cats)) {
 	foreach ($cats as $index=>$cat) {
 		if($index<3) {
