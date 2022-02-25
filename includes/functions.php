@@ -37,6 +37,9 @@ class CAF_shortcode_render {
 		if($caf_filter_layout=='filter-layout2') {
 	    include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout2-css.php";	
 			}
+        if($caf_filter_layout=='filter-layout3') {
+	    include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout3-css.php";	
+			}
 		   //echo $filter_css;
 			
 		
