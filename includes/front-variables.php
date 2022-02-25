@@ -4,6 +4,7 @@ $caf_post_layout='post-layout1';
 $caf_filter_layout='filter-layout1';
 $caf_all_ed='enable';
 $caf_term_dy='enable';
+
 if(get_post_meta($id,'caf_cpt_value')) {
 $caf_cpt_value=get_post_meta($id,'caf_cpt_value',true);
 }

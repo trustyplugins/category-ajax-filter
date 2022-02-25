@@ -1,8 +1,7 @@
 <?php
-
 $caf_pagination=new CAF_ajax_pagination();
 $caf_content_length=new CAF_content_length();
-if($filter_id) {
+if(isset($filter_id)) {
 $id=$filter_id;	
 }
 $caf_pagi_type='number';

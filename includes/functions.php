@@ -31,18 +31,20 @@ class CAF_shortcode_render {
 		wp_enqueue_style('tc-caf-font-awesome-style');
 		wp_enqueue_style('dynamic-style-'.$caf_filter_layout,
         TC_CAF_URL.'/assets/css/dynamic-styles.css');
+		wp_enqueue_style('dynamic-style-'.$caf_post_layout,
+        TC_CAF_URL.'/assets/css/dynamic-styles.css');
 		if($caf_filter_layout=='filter-layout1') {
 	    include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout1-css.php";	
 		}
 		if($caf_filter_layout=='filter-layout2') {
 	    include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout2-css.php";	
 			}
-        if($caf_filter_layout=='filter-layout3') {
+        if($caf_filter_layout=='filter-layout3'){
 	    include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout3-css.php";	
-			}
+		 }
+		 
 		   //echo $filter_css;
-			
-		
+		//echo $post_css;
 		if(($id && !empty($id) && get_post_type($id)=='caf_posts'))  {
 		if($caf_filter_layout=='filter-layout3') {$cl='sidebar';} else {$cl='';}
 			
@@ -60,11 +62,23 @@ class CAF_shortcode_render {
 		if(file_exists($filepath)) {
 		include $filepath;
 		}
-		else {
+		else{
 		echo "<div class='error-of-filter-layout error-caf'>".esc_html('Filter Layout is not Available.','tc_caf')."</div>";	
 		}
 		}
 		}
+			if($caf_post_layout=='post-layout1') {
+	    include TC_CAF_PATH."/includes/layouts/dynamic-css/post-layout1-css.php";	
+			}
+		if($caf_post_layout=='post-layout2') {
+	    include TC_CAF_PATH."/includes/layouts/dynamic-css/post-layout2-css.php";	
+			}
+		if($caf_post_layout=='post-layout3') {
+	    include TC_CAF_PATH."/includes/layouts/dynamic-css/post-layout3-css.php";	
+			}
+		if($caf_post_layout=='post-layout4') {
+	    include TC_CAF_PATH."/includes/layouts/dynamic-css/post-layout4-css.php";	
+			}
 		echo "<div id='manage-ajax-response' class='caf-row'>";	
 		if($caf_post_layout && strlen($caf_post_layout)>11) {
 		echo '<div class="status"><i class="fa fa-spinner" aria-hidden="true"></i></div>';
