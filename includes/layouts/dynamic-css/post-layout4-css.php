@@ -22,7 +22,7 @@ font-family:".$caf_post_font.";}
 ".$target_div." .error-caf{background-color: ".$caf_post_primary_color."; color: ".$caf_post_sec_color.";font-size:".$caf_post_title_font_size."px;font-family:".$caf_post_font.";}
 ".$target_div." .status i {color:".$caf_post_primary_color.";}";
 
-wp_add_inline_style('dynamic-style-'.$caf_post_layout,$post_css);
+wp_add_inline_style($handle,$post_css);
 
 
 

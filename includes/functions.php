@@ -29,9 +29,8 @@ class CAF_shortcode_render {
 		wp_enqueue_style($filter_style);
 		wp_enqueue_style($post_style);
 		wp_enqueue_style('tc-caf-font-awesome-style');
-		wp_enqueue_style('dynamic-style-'.$caf_filter_layout,
-        TC_CAF_URL.'/assets/css/dynamic-styles.css');
-		wp_enqueue_style('dynamic-style-'.$caf_post_layout,
+        $handle="tc-caf-dynamic-style-".$caf_filter_layout;
+		wp_enqueue_style($handle,
         TC_CAF_URL.'/assets/css/dynamic-styles.css');
 		if($caf_filter_layout=='filter-layout1') {
 	    include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout1-css.php";	

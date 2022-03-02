@@ -25,7 +25,7 @@ font-family:".$caf_post_font.";}
 ".$target_div." #caf-post-layout1 a.caf-read-more:hover {background-color: ".$caf_post_primary_color.";}
 ".$target_div." .status i {color:".$caf_post_primary_color.";background-color: ".$caf_post_sec_color.";}";
 
-wp_add_inline_style('dynamic-style-'.$caf_post_layout,$post_css);
+wp_add_inline_style($handle,$post_css);
 
 
 

@@ -11,4 +11,4 @@ $filter_css=".data-target-div".$b." span.post_count,.data-target-div".$b." h2.ca
 .data-target-div".$b." .search-layout2 input#caf-search-input {font-size:".$caf_filter_font_size."px;text-transform:".$caf_filter_transform.";}
 .data-target-div".$b." .search-layout1 input#caf-search-input {font-size:".$caf_filter_font_size."px;text-transform:".$caf_filter_transform.";}";
 
-wp_add_inline_style('dynamic-style-'.$caf_filter_layout,$filter_css);
+wp_add_inline_style($handle,$filter_css);

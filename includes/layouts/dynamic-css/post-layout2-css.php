@@ -16,7 +16,7 @@ $post_css=" ".$target_div." .error-caf {font-family:".$caf_post_font.";backgroun
 ".$target_div." ul#caf-layout-pagination.post-layout2 li a{background-color: ".$caf_post_sec_color2.";color:".$caf_post_primary_color.";font-family:".$caf_post_font.";}
 ".$target_div." .status i {color:".$caf_post_primary_color.";}";
 
-wp_add_inline_style('dynamic-style-'.$caf_post_layout,$post_css);
+wp_add_inline_style($handle,$post_css);
 
 
 
