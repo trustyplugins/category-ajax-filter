@@ -392,6 +392,11 @@ public function __construct() {
 		wp_enqueue_style('tc-caf-'.$caf_post_layout, TC_CAF_URL.'/assets/css/post/"'.$caf_post_layout.'".min.css','',TC_CAF_PLUGIN_VERSION);
 		wp_enqueue_style('tc-caf-'.$caf_filter_layout, TC_CAF_URL.'/assets/css/filter/"'.$caf_filter_layout.'".min.css','',TC_CAF_PLUGIN_VERSION);		
 	}
+ $b=1;
+ $handle="tc-caf-dynamic-style-".$caf_filter_layout;
+	wp_enqueue_style($handle,TC_CAF_URL.'/assets/css/dynamic-styles.css');
+ setDynamicFilterCssFree($id,$handle,$caf_filter_layout,$b,'conditional');
+ setDynamicFilterCssFree($id,$handle,$caf_post_layout,$b,'conditional');
 			wp_enqueue_style('tc-caf-font-awesome-style',TC_CAF_URL . 'assets/css/fontawesome/css/font-awesome.min.css','',TC_CAF_PLUGIN_VERSION,'all');
 			wp_enqueue_script('jquery');
 			wp_enqueue_script( 'tc-caf-frontend-scripts', TC_CAF_URL .'assets/js/script.min.js', array('jquery'),TC_CAF_PLUGIN_VERSION);
@@ -492,14 +497,29 @@ function get_string_between($string, $start, $end){
 }
 
 
-
-/*add_action( 'save_post', 'wpse_redirect_to_dashboard', 40, 3 );
-function wpse_redirect_to_dashboard( $post_id, $post, $update ) {
-    global $_POST;
-    // Since save_post runs 4 times, make sure this is the final run
-    if( count( $_POST ) > 0 && true === $update && 'caf_posts' === $post->post_type ) {
-        wp_redirect( admin_url( 'edit.php?post_type=mycptslug' ) ); exit;
-    }
+function setDynamicFilterCssFree($id,$handle,$caf_layout,$b,$type) {
+ include TC_CAF_PATH.'includes/front-variables.php';
+ switch ($caf_layout) {
+  case "filter-layout1":
+   include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout1-css.php";	
+   break;
+   case "filter-layout2":
+   include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout2-css.php";	
+   break;
+   case "filter-layout3":
+   include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout3-css.php";	
+   break;
+   case "post-layout1":
+   include TC_CAF_PATH."/includes/layouts/dynamic-css/post-layout1-css.php";			
+   break;
+   case "post-layout2":
+   include TC_CAF_PATH."/includes/layouts/dynamic-css/post-layout2-css.php";			
+   break;
+   case "post-layout3":
+   include TC_CAF_PATH."/includes/layouts/dynamic-css/post-layout3-css.php";			
+   break;
+   case "post-layout4":
+   include TC_CAF_PATH."/includes/layouts/dynamic-css/post-layout4-css.php";			
+   break;
+ }
 }
-
-*/

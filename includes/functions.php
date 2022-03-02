@@ -21,7 +21,7 @@ class CAF_shortcode_render {
 		$caf_cpt_value=get_post_meta($id,'caf_cpt_value',true);
 		}	
 		$pt=get_post_type($id);
-        wp_enqueue_script("jquery");
+  wp_enqueue_script("jquery");
 		wp_enqueue_script( 'tc-caf-frontend-scripts'); 
 		$post_style=("tc-caf-".$caf_post_layout);
 		$filter_style=("tc-caf-".$caf_filter_layout);	
@@ -29,21 +29,9 @@ class CAF_shortcode_render {
 		wp_enqueue_style($filter_style);
 		wp_enqueue_style($post_style);
 		wp_enqueue_style('tc-caf-font-awesome-style');
-        $handle="tc-caf-dynamic-style-".$caf_filter_layout;
-		wp_enqueue_style($handle,
-        TC_CAF_URL.'/assets/css/dynamic-styles.css');
-		if($caf_filter_layout=='filter-layout1') {
-	    include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout1-css.php";	
-		}
-		if($caf_filter_layout=='filter-layout2') {
-	    include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout2-css.php";	
-			}
-        if($caf_filter_layout=='filter-layout3'){
-	    include TC_CAF_PATH."/includes/layouts/dynamic-css/filter-layout3-css.php";	
-		 }
-		 
-		   //echo $filter_css;
-		//echo $post_css;
+  $handle="tc-caf-dynamic-style-".$caf_filter_layout;
+		wp_enqueue_style($handle,TC_CAF_URL.'/assets/css/dynamic-styles.css');
+		setDynamicFilterCssFree($id,$handle,$caf_filter_layout,$b,'shortcode');
 		if(($id && !empty($id) && get_post_type($id)=='caf_posts'))  {
 		if($caf_filter_layout=='filter-layout3') {$cl='sidebar';} else {$cl='';}
 			 //var_dump($tax);
@@ -52,10 +40,10 @@ class CAF_shortcode_render {
 			}
 			//var_dump($tax);	
 		echo '<div id="caf-post-layout-container" class="caf-post-layout-container '.$cl.' '.$caf_filter_layout.' '.$caf_post_layout.' data-target-div'.$b.'" data-post-type="'.$caf_cpt_value.'" data-tax="'.$tax.'" data-terms="'.$trm.'" data-per-page="'.$caf_per_page.'" data-selected-terms="'.$trm.'" data-filter-id="'.$id.'" data-post-layout="'.$caf_post_layout.'" data-target-div="data-target-div'.$b.'">';
-        if($caf_filter_status=='on')
+  if($caf_filter_status=='on')
 		{
 		if($caf_filter_layout && strlen($caf_filter_layout)>13 ) {
-		$filepath=TC_CAF_PATH."includes/layouts/filter/".$caf_filter_layout.".php";
+$filepath=TC_CAF_PATH."includes/layouts/filter/".$caf_filter_layout.".php";
 		if(file_exists($filepath)) {
 		include $filepath;
 		}
@@ -64,18 +52,7 @@ class CAF_shortcode_render {
 		}
 		}
 		}
-		if($caf_post_layout=='post-layout1') {
-	    include TC_CAF_PATH."/includes/layouts/dynamic-css/post-layout1-css.php";	
-			}
-		if($caf_post_layout=='post-layout2') {
-	    include TC_CAF_PATH."/includes/layouts/dynamic-css/post-layout2-css.php";	
-			}
-		if($caf_post_layout=='post-layout3') {
-	    include TC_CAF_PATH."/includes/layouts/dynamic-css/post-layout3-css.php";	
-			}
-		if($caf_post_layout=='post-layout4') {
-	    include TC_CAF_PATH."/includes/layouts/dynamic-css/post-layout4-css.php";	
-			}
+		setDynamicFilterCssFree($id,$handle,$caf_post_layout,$b,'shortcode');
 		echo "<div id='manage-ajax-response' class='caf-row'>";	
 		if($caf_post_layout && strlen($caf_post_layout)>11) {
 		echo '<div class="status"><i class="fa fa-spinner" aria-hidden="true"></i></div>';
