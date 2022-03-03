@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/jasveer
 Tags: Ajax Filter,Divi, Ajax posts, category posts ,Elementor
 Requires at least: 4.8
 Tested up to: 5.9
-Stable tag: 1.9.7
+Stable tag: 2.0
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -83,6 +83,13 @@ Yes you can select specific terms of any taxonomy.
 3. screenshot-3.png
 
  == Changelog ==
+= 2.0 = (03/03/2022)
+* Fixed isset image warning for all Post Layouts.
+* Add Dynamic CSS for all Post Layouts and Filter Layouts.
+* PRO COMPATIBLE [8.0]
+
+= 1.9.8 = (02/03/2022)
+* Update Patch to fix 1.9.7
 
 = 1.9.7 = (02/03/2022)
 * Fixed isset image warning for all Post Layouts.
