@@ -38,7 +38,7 @@ echo "<div class='caf-post-title'><a href='".esc_url($link)."' $target class='".
 echo"<span class='author caf-col-md-4 caf-pl-0'><i class='fa fa-user' aria-hidden='true'></i> ".get_the_author()."</span>";
   }
  if((class_exists("TC_CAF_PRO") && $caf_post_date=="show") ||  !class_exists("TC_CAF_PRO")) { 
-echo"<span class='date caf-col-md-6 caf-pl-0'><i class='fa fa-calendar' aria-hidden='true'></i> ".get_the_date('d, M Y ')."</span>";
+echo"<span class='date caf-col-md-6 caf-pl-0'><i class='fa fa-calendar' aria-hidden='true'></i> ".get_the_date($caf_post_date_format)."</span>";
  }
  if((class_exists("TC_CAF_PRO") && $caf_post_comments=="show") ||  !class_exists("TC_CAF_PRO")) { 
 echo"<span class='comment caf-col-md-3 caf-pl-0'><i class='fa fa-comment' aria-hidden='true'></i> ".get_comments_number()."</span>";

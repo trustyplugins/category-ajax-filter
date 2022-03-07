@@ -83,7 +83,7 @@ echo "<div class='caf-meta-content'>";
 echo"<b><span class='author caf-pl-0'>By ".get_the_author()." - </span></b>";
  }
  if((class_exists("TC_CAF_PRO") && $caf_post_date=="show") ||  !class_exists("TC_CAF_PRO")) { 
-echo"<span class='date caf-pl-0'>".get_the_date('M, d Y ')."</span>";
+echo"<span class='date caf-pl-0'>".get_the_date($caf_post_date_format)."</span>";
  }
  if((class_exists("TC_CAF_PRO") && $caf_post_author=="show" || $caf_post_date=="show") ||  !class_exists("TC_CAF_PRO")) {
 echo "</div>";

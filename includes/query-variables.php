@@ -21,6 +21,12 @@ $caf_post_comments="show";
 $caf_post_cats="show";
 $caf_post_rd="show";
 $caf_post_dsc="show";
+$caf_post_date_format="d, M Y";
+if(class_exists("TC_CAF_PRO")) {
+if(get_post_meta($id,'caf_post_date_format')) {
+$caf_post_date_format=get_post_meta($id,'caf_post_date_format',true);
+}
+}
 if(get_post_meta($id,'caf_cpt_value')) {
 $caf_cpt_value=get_post_meta($id,'caf_cpt_value',true);
 }
