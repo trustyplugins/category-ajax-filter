@@ -66,7 +66,9 @@
 
 	<div class="col-sm-12 row-bottom filter-color-combo">
 	<div class="form-group row">
-    <label for="caf-filter-layout" class='col-sm-12 bold-span-title'><?php echo esc_html__('Filter Color Combination','category-ajax-filter');?><span class='info'><?php echo esc_html__('Select Primary/Secondary color for filter layout.','category-ajax-filter');?><a href='#' class='filter-reset'><?php echo esc_html__('Reset','category-ajax-filter');?></a></span></label>
+    <label for="caf-filter-layout" class='col-sm-12 bold-span-title'><?php echo esc_html__('Filter Color Combination','category-ajax-filter');?><span class='info'><?php echo esc_html__('Select Primary/Secondary color for filter layout.','category-ajax-filter');?>
+<!--		<a href='#' class='filter-reset'><?php echo esc_html__('Reset','category-ajax-filter');?></a>-->
+		</span></label>
 		
     <div class="col-sm-4 filter-primary-color">
     <span class='label-title'><?php echo esc_html__('Primary Color','category-ajax-filter');?></span><br/>
@@ -176,7 +178,7 @@
 	<!---- START POST COLOR COMBINATION ---->	
 	<div class="col-sm-12 row-bottom post-color-combo">
 	<div class="form-group row">
-    <label for="caf-post-layout" class='col-sm-12 bold-span-title'><?php echo esc_html__('Post Color Combination','category-ajax-filter');?><span class='info'><?php echo esc_html__('Select Primary/Secondary color for Post layout.','category-ajax-filter');?><a href='#' class='post-reset'><?php echo esc_html__('Reset','category-ajax-filter');?></a></span></label>
+    <label for="caf-post-layout" class='col-sm-12 bold-span-title'><?php echo esc_html__('Post Color Combination','category-ajax-filter');?><span class='info'><?php echo esc_html__('Select Primary/Secondary color for Post layout.','category-ajax-filter');?><?php /*?><a href='#' class='post-reset'><?php echo esc_html__('Reset','category-ajax-filter');?></a><?php */?></span></label>
     
 	<div class="col-sm-4 post-primary-color">
     <span class='label-title'><?php echo esc_html__('Primary Color','category-ajax-filter');?></span><br/>

@@ -39,7 +39,7 @@ if($term_data) {
   $data_id=esc_attr($term_data->term_id);
  }
 echo "<li class='caf-mb-3'><a href='#' data-id='".esc_attr($data_id)."' data-main-id='flt' data-target-div='data-target-div".esc_attr($b)."'>";
- if(class_exists("TC_CAF_PRO") && $ic) {
+ if(class_exists("TC_CAF_PRO") && $ic && $ic!='undefined') {
  echo "<i class='$ic caf-front-ic'></i>";
  }
  echo esc_html($term_data->name)."</a></li>";	

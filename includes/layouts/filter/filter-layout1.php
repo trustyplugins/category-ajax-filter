@@ -55,7 +55,7 @@ if(isset($trc)) {
    }
 } 
 echo "<li class='caf-mb-4'><a href='#' data-id='".esc_attr($data_id)."' data-main-id='flt' data-target-div='data-target-div".esc_attr($b)."' class='".esc_attr($cl)."'>";
- if(class_exists("TC_CAF_PRO") && $ic) {
+ if(class_exists("TC_CAF_PRO") && isset($ic) && $ic!='undefined') {
  echo "<i class='$ic caf-front-ic'></i>";
  } 
  echo esc_html($term_data->name)."</a></li>";

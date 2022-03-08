@@ -103,7 +103,7 @@ if(isset($trc)) {
    }
 }
 echo "<li><a href='#' class='".esc_attr($cl)."' data-id='".esc_attr($data_id)."' data-main-id='flt' data-target-div='data-target-div".esc_attr($b)."'><span class='post_count'>".esc_attr($post_count)."</span>";
- if(class_exists("TC_CAF_PRO") && $ic) {
+ if(class_exists("TC_CAF_PRO") && $ic && $ic!='undefined') {
  echo "<i class='$ic caf-front-ic'></i>";
  }
  echo esc_html($term_data->name)." <i class='fa fa-angle-double-right'></i></a></li>";	
