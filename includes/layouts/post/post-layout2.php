@@ -66,10 +66,14 @@ echo "<div class='caf-meta-content'>";
  if((class_exists("TC_CAF_PRO") && $caf_post_author=="show") ||  !class_exists("TC_CAF_PRO")) { 
 echo"<b><span class='author caf-pl-0'>".get_the_author()." - </span></b>";
  }
- if((class_exists("TC_CAF_PRO") && $caf_post_date=="show") ||  !class_exists("TC_CAF_PRO")) { 
+ if((class_exists("TC_CAF_PRO") && $caf_post_date=="show")) { 
 $caf_post_date_format=apply_filters('tc_caf_post_date_format',$caf_post_date_format,$id); 
 echo"<span class='date caf-pl-0'>".get_the_date($caf_post_date_format)."</span>";
  }
+	if((!class_exists("TC_CAF_PRO") && $caf_post_date=="show")){
+		$caf_post_date_format=apply_filters('tc_caf_post_date_format',$caf_post_date_format,$id); 
+ echo"<span class='date caf-col-md-6 caf-pl-0'><i class='fa fa-calendar' aria-hidden='true'></i> ".get_the_date("d, M Y")."</span>";
+	}
  if((class_exists("TC_CAF_PRO") && $caf_post_author=="show" || $caf_post_date=="show") ||  !class_exists("TC_CAF_PRO")) {
 echo "</div>";
  }
