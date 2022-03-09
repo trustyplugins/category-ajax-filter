@@ -1,5 +1,5 @@
 <?php
-include_once TC_CAF_PATH.'includes/query-variables.php';
+include TC_CAF_PATH.'includes/query-variables.php';
 if ( $qry->have_posts() ) : while ( $qry->have_posts() ) : $qry->the_post();
 global $post;
 ?>
