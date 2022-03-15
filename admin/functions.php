@@ -388,13 +388,13 @@ public function __construct() {
 	if(get_post_meta($id,'caf_filter_layout')) {
 	$caf_filter_layout=get_post_meta($id,'caf_filter_layout',true);
 	}		
-		wp_enqueue_style('tc-caf-common-style', TC_CAF_URL.'/assets/css/common/common.min.css','',TC_CAF_PLUGIN_VERSION);	
-		wp_enqueue_style('tc-caf-'.$caf_post_layout, TC_CAF_URL.'/assets/css/post/"'.$caf_post_layout.'".min.css','',TC_CAF_PLUGIN_VERSION);
-		wp_enqueue_style('tc-caf-'.$caf_filter_layout, TC_CAF_URL.'/assets/css/filter/"'.$caf_filter_layout.'".min.css','',TC_CAF_PLUGIN_VERSION);		
+		wp_enqueue_style('tc-caf-common-style', TC_CAF_URL.'assets/css/common/common.min.css','',TC_CAF_PLUGIN_VERSION);	
+		wp_enqueue_style('tc-caf-'.$caf_post_layout, TC_CAF_URL.'assets/css/post/"'.$caf_post_layout.'".min.css','',TC_CAF_PLUGIN_VERSION);
+		wp_enqueue_style('tc-caf-'.$caf_filter_layout, TC_CAF_URL.'assets/css/filter/"'.$caf_filter_layout.'".min.css','',TC_CAF_PLUGIN_VERSION);		
 	}
  $b=1;
  $handle="tc-caf-dynamic-style-".$caf_filter_layout;
-	wp_enqueue_style($handle,TC_CAF_URL.'/assets/css/dynamic-styles.css');
+	wp_enqueue_style($handle,TC_CAF_URL.'assets/css/dynamic-styles.css','',TC_CAF_PLUGIN_VERSION);
  setDynamicFilterCssFree($id,$handle,$caf_filter_layout,$b,'conditional');
  setDynamicFilterCssFree($id,$handle,$caf_post_layout,$b,'conditional');
 			wp_enqueue_style('tc-caf-font-awesome-style',TC_CAF_URL . 'assets/css/fontawesome/css/font-awesome.min.css','',TC_CAF_PLUGIN_VERSION,'all');
@@ -406,14 +406,14 @@ public function __construct() {
 	public function tc_caf_enqueue_scripts(){
 	wp_register_script('tc-caf-frontend-scripts',TC_CAF_URL . 'assets/js/script.min.js', array('jquery'), TC_CAF_PLUGIN_VERSION);	
 	wp_localize_script( 'tc-caf-frontend-scripts', 'tc_caf_ajax', array( 'ajax_url' => admin_url('admin-ajax.php'),'nonce'=>wp_create_nonce('tc_caf_ajax_nonce'),'plugin_path'=>TC_CAF_URL));	
-	wp_register_style('tc-caf-filter-layout1', TC_CAF_URL.'/assets/css/filter/filter-layout1.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');
-	wp_register_style('tc-caf-filter-layout2', TC_CAF_URL.'/assets/css/filter/filter-layout2.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');
-	wp_register_style('tc-caf-filter-layout3', TC_CAF_URL.'/assets/css/filter/filter-layout3.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');	
-	wp_register_style('tc-caf-post-layout1', TC_CAF_URL.'/assets/css/post/post-layout1.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');	
-	wp_register_style('tc-caf-post-layout2', TC_CAF_URL.'/assets/css/post/post-layout2.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');
-	wp_register_style('tc-caf-post-layout3', TC_CAF_URL.'/assets/css/post/post-layout3.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');
-	wp_register_style('tc-caf-post-layout4', TC_CAF_URL.'/assets/css/post/post-layout4.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');	
-	wp_register_style('tc-caf-common-style', TC_CAF_URL.'/assets/css/common/common.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');	
+	wp_register_style('tc-caf-filter-layout1', TC_CAF_URL.'assets/css/filter/filter-layout1.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');
+	wp_register_style('tc-caf-filter-layout2', TC_CAF_URL.'assets/css/filter/filter-layout2.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');
+	wp_register_style('tc-caf-filter-layout3', TC_CAF_URL.'assets/css/filter/filter-layout3.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');	
+	wp_register_style('tc-caf-post-layout1', TC_CAF_URL.'assets/css/post/post-layout1.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');	
+	wp_register_style('tc-caf-post-layout2', TC_CAF_URL.'assets/css/post/post-layout2.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');
+	wp_register_style('tc-caf-post-layout3', TC_CAF_URL.'assets/css/post/post-layout3.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');
+	wp_register_style('tc-caf-post-layout4', TC_CAF_URL.'assets/css/post/post-layout4.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');	
+	wp_register_style('tc-caf-common-style', TC_CAF_URL.'assets/css/common/common.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');	
 	wp_register_style('tc-caf-font-awesome-style',TC_CAF_URL . 'assets/css/fontawesome/css/font-awesome.min.css', array(), TC_CAF_PLUGIN_VERSION, 'all');
 	}
 }

@@ -30,7 +30,7 @@ class CAF_shortcode_render {
 		wp_enqueue_style($post_style);
 		wp_enqueue_style('tc-caf-font-awesome-style');
   $handle="tc-caf-dynamic-style-".$caf_filter_layout;
-		wp_enqueue_style($handle,TC_CAF_URL.'/assets/css/dynamic-styles.css');
+		wp_enqueue_style($handle,TC_CAF_URL.'/assets/css/dynamic-styles.css','',TC_CAF_PLUGIN_VERSION);
 		setDynamicFilterCssFree($id,$handle,$caf_filter_layout,$b,'shortcode');
 		if(($id && !empty($id) && get_post_type($id)=='caf_posts'))  {
 		if($caf_filter_layout=='filter-layout3') {$cl='sidebar';} else {$cl='';}
