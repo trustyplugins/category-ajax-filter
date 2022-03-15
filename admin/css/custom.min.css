@@ -64,11 +64,11 @@ ul.caf-pro-features li.button a {
 ul.caf-pro-features li.button a span {
     padding-top: 5px;
 }
-.post-type-caf_posts a {
+.post-type-caf_posts a.row-title,.post-type-caf_posts #posts-filter span,.post-type-caf_posts span.edit a,.post-type-caf_posts ul.subsubsub a {
  color: #2271b1;
  text-decoration: none;
 }
-.post-type-caf_posts a:hover {
+.post-type-caf_posts a.row-title:hover,.post-type-caf_posts #posts-filter span:hover,.post-type-caf_posts span.edit a:hover,.post-type-caf_posts ul.subsubsub a:hover {
  color: #2271b1;
  text-decoration: none;
 }
