@@ -64,3 +64,11 @@ ul.caf-pro-features li.button a {
 ul.caf-pro-features li.button a span {
     padding-top: 5px;
 }
+.post-type-caf_posts a {
+ color: #2271b1;
+ text-decoration: none;
+}
+.post-type-caf_posts a:hover {
+ color: #2271b1;
+ text-decoration: none;
+}
