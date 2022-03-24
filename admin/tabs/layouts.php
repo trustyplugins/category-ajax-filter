@@ -48,8 +48,24 @@
 		<?php
 		foreach ($flayouts as $key=>$layout) {
 			if($caf_filter_layout==$key) { $selected='selected';} else {$selected='';}
+   if($key=="0") {
+    echo '<optgroup label="'.$layout.'">';
+   }
+   else if($key=="1") {
+    echo "</optgroup>";
+    echo '<optgroup label="'.$layout.'">';
+   }
+   else if($key=="2") {
+    echo "</optgroup>";
+    echo '<optgroup label="'.$layout.'">';
+   }
+   else if($key=="3") {
+    echo "</optgroup>";
+   }
+   else {
 			echo '<option value="'.$key.'" '.$selected.'>'.esc_attr($layout).'</option>';
 		}
+  }
 		?>
 	
 	
