@@ -3,9 +3,9 @@ Contributors: TrustyPlugins
 Donate link: https://www.buymeacoffee.com/jasveer
 Tags: Ajax Filter,Divi, Ajax posts, category posts ,Elementor
 Requires at least: 4.8
-Tested up to: 5.9
-Stable tag: 2.4
-Requires PHP: 5.6
+Tested up to: 6.0
+Stable tag: 2.5
+Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,7 +82,10 @@ Yes you can select specific terms of any taxonomy.
 2. screenshot-2.png
 3. screenshot-3.png
 
- == Changelog ==
+== Changelog ==
+ = 2.5 = (11/05/2022)
+* Default Filter Layout's More button hook added [Text Change] 
+
  = 2.4 = (01/04/2022)
 * Filter Layout Dropdown Changed [Admin Panel]
 * PRO COMPATIBLE VERSION [8.4]

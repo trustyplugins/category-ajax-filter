@@ -49,6 +49,7 @@
 	<div class="col-sm-4">
 	<span class='label-title'><?php echo esc_html__('Text Transform','category-ajax-filter'); ?></span>
     <select  class="form-control caf_import" data-import="caf_filter_transform" id="caf-filter-transform" name="caf-filter-transform">
+     <option value="inherit" <?php if($caf_filter_transform=='inherit'){echo "selected";} ?>><?php echo esc_html__('Inherit','category-ajax-filter');?></option>
 	<option value="uppercase" <?php if($caf_filter_transform=='uppercase'){echo "selected";} ?>><?php echo esc_html__('Uppercase','category-ajax-filter');?></option>
 	<option value="capitalize" <?php if($caf_filter_transform=='capitalize'){echo "selected";} ?>><?php echo esc_html__('Capitalize','category-ajax-filter');?></option>
 	<option value="lowercase" <?php if($caf_filter_transform=='lowercase'){echo "selected";} ?>><?php echo esc_html__('Lowercase','category-ajax-filter');?></option>
@@ -119,6 +120,7 @@
 	<div class="col-sm-4">
 	<span class='label-title'><?php echo esc_html__('Text Transform','category-ajax-filter'); ?></span>
     <select  class="form-control caf_import" data-import="caf_post_title_transform" id="caf-post-title-transform" name="caf-post-title-transform">
+     <option value="inherit" <?php if($caf_post_title_transform=='inherit'){echo "selected";} ?>><?php echo esc_html__('Inherit','category-ajax-filter');?></option>
 	<option value="uppercase" <?php if($caf_post_title_transform=='uppercase'){echo "selected";} ?>><?php echo esc_html__('Uppercase','category-ajax-filter');?></option>
 	<option value="capitalize" <?php if($caf_post_title_transform=='capitalize'){echo "selected";} ?>><?php echo esc_html__('Capitalize','category-ajax-filter'); ?></option>
 	<option value="lowercase" <?php if($caf_post_title_transform=='lowercase'){echo "selected";} ?>><?php echo esc_html__('Lowercase','category-ajax-filter');?></option>

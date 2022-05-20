@@ -33,7 +33,11 @@ if($term_data) {
   if($caf_filter_more_btn=="on") {
  $more_link_val=$caf_filter_more_val;
 if($key==$more_link_val) {
-   echo "<li class='caf-mb-4 more'><span>More +</span><ul>";
+ echo "<li class='caf-mb-4 more'><span>";
+ $more_text="More +";
+ $more_text=apply_filters('tc_caf_filter_more_text',$more_text,$id);
+ echo $more_text;
+ echo "</span><ul>";
     }
  }
  if($caf_default_term==$term_data->taxonomy."___".$term_data->term_id) {$cl='active';} else {$cl='';} 
