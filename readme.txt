@@ -84,7 +84,8 @@ Yes you can select specific terms of any taxonomy.
 
 == Changelog ==
  = 2.5 = (11/05/2022)
-* Default Filter Layout's More button hook added [Text Change] 
+* Default Filter Layout's More button hook added [Text Change]
+* Inherit added in transform [Typography]
 
  = 2.4 = (01/04/2022)
 * Filter Layout Dropdown Changed [Admin Panel]
