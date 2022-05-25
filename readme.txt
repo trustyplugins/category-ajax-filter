@@ -54,6 +54,7 @@ CAF plugin will work to filter the posts without any page reload. You can browse
 1. Import Layout from our official demo website <a href='https://trustyplugins.com' target='_blank'>trustyplugins.com</a> 
 2. Go to layouts page and get exported JSON code.
 3. Now you just need to put that JSON code in import tab of plugin's admin panel.
+
 4. Click on Import and CHEERS!!!
 === Watch Videos ===
 https://www.youtube.com/watch?v=uyEhRD0RiP0
@@ -83,7 +84,7 @@ Yes you can select specific terms of any taxonomy.
 3. screenshot-3.png
 
 == Changelog ==
- = 2.5 = (11/05/2022)
+ = 2.5 = (25/05/2022)
 * Default Filter Layout's More button hook added [Text Change]
 * Inherit added in transform [Typography]
 
