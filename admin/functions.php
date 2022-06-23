@@ -64,7 +64,7 @@ class CAF_Meta_Boxes {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 				return;
 			}
-		if ( !current_user_can( 'edit_page', $post_id ) ) {
+		if ( !current_user_can( 'edit_posts', $post_id ) ) {
         return $post_id;
   }
   
