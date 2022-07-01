@@ -197,9 +197,6 @@ display: inline-block;
     background: #ffffffc9;
     /*border-radius: 3px;*/
 }
-#caf-post-layout3 .caf-meta-content-cats li:nth-child(4) a {
-    background: #f79918;
-}
 #caf-post-layout3 .caf-meta-content {
  padding: 0px 8px;
 }
