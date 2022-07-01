@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/jasveer
 Tags: Ajax Filter,Divi, Ajax posts, category posts ,Elementor
 Requires at least: 4.8
 Tested up to: 6.0
-Stable tag: 2.5.1
+Stable tag: 2.5.2
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -84,6 +84,8 @@ Yes you can select specific terms of any taxonomy.
 3. screenshot-3.png
 
 == Changelog ==
+= 2.5.2 = (01/07/2022)
+* Restrict ABSPATH function added to files
 
 = 2.5.1 = (01/07/2022)
 * Category Issue fixed when you use PRO with free layouts
