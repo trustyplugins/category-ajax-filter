@@ -5,18 +5,5 @@ new CAF_Embed_Admin_Css_Js;
 new CAF_Meta_Boxes();
 new CAF_load_scripts();
 new CAF_shortcode();
-require TC_CAF_PATH. 'admin/ajax-actions.php';
+require TC_CAF_PATH . 'admin/ajax-actions.php';
 new CAF_admin_ajax();
-
-
-
-
-
-
-
-
-
-
-
-	
-

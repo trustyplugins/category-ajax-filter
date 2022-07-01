@@ -1,4 +1,5 @@
 <?php
+defined('ABSPATH') or die();
 include TC_CAF_PATH.'includes/query-variables.php';
 $target_div=".data-target-div".$b;
 
