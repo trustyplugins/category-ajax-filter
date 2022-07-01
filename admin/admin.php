@@ -1,4 +1,7 @@
 <?php
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
 require_once TC_CAF_PATH . 'admin/functions.php';
 new CAF_init();
 new CAF_Embed_Admin_Css_Js;

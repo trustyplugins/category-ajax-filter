@@ -1,3 +1,8 @@
+<?php
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+?>
 <div class="tab-pane tab-pad" id="import" role="tabpanel" aria-labelledby="import-tab">
 	<div class="manage-top-dash import-tab text"><?php echo esc_html__('Import', 'category-ajax-filter'); ?></div>
 	<div id="tabs-panel">

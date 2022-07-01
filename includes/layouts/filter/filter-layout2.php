@@ -1,3 +1,8 @@
+<?php
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+?>
 <div id="caf-filter-layout2" class='caf-filter-layout data-target-div<?php echo esc_attr($b) . " " . esc_attr($flsr); ?>'>
 <div class="selectcont caf-filter-container">
 <?php

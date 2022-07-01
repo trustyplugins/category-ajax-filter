@@ -1,3 +1,8 @@
+<?php
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+?>
 <div class="tab-pane tab-pad" id="shortcode" role="tabpanel" aria-labelledby="shortcode-tab">
 	<div class="manage-top-dash shortcode-tab text"><?php echo esc_html__('Shortcode', 'category-ajax-filter'); ?></div>
 	<div id="tabs-panel">

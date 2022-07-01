@@ -11,7 +11,9 @@ Text Domain: category-ajax-filter
 Domain Path: /languages
  */
 // Block direct access to the main plugin file.
-defined('ABSPATH') or die();
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 /*---- CONFIGURATION >>>> DEFINE CURRENT VERSION ----*/
 if (!defined('CAF_CURRENT_VERSION')) {
     define('CAF_CURRENT_VERSION', '2.5.1');

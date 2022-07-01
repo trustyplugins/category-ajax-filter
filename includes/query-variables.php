@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 $caf_pagination = new CAF_ajax_pagination();
 $caf_content_length = new CAF_content_length();
 if (isset($filter_id)) {

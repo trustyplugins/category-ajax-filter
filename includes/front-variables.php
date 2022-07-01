@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 $trm = '';
 $caf_post_layout = 'post-layout1';
 $caf_filter_layout = 'filter-layout1';

@@ -1,5 +1,7 @@
 <?php
-defined('ABSPATH') or die();
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; // Exit if accessed directly
+}
 include TC_CAF_PATH.'includes/query-variables.php';
 $target_div=".data-target-div".$b;
 if(class_exists("TC_CAF_PRO")){

@@ -1,3 +1,8 @@
+<?php
+if (!defined('ABSPATH')) {
+    exit; // Exit if accessed directly
+}
+?>
 <div class="tab-pane" id="appearance" role="tabpanel" aria-labelledby="appearance-tab">
 	<div class="manage-top-dash general-tab text"> <?php echo esc_html__('Appearance', 'category-ajax-filter'); ?></div>
 	<div id="tabs-panel">
