@@ -29,8 +29,8 @@ if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
             } else { $cats_class = '';}}
 //$cats_class='';
         ?>
-		<article id="caf-post-layout3" class="caf-post-layout1 caf-col-md-<?php echo esc_attr($caf_desktop_col); ?> caf-col-md-tablet<?php echo esc_attr($caf_tablet_col); ?> caf-col-md-mobile<?php echo esc_attr($caf_mobile_col); ?> caf-mb-5 <?php echo esc_attr($caf_special_post_class); ?> <?php echo esc_attr($caf_post_animation); ?> <?php echo esc_attr($cats_class); ?> " data-post-id="<?php echo esc_attr(get_the_id()); ?>">
-		<?php
+				<article id="caf-post-layout3" class="caf-post-layout1 caf-col-md-<?php echo esc_attr($caf_desktop_col); ?> caf-col-md-tablet<?php echo esc_attr($caf_tablet_col); ?> caf-col-md-mobile<?php echo esc_attr($caf_mobile_col); ?> caf-mb-5 <?php echo esc_attr($caf_special_post_class); ?> <?php echo esc_attr($caf_post_animation); ?> <?php echo esc_attr($cats_class); ?> " data-post-id="<?php echo esc_attr(get_the_id()); ?>">
+				<?php
         $caf_post_id = get_the_ID();
         $title = get_the_title();
         $image = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), $caf_image_size);
@@ -47,7 +47,7 @@ if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
         } else {
             $image = TC_CAF_URL . 'assets/img/unnamed.jpg';
             echo "<a href='" . esc_url($link) . "' target='" . esc_attr($caf_link_target) . "'><div class='caf-featured-img-box' style='background:url(" . esc_url($image) . "
-		)'></div></a>";
+				)'></div></a>";
         }
         echo "<div id='manage-post-area'>";
         if ((class_exists("TC_CAF_PRO") && $caf_post_cats == "show") || !class_exists("TC_CAF_PRO")) {
@@ -91,8 +91,8 @@ if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
         }
         echo "</div>";
         ?>
-		</article>
-		<?php
+				</article>
+				<?php
     endwhile;
 /**** Pagination*****/
     if (isset($_POST["params"]["load_more"])) {

@@ -117,9 +117,9 @@ padding: 0px 0px 5px 0px;
 	background: #333;
     /*border-radius: 4px;*/
 }
-#caf-post-layout4 .caf-meta-content-cats li:nth-child(4) a {
+/*#caf-post-layout4 .caf-meta-content-cats li:nth-child(4) a {
     background: #f79918 !important;
-}
+}*/
 #caf-post-layout4 .caf-meta-content {
     display: flex;
     width: 100%;
