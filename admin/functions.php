@@ -43,12 +43,12 @@ class CAF_Embed_Admin_Css_Js
     public function tc_caf_embedCssJs()
     {
         global $post_type;
-        wp_enqueue_style('tc_caf-custom-admin-style', TC_CAF_URL . 'admin/css/custom.min.css');
+        //var_dump($post_type);
+        if ($post_type == "caf_posts") {
+         wp_enqueue_style('tc_caf-custom-admin-style', TC_CAF_URL . 'admin/css/custom.min.css');
         wp_enqueue_style('tc_caf-font-awesome-style', TC_CAF_URL . 'assets/css/fontawesome/css/font-awesome.min.css');
         wp_enqueue_style('tc_caf-bootstrap-toggle-style', TC_CAF_URL . 'admin/css/bootstrap-toggle.css');
         wp_enqueue_script('tc-caf-bootstrap-toggle-script', TC_CAF_URL . 'admin/js/bootstrap-toggle.js', array('jquery'));
-        //var_dump($post_type);
-        if ($post_type == "caf_posts") {
             wp_enqueue_script('tc_caf-script', TC_CAF_URL . 'assets/bootstrap-4.5.3-dist/js/bootstrap.min.js', array('jquery'));
             wp_enqueue_style('tc_caf-bootstrap-admin-style', TC_CAF_URL . 'assets/bootstrap-4.5.3-dist/css/bootstrap.min.css');
             wp_enqueue_style('wp-color-picker');
