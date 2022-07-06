@@ -296,3 +296,62 @@ class CAF_ajax_pagination
     }
 }
 new CAF_get_filter_posts();
+
+function caf_get_cats($tax)
+{
+    global $post;
+    $caf_post_id = get_the_ID();
+    if (is_array($tax)) {
+        $cats = array();
+        foreach ($tax as $tx) {
+            $cats[] = get_the_terms($caf_post_id, $tx);
+        }
+    } else {
+        $cats = get_the_terms($caf_post_id, $tax);
+    }
+    return $cats;
+}
+function caf_get_first_class($cats) {
+    $cats_class = '';
+        if (is_array($cats)) {
+            if (isset($cats)) {
+                if (class_exists("TC_CAF_PRO")) {
+                    if (isset($cats[0][0]->name)) {
+                        $cats_class = $cats[0][0]->name;
+                    }
+                } else {
+                    if (isset($cats[0]->name)) {
+                        $cats_class = $cats[0]->name;
+                    }
+                }
+                $cats_class = str_replace(' ', '_', $cats_class);
+                $cats_class = "tp_" . $cats_class;
+            } else { $cats_class = '';}}
+            return $cats_class;
+}
+function caf_get_linked_terms($tax) {
+    $cats=caf_get_cats($tax);
+    echo "<div class='caf-meta-content-cats'>";
+    echo "<ul class='caf-mb-0'>";
+    if (is_array($cats)) {
+        foreach ($cats as $index => $cat) {
+            //  if ($index < 3) {
+            if (class_exists("TC_CAF_PRO")) {
+                if ($cat) {
+                    foreach ($cat as $ct) {
+                        if ($ct) {
+                            $clink = get_category_link($ct->term_id);
+                            echo "<li><a href='" . esc_url($clink) . "' target='_blank'>" . esc_html($ct->name) . "</a></li>";
+                        }
+                    }
+                }
+            } else {
+                $clink = get_category_link($cat->term_id);
+                echo "<li><a href='" . esc_url($clink) . "' target='_blank'>" . esc_html($cat->name) . "</a></li>";
+            }
+            // }
+        }
+    }
+    echo "</ul>";
+    echo "</div>";
+}

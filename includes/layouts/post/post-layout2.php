@@ -8,17 +8,7 @@ if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
         ?>
 				<article id="caf-post-layout2" class="caf-post-layout2 caf-col-md-<?php echo esc_attr($caf_desktop_col); ?> caf-col-md-tablet<?php echo esc_attr($caf_tablet_col); ?> caf-col-md-mobile<?php echo esc_attr($caf_mobile_col); ?> caf-mb-5 <?php echo esc_attr($caf_special_post_class); ?> <?php echo esc_attr($caf_post_animation); ?>" data-post-id="<?php echo esc_attr(get_the_id()); ?>">
 				<?php
-        $caf_post_id = get_the_ID();
-        $title = get_the_title();
-        $image = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), $caf_image_size);
-        $link = get_the_permalink();
-        $caf_content = $post->post_excerpt;
-        if (empty($caf_content)) {
-            $caf_content = $post->post_content;
-        }
-        $caf_content = preg_replace('#\[[^\]]+\]#', '', $caf_content);
-        $c_length = apply_filters('tc_caf_excerpt_length', 30, $id);
-        $caf_content = wp_trim_words($caf_content, $c_length);
+                include TC_CAF_PATH . 'includes/post-variables.php';
         if (isset($image[0])) {
             echo "<a href='" . esc_url($link) . "' target='" . esc_attr($caf_link_target) . "'><div class='caf-featured-img-box' style='background:url(" . esc_url($image[0]) . "
 				)'></div></a>";
@@ -29,39 +19,7 @@ if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
         }
         echo "<div id='manage-post-area'>";
         if ((class_exists("TC_CAF_PRO") && $caf_post_cats == "show") || !class_exists("TC_CAF_PRO")) {
-            echo "<div class='caf-meta-content-cats'>";
-            echo "<ul class='caf-mb-0'>";
-            if (is_array($tax)) {
-                $cats = array();
-                foreach ($tax as $tx) {
-                    $cats[] = get_the_terms($caf_post_id, $tx);
-                }
-            } else {
-                $cats = get_the_terms($caf_post_id, $tax);
-                //echo $tax.$caf_post_id;
-            }
-            //var_dump($cats);
-            if (is_array($cats)) {
-                foreach ($cats as $index => $cat) {
-                     //  if ($index < 3) {
-                        if (class_exists("TC_CAF_PRO")) {
-                            if ($cat) {
-                                foreach ($cat as $ct) {
-                                    if ($ct) {
-                                        $clink = get_category_link($ct->term_id);
-                                        echo "<li><a href='" . esc_url($clink) . "' target='_blank'>" . esc_html($ct->name) . "</a></li>";
-                                    }
-                                }
-                            }
-                        } else {
-                            $clink = get_category_link($cat->term_id);
-                            echo "<li><a href='" . esc_url($clink) . "' target='_blank'>" . esc_html($cat->name) . "</a></li>";
-                        }
-                        // }
-                }
-                echo "</ul>";
-                echo "</div>";
-            }
+           echo caf_get_linked_terms($tax);
         }
         echo "<div class='caf-post-title'><a href='" . esc_url($link) . "' target='" . esc_attr($caf_link_target) . "'><h2>" . esc_html($title) . "</h2></a></div>";
         if ((class_exists("TC_CAF_PRO") && $caf_post_author == "show" || $caf_post_date == "show") || !class_exists("TC_CAF_PRO")) {
