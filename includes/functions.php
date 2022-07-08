@@ -329,8 +329,9 @@ function caf_get_first_class($cats) {
             } else { $cats_class = '';}}
             return $cats_class;
 }
-function caf_get_linked_terms($tax) {
+function caf_get_linked_terms($tax,$caf_post_cats,$caf_post_layout) {
     $cats=caf_get_cats($tax);
+    if ((class_exists("TC_CAF_PRO") && $caf_post_cats == "show") || !class_exists("TC_CAF_PRO")) {
     echo "<div class='caf-meta-content-cats'>";
     echo "<ul class='caf-mb-0'>";
     if (is_array($cats)) {
@@ -354,4 +355,72 @@ function caf_get_linked_terms($tax) {
     }
     echo "</ul>";
     echo "</div>";
+}
+}
+function caf_get_post_image($image,$link,$caf_link_target,$caf_post_layout) {
+    
+    if($caf_post_layout=='post-layout4') {
+    if (isset($image[0])) {
+        echo "<a href='" . esc_url($link) . "' target='" . esc_attr($caf_link_target) . "' class='caf-f-img'><div class='caf-featured-img-box' style='background:url(" . esc_url($image[0]) . "
+                    )'></div></a>";
+    } else {
+        $image = TC_CAF_URL . 'assets/img/unnamed.jpg';
+        echo "<a href='" . esc_url($link) . "' target='" . esc_attr($caf_link_target) . "' class='caf-f-img'><div class='caf-featured-img-box' style='background:url(" . esc_url($image) . "
+                    )'></div>
+                    </a>";
+    }
+}
+else {
+    if (isset($image[0])) {
+        echo "<a href='" . esc_url($link) . "' target='" . esc_attr($caf_link_target) . "'><div class='caf-featured-img-box' style='background:url(" . esc_url($image[0]) . "
+                                            )'></div></a>";
+    } else {
+        $image = TC_CAF_URL . 'assets/img/unnamed.jpg';
+        echo "<a href='" . esc_url($link) . "' target='" . esc_attr($caf_link_target) . "'><div class='caf-featured-img-box' style='background:url(" . esc_url($image) . "
+                                            )'></div></a>";
+    }
+}
+}
+function caf_meta_content_container_start($caf_post_author,$caf_post_date,$caf_post_layout) {
+    if ((class_exists("TC_CAF_PRO") && $caf_post_author == "show" || $caf_post_date == "show") || !class_exists("TC_CAF_PRO")) {
+        echo "<div class='caf-meta-content'>";
+    }
+}
+function caf_get_post_author($caf_post_author,$caf_post_layout) {
+    if ((class_exists("TC_CAF_PRO") && $caf_post_author == "show") || !class_exists("TC_CAF_PRO")) {
+        if($caf_post_layout=='post-layout1') {
+            echo "<span class='author caf-col-md-4 caf-pl-0'><i class='fa fa-user' aria-hidden='true'></i> " . get_the_author() . "</span>";
+        }
+        else {
+        echo "<b><span class='author caf-pl-0'>" . get_the_author() . " - </span></b>";
+        }
+    }
+}
+function caf_get_post_date($caf_post_date,$caf_post_date_format,$id,$caf_post_layout) {
+    if ((class_exists("TC_CAF_PRO") && $caf_post_date == "show")) {
+      $caf_post_date_format = apply_filters('tc_caf_post_date_format', $caf_post_date_format, $id);
+      if($caf_post_layout=='post-layout1') {
+        echo "<span class='date caf-col-md-6 caf-pl-0'><i class='fa fa-calendar' aria-hidden='true'></i> " . get_the_date($caf_post_date_format) . "</span>";
+    }
+    else {
+        echo "<span class='date caf-pl-0'>" . get_the_date($caf_post_date_format) . "</span>";
+    }
+    }
+}
+function caf_meta_content_container_end($caf_post_author,$caf_post_date,$caf_post_layout) {
+    if ((class_exists("TC_CAF_PRO") && $caf_post_author == "show" || $caf_post_date == "show") || !class_exists("TC_CAF_PRO")) {
+        echo "</div>";
+    }
+}
+function caf_get_post_content($caf_post_dsc,$caf_content) {
+    if ((class_exists("TC_CAF_PRO") && $caf_post_dsc == "show") || !class_exists("TC_CAF_PRO")) {
+        echo "<div class='caf-content'>" . wp_kses_post($caf_content) . "</div>";
+    }
+}
+function caf_get_post_read_more($caf_content,$caf_post_rd,$link,$caf_link_target,$id) {
+    if ($caf_content) {
+        if ((class_exists("TC_CAF_PRO") && $caf_post_rd == "show") || !class_exists("TC_CAF_PRO")) {
+            $rd_more = esc_html('Read More');
+            echo "<div class='caf-content-read-more'><a class='caf-read-more' href='" . esc_url($link) . "' target='" . esc_attr($caf_link_target) . "'>" . apply_filters('tc_caf_post_layout_read_more', $rd_more, $id) . "</a></div>";
+        }}
 }
