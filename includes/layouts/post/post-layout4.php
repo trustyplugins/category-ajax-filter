@@ -16,9 +16,9 @@ if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
         //.caf-meta-content-cats -> .ul.caf-mb-0 -> li
         echo caf_get_linked_terms($tax, $caf_post_cats, $caf_post_layout);
         // class='caf-content'
-        echo caf_get_post_content($caf_post_dsc, $caf_content);
+        echo caf_get_post_content($caf_post_dsc, $caf_content,$caf_post_layout);
         // class='caf-content-read-more'
-        echo caf_get_post_read_more($caf_content, $caf_post_rd, $link, $caf_link_target, $id);
+        echo caf_get_post_read_more($caf_content, $caf_post_rd, $link, $caf_link_target, $id,$caf_post_layout);
         echo "</div>";
         ?>
 		    </article>

@@ -6,6 +6,8 @@ if (!defined('ABSPATH')) {
 $caf_post_id = get_the_ID();
 $title = get_the_title();
 $image = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), $caf_image_size);
+$image_id = get_post_thumbnail_id();
+$image_alt = get_post_meta($image_id, '_wp_attachment_image_alt', true);
 $link = get_the_permalink();
 $caf_content = $post->post_excerpt;
 if (empty($caf_content)) {
