@@ -5,18 +5,18 @@ if (!defined('ABSPATH')) {
 include TC_CAF_PATH . 'includes/query-variables.php';
 if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
         global $post;
+        include TC_CAF_PATH . 'includes/post-variables.php';
         $cats = caf_get_cats($tax);
         $cats_class = caf_get_first_class($cats);
-        ?>
-		<article id="caf-post-layout3" class="caf-post-layout1 caf-col-md-<?php echo esc_attr($caf_desktop_col); ?> caf-col-md-tablet<?php echo esc_attr($caf_tablet_col); ?> caf-col-md-mobile<?php echo esc_attr($caf_mobile_col); ?> caf-mb-5 <?php echo esc_attr($caf_special_post_class); ?> <?php echo esc_attr($caf_post_animation); ?> <?php echo esc_attr($cats_class); ?> " data-post-id="<?php echo esc_attr(get_the_id()); ?>">
-		<?php
-        include TC_CAF_PATH . 'includes/post-variables.php';
+        // <article>
+        echo caf_article_container_start($caf_desktop_col,$caf_tablet_col,$caf_mobile_col,$caf_special_post_class,$caf_post_animation,$cats_class,$caf_post_layout);
         // class='caf-featured-img-box'
         echo caf_get_post_image($image, $link, $caf_link_target, $caf_post_layout);
         echo "<div id='manage-post-area'>";
         //.caf-meta-content-cats -> .ul.caf-mb-0 -> li
         echo caf_get_linked_terms($tax, $caf_post_cats, $caf_post_layout);
-        echo "<div class='caf-post-title'><h2><a href='" . get_the_permalink() . "'>" . esc_html($title) . "</a></h2></div>";
+        // class='caf-post-title'
+        echo caf_get_post_title($link,$title,$caf_post_layout);
         // class='caf-meta-content'
         echo caf_meta_content_container_start($caf_post_author, $caf_post_date, $caf_post_layout);
         // span class='author caf-pl-0'
@@ -30,9 +30,8 @@ if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
         // </div>
         echo caf_meta_content_container_end($caf_post_author, $caf_post_date, $caf_post_layout);
         echo "</div>";
-        ?>
-														</article>
-														<?php
+       // </article>
+       echo caf_article_container_end();
     endwhile;
 /**** Pagination*****/
     if (isset($_POST["params"]["load_more"])) {

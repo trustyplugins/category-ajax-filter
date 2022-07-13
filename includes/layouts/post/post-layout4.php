@@ -4,15 +4,16 @@ if (!defined('ABSPATH')) {
 }
 include TC_CAF_PATH . 'includes/query-variables.php';
 if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
+include TC_CAF_PATH . 'includes/post-variables.php';
         global $post;
-        ?>
-		    <article id="caf-post-layout4" class="caf-post-layout4 caf-col-md-12 caf-col-md-tablet12 caf-col-md-mobile12 caf-mb-10 <?php echo esc_attr($caf_special_post_class); ?> <?php echo esc_attr($caf_post_animation); ?>" data-post-id="<?php echo esc_attr(get_the_id()); ?>">
-		    <?php
-        include TC_CAF_PATH . 'includes/post-variables.php';
+        // <article>
+        echo caf_article_container_start($caf_desktop_col,$caf_tablet_col,$caf_mobile_col,$caf_special_post_class,$caf_post_animation,$cats_class,$caf_post_layout);    
         // class='caf-featured-img-box'
         echo caf_get_post_image($image, $link, $caf_link_target, $caf_post_layout);
         echo "<div id='manage-post-area'>";
-        echo "<a href='" . esc_url($link) . "' target='" . esc_attr($caf_link_target) . "'><div class='caf-post-title'><h2>" . esc_html($title) . "</h2></div></a>";
+        // class='caf-post-title'
+        echo caf_get_post_title($link,$title,$caf_post_layout);
+        //echo "<a href='" . esc_url($link) . "' target='" . esc_attr($caf_link_target) . "'><div class='caf-post-title'><h2>" . esc_html($title) . "</h2></div></a>";
         //.caf-meta-content-cats -> .ul.caf-mb-0 -> li
         echo caf_get_linked_terms($tax, $caf_post_cats, $caf_post_layout);
         // class='caf-content'
@@ -20,9 +21,8 @@ if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
         // class='caf-content-read-more'
         echo caf_get_post_read_more($caf_content, $caf_post_rd, $link, $caf_link_target, $id,$caf_post_layout);
         echo "</div>";
-        ?>
-		    </article>
-										<?php
+        // </article>
+        echo caf_article_container_end();
     endwhile;
 /**** Pagination*****/
     if (isset($_POST["params"]["load_more"])) {

@@ -357,6 +357,22 @@ function caf_get_linked_terms($tax,$caf_post_cats,$caf_post_layout) {
     echo "</div>";
 }
 }
+function caf_article_container_start($caf_desktop_col,$caf_tablet_col,$caf_mobile_col,$caf_special_post_class,$caf_post_animation,$cats_class,$caf_post_layout) {
+    $caf_mb='caf-mb-5';
+    if($caf_post_layout=="post-layout4") {
+     $caf_desktop_col ='12';
+     $caf_tablet_col='12';
+     $caf_mobile_col='12';
+     $caf_mb='caf-mb-10';
+    }
+    
+    ?>
+    <article id="caf-<?php echo $caf_post_layout;?>" class="<?php echo $caf_post_layout;?> caf-col-md-<?php echo esc_attr($caf_desktop_col); ?> caf-col-md-tablet<?php echo esc_attr($caf_tablet_col); ?> caf-col-md-mobile<?php echo esc_attr($caf_mobile_col); ?> <?php echo esc_attr($caf_mb); ?> <?php echo esc_attr($caf_special_post_class); ?> <?php echo esc_attr($caf_post_animation); ?> <?php echo esc_attr($cats_class); ?> " data-post-id="<?php echo esc_attr(get_the_id()); ?>">
+    <?php
+}
+function caf_article_container_end() {
+    echo "</article>";
+}
 function caf_get_post_image($image,$link,$caf_link_target,$caf_post_layout) {
     $a_class='';
     $img_box='';
@@ -396,15 +412,24 @@ function caf_meta_content_container_start($caf_post_author,$caf_post_date,$caf_p
         echo "<div class='caf-meta-content'>";
     }
 }
+function caf_get_post_title($link,$title,$caf_post_layout) {
+    global $post;
+    echo "<div class='caf-post-title'><h2><a href='" . get_the_permalink() . "'>" . esc_html($title) . "</a></h2></div>";
+}
+function caf_get_post_comment_count($caf_post_comments,$caf_post_layout) {
+    if ((class_exists("TC_CAF_PRO") && $caf_post_comments == "show") || !class_exists("TC_CAF_PRO")) {
+        echo "<span class='comment caf-col-md-3 caf-pl-0'><i class='fa fa-comment' aria-hidden='true'></i> " . get_comments_number() . "</span>";
+    }
+}
 function caf_get_post_author($caf_post_author,$caf_post_layout) {
     if ((class_exists("TC_CAF_PRO") && $caf_post_author == "show") || !class_exists("TC_CAF_PRO")) {
         if($caf_post_layout=='post-layout1') {
             echo "<span class='author caf-col-md-4 caf-pl-0'><i class='fa fa-user' aria-hidden='true'></i> " . get_the_author() . "</span>";
         }
-        if($caf_post_layout=='post-layout3') {
+        else if($caf_post_layout=='post-layout3') {
             echo "<b><span class='author caf-pl-0'>By " . get_the_author() . " - </span></b>";
         }
-        if($caf_post_layout=='post-layout6' || $caf_post_layout=='post-layout7') {
+        else if($caf_post_layout=='post-layout6' || $caf_post_layout=='post-layout7') {
             echo "<span class='author caf-pl-0'>By " . get_the_author() . "</span>";
         }
         else {
@@ -413,7 +438,7 @@ function caf_get_post_author($caf_post_author,$caf_post_layout) {
     }
 }
 function caf_get_post_date($caf_post_date,$caf_post_date_format,$id,$caf_post_layout) {
-    if ((class_exists("TC_CAF_PRO") && $caf_post_date == "show")) {
+    if ((class_exists("TC_CAF_PRO") && $caf_post_date == "show") || !class_exists("TC_CAF_PRO")) {
       $caf_post_date_format = apply_filters('tc_caf_post_date_format', $caf_post_date_format, $id);
       if($caf_post_layout=='post-layout1' || $caf_post_layout=='post-layout11') {
         echo "<span class='date caf-col-md-6 caf-pl-0'><i class='fa fa-calendar' aria-hidden='true'></i> " . get_the_date($caf_post_date_format) . "</span>";
@@ -423,6 +448,7 @@ function caf_get_post_date($caf_post_date,$caf_post_date_format,$id,$caf_post_la
     }
     }
 }
+
 function caf_meta_content_container_end($caf_post_author,$caf_post_date,$caf_post_layout) {
     if ((class_exists("TC_CAF_PRO") && $caf_post_author == "show" || $caf_post_date == "show") || !class_exists("TC_CAF_PRO")) {
         echo "</div>";

@@ -3,6 +3,7 @@ global $post;
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
+$cats_class='';
 $caf_post_id = get_the_ID();
 $title = get_the_title();
 $image = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), $caf_image_size);
