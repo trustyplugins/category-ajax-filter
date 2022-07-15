@@ -1,8 +1,8 @@
 <?php
-global $post;
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
+global $post;
 $cats_class='';
 $caf_post_id = get_the_ID();
 $title = get_the_title();

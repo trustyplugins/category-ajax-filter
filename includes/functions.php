@@ -329,7 +329,7 @@ function caf_get_first_class($cats) {
             } else { $cats_class = '';}}
             return $cats_class;
 }
-function caf_get_linked_terms($tax,$caf_post_cats,$caf_post_layout) {
+function caf_get_linked_terms($tax,$caf_post_cats,$caf_post_layout,$id) {
     $cats=caf_get_cats($tax);
     if ((class_exists("TC_CAF_PRO") && $caf_post_cats == "show") || !class_exists("TC_CAF_PRO")) {
     echo "<div class='caf-meta-content-cats'>";
@@ -357,7 +357,7 @@ function caf_get_linked_terms($tax,$caf_post_cats,$caf_post_layout) {
     echo "</div>";
 }
 }
-function caf_article_container_start($caf_desktop_col,$caf_tablet_col,$caf_mobile_col,$caf_special_post_class,$caf_post_animation,$cats_class,$caf_post_layout) {
+function caf_article_container_start($caf_desktop_col,$caf_tablet_col,$caf_mobile_col,$caf_special_post_class,$caf_post_animation,$cats_class,$caf_post_layout,$id) {
     $caf_mb='caf-mb-5';
     if($caf_post_layout=="post-layout4") {
      $caf_desktop_col ='12';
@@ -370,10 +370,10 @@ function caf_article_container_start($caf_desktop_col,$caf_tablet_col,$caf_mobil
     <article id="caf-<?php echo $caf_post_layout;?>" class="<?php echo $caf_post_layout;?> caf-col-md-<?php echo esc_attr($caf_desktop_col); ?> caf-col-md-tablet<?php echo esc_attr($caf_tablet_col); ?> caf-col-md-mobile<?php echo esc_attr($caf_mobile_col); ?> <?php echo esc_attr($caf_mb); ?> <?php echo esc_attr($caf_special_post_class); ?> <?php echo esc_attr($caf_post_animation); ?> <?php echo esc_attr($cats_class); ?> " data-post-id="<?php echo esc_attr(get_the_id()); ?>">
     <?php
 }
-function caf_article_container_end() {
+function caf_article_container_end($id) {
     echo "</article>";
 }
-function caf_get_post_image($image,$link,$caf_link_target,$caf_post_layout) {
+function caf_get_post_image($image,$link,$caf_link_target,$caf_post_layout,$id) {
     $a_class='';
     $img_box='';
     if($caf_post_layout=='post-layout4') {
@@ -399,7 +399,7 @@ function caf_get_post_image($image,$link,$caf_link_target,$caf_post_layout) {
                     </a>";
     }
 }
-function caf_get_post_image_snippet($image,$link,$caf_link_target,$caf_post_layout,$image_alt) {
+function caf_get_post_image_snippet($image,$link,$caf_link_target,$caf_post_layout,$image_alt,$id) {
     if (isset($image[0])) {
         echo "<a href='" . esc_url($link) . "' target='" . esc_attr($caf_link_target) . "' class='caf-f-link'><img src='" . $image[0] . "' alt='" . $image_alt . "'></a>";
     } else {
@@ -407,21 +407,28 @@ function caf_get_post_image_snippet($image,$link,$caf_link_target,$caf_post_layo
         echo "<a href='" . esc_url($link) . "' target='" . esc_attr($caf_link_target) . "'><img src='" . esc_url($image) . "' alt='caf-default-image'></a>";
     }
 }
-function caf_meta_content_container_start($caf_post_author,$caf_post_date,$caf_post_layout) {
+function caf_meta_content_container_start($caf_post_author,$caf_post_date,$caf_post_layout,$id) {
     if ((class_exists("TC_CAF_PRO") && $caf_post_author == "show" || $caf_post_date == "show") || !class_exists("TC_CAF_PRO")) {
         echo "<div class='caf-meta-content'>";
     }
 }
-function caf_get_post_title($link,$title,$caf_post_layout) {
+function caf_get_post_title($link,$title,$caf_post_layout,$id) {
+    ob_start();
     global $post;
     echo "<div class='caf-post-title'><h2><a href='" . get_the_permalink() . "'>" . esc_html($title) . "</a></h2></div>";
+    $output=ob_get_contents();
+    ob_end_clean();
+    if(class_exists("TC_CAF_PRO")) {
+    $data=array('link'=>$link,'title'=>$title,'post-layout'=>$caf_post_layout,'filter-id'=>$id);
+    do_action("caf_get_post_title",$output,$data,$post);
+    }
 }
-function caf_get_post_comment_count($caf_post_comments,$caf_post_layout) {
+function caf_get_post_comment_count($caf_post_comments,$caf_post_layout,$id) {
     if ((class_exists("TC_CAF_PRO") && $caf_post_comments == "show") || !class_exists("TC_CAF_PRO")) {
         echo "<span class='comment caf-col-md-3 caf-pl-0'><i class='fa fa-comment' aria-hidden='true'></i> " . get_comments_number() . "</span>";
     }
 }
-function caf_get_post_author($caf_post_author,$caf_post_layout) {
+function caf_get_post_author($caf_post_author,$caf_post_layout,$id) {
     if ((class_exists("TC_CAF_PRO") && $caf_post_author == "show") || !class_exists("TC_CAF_PRO")) {
         if($caf_post_layout=='post-layout1') {
             echo "<span class='author caf-col-md-4 caf-pl-0'><i class='fa fa-user' aria-hidden='true'></i> " . get_the_author() . "</span>";
@@ -449,12 +456,12 @@ function caf_get_post_date($caf_post_date,$caf_post_date_format,$id,$caf_post_la
     }
 }
 
-function caf_meta_content_container_end($caf_post_author,$caf_post_date,$caf_post_layout) {
+function caf_meta_content_container_end($caf_post_author,$caf_post_date,$caf_post_layout,$id) {
     if ((class_exists("TC_CAF_PRO") && $caf_post_author == "show" || $caf_post_date == "show") || !class_exists("TC_CAF_PRO")) {
         echo "</div>";
     }
 }
-function caf_get_post_content($caf_post_dsc,$caf_content,$caf_post_layout) {
+function caf_get_post_content($caf_post_dsc,$caf_content,$caf_post_layout,$id) {
     if ((class_exists("TC_CAF_PRO") && $caf_post_dsc == "show") || !class_exists("TC_CAF_PRO")) {
         echo "<div class='caf-content'>" . wp_kses_post($caf_content) . "</div>";
     }
