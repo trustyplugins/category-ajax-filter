@@ -357,7 +357,11 @@ function caf_get_linked_terms($tax,$caf_post_cats,$caf_post_layout,$id) {
     echo "</div>";
 }
 }
-function caf_article_container_start($caf_desktop_col,$caf_tablet_col,$caf_mobile_col,$caf_special_post_class,$caf_post_animation,$cats_class,$caf_post_layout,$id) {
+add_action("caf_article_container_start","caf_article_container_start");
+function caf_article_container_start($id) {
+    ob_start();
+    include TC_CAF_PATH . 'includes/query-variables.php';
+    include TC_CAF_PATH . 'includes/post-variables.php';
     $caf_mb='caf-mb-5';
     if($caf_post_layout=="post-layout4") {
      $caf_desktop_col ='12';
@@ -365,10 +369,19 @@ function caf_article_container_start($caf_desktop_col,$caf_tablet_col,$caf_mobil
      $caf_mobile_col='12';
      $caf_mb='caf-mb-10';
     }
-    
     ?>
     <article id="caf-<?php echo $caf_post_layout;?>" class="<?php echo $caf_post_layout;?> caf-col-md-<?php echo esc_attr($caf_desktop_col); ?> caf-col-md-tablet<?php echo esc_attr($caf_tablet_col); ?> caf-col-md-mobile<?php echo esc_attr($caf_mobile_col); ?> <?php echo esc_attr($caf_mb); ?> <?php echo esc_attr($caf_special_post_class); ?> <?php echo esc_attr($caf_post_animation); ?> <?php echo esc_attr($cats_class); ?> " data-post-id="<?php echo esc_attr(get_the_id()); ?>">
     <?php
+ $output=ob_get_contents();
+ ob_end_clean();
+if(class_exists("TC_CAF_PRO")) {
+$data=array('desktop-column'=>$caf_desktop_col,'tablet-column'=>$caf_tablet_col,'mobile-column'=>$caf_mobile_col,'post-class'=>$caf_special_post_class,'post-animation'=>$caf_post_animation,'cat-class'=>$cats_class,'post-layout'=>$caf_post_layout,'filter-id'=>$id);
+echo apply_filters("caf_article_container_start_filter",$output,$data,$post);
+}
+else {
+echo $output;
+}
+
 }
 function caf_article_container_end($id) {
     echo "</article>";
@@ -412,15 +425,20 @@ function caf_meta_content_container_start($caf_post_author,$caf_post_date,$caf_p
         echo "<div class='caf-meta-content'>";
     }
 }
-function caf_get_post_title($link,$title,$caf_post_layout,$id) {
+add_action('caf_get_post_title','caf_get_post_title',5);
+function caf_get_post_title($id) {
     ob_start();
-    global $post;
+    include TC_CAF_PATH . 'includes/query-variables.php';
+    include TC_CAF_PATH . 'includes/post-variables.php';
     echo "<div class='caf-post-title'><h2><a href='" . get_the_permalink() . "'>" . esc_html($title) . "</a></h2></div>";
     $output=ob_get_contents();
     ob_end_clean();
     if(class_exists("TC_CAF_PRO")) {
     $data=array('link'=>$link,'title'=>$title,'post-layout'=>$caf_post_layout,'filter-id'=>$id);
-    do_action("caf_get_post_title",$output,$data,$post);
+    echo apply_filters("caf_get_post_title_filter",$output,$data,$post);
+    }
+    else {
+        echo $output;
     }
 }
 function caf_get_post_comment_count($caf_post_comments,$caf_post_layout,$id) {

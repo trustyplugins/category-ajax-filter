@@ -7,7 +7,7 @@ if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
         global $post;
         include TC_CAF_PATH . 'includes/post-variables.php';
         // <article>
-        echo caf_article_container_start($caf_desktop_col,$caf_tablet_col,$caf_mobile_col,$caf_special_post_class,$caf_post_animation,$cats_class,$caf_post_layout,$id);
+        do_action('caf_article_container_start',$id);
         ?>
 		<div class="manage-layout1">
 		<?php
@@ -15,7 +15,8 @@ if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
         echo caf_get_post_image($image, $link, $caf_link_target, $caf_post_layout,$id);
         echo "<div id='manage-post-area'>";
         // class='caf-post-title'
-        echo caf_get_post_title($link,$title,$caf_post_layout,$id);
+        do_action("caf_get_post_title",$id);
+       // echo caf_get_post_title($link,$title,$caf_post_layout,$id);
         // class='caf-meta-content'
         echo caf_meta_content_container_start($caf_post_author, $caf_post_date, $caf_post_layout,$id);
         // span class='author caf-col-md-4 caf-pl-0'
