@@ -205,6 +205,9 @@ display: inline-block;
 	color: #fff;
     text-transform: capitalize;
 }
+.caf-post-layout3 .caf-meta-content span.date, .caf-meta-content span.comment {
+    margin-right: 5px;
+}
 #caf-post-layout3 .caf-content {
     display: block;
     padding: 5px;

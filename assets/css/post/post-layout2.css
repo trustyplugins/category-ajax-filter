@@ -97,6 +97,9 @@ padding: 0px 0px 5px 0px;
     font-size: 12px;
 	text-transform: capitalize;
 }
+.caf-post-layout2 .caf-meta-content span.date, .caf-meta-content span.comment {
+    margin-right: 5px;
+}
 #caf-post-layout2 .caf-content {
     display: block;
     padding: 5px;
