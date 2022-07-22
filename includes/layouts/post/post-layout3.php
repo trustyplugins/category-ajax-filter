@@ -6,8 +6,6 @@ include TC_CAF_PATH . 'includes/query-variables.php';
 do_action("caf_content_before_post_loop",$id);
 if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
         global $post;
-        $cats = caf_get_cats($tax);
-        $cats_class = caf_get_first_class($cats);
         
         // <article>
         do_action('caf_article_container_start', $id);

@@ -24,6 +24,8 @@ $caf_post_comments = "show";
 $caf_post_cats = "show";
 $caf_post_rd = "show";
 $caf_post_dsc = "show";
+$caf_post_title = "show";
+$caf_post_image = "show";
 $caf_post_date_format = "d, M Y";
 if (class_exists("TC_CAF_PRO")) {
     if (get_post_meta($id, 'caf_post_date_format')) {
@@ -118,6 +120,12 @@ if (get_post_meta($id, 'caf_post_rd')) {
 }
 if (get_post_meta($id, 'caf_post_dsc')) {
     $caf_post_dsc = get_post_meta($id, 'caf_post_dsc', true);
+}
+if (get_post_meta($id, 'caf_post_title')) {
+    $caf_post_title = get_post_meta($id, 'caf_post_title', true);
+}
+if (get_post_meta($id, 'caf_post_image')) {
+    $caf_post_image = get_post_meta($id, 'caf_post_image', true);
 }
 if (get_post_meta($id, 'caf_link_target')) {
     $caf_link_target = get_post_meta($id, 'caf_link_target', true);

@@ -1,7 +1,7 @@
-#caf-post-layout1 #manage-post-area {
+.caf-post-layout1 #manage-post-area {
     background: #fff !important;
 }
-#caf-post-layout1 a {
+.caf-post-layout1 a {
     transition: all 0.15s linear;	
     text-decoration: none !important;
 }
@@ -12,7 +12,7 @@
     display: none;
 }
 
-#caf-post-layout1 .caf-featured-img-box {
+.caf-post-layout1 .caf-featured-img-box {
     display: block;
     width: 100%;
     height: 200px;
@@ -21,36 +21,35 @@
     background-position: center !important;
 }
 
-#caf-post-layout1 .caf-col-md-6 .caf-featured-img-box {
+.caf-post-layout1 .caf-col-md-6 .caf-featured-img-box {
     height: 270px;
 }
 
-#caf-post-layout1 .caf-post-title {
+.caf-post-layout1 .caf-post-title {
     display: block;
     width: 100%;
     padding: 6px 10px;
 }
 
-#caf-post-layout1 .caf-post-title h2 {
+.caf-post-layout1 .caf-post-title h2 {
     text-decoration: none;
     font-size: 18px;
     
     margin: 0;
     padding: 0;
 	}
-#caf-post-layout1 .caf-post-title a:hover {
+    .caf-post-layout1 .caf-post-title a:hover {
 	color:inherit !important;
 	box-shadow: none !important;
 }
 
-#caf-post-layout1 .caf-meta-content-cats {
+.caf-post-layout1 .caf-meta-content-cats {
     display: block;
     width: 100%;
     background: #fff;
-    border-bottom: 1px solid #f7f7f7;
 }
 
-#caf-post-layout1 .caf-meta-content-cats ul {
+.caf-post-layout1 .caf-meta-content-cats ul {
 display:inline-block;
 width:100%;	
 list-style: none;
@@ -58,7 +57,7 @@ margin: 0;
 padding: 0px 0px 5px 0px;
 }
 
-#caf-post-layout1 .caf-meta-content-cats li {
+.caf-post-layout1 .caf-meta-content-cats li {
     display: inline-block;
     padding: 0;
     margin: 0;
@@ -66,7 +65,7 @@ padding: 0px 0px 5px 0px;
 	line-height: normal;
 }
 
-#caf-post-layout1 .caf-meta-content-cats li a {
+.caf-post-layout1 .caf-meta-content-cats li a {
     display: inline-block;
     padding: 5px;
     margin: 0;
@@ -83,21 +82,21 @@ padding: 0px 0px 5px 0px;
     background: #f79918 !important;
 }*/
 
-#caf-post-layout1 .caf-meta-content {
+.caf-post-layout1 .caf-meta-content {
     display: flex;
     background: #fff;
     width: 100%;
     padding: 5px;
     border-bottom: 1px solid #f7f7f7;
 }
-#caf-post-layout1 span.author, #caf-post-layout1 span.date, #caf-post-layout1 span.comment {
+.caf-post-layout1span.author, .caf-post-layout1 span.date, .caf-post-layout1 span.comment {
     font-size: 12px;
     text-transform: capitalize;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
 }
-#caf-post-layout1 .caf-content {
+.caf-post-layout1 .caf-content {
     display: block;
     padding: 10px;
     background: #fff;
@@ -106,13 +105,13 @@ padding: 0px 0px 5px 0px;
     text-align: justify;
 }
 
-#caf-post-layout1 .caf-content-read-more {
+.caf-post-layout1 .caf-content-read-more {
     display: block;
     background: #fff;
     padding: 5px 10px;
 }
 
-#caf-post-layout1 a.caf-read-more {
+.caf-post-layout1 a.caf-read-more {
     box-shadow: none;
     text-decoration: none;
     border: 1px solid #f79918;
@@ -124,7 +123,7 @@ padding: 0px 0px 5px 0px;
 	border-radius: 2px;
 }
 
-#caf-post-layout1 a.caf-read-more:hover {
+.caf-post-layout1 a.caf-read-more:hover {
    color: #fff !important;
 }
 ul#caf-layout-pagination.post-layout1 {
@@ -161,7 +160,7 @@ ul#caf-layout-pagination.post-layout1 span.page-numbers.current {
     margin-right: 1px;
 	font-size: 16px;
 }
-#caf-post-layout1 .manage-layout1 {
+.caf-post-layout1 .manage-layout1 {
     /* background: #fcd21d; */
     padding: 0px;
     box-shadow: 0px 0px 8px -5px #000000;
