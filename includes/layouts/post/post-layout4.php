@@ -3,13 +3,14 @@ if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 include TC_CAF_PATH . 'includes/query-variables.php';
+$i=0;
 if ($qry->have_posts()): while ($qry->have_posts()): $qry->the_post();
         global $post;
-        
+        $i++;
         // <article>
         do_action('caf_article_container_start', $id);
 
-        do_action("caf_after_article_container_start",$id);
+        do_action("caf_after_article_container_start",$id,$i);
         
        // </article>
         do_action("caf_article_container_end", $id);
