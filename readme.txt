@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/jasveer
 Tags: Ajax Filter,Divi, Ajax posts, category posts ,Elementor
 Requires at least: 4.8
 Tested up to: 6.0
-Stable tag: 2.5.2
+Stable tag: 2.6
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -29,8 +29,25 @@ CAF plugin will work to filter the posts without any page reload. You can browse
 <h4>Support WP Bakery</h4>
 
 == Whats in PRO? ==
-1. Analytics Feature added in [6.9.1]
-
+1. Analytics Feature, Check your used filter's insights [clicks]
+2. Overwrite/Modify any of the Filter/Post Layout OR templates Modules to your used theme so it will not effected after plugin upgrade.
+3. Developer Hooks
+4. Selection to Multiple Taxonomy/ Terms
+5. Multiple Taxonomy Filter Added 
+6. Default Terms Selection on Page loads
+7. Auto term selection on Category page
+8. Search bar Feature
+9. More filters/Post Layouts Added
+10. Load More Button 
+11. Sorting options
+12. Ability to hide/show post elements on any layout [title,image,meta,categories,read more,content]
+13. Post Animation Effects
+14. Translation feature for used default strings [All,read more etc]
+15. Font-Awesome Icons for filter terms/categories
+16. Google Fonts family 
+17. Scroll to CAF Container on category click
+18. Parent/child category terms filter Layout
+ 
 [youtube https://www.youtube.com/watch?v=OOnLUnPuYgA]
 <a href='https://trustyplugins.com' target='_blank'>CAF PRO DEMO</a> | <a href='https://trustyplugins.com' target='_blank'>BUY PRO</a> 
 
@@ -84,8 +101,14 @@ Yes you can select specific terms of any taxonomy.
 3. screenshot-3.png
 
 == Changelog ==
-= 2.5.2 = (01/07/2022)
+= 2.6 = (26/07/2022)
 * Restrict ABSPATH function added to files
+* Templates Directory added with all used Modules
+* Many of Developer Hooks Added
+* Compatible with CAF PRO [8.6]
+
+= 2.5.2 = (01/07/2022)
+
 
 = 2.5.1 = (01/07/2022)
 * Category Issue fixed when you use PRO with free layouts
