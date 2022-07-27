@@ -184,7 +184,7 @@ class CAF_POST_ACTIONS
         ob_start();
         include TC_CAF_PATH . 'includes/query-variables.php';
         include TC_CAF_PATH . 'includes/post-variables.php';
-        include $this->template."/author.php";
+        include $this->template."/caf-author.php";
         $output = ob_get_contents();
         ob_end_clean();
         echo $output;
@@ -195,7 +195,7 @@ class CAF_POST_ACTIONS
         ob_start();
         include TC_CAF_PATH . 'includes/query-variables.php';
         include TC_CAF_PATH . 'includes/post-variables.php';
-        include $this->template."/date.php";
+        include $this->template."/caf-date.php";
         $output = ob_get_contents();
         ob_end_clean();
         echo $output;
@@ -206,7 +206,7 @@ class CAF_POST_ACTIONS
         ob_start();
         include TC_CAF_PATH . 'includes/query-variables.php';
         include TC_CAF_PATH . 'includes/post-variables.php';
-        include $this->template."/comments.php";
+        include $this->template."/comments-count.php";
         $output = ob_get_contents();
         ob_end_clean();
         echo $output;
@@ -238,7 +238,7 @@ class CAF_POST_ACTIONS
         ob_start();
         include TC_CAF_PATH . 'includes/query-variables.php';
         include TC_CAF_PATH . 'includes/post-variables.php';
-        include $this->template."/content.php";
+        include $this->template."/caf-content.php";
         $output = ob_get_contents();
         ob_end_clean();
         echo $output;
@@ -268,7 +268,7 @@ class CAF_POST_ACTIONS
         include TC_CAF_PATH . 'includes/query-variables.php';
         include TC_CAF_PATH . 'includes/post-variables.php';
         $cats = $this->caf_get_cats($tax);
-        include $this->template."/terms.php";
+        include $this->template."/caf-terms.php";
         $output = ob_get_contents();
         ob_end_clean();
             echo $output;
