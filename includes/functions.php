@@ -306,8 +306,13 @@ new CAF_get_filter_posts();
 
 
 if (class_exists("TC_CAF_PRO")) {
+    // if (!defined('TC_CAF_PRO_PATH')) {
+    //     $obj_caf_pro=new TC_CAF_PRO();
+    // $obj_caf_pro->tc_caf_plugin_constants;
+    // }
    include TC_CAF_PRO_PATH.'/admin/post-class.php';
     }
     else {
+        //echo "no";
         include TC_CAF_PATH.'/includes/post-class.php';
     }

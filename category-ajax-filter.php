@@ -31,10 +31,29 @@ class TC_CAF_Plugin
         add_action('plugins_loaded', array($this, 'tc_caf_load_plugin_textdomain'));
         $this->tc_caf_plugin_constants();
         require_once TC_CAF_PATH . 'admin/admin.php';
+        // if(CAF_CURRENT_VERSION>=2.6) {
+        //     if (!defined('TC_CAF_PRO_PLUGIN_VERSION')) {
+        //         $caf_pr=new TC_CAF_PRO();
+        //         $caf_pr->tc_caf_plugin_constants();
+        //         if(TC_CAF_PRO_PLUGIN_VERSION<8.6) {
+        //         add_action('admin_notices', array($this, 'tc_caf_pro_version_admin_error_notice'));
+        //         }
+        //         else {
+        //            require_once TC_CAF_PATH . 'admin/admin.php'; 
+        //         }
+        //     }
+        // }
+        // else {
+        // require_once TC_CAF_PATH . 'admin/admin.php';
+        // }
         /*---- UPDATE THE CURRENT ACTIVE VERSION OF THE PLUGIN ----*/
         if (!get_option('tc_caf_plugin_version')) {
             update_option('tc_caf_plugin_version', TC_CAF_PLUGIN_VERSION);
         }
+    }
+    public function tc_caf_pro_version_admin_error_notice() {
+        $message = sprintf(esc_html__('The %1$sCategory Ajax Filter PRO %2$s should be updated atleast to %1$s8.6%2$s to run properly. Please update %1$s PRO Version%2$s now.', 'category-ajax-filter-pro'), '<strong>', '</strong>');
+        printf('<div class="notice notice-error"><p>%1$s</p></div>', wp_kses_post($message));
     }
     /*---- LOAD PLUGIN TEXTDOMAIN ----*/
     public function tc_caf_load_plugin_textdomain()
