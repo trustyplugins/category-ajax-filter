@@ -23,6 +23,12 @@ class CAF_shortcode_render
             'id' => '',
         ), $atts);
         $id = $atts['id'];
+        if (!get_post_meta($id, 'caf_taxonomy')) {
+            return "<h2 style='background: #333348;color: #fff;font-size: 14px;line-height: 18px;padding: 10px;margin: 0;width: 100%;display: inline-block;text-align: center;border: none;text-shadow: none;box-shadow: none;'>" . esc_html__('Please select Taxonomy from specific CAF Filter. It is required to properly work for your Filter.', 'category-ajax-filter-pro') . "</h2>";
+        }
+        if (!get_post_meta($id, 'caf_terms')) {
+            return "<h2 style='background: #333348;color: #fff;font-size: 14px;line-height: 18px;padding: 10px;margin: 0;width: 100%;display: inline-block;text-align: center;border: none;text-shadow: none;box-shadow: none;'>" . esc_html__('Please select Categories/Terms from specific CAF Filter. It is required to properly work for your Filter.', 'category-ajax-filter-pro') . "</h2>";
+        }
         include TC_CAF_PATH . 'includes/front-variables.php';
         if (get_post_meta($id, 'caf_cpt_value')) {
             $caf_cpt_value = get_post_meta($id, 'caf_cpt_value', true);

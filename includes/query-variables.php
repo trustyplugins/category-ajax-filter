@@ -1,5 +1,5 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
 $caf_pagination = new CAF_ajax_pagination();
@@ -150,3 +150,10 @@ if (get_post_meta($id, 'caf_post_title_font_size')) {
 if (get_post_meta($id, 'caf_special_post_class')) {
     $caf_special_post_class = get_post_meta($id, 'caf_special_post_class', true);
 }
+
+// if (class_exists("TC_CAF_PRO")) {
+//     if(!empty($tax) && !is_array($tax)) {
+//         $tax=array($tax);
+//         }
+
+// }

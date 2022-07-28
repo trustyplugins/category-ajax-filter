@@ -60,6 +60,21 @@ if (get_post_meta($post->ID, 'caf_cpt_value')) {
 }
 if (get_post_meta($post->ID, 'caf_taxonomy')) {
     $tax = get_post_meta($post->ID, 'caf_taxonomy', true);
+    if (class_exists("TC_CAF_PRO")) {
+        if (!empty($tax) && !is_array($tax)) {
+            $tax = array($tax);
+            if (get_post_meta($post->ID, 'caf_terms', true)) {
+                $terms_sel = get_post_meta($post->ID, 'caf_terms', true);
+                $terms_sel_def = $terms_sel;
+                foreach ($terms_sel_def as $index => $trm) {
+                    $terms_sel[] = get_post_meta($post->ID, 'caf_taxonomy', true) . "___" . $trm;
+                }
+                update_post_meta($post->ID, 'caf_taxonomy', $tax);
+                $tax = get_post_meta($post->ID, 'caf_taxonomy', true);
+                update_post_meta($post->ID, 'caf_terms', $terms_sel);
+            }
+        }
+    }
 }
 if (get_post_meta($post->ID, 'caf_terms')) {
     $terms_sel = get_post_meta($post->ID, 'caf_terms', true);
