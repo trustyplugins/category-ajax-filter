@@ -69,15 +69,15 @@ if (!defined('ABSPATH')) {
 
 		<?php
 
-$thumb = get_image_sizes('thumbnail');
+$thumb = caf_get_image_sizes('thumbnail');
 
 $thumb = "Thumbnail (" . $thumb['width'] . "X" . $thumb['height'] . ")";
 
-$med = get_image_sizes('medium');
+$med = caf_get_image_sizes('medium');
 
 $med = "Medium (" . $med['width'] . "X" . $med['height'] . ")";
 
-$large = get_image_sizes('large');
+$large = caf_get_image_sizes('large');
 
 $large = "Large (" . $large['width'] . "X" . $large['height'] . ")";
 

@@ -23,7 +23,7 @@ class CAF_init
             'show_ui' => current_user_can('manage_options') ? true : false,
             'show_in_admin_bar' => false,
             'menu_position' => 7,
-            //'menu_icon'           => TC_CAF_URL.'admin/images/logo-icon.png',
+            //'menu_icon'     => TC_CAF_URL.'admin/images/tp icon CAF.svg',
             'menu_icon' => 'dashicons-layout',
             'rewrite' => false,
             'query_var' => false,
@@ -44,6 +44,7 @@ class CAF_Embed_Admin_Css_Js
     {
         global $post_type;
         //var_dump($post_type);
+        wp_enqueue_style('tc_caf-custom-admin-font-style', TC_CAF_URL . 'admin/css/custom-font.css');
         if ($post_type == "caf_posts") {
          wp_enqueue_style('tc_caf-custom-admin-style', TC_CAF_URL . 'admin/css/custom.min.css');
         wp_enqueue_style('tc_caf-font-awesome-style', TC_CAF_URL . 'assets/css/fontawesome/css/font-awesome.min.css');
@@ -490,7 +491,7 @@ class CAF_admin_filters
     }
 }
 
-function get_image_sizes($size = '')
+function caf_get_image_sizes($size = '')
 {
     $wp_additional_image_sizes = wp_get_additional_image_sizes();
     $sizes = array();
