@@ -21,7 +21,7 @@ $post_css.=" ".$target_div." .error-caf {font-family:".$caf_post_font.";backgrou
 ".$target_div." .caf-post-layout2 #manage-post-area {background-color: ".$caf_post_sec_color2.";border: 3px solid ".$caf_post_sec_color.";}
 ".$target_div." .caf-post-layout2 .caf-featured-img-box {border:4px solid ".$caf_post_sec_color2."}
 ".$target_div." ul#caf-layout-pagination.post-layout2 li span.current { background: ".$caf_post_sec_color.";color: ".$caf_post_sec_color2.";font-family:".$caf_post_font.";}
-".$target_div." ul#caf-layout-pagination.post-layout2 li a{background-color: ".$caf_post_sec_color2.";color:".$caf_post_primary_color.";font-family:".$caf_post_font.";}
+".$target_div." ul#caf-layout-pagination.post-layout2 li a,".$target_div." .prev-next-caf-pagination .caf-pagi-btn {background-color: ".$caf_post_sec_color2.";color:".$caf_post_primary_color.";font-family:".$caf_post_font.";}
 ".$target_div." .caf-post-layout2 a.caf-read-more{color: ".$caf_post_sec_color2.";background-color:".$caf_post_primary_color.";}
 
 ".$target_div." .status i {color:".$caf_post_primary_color.";}";

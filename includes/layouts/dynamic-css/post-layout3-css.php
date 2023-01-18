@@ -9,7 +9,7 @@ $post_css="".$target_div." .error-caf {font-family:".$caf_post_font.";background
 ".$target_div." .caf-post-layout3 .caf-post-title h2 a {font-family:".$caf_post_font.";text-transform:".$caf_post_title_transform.";font-size:".$caf_post_title_font_size."px;}
 ".$target_div." .caf-post-layout3 .caf-meta-content-cats li a {font-family:".$caf_post_font.";}
 ".$target_div." .caf-post-layout3 span.author, ".$target_div." .caf-post-layout3 span.date, ".$target_div." .caf-post-layout3 span.comment {font-family:".$caf_post_font.";color: ".$caf_post_primary_color.";}
-".$target_div." ul#caf-layout-pagination.post-layout3 li a {font-family:".$caf_post_font.";background-color: ".$caf_post_sec_color2.";color:".$caf_post_sec_color.";}
+".$target_div." ul#caf-layout-pagination.post-layout3 li a,".$target_div." .prev-next-caf-pagination .caf-pagi-btn {font-family:".$caf_post_font.";background-color: ".$caf_post_sec_color2.";color:".$caf_post_sec_color.";}
 ".$target_div." ul#caf-layout-pagination.post-layout3 span.page-numbers.current {font-family:".$caf_post_font.";color: ".$caf_post_sec_color2.";background-color:".$caf_post_sec_color.";}
 #caf-post-layout-container".$target_div.".post-layout3 {background-color: ".$caf_sec_bg_color.";}
 ".$target_div." .caf-post-layout3 .caf-post-title h2 a:hover, ".$target_div." .caf-post-layout3 span.date {color: ".$caf_post_primary_color.";}

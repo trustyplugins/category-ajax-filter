@@ -21,14 +21,14 @@ $post_css.="#caf-post-layout-container".$target_div.".post-layout1 {background-c
 ".$target_div." .caf-meta-content-cats li a {background-color: ".$caf_post_sec_color.";color:".$caf_post_sec_color2.";font-family:".$caf_post_font.";}
 ".$target_div." .caf-post-layout1 span.author,".$target_div." .caf-post-layout1 span.date,".$target_div." .caf-post-layout1 span.comment {
 font-family:".$caf_post_font.";}
-".$target_div." ul#caf-layout-pagination.post-layout1 li a {font-family:".$caf_post_font.";color: ".$caf_post_primary_color.";background-color:".$caf_post_sec_color."}
+".$target_div." ul#caf-layout-pagination.post-layout1 li a,".$target_div." .prev-next-caf-pagination .caf-pagi-btn {font-family:".$caf_post_font.";color: ".$caf_post_primary_color.";background-color:".$caf_post_sec_color."}
 ".$target_div." ul#caf-layout-pagination.post-layout1 li span.current { color: ".$caf_post_sec_color.";background-color: ".$caf_post_primary_color.";font-family:".$caf_post_font.";}
 ".$target_div." .error-caf {background-color: ".$caf_post_primary_color."; color: ".$caf_post_sec_color.";font-family:".$caf_post_font.";font-size:".$caf_post_title_font_size."px;}
 ".$target_div." .caf-post-layout1 .caf-meta-content,".$target_div." .caf-post-layout1 .caf-content {color: ".$caf_post_sec_color2.";}
 ".$target_div." .caf-post-layout1 a.caf-read-more {font-family:".$caf_post_font.";border-color: ".$caf_post_primary_color."; color: ".$caf_post_primary_color.";background-color: ".$caf_post_sec_color.";}
 ".$target_div." .caf-post-layout1 a.caf-read-more:hover {background-color: ".$caf_post_primary_color.";}
 ".$target_div." .status i {color:".$caf_post_primary_color.";background-color: ".$caf_post_sec_color.";}
-".$target_div." .caf-post-layout1 .caf-meta-content-cats li a {background-color:".$caf_post_primary_color.";color: ".$caf_post_sec_color.";}";
+".$target_div." .caf-post-layout1 .caf-meta-content-cats li a  {background-color:".$caf_post_primary_color.";color: ".$caf_post_sec_color.";}";
 
 wp_add_inline_style($handle,$post_css);
 
