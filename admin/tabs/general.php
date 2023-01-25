@@ -11,6 +11,8 @@ if (!defined('ABSPATH')) {
 	<div class="tab-panel query">
 		<div class="tab-header active" data-content="query"><i class="fa fa-check-square-o left" aria-hidden="true"></i> <?php echo esc_html__('Query Options', 'category-ajax-filter'); ?> <i class="fa fa-angle-down" aria-hidden="true"></i></div>
 		<div class="tab-content query active">
+<?php do_action("tc_caf_before_custom_post_type_select_row");?>
+
 	<!---- START FULL ROW CUSTOM POST TYPE ---->
 	<div class='col-sm-12 row-bottom'>
 	<!-- FORM GROUP -->

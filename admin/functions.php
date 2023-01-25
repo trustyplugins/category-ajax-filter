@@ -225,8 +225,15 @@ class CAF_Meta_Boxes
 
     public function caf_top_meta_box()
     {
+        global $post;
+        $cl='free';
+        if (class_exists("TC_CAF_PRO")) {
+            if (get_post_meta($post->ID, 'caf_enhance',true)==1) {
+            $cl='enhanced';
+            }
+        }
         ?>
-<div class='manage-top-logo-helper'>
+<div class="manage-top-logo-helper">
 <div class="logo-helper">
  <?php
 if (class_exists("TC_CAF_PRO")) {
@@ -242,29 +249,29 @@ if (class_exists("TC_CAF_PRO")) {
  </div>
 	<div class="manage-top-dash general-tab new-tab"><span class="dashicons dashicons-admin-tools"></span><span class='text'>
 		<?php echo esc_html__('General Settings', 'category-ajax-filter'); ?></span> <a href='<?php echo esc_url('https://trustyplugins.com', 'category-ajax-filter'); ?>' target="_blank"><i class="fa fa-info-circle" aria-hidden="true"></i> <?php echo esc_html__('Documentation', 'category-ajax-filter'); ?> </a></div></div>
-	<div id="maintain-sidebar">
+	<div id="maintain-sidebar" class="<?php echo $cl;?>">
 
 	  <!-- Nav tabs -->
 	<ul class="nav nav-tabs" id="myTab" role="tablist">
-	  <li class="nav-item" role="presentation">
+	  <li class="nav-item general-caf-li" role="presentation">
 		<a class="nav-link active" id="general-tab" data-toggle="tab" href="#general" role="tab" aria-controls="general-tab" aria-selected="true"><?php echo esc_html__('General', 'category-ajax-filter'); ?> <br/><span class="info-bt"><?php echo esc_html__('Post Type, Categories', 'category-ajax-filter'); ?> </span><span class="dashicons dashicons-admin-tools"></span></a>
 	  </li>
-   <li class="nav-item" role="presentation">
+   <li class="nav-item layout-caf-li" role="presentation">
 		<a class="nav-link" id="layouts-tab" data-toggle="tab" href="#layoutstab" role="tab" aria-controls="layouts-tab" aria-selected="false"><?php echo esc_html__('Layouts', 'category-ajax-filter'); ?> <br/><span class="info-bt"><?php echo esc_html__('Post Layout, Filter Layout', 'category-ajax-filter'); ?></span><span class="dashicons dashicons-grid-view"></span></a>
 	  </li>
-	  <li class="nav-item" role="presentation">
+	  <li class="nav-item app-caf-li" role="presentation">
 		<a class="nav-link" id="appearance-tab" data-toggle="tab" href="#appearance" role="tab" aria-controls="appearance-tab" aria-selected="false"><?php echo esc_html__('Appearance', 'category-ajax-filter'); ?> <br/><span class="info-bt"><?php echo esc_html__('Post Layout, Filter Layout', 'category-ajax-filter'); ?></span><span class="dashicons dashicons-visibility"></span></a>
 	  </li>
-	  <li class="nav-item" role="presentation">
+	  <li class="nav-item typo-caf-li" role="presentation">
 		<a class="nav-link" id="typography-tab" data-toggle="tab" href="#typography" role="tab" aria-controls="typography-tab" aria-selected="false"><?php echo esc_html__('Typography', 'category-ajax-filter'); ?> <br/><span class="info-bt"><?php echo esc_html__('Title, Description Fonts', 'category-ajax-filter'); ?></span><span class="dashicons dashicons-editor-spellcheck"></span></a>
 	  </li>
-	  <li class="nav-item" role="presentation">
+	  <li class="nav-item adv-caf-li" role="presentation">
 		<a class="nav-link" id="advanced-tab" data-toggle="tab" href="#advanced" role="tab" aria-controls="advanced-tab" aria-selected="false"><?php echo esc_html__('Advanced', 'category-ajax-filter'); ?> <br/><span class="info-bt"><?php echo esc_html__('Add Extra Classes to Post', 'category-ajax-filter'); ?></span><span class="dashicons dashicons-tag"></span></a>
 	  </li>
-		<li class="nav-item" role="presentation">
+		<li class="nav-item short-caf-li" role="presentation">
 		<a class="nav-link" id="shortcode-tab" data-toggle="tab" href="#shortcode" role="tab" aria-controls="shortcode-tab" aria-selected="false"><?php echo esc_html__('Shortcode', 'category-ajax-filter'); ?> <br/><span class="info-bt"><?php echo esc_html__('Get Your shortcode', 'category-ajax-filter'); ?></span><span class="dashicons dashicons-shortcode"></span></a>
 	  </li>
-		<li class="nav-item" role="presentation">
+		<li class="nav-item imp-caf-li" role="presentation">
 		<a class="nav-link" id="import-tab" data-toggle="tab" href="#import" role="tab" aria-controls="import-tab" aria-selected="false"><?php echo esc_html__('Import Layout', 'category-ajax-filter'); ?> <br/><span class="info-bt"><?php echo esc_html__('Import Layout from Demo Site', 'category-ajax-filter'); ?></span><span class="dashicons dashicons-controls-repeat"></span></a>
 	  </li>
   <?php
@@ -279,7 +286,7 @@ if (class_exists('TC_CAF_PRO')) {
 	</ul>
 	</div>
 	<!-- Tab panes -->
-	<div class="tab-content caf_top_meta_box caf-tab-content">
+	<div class="tab-content caf_top_meta_box caf-tab-content <?php echo $cl;?>">
 		<?php
 $caf_admin_fliters = new CAF_admin_filters();
         wp_nonce_field(basename(__FILE__), 'caf_post_meta_option');
