@@ -51,6 +51,8 @@ CAF plugin will work to filter the posts without any page reload. You can browse
 [youtube https://www.youtube.com/watch?v=OOnLUnPuYgA]
 <a href='https://trustyplugins.com' target='_blank'>CAF PRO DEMO</a> | <a href='https://trustyplugins.com' target='_blank'>BUY PRO</a> 
 
+<h4>Do you need filter for woo products/shop ?</h4>
+<a href='https://wordpress.org/plugins/trusty-woo-products-filter/' target='_blank'>Trusty Woo Products Filter</a> 
 
 == Installation ==
 
