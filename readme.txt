@@ -1,7 +1,7 @@
 === Category Ajax Filter ===
 Contributors: TrustyPlugins
 Donate link: https://www.buymeacoffee.com/jasveer
-Tags: Ajax Filter,Divi, Ajax posts, category posts ,Elementor
+Tags: Ajax Filter,Divi, Ajax posts, category posts ,Elementor,category-filter,category-ajax-filter,taxonomy-filter,custom-post-type-filter,post-type-filter,sidebar-filter
 Requires at least: 5.0
 Tested up to: 6.1
 Stable tag: 2.7
