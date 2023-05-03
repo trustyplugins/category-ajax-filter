@@ -105,7 +105,8 @@ Yes you can select specific terms of any taxonomy.
 == Changelog ==
 
 = 2.7 = (15/02/2023)
-* Compatible to Enhanced PRO version [First Enhanced Commit]
+* Bug fixed 
+* Special Css Add Class Issue fixed
 
 = 2.6.7 = (18/01/2023)
 * New Pagination added in PRO [Compatible to 8.6.5 ] 
