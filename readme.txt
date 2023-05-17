@@ -104,7 +104,9 @@ Yes you can select specific terms of any taxonomy.
 
 == Changelog ==
 
-= 2.7 = (15/02/2023)
+= 2.7.1 = (15/05/2023)
+
+= 2.7 = (2/05/2023)
 * Bug fixed 
 * Special Css Add Class Issue fixed
 
