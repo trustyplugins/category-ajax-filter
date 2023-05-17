@@ -7,7 +7,15 @@ include TC_CAF_PATH.'includes/query-variables.php';
 $target_div=".data-target-div".$b;
 $post_css="";
 if(class_exists("TC_CAF_PRO")){
-include TC_CAF_PRO_PATH.'admin/tabs/variables.php';
+    if (get_post_meta($id, 'caf_post_desc_font')) {
+        $caf_post_desc_font = get_post_meta($id, 'caf_post_desc_font', true);
+    }
+    if (get_post_meta($id, 'caf_post_desc_transform')) {
+        $caf_post_desc_transform = get_post_meta($id, 'caf_post_desc_transform', true);
+    }
+    if (get_post_meta($id, 'caf_post_desc_font_size')) {
+        $caf_post_desc_font_size = get_post_meta($id, 'caf_post_desc_font_size', true);
+    }
 $post_css.="".$target_div." .caf-post-layout1 .caf-content {font-family:".$caf_post_desc_font.";text-transform:".$caf_post_desc_transform.";font-size:".$caf_post_desc_font_size."px;}";
 }
 else {
