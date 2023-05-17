@@ -3,8 +3,8 @@ Contributors: TrustyPlugins
 Donate link: https://www.buymeacoffee.com/jasveer
 Tags: Ajax Filter,Divi, Ajax posts, category posts ,Elementor,category-filter,category-ajax-filter,taxonomy-filter,custom-post-type-filter,post-type-filter,sidebar-filter
 Requires at least: 5.0
-Tested up to: 6.1
-Stable tag: 2.7
+Tested up to: 6.2
+Stable tag: 2.7.1
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,7 +104,10 @@ Yes you can select specific terms of any taxonomy.
 
 == Changelog ==
 
-= 2.7.1 = (15/05/2023)
+= 2.7.1 = (17/05/2023)
+* Post Title New tab Link open [fix]
+* Post Description Font Syncing with PRO 
+
 
 = 2.7 = (2/05/2023)
 * Bug fixed 
