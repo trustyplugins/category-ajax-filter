@@ -86,7 +86,8 @@ https://www.youtube.com/watch?v=uyEhRD0RiP0
 Yes. You can use it with any custom post type.
 
 = Is it compatible with Woo-Commerce too? =
-NO. Currently its not cpmpatible with Woo.
+  Yes. After release of 2.7.2 , CAF supports to woocommerce products too. But it will stay with his normal post layout funtionality.
+  It does not add price, add to cart etc field to the post layout. In the PRO version of CAF you can add price etc fields too with the custom code.
 
 = Whats included in its admin panel? =
 You can set specific filter layout, post layout, pagination, color combination and more options in your hand to look it beautiful.
@@ -103,6 +104,9 @@ Yes you can select specific terms of any taxonomy.
 3. screenshot-3.png
 
 == Changelog ==
+
+= 2.7.2 = (17/05/2023)
+* Added Support for WooCommerce
 
 = 2.7.1 = (17/05/2023)
 * Post Title New tab Link open [fix]
