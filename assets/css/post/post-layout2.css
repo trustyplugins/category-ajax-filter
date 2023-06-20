@@ -16,9 +16,8 @@ text-decoration: none !important;
     position: relative;
     top: -33px;
     /*box-shadow: 2px 2px 14px -8px #454141;*/
-	padding: 10px 0px 0;
+	padding: 10px 0px;
 	/*border-radius: 4px;*/
-    box-sizing: border-box;
 }
 /*#caf-post-layout2.caf-col-md-4 {
     padding: 0;
@@ -47,7 +46,6 @@ text-decoration: none !important;
     display: block;
     width: 100%;
     padding: 5px;
-    box-sizing: border-box;
 }
 .caf-post-layout2 .caf-post-title h2 {
     text-decoration: none;

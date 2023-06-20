@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 	<!-- FORM GROUP -->
 	<div class="form-group row">
     <label for="custom-post-type-select" class="col-sm-12 col-form-label"><?php echo esc_html__('Custom Post Type', 'category-ajax-filter'); ?><span class="info">
-       <?php echo esc_html__('Select your post type to filter. Default: Post', 'category-ajax-filter'); ?>
+       <?php echo esc_html__('Select your post type to filter. Deaflut: Post', 'category-ajax-filter'); ?>
         </span></label>
     <div class="col-sm-12">
     <select class="form-control tc_caf_object_field tc_caf_select" data-field-type='select' id="custom-post-type-select" name="custom-post-type-select">
@@ -48,7 +48,7 @@ if (class_exists("TC_CAF_PRO") && TC_CAF_PRO_PLUGIN_VERSION > '4.4.1') {
 } else {
     ?>
 	<div class="form-group row">
-    <label for="caf-taxonomy" class="col-sm-12 col-form-label"><?php echo esc_html__('Taxonomy', 'category-ajax-filter'); ?><span class="info"><?php echo esc_html__('Select your taxonomy from dropdown. Default: Category', 'category-ajax-filter'); ?></span></label>
+    <label for="caf-taxonomy" class="col-sm-12 col-form-label"><?php echo esc_html__('Taxonomy', 'category-ajax-filter'); ?><span class="info"><?php echo esc_html__('Select your taxonomy from dropdown. Deaflut: Category', 'category-ajax-filter'); ?></span></label>
     <div class="col-sm-12">
     <select class="form-control tc_caf_object_field tc_caf_select" data-field-type='select' id="caf-taxonomy" name="caf-taxonomy">
 	<?php
@@ -81,7 +81,7 @@ if (class_exists("TC_CAF_PRO") && TC_CAF_PRO_PLUGIN_VERSION > '4.4.1') {
 	<div class='col-sm-12 row-bottom'>
 	<!---- FORM GROUP TERMS ---->
 	<div class="form-group row">
-    <label for="caf-terms" class="col-sm-12 col-form-label"><?php echo esc_html__('Terms', 'category-ajax-filter'); ?><span class="info"><?php echo esc_html__('Select Terms that you want to show on frontend. Default: 5/ASC ORDER', 'category-ajax-filter'); ?></span></label>
+    <label for="caf-terms" class="col-sm-12 col-form-label"><?php echo esc_html__('Terms', 'category-ajax-filter'); ?><span class="info"><?php echo esc_html__('Select Terms that you want to show on frontend. Deaflut: 5/ASC ORDER', 'category-ajax-filter'); ?></span></label>
     <div class="col-sm-12 ">
 	<ul class="category-lists">
 	<li id="all-cat"><input name='all-select' class='category-list-all check' id='category-all-btn' type='checkbox' onClick="selectAllCats(event)"><label for='category-all-btn' class='category-list-all-label'><?php echo esc_html__('All', 'category-ajax-filter'); ?></label></li>
