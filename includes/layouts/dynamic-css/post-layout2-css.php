@@ -26,7 +26,7 @@ $post_css.=" ".$target_div." .error-caf {font-family:".$caf_post_font.";backgrou
 ".$target_div." .caf-post-layout2 .caf-meta-content-cats li a {font-family:".$caf_post_font.";}
 ".$target_div." .caf-post-layout2 span.author,".$target_div." .caf-post-layout2 span.date,".$target_div." .caf-post-layout2 span.comment,".$target_div." #caf-post-layout2 .caf-content,".$target_div." #caf-post-layout2 a.caf-read-more {font-family:".$caf_post_font.";}
 ".$target_div." .caf-post-layout2 .caf-meta-content-cats li a,".$target_div." .caf-post-layout2 #manage-post-area:hover h2, ".$target_div." #caf-post-layout2 span.date,".$target_div." #caf-post-layout2 span.author,".$target_div." #caf-post-layout2 span.comment {color: ".$caf_post_primary_color.";}
-".$target_div." .caf-post-layout2 .caf-meta-content,".$target_div." .caf-post-layout2 .caf-content,".$target_div." .caf-post-layout2 #manage-post-area h2 {color: ".$caf_post_sec_color.";}
+".$target_div." .caf-post-layout2 .caf-meta-content,".$target_div." .caf-post-layout2 .caf-content,".$target_div." .caf-post-layout2 #manage-post-area h2,".$target_div." .caf-post-layout2 #manage-post-area h2 a {color: ".$caf_post_sec_color.";}
 ".$target_div." .caf-post-layout2 .error-caf{background-color: ".$caf_post_primary_color."; color: ".$caf_post_sec_color2.";font-family:".$caf_post_font.";}
 ".$target_div." .caf-post-layout2 #manage-post-area {background-color: ".$caf_post_sec_color2.";border: 3px solid ".$caf_post_sec_color.";}
 ".$target_div." .caf-post-layout2 .caf-featured-img-box {border:4px solid ".$caf_post_sec_color2."}
