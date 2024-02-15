@@ -217,9 +217,18 @@ class CAF_Meta_Boxes
     {
         add_meta_box('caf_top_meta_box', __('Settings', 'category-ajax-filter'), array($this, 'caf_top_meta_box'), 'caf_posts', 'normal', 'core' /*,array()*/);
         if (class_exists('TC_CAF_PRO')) {
+            $caf_pro_class=new TC_CAF_PRO();
+            if($caf_pro_class->check_license()=='Activated') {
             add_meta_box('caf_side_meta_box_pro', __('CAF Announcements', 'category-ajax-filter'), 'caf_side_meta_box_pro', 'caf_posts', 'side', 'core' /*,array()*/);
+           
+        }
+        else {
+        add_meta_box('caf_side_meta_box', __('CAF Pro Features', 'category-ajax-filter'), array($this, 'caf_side_meta_box'), 'caf_posts', 'side', 'core' /*,array()*/);
+        
+    }
         } else {
             add_meta_box('caf_side_meta_box', __('CAF Pro Features', 'category-ajax-filter'), array($this, 'caf_side_meta_box'), 'caf_posts', 'side', 'core' /*,array()*/);
+           
         }
     }
 
@@ -380,7 +389,14 @@ class CAF_load_scripts
         if (empty($posts)) {
             return $posts;
         }
-
+        if (class_exists('TC_CAF_PRO')) {
+            $caf_pro_class=new TC_CAF_PRO();
+            if($caf_pro_class->check_license()=='Deactivated') {
+                return $posts;
+              // echo "<center style='color:red'>Error : CAF PRO's license is not activated. Please activate the license from admin panel or deactivate the PRO version.</center>"; 
+            }
+           }
+           else {
         $shortcode_found = false; // use this flag to see if styles and scripts need to be enqueued
         $short_id = array();
         foreach ($posts as $post) {
@@ -432,6 +448,7 @@ class CAF_load_scripts
         }
         return $posts;
     }
+}
     public function tc_caf_enqueue_scripts()
     {
         wp_register_script('tc-caf-frontend-scripts', TC_CAF_URL . 'assets/js/script.min.js', array('jquery'), TC_CAF_PLUGIN_VERSION);

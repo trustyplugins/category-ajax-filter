@@ -36,12 +36,15 @@ if (!class_exists("TC_CAF_PRO")) {
         }
     }
 } else {
+	$caf_pro_class=new TC_CAF_PRO();
+	if($caf_pro_class->check_license()=='Activated') {
     foreach ($fonts as $key => $font) {
         if ($caf_filter_font == $key) {$font_sel = "selected";} else { $font_sel = '';}
         ?>
          <option <?php echo esc_attr($font_sel); ?> value="<?php echo esc_attr($key); ?>" data-val="<?php echo esc_attr($font['character_set']); ?>" datat-type="<?php echo esc_attr($font['type']); ?>"><?php echo esc_attr($key); ?></option>
          <?php
 }
+	}
 }
 ?>
 
@@ -108,12 +111,15 @@ if (!class_exists("TC_CAF_PRO")) {
         }
     }
 } else {
+	$caf_pro_class=new TC_CAF_PRO();
+	if($caf_pro_class->check_license()=='Activated') {
     foreach ($fonts as $key => $font) {
         if ($caf_post_font == $key) {$font_sel = "selected";} else { $font_sel = '';}
         ?>
          <option <?php echo esc_attr($font_sel); ?> value="<?php echo esc_attr($key); ?>" data-val="<?php echo esc_attr($font['character_set']); ?>" datat-type="<?php echo esc_attr($font['type']); ?>"><?php echo esc_attr($key); ?></option>
          <?php
 }
+	}
 }
 ?>
     </select>

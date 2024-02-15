@@ -17,6 +17,19 @@ class CAF_shortcode_render
     public function caf_filter_call($atts)
     {
         ob_start();
+        if (class_exists('TC_CAF_PRO')) {
+         $caf_pro_class=new TC_CAF_PRO();
+         if($caf_pro_class->check_license()=='Deactivated') {
+            echo "<center style='color:red'>Error : CAF PRO's license is not activated. Please activate the license from admin panel or deactivate the PRO version.</center>";
+            static $b = 1;
+            $output = ob_get_contents();
+            ob_end_clean();
+            $b++;
+            return $output;
+         }
+        }
+        else {
+
         $caf_filter = new CAF_front_filter();
         static $b = 1;
         $atts = shortcode_atts(array(
@@ -82,8 +95,10 @@ class CAF_shortcode_render
         ob_end_clean();
         $b++;
         return $output;
-
     }
+}
+
+    
 }
 class CAF_get_filter_posts
 {
