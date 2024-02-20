@@ -21,10 +21,8 @@ class CAF_shortcode_render
          $caf_pro_class=new TC_CAF_PRO();
          if($caf_pro_class->check_license()=='Deactivated') {
             echo "<center style='color:red'>Error : CAF PRO's license is not activated. Please activate the license from admin panel or deactivate the PRO version.</center>";
-            static $b = 1;
             $output = ob_get_contents();
             ob_end_clean();
-            $b++;
             return $output;
          }
         }

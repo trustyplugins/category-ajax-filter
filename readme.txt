@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/jasveer
 Tags: Ajax Filter,Divi, Ajax posts, category posts ,Elementor,category-filter,category-ajax-filter,taxonomy-filter,custom-post-type-filter,post-type-filter,sidebar-filter
 Requires at least: 6.0
 Tested up to: 6.4
-Stable tag: 2.7.2.2
+Stable tag: 2.7.2.3
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,10 @@ Yes you can select specific terms of any taxonomy.
 3. screenshot-3.png
 
 == Changelog ==
+
+= 2.7.2.3 = (19/02/2024)
+* Bug Fixes [Duplicate declaration error of static variable]
+
 
 = 2.7.2.2 = (15/02/2024)
 * Fixed License error [compatibility with PRO]
