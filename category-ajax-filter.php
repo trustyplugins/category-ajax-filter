@@ -42,7 +42,8 @@ class TC_CAF_Plugin
                 add_action('admin_notices', array($this, 'tc_caf_pro_version_admin_error_notice'));
                 deactivate_plugins( 'category-ajax-filter-pro/caf-pro.php' );
                 }
-                else if(TC_CAF_PRO_PLUGIN_VERSION<=8.8) {
+                else if(TC_CAF_PRO_PLUGIN_VERSION>=8.8) {
+                    //echo "3";
                     //do nothing
                     return;
                 }
@@ -52,14 +53,15 @@ class TC_CAF_Plugin
                 }
             }
             else {
-                //echo "2";
+               // echo "2";
             require_once TC_CAF_PATH . 'admin/admin.php';
             }
             }
             else {
                 $caf_pr=new TC_CAF_PRO();
                 $caf_pr->tc_caf_plugin_constants();
-                if(TC_CAF_PRO_PLUGIN_VERSION<=8.8) {
+                if(TC_CAF_PRO_PLUGIN_VERSION>=8.8) {
+                    //echo "4";
                     // do nothing
                 }
                 else {
@@ -68,6 +70,7 @@ class TC_CAF_Plugin
             }
         }
         else {
+           // echo "5";
         require_once TC_CAF_PATH . 'admin/admin.php';
         }
         /*---- UPDATE THE CURRENT ACTIVE VERSION OF THE PLUGIN ----*/
