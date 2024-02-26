@@ -105,6 +105,10 @@ Yes you can select specific terms of any taxonomy.
 
 == Changelog ==
 
+= 2.8 = (26/02/2024)
+* Enhancement [PRO version(8.8) will be removed as addon]
+* If using CAF PRO 8.8 , user can deactivate the free version.
+
 = 2.7.2.3 = (19/02/2024)
 * Bug Fixes [Duplicate declaration error of static variable]
 
