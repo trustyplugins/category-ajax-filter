@@ -1,19 +1,19 @@
 === Category Ajax Filter ===
 Contributors: TrustyPlugins
 Donate link: https://www.buymeacoffee.com/jasveer
-Tags: Ajax Filter,Divi, Ajax posts, category posts ,Elementor,category-filter,category-ajax-filter,taxonomy-filter,custom-post-type-filter,post-type-filter,sidebar-filter
+Tags: Filter, elementor, divi, category-filter, post-filter
 Requires at least: 6.0
 Tested up to: 6.4
-Stable tag: 2.7.2.3
+Stable tag: 2.8
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Filter blog posts/custom post types by custom taxonomy/category without page reload and with pagination too. It has different filter and post layouts.Easy to sort/filter and display posts on page with Ajax. It Support Divi, Elementor, WpBakery Page Builder. 
+Filter blog posts/custom post types by custom taxonomy/category without page reload and with pagination too. It has different filter and post layouts.
 
 == Description ==
 <h4>Support Elementor Builder</h4>
-Filter posts/custom post type's posts by category without reload the page. Select sepecific taxonomy and terms to show on the frontend. It uses ajax request to filter the posts with many pre-build layouts.Use awesome admin panel to control everything on the frontend like filter layouts, filter color combination, post layouts, post color combination, font size, font-family, pagination etc. Showcase for any type of posts/custom post types.
+Filter posts/custom post type's posts by category without reload the page. Select specific taxonomy and terms to show on the frontend. It uses ajax request to filter the posts with many pre-build layouts. Use awesome admin panel to control everything on the frontend like filter layouts, filter color combination, post layouts, post color combination, font size, font-family, pagination etc. Showcase for any type of posts/custom post types.
 <h4>Support Divi Builder</h4>
 Sort Posts/Custom post Types with Ajax functionality. Sort posts with Categories without page reload. It seamlessly loads the posts in a specific section without page reload and with pagination.
 
