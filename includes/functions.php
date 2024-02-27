@@ -232,15 +232,15 @@ class CAF_front_filter
 
     public function tc_caf_add_custom_span_before_filter()
     {
-        return esc_html__('I want to check out ', 'category-ajax-filter');
+        return esc_html_e('I want to check out ', 'category-ajax-filter');
     }
     public function tc_caf_add_custom_list_before_filter()
     {
-        return esc_html__('Everything', 'category-ajax-filter');
+        return esc_html_e('Everything', 'category-ajax-filter');
     }
     public function tc_caf_custom_title_before_sidebar_filter()
     {
-        return _e('Categories', 'category-ajax-filter');
+        return __('<h2>Categories</h2>', 'category-ajax-filter');
 
     }
     public function tc_caf_filter_order_by($terms_sel)
