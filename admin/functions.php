@@ -231,7 +231,7 @@ class CAF_Meta_Boxes
 {
     ?>
     <script type="text/javascript">
-        window.location.href = "https://trustyplugins.com/product/filter-posts-by-category-pro//";
+        window.location.href = "https://trustyplugins.com/product/filter-posts-by-category-pro/";
     </script>
     <?php
     exit;
