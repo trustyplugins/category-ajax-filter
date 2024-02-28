@@ -73,3 +73,14 @@ ul.caf-pro-features li.button a span {
  color: #2271b1;
  text-decoration: none;
 }
+.menu-icon-caf_posts ul.wp-submenu li:last-child a {
+    font-weight: 600;
+    background-color: #93003f !important;
+    color: #fff !important;
+    margin: 3px 10px 0 !important;
+    display: block;
+    text-align: center;
+    border-radius: 3px;
+    transition: all .3s;
+    box-shadow: none !important;
+}
