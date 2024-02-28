@@ -67,6 +67,7 @@ class CAF_Meta_Boxes
     {
         add_action('add_meta_boxes', array($this, 'add_post_metabox'));
         add_action('save_post', array($this, 'wpdocs_save_meta_box'), 10, 2);
+        add_action('admin_menu', array($this, 'caf_upgrade_menu'));
     }
 
     public function wpdocs_save_meta_box($post_id, $post)
@@ -213,6 +214,37 @@ class CAF_Meta_Boxes
         }
     }
 
+
+    public function caf_upgrade_menu()
+    {
+        add_submenu_page(
+            'edit.php?post_type=caf_posts',
+            __('Upgrade', 'category-ajax-filter'),
+            __('Upgrade', 'category-ajax-filter'),
+            'manage_options',
+            'caf_upgrade',
+            array($this, 'caf_upgrade')
+        );
+    }
+
+    public function caf_upgrade()
+{
+    ?>
+    <script type="text/javascript">
+        window.location.href = "https://trustyplugins.com/product/filter-posts-by-category-pro//";
+    </script>
+    <?php
+    exit;
+}
+    // public function caf_upgrade()
+    // {
+    //     // Redirect to the desired URL
+    //     // ob_start(); // Start output buffering
+    //     // wp_redirect('https://caf.trustyplugins.com/');
+    //     // ob_end_clean();
+           
+      
+    // }
     public function add_post_metabox()
     {
         add_meta_box('caf_top_meta_box', __('Settings', 'category-ajax-filter'), array($this, 'caf_top_meta_box'), 'caf_posts', 'normal', 'core' /*,array()*/);
