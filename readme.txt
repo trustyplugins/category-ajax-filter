@@ -3,7 +3,7 @@ Contributors: TrustyPlugins
 Donate link: https://www.buymeacoffee.com/jasveer
 Tags: Filter, elementor, divi, category-filter, post-filter
 Requires at least: 6.0
-Tested up to: 6.4
+Tested up to: 6.5
 Stable tag: 2.8
 Requires PHP: 7.0
 License: GPLv2 or later
