@@ -105,6 +105,10 @@ Yes you can select specific terms of any taxonomy.
 
 == Changelog ==
 
+
+= 2.8.1 = (11/04/2024)
+* 'Read More' and 'All' String translation compatibility
+
 = 2.8 = (26/02/2024)
 * Enhancement [PRO version(8.8) will be removed as addon]
 * If using CAF PRO 8.8 , user can deactivate the free version.

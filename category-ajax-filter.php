@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 /*---- CONFIGURATION >>>> DEFINE CURRENT VERSION ----*/
 if (!defined('CAF_CURRENT_VERSION')) {
-    define('CAF_CURRENT_VERSION', '2.8');
+    define('CAF_CURRENT_VERSION', '2.8.1');
 }
 if (!defined('CAF_OPTIONS')) {
     define('CAF_OPTIONS', 'Category Ajax Filter');
@@ -97,7 +97,7 @@ class TC_CAF_Plugin
             define('TC_CAF_PATH', plugin_dir_path(__FILE__));
         }
         if (!defined('TC_CAF_PLUGIN_VERSION')) {
-            define('TC_CAF_PLUGIN_VERSION', '2.8');
+            define('TC_CAF_PLUGIN_VERSION', '2.8.1');
         }
     }
 }

@@ -11,7 +11,7 @@ class CAF_shortcode_render
     }
     public function tc_caf_post_layout_read_more($text, $id)
     {
-        $text = 'Read More';
+        $text = __('Read More', 'category-ajax-filter');
         return $text;
     }
     public function caf_filter_call($atts)
@@ -257,7 +257,7 @@ class CAF_front_filter
     }
     public function tc_caf_filter_all_text($all_text)
     {
-        return 'All';
+         return __('All', 'category-ajax-filter');
     }
 }
 class CAF_ajax_pagination
