@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) {
     <?php
 foreach ($cpost_types as $cpost_type) {
     if ($select == $cpost_type) {$sel = 'selected';} else { $sel = '';}
-    echo "<option value='" . $cpost_type . "' $sel>" . esc_html($cpost_type) . "</option>";
+    echo "<option value='" . esc_attr($cpost_type) . "' ".esc_attr($sel).">" . esc_html($cpost_type) . "</option>";
 }
 ?>
     </select>
@@ -56,7 +56,7 @@ $taxo = get_object_taxonomies($select);
     if ($taxo) {
         foreach ($taxo as $tax1) {
             if ($tax == $tax1) {$sl = "selected";} else { $sl = "";}
-            echo "<option value='" . $tax1 . "' id='hide' $sl>" . esc_html($tax1) . "</option>";
+            echo "<option value='" . esc_attr($tax1) . "' id='hide' ".esc_attr($sl).">" . esc_html($tax1) . "</option>";
         }
     }
     ?>
@@ -98,7 +98,7 @@ if (class_exists("TC_CAF_PRO") && TC_CAF_PRO_PLUGIN_VERSION > '4.4.1') {
 //var_dump($terms_sel);
                     if (in_array($term->term_id, $terms_sel)) {$sl1 = 'checked';} else { $sl1 = '';}}}
 
-            echo "<li><input name='category-list[]' class='category-list check' id='category-list-id$term->term_id' type='checkbox' value='" . $term->term_id . "' $sl1><label for='category-list-id$term->term_id' class='category-list-label'>" . esc_html($term->name) . "</label></li>";
+            echo "<li><input name='category-list[]' class='category-list check' id='category-list-id".esc_attr($term->term_id)."' type='checkbox' value='" . esc_attr($term->term_id) . "' ".esc_attr($sl1)."><label for='category-list-id".esc_attr($term->term_id)."' class='category-list-label'>" . esc_html($term->name) . "</label></li>";
         }
     }
     ?>

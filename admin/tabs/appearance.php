@@ -210,7 +210,7 @@ $ptypes = apply_filters('tc_caf_pagi_type', array($caf_admin_fliters, 'tc_caf_pa
      <?php
 foreach ($ptypes as $key => $ptype) {
     if ($caf_pagi_type == $key) {$selected = 'selected';} else { $selected = '';}
-    echo '<option value="' . $key . '" ' . $selected . '>' . esc_html($ptype) . '</option>';
+    echo '<option value="' . esc_attr($key) . '" ' . esc_attr($selected) . '>' . esc_html($ptype) . '</option>';
 }
 ?>
     </select>
@@ -246,11 +246,11 @@ foreach ($animations as $key => $animation) {
     if ($caf_post_animation == $key) {$selected = 'selected';} else { $selected = '';}
 
     if ($key == $animation) {
-        echo "<optgroup label='" . $animation . "'>";
+        echo "<optgroup label='" . esc_attr($animation) . "'>";
     } else if ($key == "optionend") {
         echo "</optgroup>";
     } else {
-        echo '<option value="' . $key . '" ' . $selected . '>' . $animation . '</option>';
+        echo '<option value="' . esc_attr($key) . '" ' . esc_attr($selected) . '>' . esc_attr($animation) . '</option>';
     }
 }
 ?>

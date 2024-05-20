@@ -63,7 +63,7 @@ class CAF_shortcode_render
                 $tax = implode(",", $tax);
             }
             //var_dump($tax);
-            echo '<div id="caf-post-layout-container" class="caf-post-layout-container ' . $cl . ' ' . $caf_filter_layout . ' ' . $caf_post_layout . ' data-target-div' . $b . '" data-post-type="' . $caf_cpt_value . '" data-tax="' . $tax . '" data-terms="' . $trm . '" data-per-page="' . $caf_per_page . '" data-selected-terms="' . $trm . '" data-filter-id="' . $id . '" data-post-layout="' . $caf_post_layout . '" data-target-div="data-target-div' . $b . '">';
+            echo '<div id="caf-post-layout-container" class="caf-post-layout-container ' . esc_attr($cl) . ' ' . esc_attr($caf_filter_layout) . ' ' . esc_attr($caf_post_layout) . ' data-target-div' . esc_attr($b) . '" data-post-type="' . esc_attr($caf_cpt_value) . '" data-tax="' . esc_attr($tax) . '" data-terms="' . esc_attr($trm) . '" data-per-page="' . esc_attr($caf_per_page) . '" data-selected-terms="' . esc_attr($trm) . '" data-filter-id="' . esc_attr($id) . '" data-post-layout="' . esc_attr($caf_post_layout) . '" data-target-div="data-target-div' . esc_attr($b) . '">';
             if ($caf_filter_status == 'on') {
                 if ($caf_filter_layout && strlen($caf_filter_layout) > 13) {
                     $filepath = TC_CAF_PATH . "includes/layouts/filter/" . $caf_filter_layout . ".php";
@@ -142,7 +142,7 @@ class CAF_get_filter_posts
                 'message' => 'Term doesn\'t exist',
                 'content' => 0,
             ];
-            die(json_encode($response));
+            die(wp_json_encode($response));
         else:
             if ($terms == 'all'):
                 $tax_qry[] = [
@@ -169,6 +169,7 @@ class CAF_get_filter_posts
             'post_type' => $post_type,
             'post_status' => 'publish',
             'posts_per_page' => $per_page,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
             'tax_query' => $tax_qry,
             'orderby' => $default_order_by,
             'order' => $default_order,
@@ -191,7 +192,7 @@ class CAF_get_filter_posts
         }
 //include_once TC_CAF_PATH.'includes/layouts/post/post-layout1.php';
         $response['content'] = ob_get_clean();
-        die(json_encode($response));
+        die(wp_json_encode($response));
         //die();
     }
 }
@@ -240,7 +241,7 @@ class CAF_front_filter
     }
     public function tc_caf_custom_title_before_sidebar_filter()
     {
-        return _e('Categories', 'category-ajax-filter');
+        return esc_html_e('Categories', 'category-ajax-filter');
 
     }
     public function tc_caf_filter_order_by($terms_sel)
@@ -306,9 +307,9 @@ class CAF_ajax_pagination
             'next_text' => $next_text,
         ]);
         if ($query->max_num_pages > 1): ?>
-        <ul id="caf-layout-pagination" class="caf-pagination <?php echo $caf_post_layout; ?>">
+        <ul id="caf-layout-pagination" class="caf-pagination <?php echo esc_attr($caf_post_layout); ?>">
             <?php foreach ($paginate as $page): ?>
-                <li><?php echo $page; ?></li>
+                <li><?php echo wp_kses_post($page); ?></li>
             <?php endforeach;?>
         </ul>
     <?php endif;
