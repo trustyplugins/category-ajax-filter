@@ -93,6 +93,15 @@ class CAF_Builder_Admin {
 			'dependencies' => array( 'wp-element' ),
 			'version'      => null,
 		);
+		$builder_deps    = ! empty( $asset_meta['dependencies'] ) ? $asset_meta['dependencies'] : array( 'wp-element' );
+
+		// Ensure React packages are registered on admin screens that do not load the block editor.
+		foreach ( array( 'wp-element', 'react', 'react-dom', 'react-jsx-runtime' ) as $script_handle ) {
+			if ( in_array( $script_handle, $builder_deps, true ) && wp_script_is( $script_handle, 'registered' ) ) {
+				wp_enqueue_script( $script_handle );
+			}
+		}
+
 		$builder_version = ! empty( $asset_meta['version'] )
 			? $asset_meta['version']
 			: filemtime( TC_CAF_PATH . 'react-builder/build/index.js' );
@@ -107,7 +116,7 @@ class CAF_Builder_Admin {
 		wp_enqueue_script(
 			'caf-react-builder-script',
 			$builder_asset_url . 'index.js',
-			! empty( $asset_meta['dependencies'] ) ? $asset_meta['dependencies'] : array( 'wp-element' ),
+			$builder_deps,
 			$builder_version,
 			true
 		);

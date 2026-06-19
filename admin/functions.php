@@ -41,10 +41,12 @@ class CAF_Embed_Admin_Css_Js
     }
     public function tc_caf_embedCssJs()
     {
-        global $post_type;
-        //var_dump($post_type);
+        global $post_type, $pagenow;
+
         wp_enqueue_style('tc_caf-custom-admin-font-style', TC_CAF_URL . 'admin/css/custom-font.css', array(), TC_CAF_PLUGIN_VERSION);
-        if ($post_type == "caf_posts") {
+
+        // Legacy meta-box scripts/styles only on single filter edit screens — not the React list (edit.php).
+        if ($post_type == "caf_posts" && in_array($pagenow, array('post-new.php', 'post.php'), true)) {
             wp_enqueue_style('tc_caf-custom-admin-style', TC_CAF_URL . 'admin/css/custom.min.css', array(), TC_CAF_PLUGIN_VERSION);
             wp_enqueue_style('tc_caf-font-awesome-style', TC_CAF_URL . 'assets/css/fontawesome/css/font-awesome.min.css', array(), TC_CAF_PLUGIN_VERSION);
             wp_enqueue_style('tc_caf-bootstrap-toggle-style', TC_CAF_URL . 'admin/css/bootstrap-toggle.css', array(), TC_CAF_PLUGIN_VERSION);
