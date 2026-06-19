@@ -27,7 +27,7 @@ jQuery(function($){
     $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
   var get_text=$.trim($(".tab-content "+url+" .manage-top-dash.text").text());
   $(".manage-top-dash.general-tab.new-tab span.text").text(get_text);
-  console.log(get_text);
+  //console.log(get_text);
 } 
  
  if(getCookie("hashcafsub")!='') {
@@ -82,7 +82,6 @@ $("#app-tab-content").find(href).addClass('active');
 
 
 /*---- Start Function For CUSTOM POST TYPE SELECT ----*/
-
 $("#caf_top_meta_box #custom-post-type-select").change(function(){
 
 var val=$(this).val();
@@ -148,27 +147,16 @@ $.ajax({
 				$("#caf_top_meta_box ul.category-lists").append('<div class="notice-error">Error Occured..</div>');
 
 				}
-
-					
-
             }
 
         });	
 
 });
-
 /*---- End Function For CUSTOM POST TYPE SELECT ----*/
-
-	
-
 	/*---- Start Function To Get Terms Of Taxonomy ----*/
-
 $("#caf_top_meta_box #caf-taxonomy").change(function(){
-
 var val=$(this).val();
-
 $.ajax({
-
             url : tc_caf_ajax.ajax_url,
 
             type : 'post',
@@ -200,31 +188,19 @@ $.ajax({
 					$(div).append('<li><input name="category-list[]" class="category-list check" id="category-list-id'+tid+'" type="checkbox" value="'+tid+'"><label for="category-list-id'+tid+'" class="category-list-label">'+tname+'</label></li>');
 
 					}
-
 				}
-
 				else if(response['terms'].length=='0') {
-
 					$(div).append('<div class="notice-error">No Category added for this custom post type/taxonomy.</div>');	
-
 				}
-
 				else {
-
 				$(div).append('<div class="notice-error">Error Occured.</div>');	
-
 				}
-
             }
-
         });	
-
 });
 
 /*---- End Function For CUSTOM POST TYPE SELECT ----*/
-
 /*---- START Function To Change layout design preview ----*/
-
 $(".filter-reset").click(function(e){
 e.preventDefault();
 var layout=$("#caf-filter-layout").val();
@@ -259,9 +235,6 @@ $(btn3).css({"background-color":"#ffffff"});
 $(field_value3).val("#ffffff");
 }
 });
-
-
-
 $(".post-reset").click(function(e){
 e.preventDefault();
 var layout=$("#caf-post-layout").val();
@@ -279,155 +252,73 @@ $(field_value2).val("#ffffff");
 $(btn3).css({"background-color":"#2d2d2d"});
 $(field_value3).val("#2d2d2d");
 }
-
 });
-
-	
-
 /*---- END Function To Change layout design preview ----*/
-
 /*---- START Function To check value of switcher Managae Filter ----*/	
-
 	$('.checkstate').change(function() {
-
 		var val=$(this).prop('checked');
-
 		var dn="#"+$(this).attr("data-name");
-
 		//console.log(fields);
-
 		if(val==true) {
-
 			$(dn).val('on');
-
 		$(".manage-filters").removeClass('caf-hide');
-
 		} 
-
 		else {
-
 			$(dn).val('off');
-
 			$(".manage-filters").addClass('caf-hide');
-
 		}
-
 		var obj=get_obj_data();
-
       //$('#console-event').html('Toggle: ' + $(this).prop('checked'))
-
     });
-
 	/*---- END Function To check value of switcher ----*/
-
-	
-
 	/*---- START Function To check value of switcher Meta Filter ----*/	
-
 	$('.checkstateofmeta').change(function() {
-
 		var val=$(this).prop('checked');
-
 		//console.log(val);
-
 		if(val==true) { $(this).val('1'); 
-
-					   //$(".meta-fields-row").fadeIn();
-
+		//$(".meta-fields-row").fadeIn();
 					  } 
-
 		else {
-
 			$(this).val('0');
-
-			//$(".meta-fields-row").fadeOut();
-
+		//$(".meta-fields-row").fadeOut();
 		}
-
       //$('#console-event').html('Toggle: ' + $(this).prop('checked'))
-
     });
-
 	/*---- END Function To check value of switcher Meta Filter ----*/
-
-	
-
 	/*---- START Function To check value of switcher Meta Filter ----*/	
-
 	$('.checkstateofpgn').change(function() {
-
 		var val=$(this).prop('checked');
-
 		//console.log(val);
-
 		if(val==true) { $(this).val('1'); 
-
 		$(".p-type").fadeIn();
-
 					  } 
-
 		else {
-
 			$(this).val('0');
-
 			$(".p-type").fadeOut();
-
 		}
-
       //$('#console-event').html('Toggle: ' + $(this).prop('checked'))
-
     });
-
 	/*---- END Function To check value of switcher Meta Filter ----*/
-
 	/*---- START Function To LOAD Wp COLOR ----*/
-
 	$('.my-color-field').wpColorPicker();
-
 	/*---- END Function To LOAD Wp COLOR ----*/
-
 	var total_check=jQuery("#caf_top_meta_box .category-lists .category-list.check").length;
-
-var checked_check=jQuery("#caf_top_meta_box .category-lists .category-list.check:checked").length;
-
+    var checked_check=jQuery("#caf_top_meta_box .category-lists .category-list.check:checked").length;
 	if(total_check==checked_check) {
-
 		jQuery("#caf_top_meta_box .category-lists .category-list-all").attr("checked","checked");}
-
 });
-
-
-
-
-
-
-
 /*---- START Function To SELECT ALL CATEGORIES ----*/
-
 function selectAllCats(e) {
-
 var total_check=jQuery("#caf_top_meta_box .category-lists .category-list.check").length;
-
 var checked_check=jQuery("#caf_top_meta_box .category-lists .category-list.check:checked").length;
-
 //console.log(total_check,checked_check,checked_check2);
-
 jQuery("#caf_top_meta_box .category-lists .category-list.check").each(function(i){
-
 var check=jQuery(this).attr("checked");
-
 if(total_check==checked_check) { jQuery(this).removeAttr("checked");} 
-
 else {jQuery(this).attr("checked","checked");}
-
 })
-
-
-
 }
-
 /*---- End Function To SELECT ALL CATEGORIES ----*/
-
 jQuery(function($){
 var div="#tabs-panel .tab-panel .tab-header";
 var divs="#tabs-panel .tab-panel .tab-content";	
@@ -449,8 +340,6 @@ $(this).find("i.fa-angle-down").removeClass("rotate2").addClass('rotate');
 }	
 });	
 });
-
-
 jQuery(function($){
 $("#caf-post-layout").change(function(){
 var playout=$(this).val();
@@ -460,9 +349,6 @@ var playout=$("#caf-post-layout").val();
 conditional_fields_for_post_layout(playout);	
 get_obj_data();
 });
-
-
-
 function conditional_fields_for_post_layout(playout) {
 if(playout=='post-layout4') {
 jQuery(".clm-layout").fadeOut();
@@ -471,7 +357,6 @@ else {
 jQuery(".clm-layout").fadeIn();	
 }
 }
-
 var fields = {};
 function get_obj_data(){
 jQuery("#caf_top_meta_box").find(".tc_caf_object_field").each(function() {
@@ -480,7 +365,6 @@ fields[this.name] = jQuery(this).val();
 var obj = {fields: fields};	
 //console.log(obj);
 }
-
 jQuery(function($){
 $("#import-layout-button").click(function(e){
 e.preventDefault();
