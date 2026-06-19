@@ -1,0 +1,4108 @@
+<?php
+if ( class_exists( 'CAF_PRO_Builder_Custom_Fonts' ) ) { require_once TC_CAF_PATH . 'includes/admin/class-caf-pro-builder-custom-fonts.php'; }
+require_once TC_CAF_PATH . 'includes/builder/class-caf-builder-tier.php';
+add_filter(
+	'upload_mimes',
+	static function ( $mimes ) {
+		return array_merge(
+			$mimes,
+			array(
+				'ttf' => 'application/x-font-ttf',
+			)
+		);
+	}
+);
+// add_action('admin_menu', 'caf_builder_admin_page');
+add_action( 'wp_ajax_get_caf_builder_posts', 'get_caf_builder_posts' );
+add_action( 'wp_ajax_nopriv_get_caf_builder_posts', 'get_caf_builder_posts' );
+add_filter( 'posts_search', 'caf_builder_apply_keyword_source_search', 10, 2 );
+function caf_builder_admin_page() {
+	add_submenu_page(
+		'edit.php?post_type=caf_posts',
+		__( 'Addons', 'category-ajax-filter' ),
+		__( 'Addons', 'category-ajax-filter' ),
+		'manage_options',
+		'caf_addons',
+		'caf_builder_addons_page_display'
+	);
+}
+function caf_builder_addons_page_display() {
+	require_once TC_CAF_PATH . 'admin/addons.php';
+}
+function clean_query_args( $args ) {
+	if ( isset( $args['meta_query'] ) && is_array( $args['meta_query'] ) ) {
+		$meta_clause_count = 0;
+		foreach ( $args['meta_query'] as $key => $value ) {
+			if ( 'relation' === $key ) {
+				continue;
+			}
+			if ( is_array( $value ) && ! empty( $value ) ) {
+				++$meta_clause_count;
+			}
+		}
+		if ( 0 === $meta_clause_count ) {
+			unset( $args['meta_query'] );
+		}
+		// Keep meta_query['relation'] — WP_Query needs AND/OR when multiple clauses exist (AJAX + nested groups).
+	}
+
+	if ( isset( $args['tax_query'] ) && is_array( $args['tax_query'] ) ) {
+		$tax_clause_count = 0;
+		foreach ( $args['tax_query'] as $key => $value ) {
+			if ( 'relation' === $key ) {
+				continue;
+			}
+			if ( is_array( $value ) && ! empty( $value ) ) {
+				++$tax_clause_count;
+			}
+		}
+		if ( 0 === $tax_clause_count ) {
+			unset( $args['tax_query'] );
+		}
+		// Keep tax_query['relation'] — required for OR/AND between modules and for nested tax groups from the frontend.
+	}
+	return $args;
+}
+
+/**
+ * Validate and normalize query args for builder runtime safety.
+ *
+ * @param mixed $args Query args.
+ * @return array
+ */
+function caf_builder_validate_query_args( $args ) {
+	if ( ! is_array( $args ) ) {
+		$args = array();
+	}
+
+	if ( isset( $args['posts_per_page'] ) ) {
+		$ppp                  = (int) $args['posts_per_page'];
+		$args['posts_per_page'] = ( -1 === $ppp ) ? -1 : max( 1, absint( $ppp ) );
+	}
+
+	if ( isset( $args['paged'] ) ) {
+		$args['paged'] = max( 1, absint( $args['paged'] ) );
+	}
+
+	if ( isset( $args['order'] ) ) {
+		$order         = strtoupper( sanitize_text_field( (string) $args['order'] ) );
+		$args['order'] = in_array( $order, array( 'ASC', 'DESC' ), true ) ? $order : 'DESC';
+	}
+
+	if ( isset( $args['orderby'] ) && ! is_array( $args['orderby'] ) ) {
+		$args['orderby'] = sanitize_key( (string) $args['orderby'] );
+	}
+
+	if ( isset( $args['tax_query'] ) && ! is_array( $args['tax_query'] ) ) {
+		unset( $args['tax_query'] );
+	}
+
+	if ( isset( $args['meta_query'] ) && ! is_array( $args['meta_query'] ) ) {
+		unset( $args['meta_query'] );
+	}
+
+	return $args;
+}
+
+/**
+ * Restrict keyword search to selected source fields.
+ *
+ * @param string $keyword Raw keyword.
+ * @return string
+ */
+function caf_builder_normalize_number_words_in_text( $keyword ) {
+	$keyword = strtolower( (string) $keyword );
+	$keyword = str_replace( '-', ' ', $keyword );
+	$keyword = preg_replace( '/[^a-z0-9\s]/', ' ', $keyword );
+	$keyword = preg_replace( '/\s+/', ' ', $keyword );
+	$keyword = trim( (string) $keyword );
+
+	if ( '' === $keyword ) {
+		return '';
+	}
+
+	$tokens = array_values( array_filter( explode( ' ', $keyword ), 'strlen' ) );
+	$output = array();
+	$chunk  = array();
+
+	$flush_chunk = static function () use ( &$chunk, &$output ) {
+		if ( empty( $chunk ) ) {
+			return;
+		}
+		$number_value = caf_builder_parse_number_word_tokens( $chunk );
+		if ( null === $number_value ) {
+			$output = array_merge( $output, $chunk );
+		} else {
+			$output[] = (string) $number_value;
+		}
+		$chunk = array();
+	};
+
+	foreach ( $tokens as $token ) {
+		if ( caf_builder_is_number_word_token( $token ) ) {
+			$chunk[] = $token;
+			continue;
+		}
+		$flush_chunk();
+		$output[] = $token;
+	}
+
+	$flush_chunk();
+
+	return trim( implode( ' ', $output ) );
+}
+
+/**
+ * Check whether token is a number-word token.
+ *
+ * @param string $token Token.
+ * @return bool
+ */
+function caf_builder_is_number_word_token( $token ) {
+	static $number_words = array(
+		'zero'      => true,
+		'one'       => true,
+		'two'       => true,
+		'three'     => true,
+		'four'      => true,
+		'five'      => true,
+		'six'       => true,
+		'seven'     => true,
+		'eight'     => true,
+		'nine'      => true,
+		'ten'       => true,
+		'eleven'    => true,
+		'twelve'    => true,
+		'thirteen'  => true,
+		'fourteen'  => true,
+		'fifteen'   => true,
+		'sixteen'   => true,
+		'seventeen' => true,
+		'eighteen'  => true,
+		'nineteen'  => true,
+		'twenty'    => true,
+		'thirty'    => true,
+		'forty'     => true,
+		'fifty'     => true,
+		'sixty'     => true,
+		'seventy'   => true,
+		'eighty'    => true,
+		'ninety'    => true,
+		'hundred'   => true,
+		'thousand'  => true,
+		'lakh'      => true,
+		'lakhs'     => true,
+		'million'   => true,
+		'crore'     => true,
+		'crores'    => true,
+		'billion'   => true,
+		'and'       => true,
+	);
+
+	return isset( $number_words[ $token ] );
+}
+
+/**
+ * Convert number-word token chunk to integer.
+ *
+ * @param array $tokens Tokens.
+ * @return int|null
+ */
+function caf_builder_parse_number_word_tokens( $tokens ) {
+	if ( ! is_array( $tokens ) || empty( $tokens ) ) {
+		return null;
+	}
+
+	$values = array(
+		'zero'      => 0,
+		'one'       => 1,
+		'two'       => 2,
+		'three'     => 3,
+		'four'      => 4,
+		'five'      => 5,
+		'six'       => 6,
+		'seven'     => 7,
+		'eight'     => 8,
+		'nine'      => 9,
+		'ten'       => 10,
+		'eleven'    => 11,
+		'twelve'    => 12,
+		'thirteen'  => 13,
+		'fourteen'  => 14,
+		'fifteen'   => 15,
+		'sixteen'   => 16,
+		'seventeen' => 17,
+		'eighteen'  => 18,
+		'nineteen'  => 19,
+		'twenty'    => 20,
+		'thirty'    => 30,
+		'forty'     => 40,
+		'fifty'     => 50,
+		'sixty'     => 60,
+		'seventy'   => 70,
+		'eighty'    => 80,
+		'ninety'    => 90,
+	);
+	$scales = array(
+		'thousand' => 1000,
+		'lakh'     => 100000,
+		'lakhs'    => 100000,
+		'million'  => 1000000,
+		'crore'    => 10000000,
+		'crores'   => 10000000,
+		'billion'  => 1000000000,
+	);
+
+	$total      = 0;
+	$current    = 0;
+	$has_number = false;
+
+	foreach ( $tokens as $token ) {
+		if ( 'and' === $token ) {
+			continue;
+		}
+
+		if ( isset( $values[ $token ] ) ) {
+			$current   += (int) $values[ $token ];
+			$has_number = true;
+			continue;
+		}
+
+		if ( 'hundred' === $token ) {
+			$current    = max( 1, $current ) * 100;
+			$has_number = true;
+			continue;
+		}
+
+		if ( isset( $scales[ $token ] ) ) {
+			$scale      = (int) $scales[ $token ];
+			$current    = max( 1, $current );
+			$total     += $current * $scale;
+			$current    = 0;
+			$has_number = true;
+		}
+	}
+
+	if ( ! $has_number ) {
+		return null;
+	}
+
+	return (int) ( $total + $current );
+}
+
+/**
+ * Build keyword variants for numeric-intent search.
+ *
+ * @param string $keyword Raw keyword.
+ * @return array
+ */
+function caf_builder_get_keyword_variants( $keyword ) {
+	$variants = array();
+	$keyword  = trim( (string) $keyword );
+	if ( '' === $keyword ) {
+		return $variants;
+	}
+
+	$variants[] = $keyword;
+	$normalized = caf_builder_normalize_number_words_in_text( $keyword );
+	if ( '' !== $normalized ) {
+		$variants[] = $normalized;
+	}
+
+	return array_values( array_unique( array_filter( array_map( 'trim', $variants ), 'strlen' ) ) );
+}
+
+/**
+ * Restrict keyword search to selected source fields.
+ *
+ * @param string   $search   Existing search SQL.
+ * @param WP_Query $wp_query Current query.
+ * @return string
+ */
+function caf_builder_apply_keyword_source_search( $search, $wp_query ) {
+	if ( ! ( $wp_query instanceof WP_Query ) ) {
+		return $search;
+	}
+
+	$keyword = trim( (string) $wp_query->get( 'caf_search_keyword' ) );
+	if ( '' === $keyword ) {
+		return $search;
+	}
+
+	$source = $wp_query->get( 'caf_search_source' );
+	if ( ! is_array( $source ) ) {
+		$source = array();
+	}
+
+	$everything   = isset( $source['everything'] ) && 'true' === (string) $source['everything'];
+	$title        = isset( $source['title'] ) && 'true' === (string) $source['title'];
+	$descriptions = isset( $source['descriptions'] ) && 'true' === (string) $source['descriptions'];
+	$custom_field = isset( $source['custom_field'] ) && 'true' === (string) $source['custom_field'];
+
+	// "Everything" should still use source-aware search logic.
+	if ( $everything ) {
+		$title        = true;
+		$descriptions = true;
+	}
+
+	if ( ! $title && ! $descriptions && ! $custom_field ) {
+		return $search;
+	}
+
+	global $wpdb;
+	$keywords = caf_builder_get_keyword_variants( $keyword );
+	if ( empty( $keywords ) ) {
+		return $search;
+	}
+	$clauses = array();
+
+	if ( $title ) {
+		$title_clauses = array();
+		foreach ( $keywords as $search_keyword ) {
+			$like            = '%' . $wpdb->esc_like( $search_keyword ) . '%';
+			$title_clauses[] = $wpdb->prepare( "{$wpdb->posts}.post_title LIKE %s", $like );
+		}
+		if ( ! empty( $title_clauses ) ) {
+			$clauses[] = '( ' . implode( ' OR ', $title_clauses ) . ' )';
+		}
+	}
+	if ( $descriptions ) {
+		$description_clauses = array();
+		foreach ( $keywords as $search_keyword ) {
+			$like                  = '%' . $wpdb->esc_like( $search_keyword ) . '%';
+			$description_clauses[] = $wpdb->prepare( "{$wpdb->posts}.post_content LIKE %s", $like );
+		}
+		if ( ! empty( $description_clauses ) ) {
+			$clauses[] = '( ' . implode( ' OR ', $description_clauses ) . ' )';
+		}
+	}
+	if ( $custom_field && ( ! class_exists( 'CAF_Builder_Tier' ) || CAF_Builder_Tier::can_use_feature( 'search_custom_field' ) ) ) {
+		$custom_field_key = trim( (string) $wp_query->get( 'caf_search_custom_field' ) );
+		if ( '' !== $custom_field_key && '0' !== $custom_field_key ) {
+			$meta_clauses = array();
+			foreach ( $keywords as $search_keyword ) {
+				$like           = '%' . $wpdb->esc_like( $search_keyword ) . '%';
+				$meta_clauses[] = $wpdb->prepare(
+					"EXISTS (
+						SELECT 1
+						FROM {$wpdb->postmeta} caf_meta
+						WHERE caf_meta.post_id = {$wpdb->posts}.ID
+						  AND caf_meta.meta_key = %s
+						  AND caf_meta.meta_value LIKE %s
+					)",
+					$custom_field_key,
+					$like
+				);
+			}
+			if ( ! empty( $meta_clauses ) ) {
+				$clauses[] = '( ' . implode( ' OR ', $meta_clauses ) . ' )';
+			}
+		}
+	}
+
+	if ( empty( $clauses ) ) {
+		return $search;
+	}
+
+	$search_sql = ' AND (' . implode( ' OR ', $clauses ) . ')';
+	if ( ! is_user_logged_in() ) {
+		$search_sql .= " AND ({$wpdb->posts}.post_password = '')";
+	}
+ 
+	return $search_sql;
+}
+// function get_caf_builder_posts() {
+// if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'tc_caf_ajax_nonce' ) ) {
+// wp_send_json_error(
+// array(
+// 'message' => esc_html__( 'Security check failed.', 'tc-caf-pro' ),
+// )
+// );
+// }
+// $args       = isset( $_POST['params'] ) && is_array( $_POST['params'] ) ? $_POST['params'] : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+// $shortindex = isset( $_POST['caf_index'] ) ? absint( $_POST['caf_index'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+// if ( empty( $args ) || empty( $shortindex ) ) {
+// wp_send_json_error(
+// array(
+// 'message' => esc_html__( 'Invalid request.', 'tc-caf-pro' ),
+// )
+// );
+// }
+// $savedlayouts = get_option( 'caf_builder_layouts_list' );
+// if ( ! is_array( $savedlayouts ) || ! isset( $savedlayouts[ $shortindex ] ) ) {
+// wp_send_json_error(
+// array(
+// 'message' => esc_html__( 'Layout does not exist.', 'tc-caf-pro' ),
+// )
+// );
+// }
+// $layout_data   = $savedlayouts[ $shortindex ];
+// $optionkey     = isset( $layout_data['key'] ) ? $layout_data['key'] : '';
+// $layout_status = isset( $layout_data['post_status'] ) ? $layout_data['post_status'] : '';
+// if ( '' === $optionkey ) {
+// wp_send_json_error(
+// array(
+// 'message' => esc_html__( 'Invalid layout configuration.', 'tc-caf-pro' ),
+// )
+// );
+// }
+// if ( 'publish' !== $layout_status ) {
+// wp_send_json_error(
+// array(
+// 'message' => esc_html__( 'Layout is not published.', 'tc-caf-pro' ),
+// )
+// );
+// }
+// $builder_data = get_option( 'caf_' . $optionkey . '_' . $shortindex );
+// if ( empty( $builder_data ) ) {
+// wp_send_json_error(
+// array(
+// 'message' => esc_html__( 'Builder data does not exist.', 'tc-caf-pro' ),
+// )
+// );
+// }
+// $args  = clean_query_args( $args );
+// $query = new WP_Query( $args );
+// echo load_builder_ajax_dependencies();
+// $data_handler    = new CAF_PRO_Builder_Data( $builder_data, $shortindex );
+// $css_builder     = new CAF_PRO_Builder_Css();
+// $style_generator = new CAF_PRO_Builder_Style_Generator();
+// $query_builder   = new CAF_PRO_Builder_Query( $data_handler );
+// $posts_per_page = isset( $args['posts_per_page'] ) ? absint( $args['posts_per_page'] ) : 10;
+// $current_page   = isset( $args['paged'] ) ? absint( $args['paged'] ) : 1;
+// $post_renderer = new CAF_PRO_Builder_Post_Renderer(
+// $data_handler,
+// $css_builder,
+// $query,
+// $style_generator
+// );
+// $pagination_renderer = new CAF_PRO_Builder_Pagination_Renderer(
+// $data_handler,
+// $css_builder,
+// $query,
+// $current_page,
+// $style_generator
+// );
+// $misc_renderer = new CAF_PRO_Builder_Misc_Renderer(
+// $data_handler,
+// $css_builder,
+// $query_builder,
+// $style_generator
+// );
+// wp_send_json_success(
+// array(
+// 'posts_data'        => $post_renderer->render(),
+// 'pagination_data'   => $pagination_renderer->render(),
+// 'result_count_data' => $misc_renderer->render_result_count(
+// $posts_per_page,
+// $current_page,
+// (int) $query->found_posts
+// ),
+// 'dynamic_css'       => $css_builder->get_unique_css(),
+// 'message'           => esc_html__( 'Data fetched successfully.', 'tc-caf-pro' ),
+// )
+// );
+// }
+function get_caf_builder_posts() {
+	if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'tc_caf_ajax_nonce' ) ) {
+		wp_send_json_error(
+			array(
+				'message' => esc_html__( 'Security check failed.', 'tc-caf-pro' ),
+			)
+		);
+	}
+	$args             = isset( $_POST['params'] ) && is_array( $_POST['params'] ) ? $_POST['params'] : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$shortindex       = isset( $_POST['caf_index'] ) ? absint( $_POST['caf_index'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$selected_filters = isset( $_POST['selected_filters'] ) && is_array( $_POST['selected_filters'] ) ? $_POST['selected_filters'] : array();
+	$response_mode    = isset( $_POST['response_mode'] ) ? sanitize_key( wp_unslash( $_POST['response_mode'] ) ) : 'posts'; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$client_css_hash  = isset( $_POST['dynamic_css_hash'] ) ? sanitize_text_field( wp_unslash( $_POST['dynamic_css_hash'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	if ( empty( $args ) ) {
+		wp_send_json_error(
+			array(
+				'message' => esc_html__( 'Invalid request.', 'tc-caf-pro' ),
+			)
+		);
+	}
+	load_builder_ajax_dependencies();
+	$layout_bundle = CAF_PRO_Builder_Ajax_Performance::get_layout_bundle( $shortindex );
+	if ( empty( $layout_bundle ) ) {
+		wp_send_json_error(
+			array(
+				'message' => esc_html__( 'Layout does not exist or is not published.', 'tc-caf-pro' ),
+			)
+		);
+	}
+	$builder_data = $layout_bundle['builder_data'];
+	$args         = clean_query_args( $args );
+	$data_handler = new CAF_PRO_Builder_Data( $builder_data, $shortindex );
+	$args         = $data_handler->strip_placeholder_sort_from_query_args( $args );
+	$args         = apply_filters(
+		'caf_builder_ajax_query_args',
+		$args,
+		array(
+			'builder_index'    => $shortindex,
+			'is_ajax'          => true,
+			'selected_filters' => $selected_filters,
+			'response_mode'    => $response_mode,
+		)
+	);
+	$args = caf_builder_validate_query_args( $args );
+	if ( ! CAF_PRO_Builder_Ajax_Performance::query_needs_found_rows( $data_handler ) ) {
+		$args['no_found_rows'] = true;
+	}
+	$query             = new WP_Query( $args );
+	$css_builder       = new CAF_PRO_Builder_Css();
+	$style_generator   = new CAF_PRO_Builder_Style_Generator();
+	$query_builder     = new CAF_PRO_Builder_Query( $data_handler );
+	$query_builder->set_query_args( $args );
+	$post_renderer     = new CAF_PRO_Builder_Post_Renderer(
+		$data_handler,
+		$css_builder,
+		$query,
+		$style_generator
+	);
+	$builder_renderer  = new CAF_PRO_Builder_Renderer(
+		$data_handler,
+		$query_builder,
+		$css_builder,
+		$style_generator
+	);
+	$post_count_per_page = isset( $args['posts_per_page'] ) ? absint( $args['posts_per_page'] ) : 10;
+	$current_page        = isset( $args['paged'] ) ? absint( $args['paged'] ) : 1;
+	$found_posts           = (int) $query->found_posts;
+	$schema_append         = ! empty( $_POST['schema_append'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$response_mode         = CAF_PRO_Builder_Ajax_Performance::normalize_response_mode( $response_mode );
+	$skip_css_collection   = ( 'posts' === $response_mode );
+
+	if ( $skip_css_collection ) {
+		$css_builder->disable_collection();
+	}
+
+	$zones = ( 'full' === $response_mode )
+		? $builder_renderer->get_ajax_misc_zones(
+			$query,
+			$post_count_per_page,
+			$current_page,
+			$found_posts,
+			$selected_filters
+		)
+		: $builder_renderer->get_ajax_posts_zones(
+			$query,
+			$post_count_per_page,
+			$current_page,
+			$found_posts,
+			$selected_filters
+		);
+	if ( $skip_css_collection ) {
+		$css_payload      = CAF_PRO_Builder_Ajax_Performance::resolve_ajax_css_payload( $shortindex, $client_css_hash );
+		$dynamic_css      = $css_payload['css'];
+		$dynamic_css_hash = $css_payload['hash'];
+	} else {
+		$dynamic_css      = $css_builder->get_unique_css();
+		$dynamic_css_hash = CAF_PRO_Builder_Ajax_Performance::get_dynamic_css_hash( $dynamic_css );
+		CAF_PRO_Builder_Ajax_Performance::set_layout_css_snapshot( $shortindex, $dynamic_css );
+	}
+
+	$response = array(
+		'posts_data'       => $post_renderer->render(),
+		'dynamic_css_hash' => $dynamic_css_hash,
+		'found_posts'      => $found_posts,
+		'response_mode'    => $response_mode,
+		'message'          => esc_html__( 'Data fetched successfully.', 'tc-caf-pro' ),
+	) + $zones;
+
+	if ( class_exists( 'CAF_PRO_Builder_Seo' ) && CAF_PRO_Builder_Seo::is_enabled( $shortindex ) ) {
+		$response['itemlist_json_ld'] = CAF_PRO_Builder_Seo::render_ajax_itemlist_json_ld(
+			$query,
+			$current_page,
+			$post_count_per_page,
+			$schema_append,
+			$shortindex
+		);
+	}
+
+	if ( '' !== $dynamic_css && ( $skip_css_collection || '' === $client_css_hash || $client_css_hash !== $dynamic_css_hash ) ) {
+		$response['dynamic_css'] = $dynamic_css;
+	}
+	$response = apply_filters(
+		'caf_builder_ajax_response',
+		$response,
+		array(
+			'builder_index'    => $shortindex,
+			'is_ajax'          => true,
+			'selected_filters' => $selected_filters,
+			'query_args'       => $args,
+			'found_posts'      => $found_posts,
+			'response_mode'    => $response_mode,
+			'dynamic_css_hash' => $dynamic_css_hash,
+		),
+		$query
+	);
+
+	wp_send_json_success( $response );
+}
+/**
+ * Load builder AJAX dependencies.
+ *
+ * @return void
+ */
+function load_builder_ajax_dependencies() {
+	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-ajax-performance.php';
+	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-data.php';
+	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-css.php';
+	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-style-generator.php';
+	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-query.php';
+	require_once TC_CAF_PATH . 'includes/frontend/renderers/class-caf-pro-builder-post-renderer.php';
+	require_once TC_CAF_PATH . 'includes/frontend/renderers/class-caf-pro-builder-pagination-renderer.php';
+	require_once TC_CAF_PATH . 'includes/frontend/renderers/class-caf-pro-builder-misc-renderer.php';
+	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-framework.php';
+	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-renderer.php';
+	$seo_file = TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-seo.php';
+	if ( file_exists( $seo_file ) ) {
+		require_once $seo_file;
+	}
+	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-url-state.php';
+}
+/* Start Filter Layout Api Functions*/
+add_action( 'rest_api_init', 'caf_post_filter_init_fun' );
+function caf_post_filter_init_fun() {
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/add-filter-options/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_add_rest_option_filter',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/filter-layouts/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_filter_layouts',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/delete-filter-options/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_delete_filter_rest_option',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-taxonomy/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_taxonomy',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-terms/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_get_terms',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/save-filter-layout/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_save_filter_rest_option',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-filter-options/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_filter_option',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/rename-filter-layout-label/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_rename_rest_filter_layout',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/verify-taxonomy-terms/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_verify_taxonomy_terms',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-customfields/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_custom_fields',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+}
+
+function caf_get_custom_fields( $data ) {
+	if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'filter_custom_field' ) ) {
+		echo wp_json_encode(
+			array(
+				'status'        => 'success',
+				'custom_fields' => array(),
+			)
+		);
+		return;
+	}
+
+	$post_type = $data['post-type'];
+	$query     = new WP_Query(
+		array(
+			'post_type'     => $post_type,
+			'post_status'   => 'publish',
+			'post_per_page' => -1,
+		)
+	);
+	$results   = array();
+	while ( $query->have_posts() ) {
+		global $post;
+		$query->the_post();
+		$post_id     = get_the_ID();
+		$meta_fields = get_post_custom( $post_id );
+		$meta_fields = caf_filter_builder_meta_fields( $meta_fields );
+		if ( $meta_fields ) {
+			foreach ( $meta_fields as $custom_field => $csVal ) {
+				$fieldObj  = get_field_object( $custom_field );
+				$results[] = array(
+					'key'  => $custom_field,
+					'data' => $fieldObj,
+				);
+			}
+		}
+
+		break;
+	}
+	wp_reset_postdata();
+	echo json_encode(
+		array(
+			'status'        => 'success',
+			'custom_fields' => $results,
+		)
+	);
+}
+
+function caf_verify_taxonomy_terms( $data ) {
+	$taxonomy     = json_decode( $data['taxonomy'] );
+	$taxonomyData = array();
+	foreach ( $taxonomy as $key => $value ) {
+		$terms     = get_terms(
+			array(
+				'taxonomy'   => $value,
+				'hide_empty' => false,
+			)
+		);
+		$terms_ids = array();
+		if ( $terms ) {
+			foreach ( $terms as $term ) {
+				array_push( $terms_ids, $term->term_id );
+			}
+			$taxonomyData[ $value ] = $terms_ids;
+		} else {
+			$taxonomyData[ $value ] = array();
+		}
+	}
+	echo json_encode(
+		array(
+			'status'        => 'success',
+			'taxonomy_data' => $taxonomyData,
+		)
+	);
+}
+function caf_rename_rest_filter_layout( $data ) {
+	ob_start();
+	$index     = $data['index'];
+	$new_label = $data['title'];
+	$options   = get_option( 'caf_custom_post_filter_layout' );
+	if ( $options[ $index ] ) {
+		$options[ $index ]['label'] = $new_label;
+		update_option( 'caf_custom_post_filter_layout', $options );
+		$updated_option = get_option( 'caf_custom_post_filter_layout' );
+		echo json_encode(
+			array(
+				'status' => 'success',
+				'title'  => $updated_option[ $index ],
+			)
+		);
+	}
+}
+function caf_get_filter_option( $data ) {
+	ob_start();
+	$filter_layouts = get_option( 'caf_custom_post_filter_layout' );
+	$index          = $data['builder_index'];
+	$title          = $filter_layouts[ $index ]['key'];
+	$filter_opt     = 'caf_fl_' . $title . '_' . $index;
+	if ( get_option( $filter_opt ) ) {
+		echo json_encode(
+			array(
+				'status'      => 'success',
+				'filter_data' => get_option( $filter_opt ),
+			)
+		);
+	} else {
+		echo json_encode(
+			array(
+				'status'      => 'success',
+				'filter_data' => null,
+			)
+		);
+	}
+}
+function caf_save_filter_rest_option( $data ) {
+	ob_start();
+	$data_layouts = json_decode( $data['json_data'] );
+	$extra_data   = json_decode( $data['extraData'] );
+	$alldata      = array(
+		'filter_layout' => $data_layouts,
+		'extra_data'    => $extra_data,
+	);
+	$opt          = 'caf_custom_post_filter_layout';
+	$index        = $data['index'];
+	$layouts      = get_option( $opt );
+	$title        = $layouts[ $index ]['key'];
+	$filter_opt   = 'caf_fl_' . $title . '_' . $index;
+	if ( get_option( $filter_opt ) ) {
+		update_option( $filter_opt, $alldata );
+	} else {
+		update_option( $filter_opt, $alldata );
+	}
+	echo json_encode(
+		array(
+			'status'      => 'success',
+			'filter_data' => get_option( $filter_opt ),
+		)
+	);
+}
+
+function StyledTermData( $out, $taxo ) {
+
+	$dom = new DOMDocument();
+	$dom->loadHTML( $out );
+
+	$xpath = new DOMXPath( $dom );
+
+	// Select all <li> elements
+	$liElements = $xpath->query( '//li' );
+
+	foreach ( $liElements as $li ) {
+		// Get the text content of the <a> tag
+		$termName = $xpath->query( './/a', $li )->item( 0 )->nodeValue;
+		if ( $termName == 'undefined' || $termName == '' ) {
+			return '0';
+		}
+		$classValue   = $li->getAttribute( 'class' );
+		$numericValue = intval( preg_replace( '/[^0-9]/', '', $classValue ) );
+
+		// Get the count from the "(0)" span
+		$count = $xpath->query( './/span', $li )->item( 0 )->nodeValue;
+
+		// Create the new div element
+		$newDiv = $dom->createElement( 'div' );
+		$newDiv->setAttribute( 'class', 'trusty-manage-bar-sec-label' );
+
+		// Create the label element
+		$label = $dom->createElement( 'label' );
+		$label->setAttribute( 'for', 'category-list-id' . $numericValue );
+
+		// Create the input element
+		$input = $dom->createElement( 'input' );
+		$input->setAttribute( 'class', 'category-list check' );
+		$input->setAttribute( 'type', 'checkbox' );
+		$input->setAttribute( 'term-name', $termName );
+		$input->setAttribute( 'name', $taxo . '[]' );
+		$input->setAttribute( 'value', $taxo . '___' . $numericValue );
+		$input->setAttribute( 'id', 'category-list-id' . $numericValue );
+
+		// Append elements
+		$label->appendChild( $input );
+		$label->appendChild( $dom->createTextNode( $termName . ' ' . $count ) );
+		$newDiv->appendChild( $label );
+
+		// Create the font-awesome icon
+		$icon = $dom->createElement( 'i' );
+		$icon->setAttribute( 'class', 'fa fa-cog caf-term-setting' );
+		$icon->setAttribute( 'aria-hidden', 'true' );
+		$li->setAttribute( 'count', $count );
+		// Append the icon to the div
+		$newDiv->appendChild( $icon );
+		$li->setAttribute( 'term-id', $numericValue );
+		$ulElements = $xpath->query( './/ul', $li );
+		if ( $ulElements->length > 0 ) {
+			$li->setAttribute( 'class', $li->getAttribute( 'class' ) . ' tc-caf-has-child' );
+			if ( strpos( $li->getAttribute( 'class' ), 'tc-caf-has-child' ) !== false ) {
+				// Append the iconPlus element
+				$iconPlus = $dom->createElement( 'i' );
+				$iconPlus->setAttribute( 'class', 'fa fa-plus caf-plus' );
+				$iconPlus->setAttribute( 'aria-hidden', 'true' );
+				$newDiv->appendChild( $iconPlus );
+			}
+		}
+
+		// Replace the original <li> content with the new div
+		// $li->nodeValue = '';
+		// $li->appendChild($newDiv);
+		// $li->insertBefore($newDiv,$xpath->query('.//a', $li));
+		$li->insertBefore( $newDiv, $li->getElementsByTagName( 'a' )->item( 0 ) );
+	}
+
+	// Output the modified HTML
+	// echo $dom->saveHTML();
+	$res = $dom->saveHTML();
+
+	$stripped_html = strip_tags( $res, '<li><input><a><ul><div><label><i><span>' );
+	return $stripped_html;
+}
+function caf_get_taxonomy( $data ) {
+	ob_start();
+	$post_type      = $data['post-type'];
+	$taxonomy_names = get_object_taxonomies( $post_type );
+	$taxoData       = array();
+	foreach ( $taxonomy_names as $taxo ) {
+		$data1  = '';
+		$data1 .= "<ul class='each-tax-data $taxo' data-name='$taxo'>";
+		$data1 .= "<div class='caf-term-title-main'>";
+		$data1 .= "<h2 style='display:inline-block;width:100%;font-weight: 600;text-transform: capitalize;padding: 0;margin: 0;font-size:22px'>" . $taxo . "</h2>
+        <div class='caf-terms-cat-btn'>
+            <a class='select-all-btn' href='' style='color:rgb(0, 0, 0); text-decoration: none;'>Select All</a>
+            <div class='caf-btn-bdr'>|</div>
+            <a class='deselect-btn' href='' style='color:rgb(0, 0, 0); text-decoration: none;'>Select None</a>
+        </div>
+        </div>
+        <hr style='margin-top:0'>";
+		$data1 .= '<div class="trusty-separate-bars"><div class="trusty-separate-bar tr-name">Name</div><div class="trusty-separate-bar tr-sett">Setting</div><div class="trusty-separate-bar tr-icon">Icon</div><div class="trusty-separate-bar tr-parent">Parent Dropdown <i class="fa fa-info-circle" aria-hidden="true"></i><span>This feature will only work if you use parent child category filter layout.</span></div></div>';
+		$out    = wp_list_categories(
+			array(
+				'echo'               => '0',
+				'show_count'         => true,
+				'use_desc_for_title' => false,
+				'hide_empty'         => false,
+				'taxonomy'           => $taxo,
+				'order'              => 'ASC',
+				'orderby'            => 'name',
+				'title_li'           => '',
+				'style'              => 'list',
+			)
+		);
+		$res    = StyledTermData( $out, $taxo );
+		if ( $res != '0' ) {
+			$data1 .= $res;
+		} else {
+			$data1 .= $out;
+		}
+		$data1 .= '</ul>';
+
+		$taxoData[] = array(
+			'key'       => $taxo,
+			'label'     => $taxo,
+			'term_data' => $data1,
+			'post_type' => $post_type,
+		);
+	}
+
+	$response = array(
+		'status'        => 'success',
+		'taxonomy_list' => $taxoData,
+	);
+	header( 'Content-Type: application/json' );
+	echo json_encode( $response );
+}
+
+
+function caf_add_rest_option_filter( $data ) {
+	ob_start();
+	$opt   = 'caf_custom_post_filter_layout';
+	$title = $data['title'];
+	$key   = $data['title'];
+	$key   = strtolower( str_replace( ' ', '', $key ) );
+	if ( get_option( $opt ) ) {
+		$custom_layouts   = get_option( $opt );
+		$custom_layouts[] = array(
+			'key'   => $key,
+			'label' => $title,
+		);
+		update_option( $opt, $custom_layouts );
+	} else {
+		$custom_layouts[] = array(
+			'key'   => $key,
+			'label' => $title,
+		);
+		update_option( $opt, $custom_layouts );
+	}
+	echo json_encode(
+		array(
+			'status'         => 'success',
+			'filter_layouts' => get_option( $opt ),
+		)
+	);
+}
+function caf_get_filter_layouts( $data ) {
+	ob_start();
+	$layouts = array();
+	if ( get_option( 'caf_custom_post_filter_layout' ) ) {
+		$layouts      = get_option( 'caf_custom_post_filter_layout' );
+		$filter_saved = array();
+		foreach ( $layouts as $key => $filter ) {
+			$title = $filter['key'];
+			$title = 'caf_fl_' . $title . '_' . $key;
+			if ( get_option( $title ) ) {
+				$filter_saved[ $key ] = true;
+			} else {
+				$filter_saved[ $key ] = false;
+			}
+		}
+	}
+	echo json_encode(
+		array(
+			'status'         => 'success',
+			'filter_layouts' => $layouts,
+			'filter_saved'   => $filter_saved,
+		)
+	);
+}
+
+function caf_delete_filter_rest_option( $data ) {
+	ob_start();
+	$index   = $data['index'];
+	$options = get_option( 'caf_custom_post_filter_layout' );
+	if ( $options[ $index ] ) {
+		$layout = $options[ $index ]['key'];
+		$title  = 'caf_fl_' . $layout . '_' . $index;
+		unset( $options[ $index ] );
+		delete_option( $title );
+		update_option( 'caf_custom_post_filter_layout', $options );
+		echo json_encode(
+			array(
+				'status'         => 'success',
+				'filter_layouts' => get_option( 'caf_custom_post_filter_layout' ),
+			)
+		);
+	}
+}
+
+
+/* Start New Look Builder Layout Api Functions*/
+
+add_action( 'rest_api_init', 'caf_builder_layout_init_fun' );
+
+function caf_builder_layout_init_fun() {
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-layouts-list/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_layouts_list',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-post-types/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_post_types_list',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	if ( class_exists( 'CAF_Builder_Tier' ) && CAF_Builder_Tier::can_use_feature( 'custom_fonts' ) && class_exists( 'CAF_PRO_Builder_Custom_Fonts' ) ) {
+		register_rest_route(
+			'caf-custom-builder/v1',
+			'/custom-fonts/',
+			array(
+				'methods'             => 'GET',
+				'callback'            => array( 'CAF_PRO_Builder_Custom_Fonts', 'rest_list_fonts' ),
+				'permission_callback' => function () {
+					return current_user_can( 'manage_options' );
+				},
+			)
+		);
+		register_rest_route(
+			'caf-custom-builder/v1',
+			'/custom-fonts/',
+			array(
+				'methods'             => 'POST',
+				'callback'            => array( 'CAF_PRO_Builder_Custom_Fonts', 'rest_upload_font' ),
+				'permission_callback' => function () {
+					return current_user_can( 'manage_options' );
+				},
+				'args'                => array(
+					'family' => array(
+						'required'          => false,
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_text_field',
+					),
+				),
+			)
+		);
+		register_rest_route(
+			'caf-custom-builder/v1',
+			'/custom-fonts/(?P<slug>[a-z0-9\-]+)',
+			array(
+				'methods'             => 'DELETE',
+				'callback'            => array( 'CAF_PRO_Builder_Custom_Fonts', 'rest_delete_font' ),
+				'permission_callback' => function () {
+					return current_user_can( 'manage_options' );
+				},
+				'args'                => array(
+					'slug' => array(
+						'required'          => true,
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_key',
+					),
+				),
+			)
+		);
+	}
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/delete-layout/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_delete_layout_permissions',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/clone-layout/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_clone_layout',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/export-default-layout/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_export_default_layout',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/export-builder-layout/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_export_builder_layout',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/clone-builder-layout/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_clone_builder_layout',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/restore-layout/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_restore_layout',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/delete-layout-permanent/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_delete_layout_permanent',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/save-builder-layout/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_save_builder_layout_option',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/delete-builder-layout/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_delete_builder_layout',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/delete-builder-layout-permanent/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_delete_builder_layout_permanent',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/restore-builder-layout/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_restore_builder_layout',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-posts-list/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_posts_list',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+			'args'                => array(
+				'post_type' => array(
+					'required'          => true,
+					'type'              => 'string',
+					'sanitize_callback' => 'sanitize_key',
+				),
+			),
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-layout-data/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_get_layout_data',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/move-to-trash/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_move_to_trash',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/bulk-layouts-restore/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_bulk_layouts_restore',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/bulk-layouts-delete-permanent/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_bulk_layouts_delete_permanent',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/rename-builder-layout-label/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_rename_builder_layout_label',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/update-builder-layout/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_update_builder_layout_option',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-preview-posts/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_preview_posts',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-trash-layouts-list/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_trash_layouts_list',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-content-length/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_get_content_length',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-date/',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_date',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-taxo-data-with-recursive-method',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_taxo_data_with_recursive_method',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-cf-field-value/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_get_cf_field_value',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-cf-list/',
+		array(
+			'methods'             => 'POST',
+			'callback'            => 'caf_get_cf_field_list',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+}
+function caf_get_cf_field_list( $request ) {
+	$post_type = sanitize_key( (string) $request->get_param( 'post_type' ) );
+
+	if ( '' === $post_type ) {
+		wp_send_json_error( 'post_type is required' );
+	}
+
+	$meta_keys = caf_get_builder_custom_field_keys_for_post_type( $post_type );
+
+	wp_send_json_success(
+		array(
+			'meta_keys' => array_values( $meta_keys ),
+		)
+	);
+}
+
+/**
+ * Collect ACF field names from a fields array (including sub fields).
+ *
+ * @param array $fields Field definitions.
+ * @param array $names  Collected names (by reference).
+ * @return void
+ */
+function caf_collect_acf_field_names( $fields, &$names ) {
+	if ( ! is_array( $fields ) ) {
+		return;
+	}
+
+	foreach ( $fields as $field ) {
+		if ( empty( $field['name'] ) ) {
+			continue;
+		}
+
+		$type = isset( $field['type'] ) ? (string) $field['type'] : '';
+
+		if ( in_array( $type, array( 'tab', 'accordion', 'message' ), true ) ) {
+			if ( ! empty( $field['sub_fields'] ) ) {
+				caf_collect_acf_field_names( $field['sub_fields'], $names );
+			}
+			continue;
+		}
+
+		if ( in_array( $type, array( 'group', 'repeater', 'flexible_content', 'clone' ), true ) ) {
+			if ( ! empty( $field['sub_fields'] ) ) {
+				caf_collect_acf_field_names( $field['sub_fields'], $names );
+			}
+			continue;
+		}
+
+		$names[] = (string) $field['name'];
+
+		if ( ! empty( $field['sub_fields'] ) ) {
+			caf_collect_acf_field_names( $field['sub_fields'], $names );
+		}
+	}
+}
+
+/**
+ * Get ACF field names assigned to a post type.
+ *
+ * @param string $post_type Post type slug.
+ * @return array
+ */
+function caf_get_acf_field_keys_for_post_type( $post_type ) {
+	if ( ! function_exists( 'acf_get_field_groups' ) || ! function_exists( 'acf_get_fields' ) ) {
+		return array();
+	}
+
+	$field_keys = array();
+	$groups     = acf_get_field_groups(
+		array(
+			'post_type' => $post_type,
+		)
+	);
+
+	if ( ! is_array( $groups ) ) {
+		return array();
+	}
+
+	foreach ( $groups as $group ) {
+		if ( empty( $group['key'] ) ) {
+			continue;
+		}
+
+		$fields = acf_get_fields( $group['key'] );
+		caf_collect_acf_field_names( $fields, $field_keys );
+	}
+
+	return array_values( array_unique( $field_keys ) );
+}
+
+/**
+ * Get custom field keys allowed in builder dropdowns for a post type.
+ *
+ * Prefers ACF field groups for the post type. Falls back to distinct post meta keys
+ * for that post type when ACF is unavailable or has no matching groups.
+ *
+ * @param string $post_type Post type slug.
+ * @return array
+ */
+function caf_get_builder_custom_field_keys_for_post_type( $post_type ) {
+	$post_type = sanitize_key( (string) $post_type );
+
+	if ( '' === $post_type ) {
+		return array();
+	}
+
+	$acf_keys = caf_get_acf_field_keys_for_post_type( $post_type );
+
+	if ( ! empty( $acf_keys ) ) {
+		return caf_filter_builder_meta_keys( $acf_keys );
+	}
+
+	global $wpdb;
+
+	$meta_keys = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT DISTINCT pm.meta_key
+			FROM {$wpdb->postmeta} pm
+			INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+			WHERE p.post_type = %s
+			AND p.post_status IN ('publish', 'draft', 'pending', 'private')
+			AND pm.meta_key NOT LIKE %s",
+			$post_type,
+			$wpdb->esc_like( '_' ) . '%'
+		)
+	);
+
+	return caf_filter_builder_meta_keys( is_array( $meta_keys ) ? $meta_keys : array() );
+}
+
+/**
+ * Build meta_fields payload for builder preview using post-type field allowlist.
+ *
+ * @param int    $post_id   Post ID.
+ * @param string $post_type Post type slug.
+ * @return array
+ */
+function caf_build_post_meta_fields_for_builder( $post_id, $post_type ) {
+	$allowed_keys = caf_get_builder_custom_field_keys_for_post_type( $post_type );
+	$post_meta    = caf_filter_builder_meta_fields( get_post_custom( $post_id ) );
+	$meta_fields  = array();
+
+	foreach ( $allowed_keys as $key ) {
+		$meta_fields[ $key ] = isset( $post_meta[ $key ] ) ? $post_meta[ $key ] : array( '' );
+	}
+
+	return $meta_fields;
+}
+
+/**
+ * Determine whether a custom-field meta key should be hidden in builder dropdowns.
+ *
+ * @param string $meta_key Meta key.
+ * @return bool
+ */
+function caf_is_excluded_builder_meta_key( $meta_key ) {
+	$meta_key = (string) $meta_key;
+	if ( '' === $meta_key ) {
+		return true;
+	}
+	$meta_key_lc = strtolower( $meta_key );
+	$exact_keys  = apply_filters(
+		'caf_pro_builder_excluded_meta_keys',
+		array(
+			'_edit_lock',
+			'_edit_last',
+			'_wp_old_slug',
+		)
+	);
+	$prefixes    = apply_filters(
+		'caf_pro_builder_excluded_meta_key_prefixes',
+		array(
+			'_',
+			'wpseo_',
+			'_wpseo_',
+			'yoast_',
+			'_yoast_',
+			'rank_math_',
+			'_rank_math_',
+			'aioseo_',
+			'_aioseo_',
+			'seopress_',
+			'_seopress_',
+			'_elementor_',
+			'elementor_',
+			'shipping_',
+			'billing_',
+			'wc_',
+			'_wc_',
+		)
+	);
+	foreach ( $exact_keys as $exact_key ) {
+		if ( $meta_key_lc === strtolower( (string) $exact_key ) ) {
+			return true;
+		}
+	}
+	foreach ( $prefixes as $prefix ) {
+		$prefix = strtolower( (string) $prefix );
+		if ( '' !== $prefix && 0 === strpos( $meta_key_lc, $prefix ) ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * Filter associative post meta array by key.
+ *
+ * @param array $meta_fields Post meta fields (key => value[]).
+ * @return array
+ */
+function caf_filter_builder_meta_fields( $meta_fields ) {
+	if ( ! is_array( $meta_fields ) ) {
+		return array();
+	}
+	$filtered_fields = array();
+	foreach ( $meta_fields as $key => $value ) {
+		if ( caf_is_excluded_builder_meta_key( $key ) ) {
+			continue;
+		}
+		$filtered_fields[ $key ] = $value;
+	}
+	return $filtered_fields;
+}
+
+/**
+ * Filter flat meta key list.
+ *
+ * @param array $meta_keys Meta key list.
+ * @return array
+ */
+function caf_filter_builder_meta_keys( $meta_keys ) {
+	if ( ! is_array( $meta_keys ) ) {
+		return array();
+	}
+	$filtered_keys = array();
+	foreach ( $meta_keys as $meta_key ) {
+		if ( caf_is_excluded_builder_meta_key( $meta_key ) ) {
+			continue;
+		}
+		$filtered_keys[] = $meta_key;
+	}
+	return $filtered_keys;
+}
+
+function caf_get_cf_field_value( $request ) {
+	$post_id    = $request->get_param( 'post_id' );
+	$field_name = $request->get_param( 'field_name' );
+
+	// -------------------------
+	// HELPER: Get all image sizes
+	// -------------------------
+	function get_custom_image_sizes( $attachment_id ) {
+
+		// Only these sizes are required
+		$required_sizes = array( 'thumbnail', 'medium', 'medium_large', 'large' );
+
+		$sizes = array();
+
+		foreach ( $required_sizes as $size ) {
+			$img = wp_get_attachment_image_src( $attachment_id, $size );
+
+			$sizes[ $size ] = $img ? esc_url( $img[0] ) : '';
+		}
+
+		return $sizes;
+	}
+
+	// -------------------------
+	// 1️⃣ TRY ACF FIELD FIRST
+	// -------------------------
+	$acf_field = false;
+
+	if ( function_exists( 'get_field_object' ) ) {
+		$acf_field = get_field_object( $field_name, $post_id );
+	}
+
+	if ( $acf_field ) {
+
+		$type  = $acf_field['type'];
+		$value = $acf_field['value'];
+
+		// IMAGE FIELD (ACF)
+		if ( $type === 'image' ) {
+
+				$image_id = 0;
+
+				// CASE 1: Return format = URL
+			if ( is_string( $value ) && filter_var( $value, FILTER_VALIDATE_URL ) ) {
+				$image_id = attachment_url_to_postid( $value );
+			}
+
+				// CASE 2: Return format = ID
+			elseif ( is_numeric( $value ) ) {
+				$image_id = $value;
+			}
+
+				// CASE 3: Return format = Array
+			elseif ( is_array( $value ) && isset( $value['ID'] ) ) {
+				$image_id = $value['ID'];
+			}
+
+			if ( ! $image_id ) {
+				wp_send_json_error( 'Image ID not found' );
+			}
+
+				// Get main image URL
+				$image_url = wp_get_attachment_url( $image_id );
+
+				// CALL YOUR FUNCTION here 👍
+				$sizes = get_custom_image_sizes( $image_id );
+
+				wp_send_json_success(
+					array(
+						'source' => 'acf',
+						'value'  => $image_url,
+						'sizes'  => $sizes,
+					)
+				);
+		}
+
+		// FILE FIELD (ACF)
+		if ( $type === 'file' ) {
+
+			$url = '';
+
+			if ( is_array( $value ) && isset( $value['url'] ) ) {
+				$url = $value['url'];
+			}
+			if ( is_numeric( $value ) ) {
+				$url = wp_get_attachment_url( $value );
+			}
+
+			wp_send_json_success(
+				array(
+					'source' => 'acf',
+					'type'   => 'file',
+					'value'  => $url,
+					'sizes'  => array(), // file has no sizes
+				)
+			);
+		}
+
+		// TEXT / TEXTAREA (ACF)
+		if ( $type === 'text' || $type === 'textarea' ) {
+
+			wp_send_json_success(
+				array(
+					'source' => 'acf',
+					'type'   => $type,
+					'value'  => (string) $value,
+					'sizes'  => array(),
+				)
+			);
+		}
+	} else {
+		// -------------------------
+		// 2️⃣ NORMAL META FIELD
+		// -------------------------
+		$raw = get_post_meta( $post_id, $field_name, true );
+
+		// If normal meta contains numeric attachment ID
+		if ( is_numeric( $raw ) && get_post_mime_type( $raw ) ) {
+
+			wp_send_json_success(
+				array(
+					'source' => 'meta',
+					'type'   => 'image_or_file',
+					'value'  => wp_get_attachment_url( $raw ),
+					'sizes'  => get_all_image_sizes_list( $raw ),
+				)
+			);
+		}
+
+		// Normal text meta
+		wp_send_json_success(
+			array(
+				'source' => 'meta',
+				'type'   => 'meta_text',
+				'value'  => $raw,
+				'sizes'  => array(),
+			)
+		);
+	}
+
+	// if (!$post_id) {
+	// echo json_encode(array("status" => "error", "excerpt" => "", "message" => "Required Parameters are Missing"));
+	// }
+	// if ($status === true) {
+	// $desc = get_html_excerpt_without_divi_shortcodes($post_id, $length);
+	// echo json_encode(array("status" => "success", "excerpt" => $desc));
+	// } else {
+	// $text = get_excerpt_by_words($post_id, $length);
+	// echo json_encode(array("status" => "success", "excerpt" => $text));
+	// }
+}
+
+
+function caf_get_date( $data ) {
+	$id      = $data['id'];
+	$format  = $data['format'];
+	$results = array();
+	$dt      = get_the_date( $format, $id );
+	$results = array( 'date' => $dt );
+	echo json_encode(
+		array(
+			'status'  => 'success',
+			'results' => $results,
+		)
+	);
+}
+
+function get_excerpt_by_words( $post_id = null, $word_count = 20 ) {
+	// if (!$post_id) {
+	// $post_id = get_the_ID();
+	// }
+
+	// $post = get_post($post_id);
+	// if (!$post) return '';
+
+	// // Use excerpt if available, otherwise content
+	// $text = $post->post_excerpt ? $post->post_excerpt : $post->post_content;
+
+	// //  Remove Divi shortcodes like [et_pb_section] but keep inner content
+	// $text = preg_replace('/\[(\/?et_pb_[^\]]+)\]/', '', $text);
+
+	// //  Optionally remove all shortcodes (if others exist too)
+	// $text = strip_shortcodes($text);
+
+	// //  Remove all HTML tags (you wanted pure text)
+	// $text = wp_strip_all_tags($text);
+
+	// //  Limit by word count
+	// $words = preg_split('/\s+/', $text, -1, PREG_SPLIT_NO_EMPTY);
+
+	// if (count($words) > $word_count) {
+	// $words = array_slice($words, 0, $word_count);
+	// $text = implode(' ', $words) . '...';
+	// }
+
+	// return trim($text);
+
+		$excerpt = wp_strip_all_tags( get_the_excerpt( $post_id ) );
+		$excerpt = wp_trim_words( $excerpt, $word_count, '...' );
+		return $excerpt;
+}
+
+function get_html_excerpt_without_divi_shortcodes( $post_id = null, $word_limit = 20 ) {
+	if ( ! $post_id ) {
+		$post_id = get_the_ID();
+	}
+
+	$post = get_post( $post_id );
+	if ( ! $post ) {
+		return '';
+	}
+	$content = $post->post_content;
+	// get divi post content
+	if ( ! defined( 'ONLY_ONCE_ap3_divi_do_shortcodes' ) && function_exists( 'et_builder_init_global_settings' ) && function_exists( 'et_builder_add_main_elements' ) ) {
+		define( 'ONLY_ONCE_ap3_divi_do_shortcodes', true );
+		et_builder_add_main_elements();
+	}
+	ET_Builder_Element::clean_internal_modules_styles();
+	$content   = et_core_intentionally_unescaped( apply_filters( 'the_content', $content ), 'html' );
+	$words     = 0;
+	$output    = '';
+	$open_tags = array();
+
+	// Tokenize HTML + text
+	preg_match_all( '/(<[^>]+?>|[^<>\s]+|\s+)/u', $content, $tokens );
+
+	foreach ( $tokens[0] as $token ) {
+		if ( preg_match( '/<[^>]+>/', $token ) ) {
+			$output .= $token;
+			if ( preg_match( '/^<(\w+)(?![^>]*\/)>$/', $token, $matches ) ) {
+				$open_tags[] = $matches[1];
+			} elseif ( preg_match( '/^<\/(\w+)>$/', $token, $matches ) ) {
+				array_pop( $open_tags );
+			}
+		} elseif ( trim( $token ) === '' ) {
+			$output .= $token;
+		} else {
+			$output .= $token;
+			++$words;
+			if ( $words >= $word_limit ) {
+				break;
+			}
+		}
+	}
+
+	while ( ! empty( $open_tags ) ) {
+		$output .= '</' . array_pop( $open_tags ) . '>';
+	}
+
+	return trim( $output );
+}
+
+
+function caf_get_content_length( $request ) {
+	ob_start();
+	$post_id = $request->get_param( 'post_id' );
+	$length  = $request->get_param( 'length' );
+	$status  = $request->get_param( 'status' );
+	if ( ! $post_id ) {
+		echo json_encode(
+			array(
+				'status'  => 'error',
+				'excerpt' => '',
+				'message' => 'Required Parameters are Missing',
+			)
+		);
+	}
+	if ( $status === true ) {
+		$desc = get_html_excerpt_without_divi_shortcodes( $post_id, $length );
+		echo json_encode(
+			array(
+				'status'  => 'success',
+				'excerpt' => $desc,
+			)
+		);
+	} else {
+		$text = get_excerpt_by_words( $post_id, $length );
+		echo json_encode(
+			array(
+				'status'  => 'success',
+				'excerpt' => $text,
+			)
+		);
+	}
+}
+function caf_get_preview_posts( $data ) {
+	ob_start();
+	$queryData = json_decode( $data['query_data'], true );
+	$queryArgs = isset( $queryData['query'] ) && is_array( $queryData['query'] ) ? $queryData['query'] : array();
+
+	if ( empty( $queryArgs['orderby'] ) || '0' === (string) $queryArgs['orderby'] ) {
+		unset( $queryArgs['orderby'] );
+	}
+
+	if ( empty( $queryArgs['order'] ) || '0' === (string) $queryArgs['order'] ) {
+		unset( $queryArgs['order'] );
+	}
+
+	// var_dump($queryArgs);
+	$query      = new WP_Query( $queryArgs );
+	$postsList  = array();
+	$post_type  = isset( $queryArgs['post_type'] ) ? $queryArgs['post_type'] : 'post';
+	$taxo       = get_object_taxonomies( $post_type );
+	$imageArray = array();
+	while ( $query->have_posts() ) {
+		global $post;
+		$query->the_post();
+		$post_id     = get_the_ID();
+		$excerpt     = get_the_excerpt();
+		$content     = get_post_type_object( $post_type );
+		$post_url    = get_permalink();
+		$imageurl    = get_the_post_thumbnail_url();
+		$meta_fields = caf_build_post_meta_fields_for_builder( $post_id, $post_type );
+
+		$trms = array();
+		if ( $taxo ) {
+			foreach ( $taxo as $tax ) {
+				$terms        = wp_get_post_terms( $post_id, $tax );
+				$trms[ $tax ] = $terms;
+			}
+		}
+		$imageArray   = array( 'sizes' => get_intermediate_image_sizes() );
+		$thumbnail_id = get_post_thumbnail_id( $post_id );
+		foreach ( $imageArray['sizes'] as $size ) {
+			$thumbnail_url       = wp_get_attachment_image_src( $thumbnail_id, $size );
+			$imageArray[ $size ] = ( is_array( $thumbnail_url ) && ! empty( $thumbnail_url[0] ) )
+				? esc_url( $thumbnail_url[0] )
+				: '';
+		}
+		$postsList[] = array(
+			'label'        => get_the_title(),
+			'value'        => $post_id,
+			'id'           => $post_id,
+			'key'          => $post_id,
+			'title'        => get_the_title(),
+			'description'  => get_the_content(),
+			'excerpt'      => $excerpt,
+			'url'          => $post_url,
+			'image'        => $imageurl,
+			'imageArray'   => $imageArray,
+			'taxonomies'   => $taxo,
+			'categories'   => $trms,
+			'author'       => get_the_author(),
+			'date'         => get_the_date( 'd-m-y' ),
+			'post_date'    => get_post() ? get_post()->post_date : '',
+			'meta_fields'  => $meta_fields,
+			'customtext'   => 'Custom text',
+			'commentcount' => get_comments_number(),
+		);
+	}
+	wp_reset_postdata();
+	$prev         = false;
+	$current_page = intval( $queryArgs['paged'] );
+	if ( $current_page > 1 ) {
+		$prev = true;
+	}
+	$nextbtn = false;
+
+	if ( $query->max_num_pages > $queryArgs['paged'] ) {
+		$nextbtn = true;
+	}
+	$post_per_page = intval( $queryArgs['posts_per_page'] );
+	$start         = ( $current_page - 1 ) * $post_per_page + 1; // Starting post number
+	$end           = min( $current_page * $post_per_page, $query->found_posts ); // Ending post number
+	if ( $query->found_posts == 0 ) {
+		$start = '0';
+	}
+	$resultsCount = array(
+		'start'         => $start,
+		'end'           => $end,
+		'total_results' => $query->found_posts,
+	);
+	if ( $queryData['pagination_type'] == 'number' || $queryData['pagination_type'] == 'number2' || $queryData['pagination_type'] == 'button' ) {
+		echo json_encode(
+			array(
+				'status'        => 'success',
+				'posts_list'    => $postsList,
+				'next'          => $nextbtn,
+				'load_more'     => $nextbtn,
+				'current_page'  => $current_page,
+				'prev'          => $prev,
+				'total_page'    => $query->max_num_pages,
+				'results_count' => $resultsCount,
+				'query'         => $queryArgs,
+			)
+		);
+	}
+
+	if ( $queryData['pagination_type'] == 'load-more' ) {
+		echo json_encode(
+			array(
+				'status'        => 'success',
+				'posts_list'    => $postsList,
+				'load_more'     => $nextbtn,
+				'current_page'  => $current_page,
+				'total_page'    => $query->max_num_pages,
+				'next'          => $nextbtn,
+				'prev'          => $prev,
+				'results_count' => $resultsCount,
+			)
+		);
+	}
+}
+function caf_update_builder_layout_option( $data ) {
+	ob_start();
+	$layout_data  = caf_normalize_builder_layout_data( json_decode( $data['layout_data'] ) );
+	$title        = $data['layout_key'];
+	$layout_index = $data['layout_index'];
+	$status       = $layout_data->common_data->layout_publish;
+	$opt          = 'caf_builder_layouts_list';
+	if ( get_option( $opt ) ) {
+		$layouts                                 = get_option( $opt );
+		$valid_index                             = ( '' !== (string) $layout_index && is_numeric( $layout_index ) );
+		if ( $valid_index ) {
+			$layout_index = (int) $layout_index;
+			if ( isset( $layouts[ $layout_index ] ) && is_array( $layouts[ $layout_index ] ) ) {
+				$layouts[ $layout_index ]['post_status'] = $status;
+				update_option( $opt, $layouts );
+			}
+		}
+	}
+	update_option( $title, $layout_data );
+	if ( isset( $data['layout_index'] ) && is_numeric( $data['layout_index'] ) ) {
+		caf_builder_invalidate_layout_cache( (int) $data['layout_index'] );
+	}
+	echo json_encode(
+		array(
+			'status'      => 'success',
+			'layout_data' => get_option( $title ),
+		)
+	);
+}
+/**
+ * Normalize builder layout data for backward compatibility.
+ *
+ * Ensures required branches exist so new keys added in future releases
+ * do not break older saved layouts.
+ */
+function caf_walk_filter_layout_modules( $initial_data, $callback ) {
+	if ( ! is_array( $initial_data ) || ! is_callable( $callback ) ) {
+		return;
+	}
+
+	foreach ( $initial_data as $row ) {
+		$row = is_object( $row ) ? $row : (object) $row;
+		if ( empty( $row->data ) || ! is_array( $row->data ) ) {
+			continue;
+		}
+
+		foreach ( $row->data as $column ) {
+			$column = is_object( $column ) ? $column : (object) $column;
+			if ( empty( $column->data ) || ! is_array( $column->data ) ) {
+				continue;
+			}
+
+			foreach ( $column->data as $module ) {
+				$module = is_object( $module ) ? $module : (object) $module;
+				$callback( $module );
+			}
+		}
+	}
+}
+
+/**
+ * Remove post modules that are not allowed on the current tier.
+ *
+ * @param array<int, mixed> $initial_data Post layout initial_data tree.
+ * @return array<int, mixed>
+ */
+function caf_filter_post_layout_modules_by_tier( $initial_data ) {
+	if ( ! is_array( $initial_data ) || ! class_exists( 'CAF_Builder_Tier' ) ) {
+		return is_array( $initial_data ) ? $initial_data : array();
+	}
+
+	foreach ( $initial_data as $row_index => $row ) {
+		$row = is_object( $row ) ? $row : (object) $row;
+		if ( empty( $row->data ) || ! is_array( $row->data ) ) {
+			continue;
+		}
+
+		foreach ( $row->data as $column_index => $column ) {
+			$column = is_object( $column ) ? $column : (object) $column;
+			if ( empty( $column->data ) || ! is_array( $column->data ) ) {
+				continue;
+			}
+
+			$column->data = array_values(
+				array_filter(
+					$column->data,
+					static function ( $module ) {
+						$module = is_object( $module ) ? $module : (object) $module;
+						if ( empty( $module->key ) ) {
+							return true;
+						}
+
+						return CAF_Builder_Tier::can_use_post_module( (string) $module->key );
+					}
+				)
+			);
+
+			$row->data[ $column_index ] = $column;
+		}
+
+		$initial_data[ $row_index ] = $row;
+	}
+
+	return $initial_data;
+}
+
+/**
+ * Strip Pro-only search module settings on free tier saves.
+ *
+ * @param object $settings Search module settings object.
+ * @return object
+ */
+function caf_sanitize_free_search_module_settings( $settings ) {
+	if ( ! is_object( $settings ) ) {
+		$settings = new stdClass();
+	}
+
+	if ( ! class_exists( 'CAF_Builder_Tier' ) ) {
+		return $settings;
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'smart_ai_search' ) ) {
+		$settings->smart_ai_search = (object) array(
+			'is_enable' => 'false',
+		);
+		if ( ! isset( $settings->keyword_search ) || ! is_object( $settings->keyword_search ) ) {
+			$settings->keyword_search = new stdClass();
+		}
+		$settings->keyword_search->is_enable = 'true';
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'search_custom_field' ) ) {
+		if ( ! isset( $settings->source ) || ! is_object( $settings->source ) ) {
+			$settings->source = new stdClass();
+		}
+		$settings->source->custom_field = false;
+		$settings->custom_field         = '0';
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'voice_search' ) ) {
+		if ( ! isset( $settings->voice_icon ) || ! is_object( $settings->voice_icon ) ) {
+			$settings->voice_icon = new stdClass();
+		}
+		$settings->voice_icon->is_enable = 'false';
+	}
+
+	return $settings;
+}
+
+/**
+ * Strip Pro-only term defaults/icons from taxonomy term trees on free tier.
+ *
+ * @param array<int, mixed> $term_data Term tree.
+ * @param bool              $strip_default Remove default/predefine flags.
+ * @param bool              $strip_icons   Remove term icons.
+ * @return array<int, mixed>
+ */
+function caf_strip_locked_filter_term_features( $term_data, $strip_default, $strip_icons ) {
+	if ( ! is_array( $term_data ) ) {
+		return array();
+	}
+
+	foreach ( $term_data as $index => $term ) {
+		$term = is_object( $term ) ? $term : (object) $term;
+
+		if ( $strip_default && isset( $term->predefine ) ) {
+			$term->predefine = 'false';
+		}
+		if ( $strip_icons ) {
+			$term->icons = (object) array(
+				'icon'     => '',
+				'type'     => 'icon',
+				'position' => 'before',
+			);
+		}
+		if ( isset( $term->children_data ) && is_array( $term->children_data ) ) {
+			$term->children_data = caf_strip_locked_filter_term_features(
+				$term->children_data,
+				$strip_default,
+				$strip_icons
+			);
+		}
+
+		$term_data[ $index ] = $term;
+	}
+
+	return $term_data;
+}
+
+/**
+ * Strip Pro-only checkbox/dropdown filter settings on free tier saves.
+ *
+ * @param object $settings Module settings object.
+ * @return object
+ */
+function caf_sanitize_free_checkbox_dropdown_module_settings( $settings ) {
+	if ( ! is_object( $settings ) ) {
+		$settings = new stdClass();
+	}
+
+	if ( ! class_exists( 'CAF_Builder_Tier' ) ) {
+		return $settings;
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'filter_custom_field' ) ) {
+		$settings->data_source        = 'taxonomy';
+		$settings->custom_field_data  = array();
+		$settings->cf_predefined_terms = array();
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'filter_show_icon' ) ) {
+		$settings->show_icon = 'false';
+	}
+
+	$strip_default = ! CAF_Builder_Tier::can_use_feature( 'filter_term_default' );
+	$strip_icons   = ! CAF_Builder_Tier::can_use_feature( 'filter_term_icon' );
+
+	if ( $strip_default ) {
+		$settings->predefined_terms = array();
+	}
+
+	if ( ( $strip_default || $strip_icons ) && isset( $settings->taxonomy_data ) && is_array( $settings->taxonomy_data ) ) {
+		foreach ( $settings->taxonomy_data as $index => $taxonomy_row ) {
+			$taxonomy_row = is_object( $taxonomy_row ) ? $taxonomy_row : (object) $taxonomy_row;
+			if ( isset( $taxonomy_row->term_data ) && is_array( $taxonomy_row->term_data ) ) {
+				$taxonomy_row->term_data = caf_strip_locked_filter_term_features(
+					$taxonomy_row->term_data,
+					$strip_default,
+					$strip_icons
+				);
+			}
+			$settings->taxonomy_data[ $index ] = $taxonomy_row;
+		}
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'filter_custom_field' ) && isset( $settings->custom_field_data ) ) {
+		$settings->custom_field_data = array();
+	}
+
+	return $settings;
+}
+
+/**
+ * Strip Pro-only reset module settings on free tier saves.
+ *
+ * @param object $settings Module settings object.
+ * @return object
+ */
+function caf_sanitize_free_reset_module_settings( $settings ) {
+	if ( ! is_object( $settings ) ) {
+		$settings = new stdClass();
+	}
+
+	if ( ! class_exists( 'CAF_Builder_Tier' ) ) {
+		return $settings;
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'reset_module_icon' ) ) {
+		$settings->icons = (object) array(
+			'visibility' => false,
+			'icon'       => '',
+			'type'       => 'icon',
+		);
+	}
+
+	return $settings;
+}
+
+/**
+ * Strip Pro-only post module settings on free tier saves.
+ *
+ * @param string $module_key Post module key slug.
+ * @param object $settings   Module settings object.
+ * @return object
+ */
+function caf_sanitize_free_post_module_settings( $module_key, $settings ) {
+	if ( ! is_object( $settings ) ) {
+		$settings = new stdClass();
+	}
+
+	if ( ! class_exists( 'CAF_Builder_Tier' ) ) {
+		return $settings;
+	}
+
+	if ( 'image' === (string) $module_key && ! CAF_Builder_Tier::can_use_feature( 'post_image_custom_field' ) ) {
+		$settings->image_source = 'featured_image';
+		$settings->custom_field = '0';
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'post_link_custom_field' ) ) {
+		if ( ! isset( $settings->link ) || ! is_object( $settings->link ) ) {
+			$settings->link = new stdClass();
+		}
+		if ( isset( $settings->link->type ) && 'custom-url' === (string) $settings->link->type ) {
+			$settings->link->type = 'post-url';
+		}
+		$settings->link->custom_field = '0';
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'post_prefix_suffix' ) ) {
+		$settings->prefix = (object) array(
+			'is_enable' => 'false',
+			'meta_type' => 'text',
+			'meta_text' => '',
+		);
+		$settings->suffix = (object) array(
+			'is_enable' => 'false',
+			'meta_type' => 'text',
+			'meta_text' => '',
+		);
+	}
+
+	return $settings;
+}
+
+function caf_normalize_builder_layout_data( $layout_data ) {
+	if ( ! is_object( $layout_data ) ) {
+		$layout_data = new stdClass();
+	}
+
+	if ( ! isset( $layout_data->common_data ) || ! is_object( $layout_data->common_data ) ) {
+		$layout_data->common_data = new stdClass();
+	}
+	if ( ! isset( $layout_data->common_data->layout_schema_version ) ) {
+		$layout_data->common_data->layout_schema_version = 1;
+	}
+	if ( ! isset( $layout_data->common_data->analytics_enabled ) ) {
+		$layout_data->common_data->analytics_enabled = false;
+	}
+	if ( ! isset( $layout_data->common_data->filter_url_enabled ) ) {
+		$layout_data->common_data->filter_url_enabled = true;
+	}
+	if ( ! isset( $layout_data->common_data->schema_enabled ) ) {
+		$layout_data->common_data->schema_enabled = true;
+	}
+
+	if ( ! isset( $layout_data->filter_layout_data ) || ! is_object( $layout_data->filter_layout_data ) ) {
+		$layout_data->filter_layout_data = new stdClass();
+	}
+	if ( ! isset( $layout_data->filter_layout_data->extra_data ) || ! is_object( $layout_data->filter_layout_data->extra_data ) ) {
+		$layout_data->filter_layout_data->extra_data = new stdClass();
+	}
+	if ( ! isset( $layout_data->filter_layout_data->breadcrumb_data ) || ! is_object( $layout_data->filter_layout_data->breadcrumb_data ) ) {
+		$layout_data->filter_layout_data->breadcrumb_data = new stdClass();
+	}
+	if ( ! isset( $layout_data->filter_layout_data->initial_data ) || ! is_array( $layout_data->filter_layout_data->initial_data ) ) {
+		$layout_data->filter_layout_data->initial_data = array();
+	}
+	if ( ! isset( $layout_data->filter_layout_data->filter_query_data ) || ! is_object( $layout_data->filter_layout_data->filter_query_data ) ) {
+		$layout_data->filter_layout_data->filter_query_data = new stdClass();
+	}
+	if ( ! isset( $layout_data->filter_layout_data->filter_query_data->data_source ) || ! is_object( $layout_data->filter_layout_data->filter_query_data->data_source ) ) {
+		$layout_data->filter_layout_data->filter_query_data->data_source = new stdClass();
+	}
+	if ( ! isset( $layout_data->filter_layout_data->filter_query_data->taxonomy_data ) || ! is_array( $layout_data->filter_layout_data->filter_query_data->taxonomy_data ) ) {
+		$layout_data->filter_layout_data->filter_query_data->taxonomy_data = array();
+	}
+	if ( ! isset( $layout_data->filter_layout_data->filter_query_data->custom_field_data ) || ! is_array( $layout_data->filter_layout_data->filter_query_data->custom_field_data ) ) {
+		$layout_data->filter_layout_data->filter_query_data->custom_field_data = array();
+	}
+
+	if ( ! isset( $layout_data->post_layout_data ) || ! is_object( $layout_data->post_layout_data ) ) {
+		$layout_data->post_layout_data = new stdClass();
+	}
+	if ( ! isset( $layout_data->post_layout_data->extra_data ) || ! is_object( $layout_data->post_layout_data->extra_data ) ) {
+		$layout_data->post_layout_data->extra_data = new stdClass();
+	}
+	if ( ! isset( $layout_data->post_layout_data->breadcrumb_data ) || ! is_object( $layout_data->post_layout_data->breadcrumb_data ) ) {
+		$layout_data->post_layout_data->breadcrumb_data = new stdClass();
+	}
+	if ( ! isset( $layout_data->post_layout_data->initial_data ) || ! is_array( $layout_data->post_layout_data->initial_data ) ) {
+		$layout_data->post_layout_data->initial_data = array();
+	}
+
+	$layout_data->post_layout_data->initial_data = caf_filter_post_layout_modules_by_tier(
+		$layout_data->post_layout_data->initial_data
+	);
+
+	if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'elementor_loop' ) ) {
+		if (
+			isset( $layout_data->post_layout_data->extra_data->layout_source )
+			&& 'elementor_loop' === (string) $layout_data->post_layout_data->extra_data->layout_source
+		) {
+			$layout_data->post_layout_data->extra_data->layout_source  = 'caf_builder';
+			$layout_data->post_layout_data->extra_data->loop_template_id = '';
+		}
+	}
+
+	if ( class_exists( 'CAF_Builder_Tier' ) ) {
+		if ( ! CAF_Builder_Tier::can_use_feature( 'analytics' ) ) {
+			$layout_data->common_data->analytics_enabled = false;
+		}
+		if ( ! CAF_Builder_Tier::can_use_feature( 'filter_url' ) ) {
+			$layout_data->common_data->filter_url_enabled = false;
+		}
+		if ( ! CAF_Builder_Tier::can_use_feature( 'schema' ) ) {
+			$layout_data->common_data->schema_enabled = false;
+		}
+		if ( ! CAF_Builder_Tier::can_use_feature( 'meta_relation' ) ) {
+			$layout_data->filter_layout_data->extra_data->meta_relation = 'IN';
+			if ( isset( $layout_data->filter_layout_data->filter_query_data ) && is_object( $layout_data->filter_layout_data->filter_query_data ) ) {
+				$layout_data->filter_layout_data->filter_query_data->meta_relation = 'IN';
+			}
+		}
+	}
+
+	caf_walk_filter_layout_modules(
+		$layout_data->filter_layout_data->initial_data,
+		static function ( $module ) {
+			if ( ! isset( $module->key ) ) {
+				return;
+			}
+
+			$module_key = (string) $module->key;
+			if ( ! isset( $module->settings ) || ! is_object( $module->settings ) ) {
+				$module->settings = new stdClass();
+			}
+
+			if ( 'search' === $module_key ) {
+				$module->settings = caf_sanitize_free_search_module_settings( $module->settings );
+				return;
+			}
+
+			if ( in_array( $module_key, array( 'checkbox_filter', 'dropdown_filter' ), true ) ) {
+				$module->settings = caf_sanitize_free_checkbox_dropdown_module_settings( $module->settings );
+				return;
+			}
+
+			if ( 'reset' === $module_key ) {
+				$module->settings = caf_sanitize_free_reset_module_settings( $module->settings );
+			}
+		}
+	);
+
+	caf_walk_filter_layout_modules(
+		$layout_data->post_layout_data->initial_data,
+		static function ( $module ) {
+			if ( ! isset( $module->key ) ) {
+				return;
+			}
+
+			if ( ! isset( $module->settings ) || ! is_object( $module->settings ) ) {
+				$module->settings = new stdClass();
+			}
+
+			$module->settings = caf_sanitize_free_post_module_settings(
+				(string) $module->key,
+				$module->settings
+			);
+		}
+	);
+
+	return $layout_data;
+}
+
+function caf_rename_builder_layout_label( $data ) {
+	ob_start();
+	$index     = $data['index'];
+	$new_label = $data['label'];
+	$options   = get_option( 'caf_builder_layouts_list' );
+
+	if ( $options[ $index ] ) {
+		$options[ $index ]['label'] = $new_label;
+		update_option( 'caf_builder_layouts_list', $options );
+		$updated_option = get_option( 'caf_builder_layouts_list' );
+		$title          = 'caf_' . $options[ $index ]['key'] . '_' . $index;
+		if ( get_option( $title ) ) {
+			$newlayoutData                           = get_option( $title );
+			$newlayoutData->common_data->layout_name = $updated_option[ $index ]['label'];
+			update_option( $title, $newlayoutData );
+			echo json_encode(
+				array(
+					'status' => 'success',
+					'label'  => $updated_option[ $index ]['label'],
+				)
+			);
+		} else {
+			echo json_encode(
+				array(
+					'status' => 'error',
+					'msg'    => 'Data Not Updated',
+				)
+			);
+		}
+	}
+}
+function caf_get_layout_data( $data ) {
+	// ob_start();
+	$layout_key = $data['layout_key'];
+	if ( get_option( $layout_key ) ) {
+		$normalized_layout = caf_normalize_builder_layout_data( get_option( $layout_key ) );
+		echo json_encode(
+			array(
+				'status'      => 'success',
+				'layout_data' => $normalized_layout,
+			)
+		);
+	} else {
+		echo json_encode(
+			array(
+				'status'      => 'error',
+				'layout_data' => array(),
+				'message'     => 'No Result Found',
+			)
+		);
+	}
+}
+function caf_move_to_trash( $data ) {
+	$postIds     = json_decode( $data['post_ids'] );
+	$oldPanel    = array();
+	$builderPost = array();
+	if ( ! empty( $postIds ) ) {
+		foreach ( $postIds as $pid ) {
+			if ( str_contains( $pid, 'bl_' ) ) {
+				array_push( $builderPost, preg_replace( '/\D/', '', $pid ) );
+			} else {
+				array_push( $oldPanel, $pid );
+			}
+		}
+
+		if ( ! empty( $oldPanel ) ) {
+			foreach ( $oldPanel as $post_id ) {
+				if ( get_post_status( $post_id ) ) {
+					wp_trash_post( $post_id );
+				}
+			}
+		}
+
+		if ( ! empty( $builderPost ) ) {
+			foreach ( $builderPost as $index ) {
+				$opt                                   = 'caf_builder_layouts_list';
+				$savedLayouts                          = get_option( $opt );
+				$savedLayouts[ $index ]['post_status'] = 'trash';
+				update_option( $opt, $savedLayouts );
+			}
+		}
+		echo json_encode(
+			array(
+				'status'  => 'success',
+				'message' => 'Filters Trash Successfully',
+			)
+		);
+	} else {
+		echo json_encode(
+			array(
+				'status'  => 'error',
+				'message' => "Something went's Wrong",
+			)
+		);
+	}
+}
+function caf_bulk_layouts_restore( $data ) {
+	$postIds     = json_decode( $data['post_ids'] );
+	$oldPanel    = array();
+	$builderPost = array();
+	if ( ! empty( $postIds ) ) {
+		foreach ( $postIds as $pid ) {
+			if ( str_contains( $pid, 'bl_' ) ) {
+				array_push( $builderPost, preg_replace( '/\D/', '', $pid ) );
+			} else {
+				array_push( $oldPanel, $pid );
+			}
+		}
+
+		if ( ! empty( $oldPanel ) ) {
+			foreach ( $oldPanel as $post_id ) {
+				if ( get_post_status( $post_id ) ) {
+					wp_untrash_post( $post_id );
+				}
+			}
+		}
+
+		if ( ! empty( $builderPost ) ) {
+			foreach ( $builderPost as $index ) {
+				$opt                                   = 'caf_builder_layouts_list';
+				$savedLayouts                          = get_option( $opt );
+				$savedLayouts[ $index ]['post_status'] = 'draft';
+				update_option( $opt, $savedLayouts );
+			}
+		}
+		echo json_encode(
+			array(
+				'status'  => 'success',
+				'message' => 'Filters Restored Successfully',
+			)
+		);
+	} else {
+		echo json_encode(
+			array(
+				'status'  => 'error',
+				'message' => "Something went's Wrong",
+			)
+		);
+	}
+}
+function caf_bulk_layouts_delete_permanent( $data ) {
+	$postIds     = json_decode( $data['post_ids'] );
+	$oldPanel    = array();
+	$builderPost = array();
+	if ( ! empty( $postIds ) ) {
+		foreach ( $postIds as $pid ) {
+			if ( str_contains( $pid, 'bl_' ) ) {
+				array_push( $builderPost, preg_replace( '/\D/', '', $pid ) );
+			} else {
+				array_push( $oldPanel, $pid );
+			}
+		}
+
+		if ( ! empty( $oldPanel ) ) {
+			foreach ( $oldPanel as $post_id ) {
+				if ( get_post_status( $post_id ) ) {
+					wp_delete_post( $post_id, true );
+				}
+			}
+		}
+
+		if ( ! empty( $builderPost ) ) {
+			$options = get_option( 'caf_builder_layouts_list' );
+			foreach ( $builderPost as $index ) {
+				if ( $options[ $index ] ) {
+					$layout = $options[ $index ]['key'];
+					$title  = 'caf_' . $layout . '_' . $index;
+					unset( $options[ $index ] );
+					delete_option( $title );
+				}
+			}
+			update_option( 'caf_builder_layouts_list', $options );
+		}
+		echo json_encode(
+			array(
+				'status'  => 'success',
+				'message' => 'Filters Deleted Successfully',
+			)
+		);
+	} else {
+		echo json_encode(
+			array(
+				'status'  => 'error',
+				'message' => "Something went's Wrong",
+			)
+		);
+	}
+}
+
+function caf_delete_layout_permissions( $request ) {
+	$post_id = intval( $request['post_id'] );
+	if ( get_post_status( $post_id ) ) {
+		wp_trash_post( $post_id );
+		echo json_encode(
+			array(
+				'status'  => 'success',
+				'message' => 'Post deleted successfully.',
+			)
+		);
+	} else {
+		echo json_encode(
+			array(
+				'status'  => 'error',
+				'message' => 'Failed to delete post.',
+			)
+		);
+	}
+}
+
+function caf_generate_unique_title( $original_title, $post_type ) {
+
+	// Remove existing " _(Copy)" or " _(Copy X)"
+	$clean_title = preg_replace( '/\s_\((Copy)(\s\d+)?\)$/', '', $original_title );
+
+	$count = 0;
+
+	while ( true ) {
+
+		if ( $count === 0 ) {
+			$title = $clean_title . ' _(Copy)';
+		} else {
+			$title = $clean_title . ' _(Copy' . $count . ')';
+		}
+
+		$query = new WP_Query(
+			array(
+				'post_type'      => $post_type,
+				'post_status'    => 'any',
+				'title'          => $title,
+				'posts_per_page' => 1,
+				'fields'         => 'ids',
+			)
+		);
+
+		if ( ! $query->have_posts() ) {
+			break;
+		}
+
+		++$count;
+	}
+
+	return $title;
+}
+
+
+
+
+function duplicate_post( $post_id ) {
+	$post = get_post( $post_id );
+	if ( ! $post ) {
+		return;
+	}
+
+	// Base copy title
+	// $base_title = $post->post_title . ' -(Copy)';
+
+	// Generate unique title
+	$unique_title = caf_generate_unique_title( $post->post_title, $post->post_type );
+
+	$new_post = array(
+		'post_title'    => $unique_title,
+		'post_content'  => $post->post_content,
+		'post_status'   => 'draft',
+		'post_author'   => $post->post_author,
+		'post_type'     => $post->post_type,
+		'post_excerpt'  => $post->post_excerpt,
+		'post_category' => wp_get_post_categories( $post_id ),
+	);
+
+	$new_post_id = wp_insert_post( $new_post );
+
+	// Copy post meta
+	$post_meta = get_post_meta( $post_id );
+	foreach ( $post_meta as $key => $value ) {
+		update_post_meta( $new_post_id, $key, maybe_unserialize( $value[0] ) );
+	}
+
+	// Copy featured image
+	$thumbnail_id = get_post_thumbnail_id( $post_id );
+	if ( $thumbnail_id ) {
+		set_post_thumbnail( $new_post_id, $thumbnail_id );
+	}
+
+	// Copy taxonomies
+	$taxonomies = get_object_taxonomies( $post->post_type );
+	foreach ( $taxonomies as $taxonomy ) {
+		$terms = wp_get_post_terms( $post_id, $taxonomy );
+		wp_set_post_terms( $new_post_id, wp_list_pluck( $terms, 'term_id' ), $taxonomy );
+	}
+
+	return $new_post_id;
+}
+
+function caf_clone_layout( $request ) {
+	$post_id     = intval( $request['post_id'] );
+	$new_post_id = duplicate_post( $post_id );
+	if ( $new_post_id ) {
+		echo json_encode(
+			array(
+				'status'  => 'success',
+				'message' => 'Filter Clone successfully.',
+			)
+		);
+	} else {
+		echo json_encode(
+			array(
+				'status'  => 'error',
+				'message' => 'Failed to clone filter.',
+			)
+		);
+	}
+}
+// phpcs:disable
+function caf_export_default_layout($request)
+{
+    $post_id = intval($request['post_id']);
+    $result['result'] = '';
+    if ($post_id) {
+        $meta = get_post_meta($post_id);
+        $meta['result'] = 'success';
+        $json = json_encode($meta);
+        $file_path = TC_CAF_PATH . "admin/json/general.json";
+        $file_url = TC_CAF_URL . "admin/json/general.json";
+        $fh = fopen($file_path, 'w');
+        if ($fh) {
+            fwrite($fh, $json);
+            fclose($fh);
+            $result['result'] = 'success';
+            $result['file'] = $file_url;
+            $result['filename'] = "caf-{$post_id}.json";
+            echo json_encode($result);
+        } else {
+            echo json_encode(array('result' => 'error', 'message' => 'Cannot write to file.'));
+        }
+    } else {
+        echo json_encode(array('result' => 'error', 'message' => 'Invalid post ID.'));
+    }
+}
+// phpcs:enable
+function caf_export_builder_layout( $request ) {
+	$index   = intval( $request['index'] );
+	$options = get_option( 'caf_builder_layouts_list' );
+	if ( $options[ $index ] ) {
+		$layout       = $options[ $index ]['key'];
+		$layout_label = $options[ $index ]['label'];
+		$title        = 'caf_' . $layout . '_' . $index;
+		if ( get_option( $title ) ) {
+			$baseLayoutData = get_option( $title );
+			$json_data      = json_encode( $baseLayoutData, JSON_PRETTY_PRINT );
+			header( 'Content-Type: application/json' );
+			header( 'Content-Disposition: attachment; filename=' . $layout_label . '.json"' );
+			echo $json_data;
+			exit;
+		} else {
+			echo json_encode(
+				array(
+					'status'  => 'error',
+					'message' => 'Failed to export filter.',
+				)
+			);
+		}
+	} else {
+		echo json_encode(
+			array(
+				'status'  => 'error',
+				'message' => 'Index id Not Found.',
+			)
+		);
+	}
+	exit;
+}
+function caf_generate_unique_layout_name( $base_name ) {
+
+	$layouts = get_option( 'caf_builder_layouts_list', array() );
+	$labels  = wp_list_pluck( $layouts, 'label' );
+
+	// Remove _Copy, _Copy1, _Copy2 etc (case-insensitive)
+	$clean_name = preg_replace( '/_Copy\d*$/i', '', $base_name );
+
+	// First try: _Copy
+	if ( ! in_array( $clean_name . '_Copy', $labels, true ) ) {
+		return $clean_name . '_Copy';
+	}
+
+	// Then try: _Copy1, _Copy2, _Copy3...
+	$count = 1;
+	while ( true ) {
+		$new_name = $clean_name . '_Copy' . $count;
+
+		if ( ! in_array( $new_name, $labels, true ) ) {
+			return $new_name;
+		}
+
+		++$count;
+	}
+}
+
+function caf_clone_builder_layout( $request ) {
+	$index   = intval( $request['index'] );
+	$options = get_option( 'caf_builder_layouts_list' );
+	if ( $options[ $index ] ) {
+		$layout       = $options[ $index ]['key'];
+		$layout_label = $options[ $index ]['label'];
+
+		$title = 'caf_' . $layout . '_' . $index;
+		if ( get_option( $title ) ) {
+			$baseLayoutData = get_option( $title );
+			// $copy_suffix = "_Copy";
+			// $new_layout_name = $layout_label . $copy_suffix;
+			$new_layout_name = caf_generate_unique_layout_name( $layout_label );
+			// return ;
+			$layout_key = save_new_layout_list( $new_layout_name );
+
+			$prifix                                      = 'caf_';
+			$new_layout_key                              = $prifix . $layout_key['key'];
+			$baseLayoutData->common_data->layout_key     = $new_layout_key;
+			$baseLayoutData->common_data->layout_name    = $new_layout_name;
+			$baseLayoutData->common_data->layout_publish = 'draft';
+			$baseLayoutData->common_data->layout_index   = $layout_key['index'];
+
+			update_option( $new_layout_key, $baseLayoutData );
+			echo json_encode(
+				array(
+					'status'  => 'success',
+					'message' => 'Filter Clone successfully.',
+				)
+			);
+		} else {
+			echo json_encode(
+				array(
+					'status'  => 'error',
+					'message' => 'Failed to clone filter.',
+				)
+			);
+		}
+	} else {
+		echo json_encode(
+			array(
+				'status'  => 'error',
+				'message' => 'Index id Not Found.',
+			)
+		);
+	}
+}
+
+function caf_delete_layout_permanent( $request ) {
+	$post_id = intval( $request['post_id'] );
+	if ( wp_delete_post( $post_id, true ) ) {
+		echo json_encode(
+			array(
+				'status'  => 'success',
+				'message' => 'Post deleted successfully.',
+			)
+		);
+	} else {
+		echo json_encode(
+			array(
+				'status'  => 'error',
+				'message' => 'Failed to delete post.',
+			)
+		);
+	}
+}
+
+function caf_restore_layout( $request ) {
+	$post_id = intval( $request['post_id'] );
+	if ( get_post_status( $post_id ) ) {
+		wp_untrash_post( $post_id );
+		echo json_encode(
+			array(
+				'status'  => 'success',
+				'message' => 'Post Restore successfully.',
+			)
+		);
+	} else {
+		echo json_encode(
+			array(
+				'status'  => 'error',
+				'message' => 'Failed to Restore Post.',
+			)
+		);
+	}
+}
+
+function caf_get_post_types_list() {
+	$results    = array();
+	$post_types = get_post_types( array( 'public' => true ), 'objects' );
+	$excluded_post_types = apply_filters(
+		'caf_pro_builder_excluded_post_types',
+		array(
+			'attachment',
+			'product',
+		)
+	);
+	if ( ! empty( $excluded_post_types ) ) {
+		foreach ( $excluded_post_types as $excluded_post_type ) {
+			unset( $post_types[ $excluded_post_type ] );
+		}
+	}
+	foreach ( $post_types  as  $post_type ) {
+		$results[] = array(
+			'value' => $post_type->name,
+			'label' => $post_type->label,
+		);
+	}
+
+	echo json_encode(
+		array(
+			'status'     => 'success',
+			'post_types' => $results,
+		)
+	);
+}
+/**
+ * Get unserialized option data
+ */
+function caf_get_unserialized_option_data($option_name) {
+    
+    $optionData = get_option($option_name);
+
+    if ( empty($optionData) ) {
+        return [];
+    }
+
+    // Automatically unserialize if serialized
+    return maybe_unserialize($optionData);
+}
+function caf_get_layouts_list( $data ) {
+	$args           = array(
+		'post_type'      => 'caf_posts',
+		'posts_per_page' => -1,
+		'post_status'    => array( 'publish', 'draft' ),
+	);
+	$posts          = get_posts( $args );
+	$opt            = 'caf_builder_layouts_list';
+	$blList         = get_option( $opt );
+	$filteredBlList = array();
+	if ( ! empty( $blList ) ) {
+		$filteredBlList = array_filter(
+			$blList,
+			function ( $item ) {
+				return ( ! isset( $item['post_status'] ) || $item['post_status'] !== 'trash' );
+			}
+		);
+	}
+	$results = array();
+	if ( ! empty( $posts ) ) {
+		foreach ( $posts as $post ) {
+			$post->shortcode     = "[caf_filter id='" . $post->ID . "']";
+			$post->layout_source = 'Old Panel';
+			$post->list_index    = '';
+			$results[]           = $post;
+		}
+	}
+	if ( ! empty( $filteredBlList ) ) {
+		foreach ( $filteredBlList as $key => $layout ) {
+			$title = 'caf_' . $layout['key'] . '_' . $key;
+			if ( get_option(trim($title)) ) {
+				$layout['layout_data'] = caf_get_unserialized_option_data($title);
+			}
+			// $post_status ="false";
+			// if(get_option($title)){
+			// $layoutData = get_option($title);
+			// $post_status = $layoutData->common_data->layout_publish;
+			// }
+			$layout['shortcode']     = "[caf_filter id='caf_" . $key . "']";
+			$layout['layout_source'] = 'Builder';
+			$layout['list_index']    = $key;
+			$layout['ID']            = 'caf_' . $layout['key'] . '_' . $key;
+			$layout['post_title']    = $layout['label'];
+			// $layout['post_status']=$post_status;
+			$results[] = $layout;
+		}
+	}
+	usort(
+		$results,
+		function ( $a, $b ) {
+	
+			$dateA = is_object($a)
+				? strtotime($a->post_date)
+				: strtotime($a['post_date']);
+	
+			$dateB = is_object($b)
+				? strtotime($b->post_date)
+				: strtotime($b['post_date']);
+	
+			return $dateB - $dateA; // DESC (newest first)
+		}
+	);
+
+	if (isset($data['search']) && !empty($data['search'])) {
+		$search = $data['search'];
+	
+		$results = array_filter($results, function($item) use ($search) {
+	
+			// object or array both handle 
+			$title = is_object($item)
+				? ($item->post_title ?? '')
+				: ($item['post_title'] ?? '');
+	
+			return !empty($title) && stripos($title, $search) !== false;
+		});
+	}
+
+	if ( count( $results ) > 0 ) {
+		$perPage          = isset( $data['perPage'] ) ? (int) $data['perPage'] : 10;
+		$currentPage      = isset( $data['page'] ) ? (int) $data['page'] : 1;
+		$startIndex       = ( $currentPage - 1 ) * $perPage;
+		$paginatedResults = array_slice( $results, $startIndex, $perPage );
+		$totalItems       = count( $results );
+		$totalPages       = ceil( $totalItems / $perPage );
+		echo json_encode(
+			array(
+				'status'        => 'success',
+				'layouts_list'  => $paginatedResults,
+				'current_page'  => $currentPage,
+				'total_page'    => $totalPages,
+				'total_filters' => $totalItems,
+			)
+		);
+	} else {
+		$currentPage = isset( $data['page'] ) ? (int) $data['page'] : 1;
+		echo json_encode(
+			array(
+				'status'        => 'success',
+				'layouts_list'  => $results,
+				'current_page'  => $currentPage,
+				'total_page'    => 1,
+				'total_filters' => 0,
+			)
+		);
+	}
+}
+function caf_get_trash_layouts_list( $data ) {
+	$args           = array(
+		'post_type'      => 'caf_posts',
+		'posts_per_page' => -1,
+		'post_status'    => array( 'trash' ),
+	);
+	$posts          = get_posts( $args );
+	$opt            = 'caf_builder_layouts_list';
+	$blList         = get_option( $opt );
+	$filteredBlList = array();
+	if ( ! empty( $blList ) ) {
+		$filteredBlList = array_filter(
+			$blList,
+			function ( $item ) {
+				return ( $item['post_status'] == 'trash' );
+			}
+		);
+	}
+	$results = array();
+	if ( ! empty( $posts ) ) {
+		foreach ( $posts as $post ) {
+			$post->shortcode     = "[caf_filter id='" . $post->ID . "']";
+			$post->layout_source = 'Old Panel';
+			$post->list_index    = '';
+			$results[]           = $post;
+		}
+	}
+	if ( ! empty( $filteredBlList ) ) {
+		foreach ( $filteredBlList as $key => $layout ) {
+			$title = 'caf_' . $layout['key'] . '_' . $key;
+			// $post_status ="false";
+			// if(get_option($title)){
+			// $layoutData = get_option($title);
+			// $post_status = $layoutData->common_data->layout_publish;
+			// }
+			$layout['shortcode']     = "[caf_filter id='caf_" . $key . "']";
+			$layout['layout_source'] = 'Builder';
+			$layout['list_index']    = $key;
+			$layout['ID']            = 'caf_' . $layout['key'] . '_' . $key;
+			$layout['post_title']    = $layout['label'];
+			// $layout['post_status']=$post_status;
+			$results[] = $layout;
+		}
+	}
+		usort(
+			$results,
+			function ( $a, $b ) {
+		
+				$dateA = is_object($a)
+					? strtotime($a->post_date)
+					: strtotime($a['post_date']);
+		
+				$dateB = is_object($b)
+					? strtotime($b->post_date)
+					: strtotime($b['post_date']);
+		
+				return $dateB - $dateA; // DESC (newest first)
+			}
+		);
+
+		if (isset($data['search']) && !empty($data['search'])) {
+			$search = $data['search'];
+		
+			$results = array_filter($results, function($item) use ($search) {
+		
+				// object or array both handle 
+				$title = is_object($item)
+					? ($item->post_title ?? '')
+					: ($item['post_title'] ?? '');
+		
+				return !empty($title) && stripos($title, $search) !== false;
+			});
+		}
+
+	if ( count( $results ) > 0 ) {
+		$perPage          = isset( $data['perPage'] ) ? (int) $data['perPage'] : 10;
+		$currentPage      = isset( $data['page'] ) ? (int) $data['page'] : 1;
+		$startIndex       = ( $currentPage - 1 ) * $perPage;
+		$paginatedResults = array_slice( $results, $startIndex, $perPage );
+		$totalItems       = count( $results );
+		$totalPages       = ceil( $totalItems / $perPage );
+		echo json_encode(
+			array(
+				'status'              => 'success',
+				'layouts_list'        => $paginatedResults,
+				'current_page'        => $currentPage,
+				'total_page'          => $totalPages,
+				'total_trash_filters' => $totalItems,
+			)
+		);
+	} else {
+		$currentPage = isset( $data['page'] ) ? (int) $data['page'] : 1;
+		echo json_encode(
+			array(
+				'status'              => 'success',
+				'layouts_list'        => $results,
+				'current_page'        => $currentPage,
+				'total_page'          => 1,
+				'total_trash_filters' => 0,
+			)
+		);
+	}
+}
+function caf_save_builder_layout_option( $data ) {
+	ob_start();
+	$layout_data                            = caf_normalize_builder_layout_data( json_decode( $data['layout_data'] ) );
+	$layout_name                            = $layout_data->common_data->layout_name;
+	$layout_key                             = save_new_layout_list( $layout_name );
+	if ( is_wp_error( $layout_key ) ) {
+		echo wp_json_encode(
+			array(
+				'status'  => 'error',
+				'message' => $layout_key->get_error_message(),
+			)
+		);
+		return;
+	}
+	$prifix                                 = 'caf_';
+	$title                                  = $prifix . $layout_key['key'];
+	$layout_data->common_data->layout_key   = $title;
+	$layout_data->common_data->layout_index = $layout_key['index'];
+	update_option( $title, $layout_data );
+	if ( isset( $layout_key['index'] ) && is_numeric( $layout_key['index'] ) ) {
+		caf_builder_invalidate_layout_cache( (int) $layout_key['index'] );
+	}
+	echo json_encode(
+		array(
+			'status'       => 'success',
+			'layout_data'  => get_option( $title ),
+			'layout_key'   => $title,
+			'layout_index' => $layout_key['index'],
+		)
+	);
+}
+/**
+ * Clear cached layout bundle/CSS after builder save or delete.
+ *
+ * @param int $shortindex Layout shortcode index.
+ * @return void
+ */
+function caf_builder_invalidate_layout_cache( $shortindex ) {
+	if ( ! class_exists( 'CAF_PRO_Builder_Ajax_Performance' ) ) {
+		return;
+	}
+	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-ajax-performance.php';
+	CAF_PRO_Builder_Ajax_Performance::invalidate_layout_cache( $shortindex );
+}
+function save_new_layout_list( $layout_name ) {
+	ob_start();
+	if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_create_layout() ) {
+		return new WP_Error(
+			'caf_layout_limit',
+			__( 'Free version allows a limited number of builder layouts. Upgrade to CAF Pro for unlimited layouts.', 'category-ajax-filter' )
+		);
+	}
+	$opt   = 'caf_builder_layouts_list';
+	$title = $layout_name;
+	$key   = $layout_name;
+	$key   = strtolower( trim( $key ) );
+	$key   = str_replace( ' ', '', $key );
+	if ( get_option( $opt ) ) {
+		$layouts   = get_option( $opt );
+		$layouts[] = array(
+			'key'         => $key,
+			'label'       => $title,
+			'post_status' => 'draft',
+			'post_date' => current_time('mysql'),
+		);
+		update_option( $opt, $layouts );
+	} else {
+		$layouts[] = array(
+			'key'         => $key,
+			'label'       => $title,
+			'post_status' => 'draft',
+			'post_date' => current_time('mysql'),
+		);
+		update_option( $opt, $layouts );
+	}
+	$layoutsList = get_option( $opt );
+	$lastIndex   = array_key_last( $layoutsList );
+	return array(
+		'key'   => $key . '_' . $lastIndex,
+		'index' => $lastIndex,
+	);
+	// $lastIndex = array_key_last($layoutsList);
+	// return $lastIndex;
+}
+function caf_delete_builder_layout( $data ) {
+	ob_start();
+	$index   = $data['index'];
+	$options = get_option( 'caf_builder_layouts_list' );
+	if ( $options[ $index ] ) {
+		$options[ $index ]['post_status'] = 'trash';
+		update_option( 'caf_builder_layouts_list', $options );
+		echo json_encode(
+			array(
+				'status'  => 'success',
+				'message' => 'Layout Trashed Successfully',
+			)
+		);
+	} else {
+		echo json_encode(
+			array(
+				'status' => 'success',
+				'error'  => 'Layout Not Found',
+			)
+		);
+	}
+}
+function caf_delete_builder_layout_permanent( $data ) {
+	ob_start();
+	$index   = $data['index'];
+	$options = get_option( 'caf_builder_layouts_list' );
+	if ( $options[ $index ] ) {
+		$layout = $options[ $index ]['key'];
+		$title  = 'caf_' . $layout . '_' . $index;
+		unset( $options[ $index ] );
+		delete_option( $title );
+		update_option( 'caf_builder_layouts_list', $options );
+		caf_builder_invalidate_layout_cache( (int) $index );
+		echo json_encode(
+			array(
+				'status'  => 'success',
+				'message' => 'Layout Deleted Successfully',
+			)
+		);
+	} else {
+		echo json_encode(
+			array(
+				'status' => 'success',
+				'error'  => 'Layout Not Found',
+			)
+		);
+	}
+}
+function caf_restore_builder_layout( $data ) {
+	ob_start();
+	$index   = $data['index'];
+	$options = get_option( 'caf_builder_layouts_list' );
+	if ( $options[ $index ] ) {
+		$options[ $index ]['post_status'] = 'draft';
+		update_option( 'caf_builder_layouts_list', $options );
+		echo json_encode(
+			array(
+				'status'  => 'success',
+				'message' => 'Layout Restored Successfully',
+			)
+		);
+	} else {
+		echo json_encode(
+			array(
+				'status' => 'success',
+				'error'  => 'Layout Not Found',
+			)
+		);
+	}
+}
+function caf_add_term_links( $terms ) {
+
+	if ( empty( $terms ) || is_wp_error( $terms ) ) {
+		return $terms;
+	}
+
+	foreach ( $terms as &$term ) {
+
+		$term_link = get_term_link( $term );
+
+		if ( ! is_wp_error( $term_link ) ) {
+			$term->term_link = $term_link;
+		} else {
+			$term->term_link = '#';
+		}
+	}
+	unset( $term );
+	return $terms;
+}
+function caf_get_posts_list( $data ) {
+	$post_type = '';
+	if ( is_object( $data ) && method_exists( $data, 'get_param' ) ) {
+		$post_type = sanitize_key( (string) $data->get_param( 'post_type' ) );
+	} elseif ( is_array( $data ) && isset( $data['post_type'] ) ) {
+		$post_type = sanitize_key( (string) $data['post_type'] );
+	}
+
+	if ( '' === $post_type ) {
+		echo wp_json_encode(
+			array(
+				'status'  => 'error',
+				'message' => 'Post type is required.',
+			)
+		);
+		return;
+	}
+
+	$query      = new WP_Query(
+		array(
+			'post_type'      => $post_type,
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+		)
+	);
+	$postsList  = array();
+	$taxo       = get_object_taxonomies( $post_type, 'objects' );
+	$imageArray = array();
+	while ( $query->have_posts() ) {
+		global $post;
+		$query->the_post();
+		$post_id               = get_the_ID();
+		$excerpt               = get_the_excerpt();
+		$content               = get_post_type_object( $post_type );
+		$post_url              = get_permalink();
+		$imageurl              = get_the_post_thumbnail_url();
+		$filterd_custom_fields = caf_build_post_meta_fields_for_builder( $post_id, $post_type );
+
+		$trms = array();
+		if ( $taxo ) {
+			foreach ( $taxo as $tax ) {
+				$terms              = wp_get_post_terms( $post_id, $tax->name );
+				$trms[ $tax->name ] = caf_add_term_links( $terms );
+			}
+		}
+
+		// $imageArray = ["sizes" => get_intermediate_image_sizes()];
+		$imageArray   = array( 'sizes' => array( 'thumbnail', 'medium', 'medium_large', 'large' ) );
+		$thumbnail_id = get_post_thumbnail_id( $post_id );
+		foreach ( $imageArray['sizes'] as $size ) {
+			$thumbnail_url       = wp_get_attachment_image_src( $thumbnail_id, $size );
+			$imageArray[ $size ] = ( is_array( $thumbnail_url ) && ! empty( $thumbnail_url[0] ) )
+				? esc_url( $thumbnail_url[0] )
+				: '';
+		}
+		$postsList[] = array(
+			'label'         => get_the_title(),
+			'value'         => $post_id,
+			'id'            => $post_id,
+			'key'           => $post_id,
+			'title'         => get_the_title(),
+			'description'   => get_the_content(),
+			'excerpt'       => $excerpt,
+			'url'           => $post_url,
+			'image'         => $imageurl,
+			'imageArray'    => $imageArray,
+			'taxonomies'    => $taxo,
+			'categories'    => $trms,
+			'author'        => get_the_author(),
+			'author_avatar' => get_author_avatar_url( $post_id ),
+			'date'          => get_the_date( 'd-m-y' ),
+			'post_date'     => get_post() ? get_post()->post_date : '',
+			'meta_fields'   => $filterd_custom_fields,
+			'customtext'    => 'Custom text',
+			'commentcount'  => get_comments_number(),
+		);
+	}
+	wp_reset_postdata();
+	$resultsCount = array(
+		'start'         => '1',
+		'end'           => $query->found_posts,
+		'total_results' => $query->found_posts,
+	);
+	echo wp_json_encode(
+		array(
+			'status'        => 'success',
+			'posts_list'    => $postsList,
+			'results_count' => $resultsCount,
+		)
+	);
+}
+function caf_get_taxo_data_with_recursive_method( $request ) {
+	$post_type = $request['post-type'];
+	if ( ! empty( $post_type ) ) {
+		$taxonomies    = get_object_taxonomies( $post_type, 'objects' );
+		$taxonomy_tree = array();
+		if ( ! empty( $taxonomies ) ) {
+			foreach ( $taxonomies as $taxonomy ) {
+				$terms = get_terms(
+					array(
+						'taxonomy'   => $taxonomy->name,
+						'hide_empty' => false,
+					)
+				);
+
+				if ( ! empty( $terms ) ) {
+					$term_data = build_term_tree_with_counts( $terms, $taxonomy->name ,$post_type);
+
+					$taxonomy_tree[] = array(
+						'key'       => $taxonomy->name,
+						'label'     => $taxonomy->label,
+						'term_data' => $term_data,
+					);
+				}
+			}
+			echo json_encode(
+				array(
+					'status'        => 'success',
+					'taxonomy_list' => $taxonomy_tree,
+				)
+			);
+		} else {
+			echo json_encode(
+				array(
+					'status'        => 'success',
+					'taxonomy_list' => null,
+					'message'       => 'taxonomies are not exist',
+				)
+			);
+		}
+	} else {
+		echo json_encode(
+			array(
+				'status'        => 'success',
+				'taxonomy_list' => null,
+				'message'       => 'post type not exist',
+			)
+		);
+	}
+}
+
+
+function build_term_tree_with_counts( $terms, $taxonomy_name ,$post_type) {
+	if ( is_wp_error( $terms ) || empty( $terms ) ) {
+		return array();
+	}
+
+	$term_lookup = array();
+	foreach ( $terms as $term ) {
+		$term->children_data           = array();
+		$term_lookup[ $term->term_id ] = $term;
+	}
+
+	$roots = array();
+	foreach ( $terms as $term ) {
+		if ( ! empty( $term->parent ) && isset( $term_lookup[ $term->parent ] ) ) {
+			$term_lookup[ $term->parent ]->children_data[] = $term;
+		} else {
+			$roots[] = $term;
+		}
+	}
+
+	// Helper to get unique post IDs under a term (including descendants)
+	$get_post_ids = function ( $term_id, $taxonomy_name ) use ( &$get_post_ids, $term_lookup, $post_type) {
+		$args = array(
+			'post_type'      => $post_type ,
+			'post_status'    => 'publish',
+			'fields'         => 'ids',
+			'posts_per_page' => -1,
+			'tax_query'      => array(
+				array(
+					'taxonomy'         => $taxonomy_name,
+					'terms'            => $term_id,
+					'include_children' => false,
+				),
+			),
+		);
+
+		$posts    = get_posts( $args );
+		$post_ids = $posts ? $posts : array();
+
+		// Include child terms (recursively)
+		if ( ! empty( $term_lookup[ $term_id ]->children_data ) ) {
+			foreach ( $term_lookup[ $term_id ]->children_data as $child ) {
+				$child_posts = $get_post_ids( $child->term_id, $taxonomy_name );
+				$post_ids    = array_merge( $post_ids, $child_posts );
+			}
+		}
+
+		// Remove duplicate post IDs
+		return array_unique( $post_ids );
+	};
+
+	// Recursive conversion with accurate count
+	$to_array = function ( $term ) use ( &$to_array, &$get_post_ids, $taxonomy_name ) {
+		$post_ids    = $get_post_ids( $term->term_id, $taxonomy_name );
+		$total_count = count( $post_ids );
+
+		$children_arr = array();
+		if ( ! empty( $term->children_data ) ) {
+			foreach ( $term->children_data as $child ) {
+				$children_arr[] = $to_array( $child );
+			}
+		}
+
+		return array(
+			'id'            => (int) $term->term_id,
+			'name'          => $term->name,
+			'slug'          => $term->slug,
+			'count'         => (int) $term->count,
+			'total_count'   => $total_count, // ✅ unique post count
+			'children_data' => $children_arr,
+		);
+	};
+
+	$output = array();
+	foreach ( $roots as $root ) {
+		$output[] = $to_array( $root );
+	}
+	return $output;
+}
+
+// function build_term_tree_with_counts($terms, $taxonomy_name) {
+// if (is_wp_error($terms) || empty($terms)) {
+// return array();
+// }
+// $term_lookup = array();
+// foreach ($terms as $term) {
+// $term->children_data = array();
+// $term_lookup[$term->term_id] = $term;
+// }
+// $roots = array();
+// foreach ($terms as $term) {
+// if (!empty($term->parent) && isset($term_lookup[$term->parent])) {
+// $term_lookup[$term->parent]->children_data[] = $term;
+// } else {
+// $roots[] = $term;
+// }
+// }
+
+// Recursive conversion + total_count calculation
+// $to_array = function($term) use (&$to_array, $taxonomy_name) {
+// $direct_count = (int) $term->count;
+
+// $children_arr = array();
+// $children_total = 0;
+// if (!empty($term->children_data)) {
+// foreach ($term->children_data as $child) {
+// $child_arr = $to_array($child);
+// $children_arr[] = $child_arr;
+// $children_total += (int) $child_arr['total_count'];
+// }
+// }
+// $total_count = $direct_count + $children_total;
+
+// return array(
+// 'id'          => (int) $term->term_id,
+// 'name'        => $term->name,
+// 'slug'        => $term->slug,
+// 'count'       => $direct_count,
+// 'total_count' => $total_count,
+// 'children_data'    => $children_arr,
+// );
+// };
+
+// $output = array();
+// foreach ($roots as $root) {
+// $output[] = $to_array($root);
+// }
+// return $output;
+// }
+
+
+/* start api for testing puspose*/
+add_action(
+	'rest_api_init',
+	function () {
+		register_rest_route(
+			'caf-custom-builder/v1',
+			'/upload-icon/',
+			array(
+				'methods'             => 'POST',
+				'callback'            => 'handle_image_upload',
+				'permission_callback' => function () {
+					return current_user_can( 'manage_options' );
+				},
+			)
+		);
+	}
+);
+// phpcs:disable
+function handle_image_upload($data)
+{
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return new WP_Error( 'caf_upload_forbidden', 'Unauthorized request.', array( 'status' => 403 ) );
+	}
+
+	$files = method_exists( $data, 'get_file_params' ) ? $data->get_file_params() : array();
+	if ( empty( $files['file'] ) || empty( $files['file']['tmp_name'] ) ) {
+		return rest_ensure_response( array( 'status' => 'error', 'message' => 'No file provided.' ) );
+	}
+
+	$file = $files['file'];
+	if ( ! isset( $file['error'] ) || UPLOAD_ERR_OK !== (int) $file['error'] ) {
+		return rest_ensure_response( array( 'status' => 'error', 'message' => 'Upload failed.' ) );
+	}
+
+	$allowed_mimes = array(
+		'jpg|jpeg|jpe' => 'image/jpeg',
+		'png'          => 'image/png',
+		'gif'          => 'image/gif',
+		'webp'         => 'image/webp',
+	);
+	$filetype      = wp_check_filetype_and_ext( $file['tmp_name'], $file['name'], $allowed_mimes );
+	if ( empty( $filetype['ext'] ) || empty( $filetype['type'] ) ) {
+		return rest_ensure_response( array( 'status' => 'error', 'message' => 'Invalid file type.' ) );
+	}
+
+	$target_dir = trailingslashit( __DIR__ ) . 'loader-icons/';
+	if ( ! file_exists( $target_dir ) ) {
+		wp_mkdir_p( $target_dir );
+	}
+
+	$base_name     = 'caf-loader-img-' . time() . '.' . $filetype['ext'];
+	$new_file_name = wp_unique_filename( $target_dir, sanitize_file_name( $base_name ) );
+	$target_file   = $target_dir . $new_file_name;
+
+	if ( ! move_uploaded_file( $file['tmp_name'], $target_file ) ) {
+		return rest_ensure_response( array( 'status' => 'error', 'message' => 'Upload failed.' ) );
+	}
+
+	$file_url = plugins_url( 'loader-icons/' . $new_file_name, __FILE__ );
+	return rest_ensure_response(
+		array(
+			'status'   => 'success',
+			'message'  => 'File uploaded successfully',
+			'fileName' => sanitize_file_name( $file['name'] ),
+			'fileUrl'  => esc_url_raw( $file_url ),
+		)
+	);
+}
+
+// phpcs:enable
+/* end api for testing puspose*/
+
+function caf_free_register_caf_admin_submenus() {
+	remove_submenu_page( 'edit.php?post_type=caf_posts', 'edit.php?post_type=caf_posts' );
+	remove_submenu_page( 'edit.php?post_type=caf_posts', 'post-new.php?post_type=caf_posts' );
+
+	add_submenu_page(
+		'edit.php?post_type=caf_posts',
+		__( 'Filters', 'category-ajax-filter' ),
+		__( 'Filters', 'category-ajax-filter' ),
+		'manage_options',
+		'caf-free-builder-filters',
+		'__return_empty_string'
+	);
+
+	global $submenu;
+
+	if ( ! isset( $submenu['edit.php?post_type=caf_posts'] ) || ! is_array( $submenu['edit.php?post_type=caf_posts'] ) ) {
+		return;
+	}
+
+	foreach ( $submenu['edit.php?post_type=caf_posts'] as $key => $menu_item ) {
+		if ( ! isset( $menu_item[2] ) ) {
+			continue;
+		}
+
+		if ( false !== strpos( $menu_item[2], 'page=caf-free-builder-filters' ) ) {
+			$submenu['edit.php?post_type=caf_posts'][ $key ][2] = 'edit.php?post_type=caf_posts&builder=1';
+		}
+	}
+}
+add_action( 'admin_menu', 'caf_free_register_caf_admin_submenus', 99998 );
+
+/**
+ * Redirect bare caf_posts list URL to the builder (top-level menu click).
+ *
+ * @return void
+ */
+function caf_free_redirect_caf_posts_to_builder() {
+	global $pagenow;
+
+	if ( ! is_admin() || 'edit.php' !== $pagenow ) {
+		return;
+	}
+
+	if ( ! isset( $_GET['post_type'] ) || 'caf_posts' !== $_GET['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return;
+	}
+
+	if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return;
+	}
+
+	if ( isset( $_GET['builder'] ) && '1' === (string) $_GET['builder'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return;
+	}
+
+	wp_safe_redirect( admin_url( 'edit.php?post_type=caf_posts&builder=1' ) );
+	exit;
+}
+add_action( 'admin_init', 'caf_free_redirect_caf_posts_to_builder' );
+
+/**
+ * Keep "Filters" submenu highlighted on caf_posts list screen.
+ *
+ * @param string $submenu_file Current submenu slug.
+ * @return string
+ */
+function caf_force_filters_submenu_active( $submenu_file ) {
+	global $pagenow;
+
+	$is_caf_posts_list = isset( $_GET['post_type'] ) && 'caf_posts' === $_GET['post_type'] && 'edit.php' === $pagenow && empty( $_GET['page'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	if ( $is_caf_posts_list ) {
+		return 'edit.php?post_type=caf_posts&page=caf-free-builder-filters';
+	}
+
+	return $submenu_file;
+}
+add_filter( 'submenu_file', 'caf_force_filters_submenu_active', 100 );
+
+
+
+
+
+
+
+/* For Testing Purpose */
+
+function get_posts_with_both_terms() {
+	$args = array(
+		'post_type'      => 'post', // Replace with your custom post type if needed
+		'posts_per_page' => -1,
+		'tax_query'      => array(
+			'relation' => 'AND',
+			array(
+				'taxonomy' => 'category', // Replace with your taxonomy slug
+				'field'    => 'term_id',
+				'terms'    => array( 59 ),
+				'operator' => 'IN',
+			),
+			array(
+				'taxonomy' => 'category', // Same taxonomy
+				'field'    => 'term_id',
+				'terms'    => array( 35 ),
+				'operator' => 'IN',
+			),
+		),
+	);
+
+	$query = new WP_Query( $args );
+
+	if ( $query->have_posts() ) {
+		$output = '<ul>';
+		while ( $query->have_posts() ) {
+			$query->the_post();
+			$output .= '<li><a href="' . get_permalink() . '">' . get_the_title() . '</a></li>';
+		}
+		$output .= '</ul>';
+		wp_reset_postdata();
+	} else {
+		$output = '<p>No posts found with both terms.</p>';
+	}
+
+	return $output;
+}
+
+add_shortcode( 'custom_tax_query_posts', 'get_posts_with_both_terms' );
+
+// add_action('rest_api_init', function () {
+// register_rest_route('caf-custom-builder/v1', '/get-texo-data-test/', array(
+// 'methods' => 'GET',
+// 'callback' => 'get_texo_data_test',
+// 'permission_callback' => '__return_true',
+// ));
+// });
+
+
+// function get_texo_data_test(){
+// // Get all taxonomies associated with post type 'post'
+// $taxonomies = get_object_taxonomies('post', 'objects');
+
+// // Array to store term data for each taxonomy
+// $taxonomy_tree = [];
+
+// foreach ($taxonomies as $taxonomy) {
+// $terms = get_terms(array(
+// 'taxonomy' => $taxonomy->name,
+// 'hide_empty' => false,  // Show all terms even if not assigned to any posts
+// ));
+
+// Build term tree for each taxonomy
+// $taxonomy_tree[$taxonomy->name] = build_term_tree($terms);  // Using the build_term_tree function from before
+
+// }
+// echo json_encode(array("status" => "success", "taxonomy_tree"=>$taxonomy_tree));
+// }
+
+// function build_term_tree($terms) {
+// $term_tree = [];
+// $term_lookup = [];
+
+// foreach ($terms as $term) {
+// $term->children = [];
+// $term_lookup[$term->term_id] = $term;
+// }
+
+// foreach ($terms as $term) {
+// if ($term->parent && isset($term_lookup[$term->parent])) {
+// $term_lookup[$term->parent]->children[] = $term;
+// } else {
+// $term_tree[] = $term;
+// }
+// }
+
+// return convert_to_array($term_tree);
+// }
+
+// function convert_to_array($terms) {
+// $output = [];
+// foreach ($terms as $term) {
+// $output[] = [
+// 'id' => $term->term_id,
+// 'name' => $term->name,
+// 'slug' => $term->slug,
+// 'children' => convert_to_array($term->children)
+// ];
+// }
+// return $output;
+// }
+
+// add_action('rest_api_init', function () {
+// register_rest_route('caf-custom-builder/v1', '/get-texo-data-test', array(
+// 'methods'  => 'GET',
+// 'callback' => 'get_texo_data_test',
+// 'permission_callback' => '__return_true',
+// ));
+// });
+
+// function get_featured_image_sizes_shortcode($atts) {
+
+// ob_start(); // Start Buffer
+
+// $atts = shortcode_atts(array(
+// 'id' => get_the_ID(), // default: current post ID
+// ), $atts);
+
+// $post_id = $atts['id'];
+
+// Get featured image ID
+// $image_id = get_post_thumbnail_id($post_id);
+// if (!$image_id) {
+// echo "<p>No Featured Image Found.</p>";
+// return ob_get_clean();
+// }
+
+// All sizes you want
+// $sizes = array('thumbnail', 'medium', 'large', 'full');
+
+// echo '<div class="featured-image-sizes">';
+
+// foreach ($sizes as $size) {
+
+// $img = wp_get_attachment_image_src($image_id, $size);
+
+// echo "<pre>";
+// print_r($img);   // <- Yaha aapko pura array milega
+// echo "</pre>";
+
+// if ($img) {
+// $url = $img[0];
+// $width = $img[1];
+// $height = $img[2];
+
+// echo "
+// <div class='img-box'>
+// <strong>$size</strong><br>
+// URL: $url <br>
+// Width: $width px<br>
+// Height: $height px
+// <hr>
+// </div>
+// ";
+// }
+// }
+
+// echo '</div>';
+
+// return ob_get_clean(); // Return buffer content
+// }
+// add_shortcode('featured_image_sizes', 'get_featured_image_sizes_shortcode');
+
+// add_filter('big_image_size_threshold', '__return_false');
+
+
+function get_author_avatar_url( $postid ) {
+
+	$author_id = get_post_field( 'post_author', $postid );
+
+	if ( ! $author_id ) {
+		return '';
+	}
+
+	$avatar_url = get_avatar_url( $author_id );
+
+	return esc_url( $avatar_url );
+}
+
+// add_shortcode( 'author_avatar_url', 'get_author_avatar_url_shortcode' );

@@ -5,7 +5,7 @@ Plugin URI: https://trustyplugins.com/category-ajax-filter-pro
 Tags: ajax filter, category filter, taxonomy filter, custom post type, filter
 Requires at least: 6.0
 Tested up to: 7.0
-Stable tag: 2.8.5.1
+Stable tag: 3.0.0
 Requires PHP: 7.0
 License: GPL3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -197,6 +197,10 @@ Yes, since version 2.7.2, Category AJAX Filter supports WooCommerce products wit
 No. CAF is built to be lightweight and only loads assets on pages where a filter shortcode is used.
 
 == Changelog ==
+
+= 3.0.0 = (08/06/2026)
+* readme Updated
+
 
 = 2.8.5.1 = (08/06/2026)
 * readme Updated

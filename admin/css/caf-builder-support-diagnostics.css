@@ -1,0 +1,41 @@
+/* CAF Builder — Support diagnostics / Logs admin page */
+
+.caf-builder-support-diagnostics__intro {
+  max-width: 720px;
+  margin: 0 0 24px;
+}
+
+.caf-builder-support-diagnostics__section {
+  margin-bottom: 32px;
+}
+
+.caf-builder-support-diagnostics__section-title {
+  margin: 0 0 12px;
+  font-size: 1.3em;
+}
+
+.caf-builder-support-diagnostics__section--errors {
+  margin-top: 32px;
+}
+
+.caf-builder-support-diagnostics__system-table {
+  max-width: 720px;
+}
+
+.caf-builder-support-diagnostics__toolbar {
+  margin: 12px 0 16px;
+}
+
+.caf-builder-support-diagnostics__empty {
+  margin: 0;
+  color: #646970;
+}
+
+.caf-builder-support-diagnostics__error-table {
+  margin-top: 8px;
+}
+
+.caf-builder-support-diagnostics__error-table code {
+  font-size: 12px;
+  word-break: break-all;
+}
