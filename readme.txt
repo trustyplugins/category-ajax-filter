@@ -198,6 +198,9 @@ No. CAF is built to be lightweight and only loads assets on pages where a filter
 
 == Changelog ==
 
+= 2.8.5.1 = (08/06/2026)
+* readme Updated
+
 = 2.8.5 = (25/05/2026)
 * Updated admin design compatible with WordPress 7.0.
 * Admin CSS fixed.
