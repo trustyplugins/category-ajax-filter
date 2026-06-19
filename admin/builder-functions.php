@@ -3840,6 +3840,10 @@ function handle_image_upload($data)
 // phpcs:enable
 /* end api for testing puspose*/
 
+function caf_free_get_builder_filters_admin_url() {
+	return admin_url( 'edit.php?post_type=caf_posts&builder=1' );
+}
+
 function caf_free_register_caf_admin_submenus() {
 	remove_submenu_page( 'edit.php?post_type=caf_posts', 'edit.php?post_type=caf_posts' );
 	remove_submenu_page( 'edit.php?post_type=caf_posts', 'post-new.php?post_type=caf_posts' );
@@ -3859,20 +3863,27 @@ function caf_free_register_caf_admin_submenus() {
 		return;
 	}
 
+	$builder_url = 'edit.php?post_type=caf_posts&builder=1';
+
 	foreach ( $submenu['edit.php?post_type=caf_posts'] as $key => $menu_item ) {
 		if ( ! isset( $menu_item[2] ) ) {
 			continue;
 		}
 
-		if ( false !== strpos( $menu_item[2], 'page=caf-free-builder-filters' ) ) {
-			$submenu['edit.php?post_type=caf_posts'][ $key ][2] = 'edit.php?post_type=caf_posts&builder=1';
+		$menu_slug = (string) $menu_item[2];
+
+		if (
+			'caf-free-builder-filters' === $menu_slug
+			|| false !== strpos( $menu_slug, 'caf-free-builder-filters' )
+		) {
+			$submenu['edit.php?post_type=caf_posts'][ $key ][2] = $builder_url;
 		}
 	}
 }
 add_action( 'admin_menu', 'caf_free_register_caf_admin_submenus', 99998 );
 
 /**
- * Redirect bare caf_posts list URL to the builder (top-level menu click).
+ * Redirect caf_posts list URLs to the React builder screen.
  *
  * @return void
  */
@@ -3887,21 +3898,29 @@ function caf_free_redirect_caf_posts_to_builder() {
 		return;
 	}
 
-	if ( ! empty( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$page    = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$builder = isset( $_GET['builder'] ) ? (string) wp_unslash( $_GET['builder'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+	if ( 'caf-free-builder-filters' === $page ) {
+		wp_safe_redirect( caf_free_get_builder_filters_admin_url() );
+		exit;
+	}
+
+	if ( '1' === $builder ) {
 		return;
 	}
 
-	if ( isset( $_GET['builder'] ) && '1' === (string) $_GET['builder'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	if ( '' !== $page ) {
 		return;
 	}
 
-	wp_safe_redirect( admin_url( 'edit.php?post_type=caf_posts&builder=1' ) );
+	wp_safe_redirect( caf_free_get_builder_filters_admin_url() );
 	exit;
 }
 add_action( 'admin_init', 'caf_free_redirect_caf_posts_to_builder' );
 
 /**
- * Keep "Filters" submenu highlighted on caf_posts list screen.
+ * Keep "Filters" submenu highlighted on caf_posts builder list screen.
  *
  * @param string $submenu_file Current submenu slug.
  * @return string
@@ -3909,9 +3928,15 @@ add_action( 'admin_init', 'caf_free_redirect_caf_posts_to_builder' );
 function caf_force_filters_submenu_active( $submenu_file ) {
 	global $pagenow;
 
-	$is_caf_posts_list = isset( $_GET['post_type'] ) && 'caf_posts' === $_GET['post_type'] && 'edit.php' === $pagenow && empty( $_GET['page'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	if ( $is_caf_posts_list ) {
-		return 'edit.php?post_type=caf_posts&page=caf-free-builder-filters';
+	if ( 'edit.php' !== $pagenow || ! isset( $_GET['post_type'] ) || 'caf_posts' !== $_GET['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		return $submenu_file;
+	}
+
+	$page    = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	$builder = isset( $_GET['builder'] ) ? (string) wp_unslash( $_GET['builder'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+	if ( '1' === $builder || '' === $page ) {
+		return 'edit.php?post_type=caf_posts&builder=1';
 	}
 
 	return $submenu_file;
