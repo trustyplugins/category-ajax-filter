@@ -106,6 +106,10 @@ register_activation_hook(__FILE__, 'tc_caf_activate');
 register_deactivation_hook(__FILE__, 'tc_caf_deactivate');
 function tc_caf_activate()
 {
+	// Fresh installs often use plain permalinks; flushing helps /wp-json/ resolve.
+	if ( function_exists( 'flush_rewrite_rules' ) ) {
+		flush_rewrite_rules();
+	}
 }
 function tc_caf_deactivate()
 {

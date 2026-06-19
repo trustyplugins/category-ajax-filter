@@ -131,6 +131,7 @@ class CAF_Builder_Admin {
 					'rest_nonce'    => wp_create_nonce( 'wp_rest' ),
 					'plugin_path'   => TC_CAF_URL,
 					'site_base_url' => site_url(),
+					'rest_api_base' => esc_url_raw( rest_url( 'caf-custom-builder/v1/' ) ),
 					'custom_fonts'  => array(),
 					'support_env'   => class_exists( 'CAF_Support_Diagnostics' )
 						? CAF_Support_Diagnostics::get_support_env()
