@@ -558,6 +558,7 @@ function get_string_between($string, $start, $end)
 
 function setDynamicFilterCssFree($id, $handle, $caf_layout, $b, $type)
 {
+    include TC_CAF_PATH . 'includes/caf-legacy-variable-defaults-bootstrap.php';
     include TC_CAF_PATH . 'includes/front-variables.php';
     switch ($caf_layout) {
         case "filter-layout1":

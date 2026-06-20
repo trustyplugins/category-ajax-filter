@@ -2,9 +2,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
+include TC_CAF_PATH . 'includes/caf-legacy-variable-defaults-bootstrap.php';
 $trm = '';
-$caf_post_layout = 'post-layout1';
-$caf_filter_layout = 'filter-layout1';
 $caf_all_ed = 'enable';
 //$caf_term_dy='enable';
 

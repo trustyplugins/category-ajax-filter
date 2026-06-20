@@ -92,6 +92,9 @@ class CAF_Builder_Tier {
 				'post_image_custom_field',
 				'post_link_custom_field',
 				'post_prefix_suffix',
+				'preview_loader_settings',
+				'pagination_button',
+				'pagination_load_more',
 			),
 		);
 	}

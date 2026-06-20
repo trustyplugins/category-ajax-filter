@@ -2,6 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
+include TC_CAF_PATH . 'includes/caf-legacy-variable-defaults-bootstrap.php';
 $filter_css=".data-target-div".$b." #caf-filter-layout2 .selectcont,.data-target-div".$b." #caf-filter-layout2 li,.data-target-div".$b." #caf-filter-layout2,.data-target-div".$b." #caf-filter-layout2 li ul li a  {font-family:".$caf_filter_font."}
 .data-target-div".$b." #caf-filter-layout2 ul.dropdown li a {color: ".$caf_filter_sec_color.";}
 .data-target-div".$b." #caf-filter-layout2 ul.dropdown li span {color: ".$caf_filter_primary_color.";}

@@ -2,9 +2,12 @@
 if (!defined('ABSPATH')) {
     exit; // Exit if accessed directly
 }
+include TC_CAF_PATH . 'includes/caf-legacy-variable-defaults-bootstrap.php';
 $caf_pagination = new CAF_ajax_pagination();
 $caf_content_length = new CAF_content_length();
-if (isset($filter_id)) {
+if (!isset($id)) {
+    $id = isset($filter_id) ? $filter_id : 0;
+} elseif (isset($filter_id)) {
     $id = $filter_id;
 }
 $caf_pagi_type = 'number';
@@ -73,15 +76,15 @@ if (get_post_meta($id, 'caf_post_layout')) {
 if (get_post_meta($id, 'caf_col_opt')) {
     $caf_col_opt = get_post_meta($id, 'caf_col_opt', true);
 }
-if ($caf_col_opt['caf_col_desktop']) {
+if (!empty($caf_col_opt['caf_col_desktop'])) {
     $caf_desktop_col = 12 / $caf_col_opt['caf_col_desktop'];
     $caf_desktop_col_val = $caf_col_opt['caf_col_desktop'];
 }
-if ($caf_col_opt['caf_col_tablet']) {
+if (!empty($caf_col_opt['caf_col_tablet'])) {
     $caf_tablet_col = 12 / $caf_col_opt['caf_col_tablet'];
     $caf_tablet_col_val = $caf_col_opt['caf_col_tablet'];
 }
-if ($caf_col_opt['caf_col_mobile']) {
+if (!empty($caf_col_opt['caf_col_mobile'])) {
     $caf_mobile_col = 12 / $caf_col_opt['caf_col_mobile'];
     $caf_mobile_col_val = $caf_col_opt['caf_col_mobile'];
 }

@@ -2446,6 +2446,167 @@ function caf_sanitize_free_post_module_settings( $module_key, $settings ) {
 	return $settings;
 }
 
+/**
+ * Default loader used on free tier (simple spinner, no overlay).
+ *
+ * @return object
+ */
+function caf_get_free_preview_loader_defaults() {
+	return (object) array(
+		'is_enable'    => 'true',
+		'loader_type'  => 'true',
+		'loader_text'  => 'Loading...',
+		'overlay'      => 'false',
+		'custom_class' => '',
+		'icon_data'    => (object) array(
+			'source' => 'list',
+			'icon'   => 'fa fa-spinner fa-pulse',
+			'url'    => '',
+			'upload' => '',
+			'style'  => (object) array(
+				'desktop' => (object) array(
+					'default' => (object) array(
+						'fontSize' => '14px',
+						'overlay'  => 'rgba(255,255,255,0)',
+					),
+					'hover'   => new stdClass(),
+				),
+				'tablet'  => (object) array(
+					'default' => new stdClass(),
+					'hover'   => new stdClass(),
+				),
+				'mobile'  => (object) array(
+					'default' => new stdClass(),
+					'hover'   => new stdClass(),
+				),
+			),
+		),
+	);
+}
+
+/**
+ * Strip Pro-only layout preview settings on free tier saves.
+ *
+ * @param object $layout_data Layout data object.
+ * @return object
+ */
+function caf_sanitize_free_preview_template_data( $layout_data ) {
+	if ( ! is_object( $layout_data ) || ! class_exists( 'CAF_Builder_Tier' ) ) {
+		return $layout_data;
+	}
+
+	if ( ! isset( $layout_data->common_data ) || ! is_object( $layout_data->common_data ) ) {
+		return $layout_data;
+	}
+	if ( ! isset( $layout_data->common_data->preview_template_data ) || ! is_object( $layout_data->common_data->preview_template_data ) ) {
+		return $layout_data;
+	}
+
+	$preview = $layout_data->common_data->preview_template_data;
+	if ( ! isset( $preview->misc_preview_data ) || ! is_object( $preview->misc_preview_data ) ) {
+		$preview->misc_preview_data = new stdClass();
+	}
+
+	$misc = $preview->misc_preview_data;
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'floating_filter' ) ) {
+		if ( ! isset( $misc->extra ) || ! is_object( $misc->extra ) ) {
+			$misc->extra = new stdClass();
+		}
+		foreach ( array( 'desktop', 'tablet', 'mobile' ) as $device ) {
+			if ( ! isset( $misc->extra->$device ) || ! is_object( $misc->extra->$device ) ) {
+				$misc->extra->$device = new stdClass();
+			}
+			$misc->extra->$device->filterPosition = 'inline';
+		}
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'preview_loader_settings' ) ) {
+		$misc->loader = caf_get_free_preview_loader_defaults();
+	}
+
+	if ( isset( $misc->dnd_column_data ) ) {
+		$misc->dnd_column_data = caf_sanitize_free_dnd_column_data( $misc->dnd_column_data );
+	}
+
+	return $layout_data;
+}
+
+/**
+ * Map layout-control DnD item keys to tier feature slugs.
+ *
+ * @param string $item_key DnD misc item key.
+ * @return string|null
+ */
+function caf_get_dnd_misc_item_feature( $item_key ) {
+	$map = array(
+		'sorting'      => 'sorting',
+		'result_count' => 'result_counter',
+		'selected'     => 'active_filters',
+	);
+
+	$item_key = (string) $item_key;
+
+	return isset( $map[ $item_key ] ) ? $map[ $item_key ] : null;
+}
+
+/**
+ * Disable Pro-only layout control items on free tier saves.
+ *
+ * @param mixed $dnd_column_data DnD column array from misc preview data.
+ * @return mixed
+ */
+function caf_sanitize_free_dnd_column_data( $dnd_column_data ) {
+	if ( ! is_array( $dnd_column_data ) || ! class_exists( 'CAF_Builder_Tier' ) ) {
+		return $dnd_column_data;
+	}
+
+	foreach ( $dnd_column_data as $column ) {
+		if ( ! is_object( $column ) || ! isset( $column->data ) || ! is_array( $column->data ) ) {
+			continue;
+		}
+
+		foreach ( $column->data as $item ) {
+			if ( ! is_object( $item ) || ! isset( $item->key ) ) {
+				continue;
+			}
+
+			$item_key = (string) $item->key;
+			if ( 'pagination' === $item_key ) {
+				if ( ! isset( $item->settings ) || ! is_object( $item->settings ) ) {
+					$item->settings = new stdClass();
+				}
+				$pagination_type = isset( $item->settings->pagination_type )
+					? (string) $item->settings->pagination_type
+					: 'number2';
+				if (
+					'button' === $pagination_type
+					&& ! CAF_Builder_Tier::can_use_feature( 'pagination_button' )
+				) {
+					$item->settings->pagination_type = 'number2';
+				}
+				if (
+					'load-more' === $pagination_type
+					&& ! CAF_Builder_Tier::can_use_feature( 'pagination_load_more' )
+				) {
+					$item->settings->pagination_type = 'number2';
+				}
+				continue;
+			}
+
+			$feature = caf_get_dnd_misc_item_feature( $item_key );
+			if ( $feature && ! CAF_Builder_Tier::can_use_feature( $feature ) ) {
+				if ( ! isset( $item->settings ) || ! is_object( $item->settings ) ) {
+					$item->settings = new stdClass();
+				}
+				$item->settings->is_enable = 'false';
+			}
+		}
+	}
+
+	return $dnd_column_data;
+}
+
 function caf_normalize_builder_layout_data( $layout_data ) {
 	if ( ! is_object( $layout_data ) ) {
 		$layout_data = new stdClass();
@@ -2582,6 +2743,8 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 			);
 		}
 	);
+
+	$layout_data = caf_sanitize_free_preview_template_data( $layout_data );
 
 	return $layout_data;
 }
