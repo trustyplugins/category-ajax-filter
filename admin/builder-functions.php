@@ -647,21 +647,31 @@ function get_caf_builder_posts() {
  * @return void
  */
 function load_builder_ajax_dependencies() {
-	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-ajax-performance.php';
-	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-data.php';
-	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-css.php';
-	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-style-generator.php';
-	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-query.php';
-	require_once TC_CAF_PATH . 'includes/frontend/renderers/class-caf-pro-builder-post-renderer.php';
-	require_once TC_CAF_PATH . 'includes/frontend/renderers/class-caf-pro-builder-pagination-renderer.php';
-	require_once TC_CAF_PATH . 'includes/frontend/renderers/class-caf-pro-builder-misc-renderer.php';
-	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-framework.php';
-	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-renderer.php';
-	$seo_file = TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-seo.php';
+	$base = TC_CAF_PATH . 'includes/frontend/';
+	require_once $base . 'class-caf-pro-builder-ajax-performance.php';
+	require_once $base . 'class-caf-pro-builder-data.php';
+	require_once $base . 'class-caf-pro-builder-css.php';
+	require_once TC_CAF_PATH . 'includes/admin/class-caf-pro-builder-custom-fonts.php';
+	require_once $base . 'class-caf-pro-builder-style-generator.php';
+	require_once $base . 'class-caf-pro-builder-query.php';
+	require_once $base . 'modules/filters/class-caf-pro-filter-base-module.php';
+	require_once $base . 'modules/filters/class-caf-pro-filter-search-module.php';
+	require_once $base . 'modules/filters/class-caf-pro-filter-reset-module.php';
+	require_once $base . 'modules/filters/class-caf-pro-filter-checkbox-module.php';
+	require_once $base . 'modules/filters/class-caf-pro-filter-dropdown-module.php';
+	require_once $base . 'modules/filters/class-caf-pro-filter-range-slider-module.php';
+	require_once $base . 'modules/filters/class-caf-pro-filter-module-factory.php';
+	require_once $base . 'renderers/class-caf-pro-builder-filter-renderer.php';
+	require_once $base . 'renderers/class-caf-pro-builder-post-renderer.php';
+	require_once $base . 'renderers/class-caf-pro-builder-pagination-renderer.php';
+	require_once $base . 'renderers/class-caf-pro-builder-misc-renderer.php';
+	require_once $base . 'class-caf-pro-builder-framework.php';
+	require_once $base . 'class-caf-pro-builder-renderer.php';
+	$seo_file = $base . 'class-caf-pro-builder-seo.php';
 	if ( file_exists( $seo_file ) ) {
 		require_once $seo_file;
 	}
-	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-url-state.php';
+	require_once $base . 'class-caf-pro-builder-url-state.php';
 }
 /* Start Filter Layout Api Functions*/
 add_action( 'rest_api_init', 'caf_post_filter_init_fun' );

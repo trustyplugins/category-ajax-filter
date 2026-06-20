@@ -1,0 +1,1120 @@
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+/**
+ * Frontend Builder Main Renderer
+ *
+ * @package TC_CAF_PRO
+ */
+class CAF_PRO_Builder_Renderer {
+
+	/**
+	 * Builder data handler.
+	 *
+	 * @var CAF_PRO_Builder_Data
+	 */
+	protected $data_handler;
+
+	/**
+	 * Builder query handler.
+	 *
+	 * @var CAF_PRO_Builder_Query
+	 */
+	protected $query_builder;
+
+	/**
+	 * Builder CSS collector.
+	 *
+	 * @var CAF_PRO_Builder_Css
+	 */
+	protected $css_builder;
+
+	/**
+	 * Style generator.
+	 *
+	 * @var CAF_PRO_Builder_Style_Generator
+	 */
+	protected $style_generator;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param CAF_PRO_Builder_Data            $data_handler  Builder data handler.
+	 * @param CAF_PRO_Builder_Query           $query_builder Query builder.
+	 * @param CAF_PRO_Builder_Css             $css_builder   CSS builder.
+	 * @param CAF_PRO_Builder_Style_Generator $style_generator   CSS generator.
+	 */
+	public function __construct( CAF_PRO_Builder_Data $data_handler, CAF_PRO_Builder_Query $query_builder, CAF_PRO_Builder_Css $css_builder, CAF_PRO_Builder_Style_Generator $style_generator ) {
+		$this->data_handler    = $data_handler;
+		$this->query_builder   = $query_builder;
+		$this->css_builder     = $css_builder;
+		$this->style_generator = $style_generator;
+	}
+
+	/**
+	 * Render full builder output.
+	 *
+	 * @return string
+	 */
+	public function render() {
+		$query = $this->get_initial_query();
+		do_action( 'caf_builder_render_before', $query, $this->get_hook_context() );
+
+		$html  = $this->render_wrapper_open();
+		$html .= $this->render_container_css();
+		$html .= $this->render_floating_overlay();
+		$html .= $this->render_preview_layout_wrapper_open();
+		$html .= $this->render_floating_filter_toggle_button();
+
+		if ( $this->data_handler->has_filters() ) {
+			$html .= $this->render_filter_area( $query );
+		}
+
+		$html .= $this->render_post_area( $query );
+		$html .= $this->render_preview_layout_wrapper_close();
+		$html .= $this->render_custom_css_block();
+		$html .= $this->render_wrapper_close();
+		$html  = apply_filters( 'caf_builder_render_html', $html, $this->get_hook_context( array( 'query' => $query ) ) );
+		do_action( 'caf_builder_render_after', $html, $query, $this->get_hook_context() );
+		return $html;
+	}
+
+	/**
+	 * Get initial query object.
+	 *
+	 * @return WP_Query
+	 */
+	protected function get_initial_query() {
+		if ( $this->data_handler->has_filters() ) {
+			return $this->query_builder->get_page_load_query();
+		}
+
+		// When "filter" is turned off in layout extras, WP still renders filter modules with defaults.
+		// In that case get_page_load_args() can include tax/meta from those modules; use that query
+		// so the first paint matches checked defaults. Otherwise fall back to filter_query_data pool.
+		$page_load_args = $this->query_builder->get_page_load_args();
+		if ( ! empty( $page_load_args['tax_query'] ) || ! empty( $page_load_args['meta_query'] ) ) {
+			return $this->query_builder->get_page_load_query();
+		}
+
+		return $this->query_builder->get_filter_query();
+	}
+
+	/**
+	 * Render wrapper opening tag.
+	 *
+	 * @return string
+	 */
+	protected function render_wrapper_open() {
+		$attributes = $this->data_handler->get_wrapper_attributes();
+		if ( $this->is_filter_floating() ) {
+			$existing_class = isset( $attributes['class'] ) ? (string) $attributes['class'] : '';
+			$attributes['class'] = trim( $existing_class . ' floating' );
+		}
+		$attributes = apply_filters( 'caf_builder_wrapper_attributes', $attributes, $this->get_hook_context() );
+
+		if ( class_exists( 'CAF_PRO_Builder_Url_State' ) ) {
+			if ( CAF_PRO_Builder_Url_State::request_has_state( $this->data_handler->get_short_index() ) ) {
+				$attributes['data-caf-url-applied'] = '1';
+			}
+		}
+
+		$html = '<div ' . $this->build_html_attributes( $attributes ) . '>';
+		return apply_filters( 'caf_builder_wrapper_open_html', $html, $attributes, $this->get_hook_context() );
+	}
+
+	/**
+	 * Render wrapper closing tag.
+	 *
+	 * @return string
+	 */
+	protected function render_wrapper_close() {
+		$html = '</div>';
+		return apply_filters( 'caf_builder_wrapper_close_html', $html, $this->get_hook_context() );
+	}
+
+	/**
+	 * Render container level CSS.
+	 *
+	 * @return string
+	 */
+	protected function render_container_css() {
+		$container_data  = $this->data_handler->get_misc_container_data();
+		$instance_class  = '.' . $this->data_handler->get_instance_class();
+		$container_scope = $instance_class . ' .caf-builder-preview-template-container';
+		$container_style = isset( $container_data->style ) ? $container_data->style : null;
+
+		if ( ! empty( $container_style ) ) {
+			$this->css_builder->add(
+				$this->style_generator->generate_responsive_css(
+					$container_style,
+					'default',
+					$container_scope
+				)
+			);
+
+			$this->css_builder->add(
+				$this->style_generator->generate_responsive_css(
+					$container_style,
+					'hover',
+					$container_scope . ':hover'
+				)
+			);
+		}
+
+		return '';
+	}
+
+	/**
+	 * Render inner preview-layout wrapper opening tag.
+	 *
+	 * Mirrors builder preview DOM grouping to keep floating controls
+	 * and post area aligned with the same layout context.
+	 *
+	 * @return string
+	 */
+	protected function render_preview_layout_wrapper_open() {
+		$classes   = array( 'caf-builder-preview-template-container' );
+		$position  = (string) $this->get_float_setting( 'filterPosition', 'inline' );
+		$is_float  = $this->is_filter_floating();
+		$container = $this->data_handler->get_misc_container_data();
+		$custom    = isset( $container->custom_class ) ? sanitize_html_class( $container->custom_class ) : '';
+
+		if ( '' !== $position ) {
+			$classes[] = sanitize_html_class( $position );
+		}
+
+		if ( $is_float ) {
+			$classes[] = 'floating';
+		}
+		if ( '' !== $custom ) {
+			$classes[] = $custom;
+		}
+
+		return '<div class="' . esc_attr( implode( ' ', array_filter( $classes ) ) ) . '">';
+	}
+
+	/**
+	 * Render inner preview-layout wrapper closing tag.
+	 *
+	 * @return string
+	 */
+	protected function render_preview_layout_wrapper_close() {
+		return '</div>';
+	}
+
+	/**
+	 * Render filter area.
+	 *
+	 * For now this is a placeholder wrapper.
+	 * Later it will delegate to CAF_PRO_Builder_Filter_Renderer.
+	 *
+	 * @return string
+	 */
+	protected function render_filter_area( $query ) {
+		$query_args          = $this->query_builder->get_query_args();
+		$filter_preview_data = $this->data_handler->get_filter_preview_data();
+		$instance_class      = '.' . $this->data_handler->get_instance_class();
+		$custom_class        = ! empty( $filter_preview_data->custom_class ) ? sanitize_html_class( $filter_preview_data->custom_class ) : '';
+		$filter_area_class   = 'caf-builder-filter filter-layout-container';
+		$animation_type      = $this->get_float_setting( 'animationType', 'slide-right-left' );
+		$filter_position     = $this->get_float_setting( 'filterPosition', 'inline' );
+		$filter_style        = isset( $filter_preview_data->style ) ? $filter_preview_data->style : null;
+		$post_count_per_page = isset( $query_args['posts_per_page'] ) ? (int) $query_args['posts_per_page'] : 0;
+		$current_page        = isset( $query_args['paged'] ) ? (int) $query_args['paged'] : 1;
+		$found_posts         = ( $query instanceof WP_Query ) ? (int) $query->found_posts : 0;
+
+		if ( ! empty( $custom_class ) ) {
+			$filter_area_class .= ' ' . $custom_class;
+		}
+		if ( 'floating' === $filter_position ) {
+			$filter_area_class .= ' caf-builder-template-preview-filter filter-close ' . sanitize_html_class( $animation_type );
+		}
+
+		
+		if ( ! empty( $filter_style ) ) {
+			$this->css_builder->add(
+				$this->style_generator->generate_responsive_css(
+					$filter_style,
+					'default',
+					$instance_class . ' .filter-layout-container'
+				)
+			);
+
+			$this->css_builder->add(
+				$this->style_generator->generate_responsive_css(
+					$filter_style,
+					'hover',
+					$instance_class . ' .filter-layout-container:hover'
+				)
+			);
+		}
+
+		$filter_renderer = new CAF_PRO_Builder_Filter_Renderer(
+			$this->data_handler,
+			$this->css_builder,
+			$this->style_generator
+		);
+
+		$filter_top_html = $this->render_misc_zone(
+			'filter_top',
+			$query,
+			$post_count_per_page,
+			$current_page,
+			$found_posts
+		);
+		$filter_top_zone = $this->get_misc_zone_data( 'filter_top' );
+		$this->collect_misc_zone_wrapper_css(
+			$filter_top_zone,
+			$instance_class . ' .caf-builder-template-preview-filter-top-wrapper'
+		);
+
+		$filter_bottom_html = $this->render_misc_zone(
+			'filter_bottom',
+			$query,
+			$post_count_per_page,
+			$current_page,
+			$found_posts
+		);
+		$filter_bottom_zone = $this->get_misc_zone_data( 'filter_bottom' );
+		$this->collect_misc_zone_wrapper_css(
+			$filter_bottom_zone,
+			$instance_class . ' .caf-builder-template-preview-filter-bottom-wrapper'
+		);
+
+		$html = '<div class="' . esc_attr( $filter_area_class ) . '">';
+		if ( 'floating' === $filter_position ) {
+			$html .= '<button class="caf-builder-filter-close" type="button" aria-label="' . esc_attr__( 'Close Filter', 'tc-caf-pro' ) . '">X</button>';
+		}
+
+		if ( '' !== $filter_top_html ) {
+			$html .= '<div class="' . esc_attr( $this->get_misc_zone_wrapper_class( 'caf-builder-template-preview-filter-top-wrapper', $filter_top_zone ) ) . '">';
+			$html .= $filter_top_html;
+			$html .= '</div>';
+		}
+
+		$html .= $filter_renderer->render();
+
+		if ( '' !== $filter_bottom_html ) {
+			$html .= '<div class="' . esc_attr( $this->get_misc_zone_wrapper_class( 'caf-builder-template-preview-filter-bottom-wrapper', $filter_bottom_zone ) ) . '">';
+			$html .= $filter_bottom_html;
+			$html .= '</div>';
+		}
+
+		$html .= '</div>';
+
+		return apply_filters( 'caf_builder_filter_area_html', $html, $this->get_hook_context( array( 'query' => $query ) ) );
+	}
+
+	/**
+	 * Render floating-filter overlay.
+	 *
+	 * @return string
+	 */
+	protected function render_floating_overlay() {
+		if ( ! $this->is_filter_floating() ) {
+			return '';
+		}
+		$overlay = $this->get_float_setting( 'overlay', 'rgba(32, 31, 31, 0.624)' );
+		$style   = 'background-color:' . esc_attr( (string) $overlay ) . ';';
+		return '<div class="caf-builder-filter-post-overlay" style="' . $style . '"></div>';
+	}
+
+	/**
+	 * Render floating-filter toggle button.
+	 *
+	 * @return string
+	 */
+	protected function render_floating_filter_toggle_button() {
+		if ( ! $this->is_filter_floating() ) {
+			return '';
+		}
+
+		$this->collect_floating_filter_button_css();
+
+		$button_enabled = $this->to_bool( $this->get_float_setting( 'floatButton', true ) );
+		$icon_enabled   = $this->to_bool( $this->get_float_setting( 'floatIcon', false ) );
+		$button_text    = (string) $this->get_float_setting( 'floatButtonValue', __( 'Filter', 'tc-caf-pro' ) );
+		$icon_class     = (string) $this->get_float_setting( 'floatIconValue', '' );
+
+		if ( ! $button_enabled && ! $icon_enabled ) {
+			return '';
+		}
+
+		$button_classes = array( 'caf-filter-slide-button' );
+		if ( $icon_enabled ) {
+			$button_classes[] = 'has-float-icon';
+		}
+		if ( $button_enabled ) {
+			$button_classes[] = 'has-float-text';
+		}
+
+		$html  = '<div class="caf-builder-template-preview-filter-floating">';
+		$html .= '<button class="' . esc_attr( implode( ' ', $button_classes ) ) . '" type="button" aria-label="' . esc_attr__( 'Open Filter', 'tc-caf-pro' ) . '">';
+		if ( $icon_enabled && '' !== trim( $icon_class ) ) {
+			$html .= '<i class="' . esc_attr( $icon_class ) . '" aria-hidden="true"></i>';
+		}
+		if ( $button_enabled ) {
+			$html .= '<span class="caf-floating-filter-button-text">' . esc_html( $button_text ) . '</span>';
+		}
+		$html .= '</button>';
+		$html .= '</div>';
+
+		return $html;
+	}
+
+	/**
+	 * Collect floating trigger button CSS from float-button design settings.
+	 *
+	 * @return void
+	 */
+	protected function collect_floating_filter_button_css() {
+		$misc_data = $this->data_handler->get_misc_preview_data();
+		if ( empty( $misc_data ) || ! is_object( $misc_data ) ) {
+			return;
+		}
+
+		$float_button_style = null;
+		if ( isset( $misc_data->meta ) && is_object( $misc_data->meta ) ) {
+			$float_button_style = isset( $misc_data->meta->style ) && is_object( $misc_data->meta->style )
+				? $misc_data->meta->style
+				: $misc_data->meta;
+		}
+		if ( empty( $float_button_style ) ) {
+			return;
+		}
+
+		$instance_selector = '.' . $this->data_handler->get_instance_class();
+		$selector          = $instance_selector . ' .caf-builder-template-preview-filter-floating .caf-filter-slide-button';
+
+		$this->css_builder->add(
+			$this->style_generator->generate_responsive_css(
+				$float_button_style,
+				'default',
+				$selector,
+				array(
+					'background_image_mode' => 'always',
+				)
+			)
+		);
+
+		$this->css_builder->add(
+			$this->style_generator->generate_responsive_css(
+				$float_button_style,
+				'hover',
+				$selector . ':hover',
+				array(
+					'background_image_mode' => 'always',
+				)
+			)
+		);
+	}
+
+	/**
+	 * Check whether filter panel should render as floating.
+	 *
+	 * @return bool
+	 */
+	protected function is_filter_floating() {
+		return 'floating' === $this->get_float_setting( 'filterPosition', 'inline' );
+	}
+
+	/**
+	 * Resolve floating setting from misc preview extra data.
+	 *
+	 * @param string $key     Setting key.
+	 * @param mixed  $default Fallback value.
+	 * @return mixed
+	 */
+	protected function get_float_setting( $key, $default = null ) {
+		$misc_data = $this->data_handler->get_misc_preview_data();
+		if ( empty( $misc_data ) || ! is_object( $misc_data ) || empty( $misc_data->extra ) || ! is_object( $misc_data->extra ) ) {
+			return $default;
+		}
+
+		$extra         = $misc_data->extra;
+		$active_device = $this->get_active_frontend_device_key();
+
+		if ( isset( $extra->{$active_device} ) && is_object( $extra->{$active_device} ) && isset( $extra->{$active_device}->{$key} ) ) {
+			return $extra->{$active_device}->{$key};
+		}
+
+		if ( isset( $extra->desktop ) && is_object( $extra->desktop ) && isset( $extra->desktop->{$key} ) ) {
+			return $extra->desktop->{$key};
+		}
+
+		if ( isset( $extra->{$key} ) ) {
+			return $extra->{$key};
+		}
+
+		return $default;
+	}
+
+	/**
+	 * Resolve active frontend device key.
+	 *
+	 * @return string One of: desktop|tablet|mobile.
+	 */
+	protected function get_active_frontend_device_key() {
+		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? strtolower( (string) wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
+
+		$is_tablet = false !== strpos( $user_agent, 'ipad' )
+			|| false !== strpos( $user_agent, 'tablet' )
+			|| false !== strpos( $user_agent, 'kindle' )
+			|| false !== strpos( $user_agent, 'silk' )
+			|| false !== strpos( $user_agent, 'playbook' );
+
+		if ( $is_tablet ) {
+			return 'tablet';
+		}
+
+		if ( wp_is_mobile() ) {
+			return 'mobile';
+		}
+
+		return 'desktop';
+	}
+
+	/**
+	 * Convert mixed builder value to bool.
+	 *
+	 * @param mixed $value Value to normalize.
+	 * @return bool
+	 */
+	protected function to_bool( $value ) {
+		if ( is_bool( $value ) ) {
+			return $value;
+		}
+		return in_array( strtolower( (string) $value ), array( '1', 'true', 'yes', 'on' ), true );
+	}
+
+	/**
+	 * Render post area.
+	 *
+	 * For now this includes only the main structure placeholders.
+	 * Later it will delegate to post/misc/pagination renderers.
+	 *
+	 * @param WP_Query $query Query object.
+	 * @return string
+	 */
+	protected function render_post_area( $query ) {
+		$query_args           = $this->query_builder->get_query_args();
+		$post_preview_data    = $this->data_handler->get_post_preview_data();
+		$instance_class       = '.' . $this->data_handler->get_instance_class();
+		$post_container_class = 'post-layout-container';
+		$post_inner_class     = $this->get_post_inner_classes();
+		$post_count_per_page  = isset( $query_args['posts_per_page'] ) ? (int) $query_args['posts_per_page'] : 0;
+		$current_page         = isset( $query_args['paged'] ) ? (int) $query_args['paged'] : 1;
+		$found_posts          = ( $query instanceof WP_Query ) ? (int) $query->found_posts : 0;
+
+		$this->collect_post_container_css( $post_preview_data, $instance_class );
+
+		$post_renderer = new CAF_PRO_Builder_Post_Renderer(
+			$this->data_handler,
+			$this->css_builder,
+			$query,
+			$this->style_generator
+		);
+
+		$html = '<div class="' . esc_attr( $post_container_class ) . '">';
+
+		// Render draggable misc items assigned to post_top.
+		$post_top_html = $this->render_misc_zone(
+			'post_top',
+			$query,
+			$post_count_per_page,
+			$current_page,
+			$found_posts
+		);
+		$post_top_zone = $this->get_misc_zone_data( 'post_top' );
+		$this->collect_misc_zone_wrapper_css(
+			$post_top_zone,
+			$instance_class . ' .caf-builder-template-preview-post-top-wrapper'
+		);
+
+		if ( '' !== $post_top_html ) {
+			$html .= '<div class="' . esc_attr( $this->get_misc_zone_wrapper_class( 'caf-builder-template-preview-post-top-wrapper', $post_top_zone ) ) . '">';
+			$html .= $post_top_html;
+			$html .= '</div>';
+		}
+
+		$html .= '<div class="caf-builder-template-preview-search-result-container">';
+		$html .= esc_html__( 'Search Results for: ', 'tc-caf-pro' );
+		$html .= '<span class="search-keyword"></span>';
+		$html .= '</div>';
+
+		$html .= $this->render_loader_placeholder();
+
+		$html .= '<div class="' . esc_attr( $post_inner_class ) . '">';
+		$html .= $post_renderer->render();
+		$html .= '</div>';
+
+		if ( class_exists( 'CAF_PRO_Builder_Seo' ) && CAF_PRO_Builder_Seo::is_enabled( $this->data_handler->get_short_index() ) ) {
+			$html .= CAF_PRO_Builder_Seo::render_itemlist_json_ld(
+				$query,
+				CAF_PRO_Builder_Seo::get_list_url(),
+				array(
+					'shortindex' => $this->data_handler->get_short_index(),
+				)
+			);
+		}
+
+		// Render draggable misc items assigned to post_bottom.
+
+		$post_bottom_html = $this->render_misc_zone(
+			'post_bottom',
+			$query,
+			$post_count_per_page,
+			$current_page,
+			$found_posts
+		);
+		$post_bottom_zone = $this->get_misc_zone_data( 'post_bottom' );
+		$this->collect_misc_zone_wrapper_css(
+			$post_bottom_zone,
+			$instance_class . ' .caf-builder-template-preview-post-bottom-wrapper'
+		);
+
+		if ( '' !== $post_bottom_html ) {
+			$html .= '<div class="' . esc_attr( $this->get_misc_zone_wrapper_class( 'caf-builder-template-preview-post-bottom-wrapper', $post_bottom_zone ) ) . '">';
+			$html .= $post_bottom_html;
+			$html .= '</div>';
+		}
+
+		$html .= '</div>';
+
+		return apply_filters( 'caf_builder_post_area_html', $html, $this->get_hook_context( array( 'query' => $query ) ) );
+	}
+	/**
+	 * Render misc zone based on builder drag-drop configuration.
+	 *
+	 * Loops through the zone (e.g., filter_top, post_bottom) and renders
+	 * enabled misc items like sorting, result count, pagination, etc.
+	 *
+	 * @param string   $zone_key            Zone identifier (filter_top, filter_bottom, post_top, post_bottom).
+	 * @param WP_Query $query               WordPress query object.
+	 * @param int      $post_count_per_page Number of posts per page.
+	 * @param int      $current_page        Current pagination page.
+	 * @param int      $found_posts         Total found posts.
+	 * @param int      $selected_filters    Selected Tags.
+	 * @return string Rendered HTML output of the misc zone.
+	 */
+	public function render_misc_zone( $zone_key, $query, $post_count_per_page, $current_page, $found_posts, $selected_filters = array() ) {
+		$misc_data = $this->data_handler->get_misc_preview_data();
+
+		if ( empty( $misc_data->dnd_column_data ) || ! is_array( $misc_data->dnd_column_data ) ) {
+			return '';
+		}
+
+		$zone = $this->find_misc_zone_by_key( $misc_data->dnd_column_data, $zone_key );
+		if ( empty( $zone ) || empty( $zone->data ) || ! is_array( $zone->data ) ) {
+			return '';
+		}
+
+		$html = '';
+
+		foreach ( $zone->data as $item ) {
+			if ( empty( $item->key ) ) {
+				continue;
+			}
+			$is_enabled = isset( $item->settings->is_enable ) ? (string) $item->settings->is_enable : 'false';
+			if ( 'true' !== $is_enabled ) {
+				continue;
+			}
+
+			$html .= $this->render_misc_item(
+				$item,
+				$query,
+				$post_count_per_page,
+				$current_page,
+				$found_posts,
+				$selected_filters
+			);
+		}
+
+		return $html;
+	}
+
+	/**
+	 * Find a misc zone by its key from zone collection.
+	 *
+	 * @param array  $zones    List of zone objects.
+	 * @param string $zone_key Zone key to search for.
+	 *
+	 * @return object|null Zone object if found, otherwise null.
+	 */
+	public function find_misc_zone_by_key( $zones, $zone_key ) {
+		if ( empty( $zones ) || ! is_array( $zones ) ) {
+			return null;
+		}
+
+		foreach ( $zones as $zone ) {
+			if ( isset( $zone->key ) && $zone->key === $zone_key ) {
+				return $zone;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get misc zone object by key.
+	 *
+	 * @param string $zone_key Zone key.
+	 * @return object|null
+	 */
+	protected function get_misc_zone_data( $zone_key ) {
+		$misc_data = $this->data_handler->get_misc_preview_data();
+		if ( empty( $misc_data->dnd_column_data ) || ! is_array( $misc_data->dnd_column_data ) ) {
+			return null;
+		}
+
+		return $this->find_misc_zone_by_key( $misc_data->dnd_column_data, $zone_key );
+	}
+
+	/**
+	 * Collect CSS for misc zone wrappers from saved layout style.
+	 *
+	 * @param object|null $zone     Zone object.
+	 * @param string      $selector Wrapper selector.
+	 * @return void
+	 */
+	protected function collect_misc_zone_wrapper_css( $zone, $selector ) {
+		if ( empty( $zone ) || ! is_object( $zone ) || empty( $zone->style ) || ! is_object( $zone->style ) || empty( $selector ) ) {
+			return;
+		}
+
+		$settings = isset( $zone->settings ) && is_object( $zone->settings ) ? $zone->settings : new stdClass();
+
+		$this->css_builder->add(
+			$this->style_generator->generate_responsive_css(
+				$zone->style,
+				'default',
+				$selector,
+				array(
+					'settings' => $settings,
+				)
+			)
+		);
+
+		$this->css_builder->add(
+			$this->style_generator->generate_responsive_css(
+				$zone->style,
+				'hover',
+				$selector . ':hover',
+				array(
+					'settings' => $settings,
+				)
+			)
+		);
+	}
+
+	/**
+	 * Build wrapper class list for misc zone containers.
+	 *
+	 * @param string      $base_class Base wrapper class.
+	 * @param object|null $zone       Zone object.
+	 * @return string
+	 */
+	protected function get_misc_zone_wrapper_class( $base_class, $zone ) {
+		$classes = array( $base_class );
+		if ( ! empty( $zone ) && is_object( $zone ) && isset( $zone->settings ) && is_object( $zone->settings ) && ! empty( $zone->settings->custom_class ) ) {
+			$classes[] = sanitize_text_field( (string) $zone->settings->custom_class );
+		}
+		if ( ! empty( $zone ) && is_object( $zone ) && isset( $zone->settings ) && is_object( $zone->settings ) && isset( $zone->settings->visibility ) && is_object( $zone->settings->visibility ) ) {
+			if ( isset( $zone->settings->visibility->desktop ) && 'true' === (string) $zone->settings->visibility->desktop ) {
+				$classes[] = 'caf-hide-desktop';
+			}
+			if ( isset( $zone->settings->visibility->tablet ) && 'true' === (string) $zone->settings->visibility->tablet ) {
+				$classes[] = 'caf-hide-tablet';
+			}
+			if ( isset( $zone->settings->visibility->mobile ) && 'true' === (string) $zone->settings->visibility->mobile ) {
+				$classes[] = 'caf-hide-mobile';
+			}
+		}
+		return implode( ' ', array_filter( $classes ) );
+	}
+
+	/**
+	 * Render individual misc item based on its type.
+	 *
+	 * Supports rendering of:
+	 * - selected filters
+	 * - result count
+	 * - sorting
+	 * - pagination
+	 *
+	 * @param object   $item                Misc item configuration object.
+	 * @param WP_Query $query               WordPress query object.
+	 * @param int      $post_count_per_page Number of posts per page.
+	 * @param int      $current_page        Current pagination page.
+	 * @param int      $found_posts         Total found posts.
+	 * @param int      $selected_filters    Selected Tags.
+	 * @return string Rendered HTML output for the misc item.
+	 */
+	public function render_misc_item( $item, $query, $post_count_per_page, $current_page, $found_posts, $selected_filters = array() ) {
+		$key = isset( $item->key ) ? $item->key : '';
+		switch ( $key ) {
+			case 'selected':
+				return $this->render_selected_filters_placeholder( $selected_filters, $item );
+
+			case 'result_count':
+				return $this->render_result_count_placeholder(
+					$post_count_per_page,
+					$current_page,
+					$found_posts,
+					$item
+				);
+
+			case 'sorting':
+				return $this->render_sorting_placeholder( $this->query_builder->get_query_args(), $item );
+
+			case 'pagination':
+				return $this->render_pagination_placeholder( $query, $item );
+
+			default:
+				return '';
+		}
+	}
+	/**
+	 * Get rendered misc zones for AJAX response.
+	 *
+	 * @param WP_Query $query               WordPress query object.
+	 * @param int      $post_count_per_page Number of posts per page.
+	 * @param int      $current_page        Current page number.
+	 * @param int      $found_posts         Total found posts.
+	 * @param int      $selected_filters     Selected tags.
+	 *
+	 * @return array
+	 */
+	public function get_ajax_misc_zones( $query, $post_count_per_page, $current_page, $found_posts, $selected_filters ) {
+		return array(
+			'filter_top_data'    => $this->render_misc_zone(
+				'filter_top',
+				$query,
+				$post_count_per_page,
+				$current_page,
+				$found_posts,
+				$selected_filters
+			),
+			'filter_bottom_data' => $this->render_misc_zone(
+				'filter_bottom',
+				$query,
+				$post_count_per_page,
+				$current_page,
+				$found_posts,
+				$selected_filters
+			),
+			'post_top_data'      => $this->render_misc_zone(
+				'post_top',
+				$query,
+				$post_count_per_page,
+				$current_page,
+				$found_posts,
+				$selected_filters
+			),
+			'post_bottom_data'   => $this->render_misc_zone(
+				'post_bottom',
+				$query,
+				$post_count_per_page,
+				$current_page,
+				$found_posts,
+				$selected_filters
+			),
+		);
+	}
+
+	/**
+	 * Render only post-area misc zones for lightweight AJAX responses.
+	 *
+	 * Skips filter top/bottom wrappers because filter markup is unchanged client-side.
+	 *
+	 * @param WP_Query $query               WordPress query object.
+	 * @param int      $post_count_per_page Number of posts per page.
+	 * @param int      $current_page        Current page number.
+	 * @param int      $found_posts         Total found posts.
+	 * @param array    $selected_filters    Selected tags payload.
+	 * @return array
+	 */
+	public function get_ajax_posts_zones( $query, $post_count_per_page, $current_page, $found_posts, $selected_filters ) {
+		return array(
+			'post_top_data'    => $this->render_misc_zone(
+				'post_top',
+				$query,
+				$post_count_per_page,
+				$current_page,
+				$found_posts,
+				$selected_filters
+			),
+			'post_bottom_data' => $this->render_misc_zone(
+				'post_bottom',
+				$query,
+				$post_count_per_page,
+				$current_page,
+				$found_posts,
+				$selected_filters
+			),
+		);
+	}
+	/**
+	 * Get post inner wrapper classes.
+	 *
+	 * @return string
+	 */
+	protected function get_post_inner_classes() {
+		$post_preview_data = $this->data_handler->get_post_preview_data();
+		$classes           = array( 'caf-builder-post', 'post-layout-container-inner' );
+
+		if ( isset( $post_preview_data->layout_type ) && 'grid' === $post_preview_data->layout_type ) {
+			$classes[] = 'caf-grid';
+
+			if ( ! empty( $post_preview_data->grid->device_columns->desktop ) ) {
+				$classes[] = 'caf-grid-' . absint( $post_preview_data->grid->device_columns->desktop );
+			}
+		}
+
+		return implode( ' ', array_filter( $classes ) );
+	}
+
+	/**
+	 * Collect post container CSS.
+	 *
+	 * @param object $post_preview_data Post preview data.
+	 * @param string $instance_class    Instance selector.
+	 * @return void
+	 */
+	protected function collect_post_container_css( $post_preview_data, $instance_class ) {
+		if ( empty( $post_preview_data->layout_type ) || 'grid' !== $post_preview_data->layout_type ) {
+			return;
+		}
+
+		$grid_style  = isset( $post_preview_data->grid->style ) ? $post_preview_data->grid->style : null;
+		$inner_style = isset( $post_preview_data->inner->style ) ? $post_preview_data->inner->style : null;
+
+		if ( ! empty( $grid_style ) ) {
+			$this->css_builder->add(
+				$this->style_generator->generate_responsive_css(
+					$grid_style,
+					'default',
+					$instance_class . ' .post-layout-container'
+				)
+			);
+
+			$this->css_builder->add(
+				$this->style_generator->generate_responsive_css(
+					$grid_style,
+					'hover',
+					$instance_class . ' .post-layout-container:hover'
+				)
+			);
+		}
+
+		if ( ! empty( $inner_style ) ) {
+			$this->css_builder->add(
+				$this->style_generator->generate_responsive_css(
+					$inner_style,
+					'default',
+					$instance_class . ' .post-layout-container-inner'
+				)
+			);
+
+			$this->css_builder->add(
+				$this->style_generator->generate_responsive_css(
+					$inner_style,
+					'hover',
+					$instance_class . ' .post-layout-container-inner:hover'
+				)
+			);
+		}
+
+		$this->collect_post_grid_device_columns_css( $post_preview_data, $instance_class );
+	}
+
+	/**
+	 * Collect responsive grid column-count CSS from device settings.
+	 *
+	 * @param object $post_preview_data Post preview data object.
+	 * @param string $instance_class    Instance selector (prefixed with dot).
+	 * @return void
+	 */
+	protected function collect_post_grid_device_columns_css( $post_preview_data, $instance_class ) {
+		if ( empty( $post_preview_data->grid ) || ! is_object( $post_preview_data->grid ) || empty( $post_preview_data->grid->device_columns ) || ! is_object( $post_preview_data->grid->device_columns ) ) {
+			return;
+		}
+
+		$device_columns = $post_preview_data->grid->device_columns;
+		$desktop_cols   = isset( $device_columns->desktop ) ? max( 1, absint( $device_columns->desktop ) ) : 0;
+		if ( $desktop_cols < 1 ) {
+			return;
+		}
+
+		$tablet_cols = isset( $device_columns->tablet ) ? max( 1, absint( $device_columns->tablet ) ) : $desktop_cols;
+		$mobile_cols = isset( $device_columns->mobile ) ? max( 1, absint( $device_columns->mobile ) ) : $tablet_cols;
+
+		$selector = $instance_class . ' .post-layout-container-inner.caf-grid';
+		$css      = $selector . ' { grid-template-columns: repeat(' . $desktop_cols . ', minmax(0,1fr)); }';
+		$css     .= '@media (max-width: 1024px) { ' . $selector . ' { grid-template-columns: repeat(' . $tablet_cols . ', minmax(0,1fr)); } }';
+		$css     .= '@media (max-width: 767px) { ' . $selector . ' { grid-template-columns: repeat(' . $mobile_cols . ', minmax(0,1fr)); } }';
+
+		$this->css_builder->add( $css );
+	}
+
+	/**
+	 * Render loader placeholder.
+	 *
+	 * @return string
+	 */
+	protected function render_loader_placeholder() {
+		$misc_renderer = new CAF_PRO_Builder_Misc_Renderer(
+			$this->data_handler,
+			$this->css_builder,
+			$this->query_builder,
+			$this->style_generator
+		);
+
+		return $misc_renderer->render_loader();
+	}
+
+	/**
+	 * Render selected filters placeholder.
+	 *
+	 * @param array $selected_filters Selected Tags.
+	 * @return string
+	 */
+	protected function render_selected_filters_placeholder( $selected_filters = array(), $selected_item = null ) {
+		$misc_renderer = new CAF_PRO_Builder_Misc_Renderer(
+			$this->data_handler,
+			$this->css_builder,
+			$this->query_builder,
+			$this->style_generator
+		);
+
+		return $misc_renderer->render_selected_filters( $selected_filters, $selected_item );
+	}
+
+	/**
+	 * Render result count placeholder.
+	 *
+	 * @param int $posts_per_page Posts per page.
+	 * @param int $current_page   Current page.
+	 * @param int $total_posts    Total found posts.
+	 * @return string
+	 */
+	protected function render_result_count_placeholder( $posts_per_page, $current_page, $total_posts, $result_count_item = null ) {
+		$misc_renderer = new CAF_PRO_Builder_Misc_Renderer(
+			$this->data_handler,
+			$this->css_builder,
+			$this->query_builder,
+			$this->style_generator
+		);
+
+		return $misc_renderer->render_result_count( $posts_per_page, $current_page, $total_posts, $result_count_item );
+	}
+
+	/**
+	 * Render sorting placeholder.
+	 *
+	 * @param array $query_args Query Arguments.
+	 * @return string
+	 */
+	protected function render_sorting_placeholder( $query_args = array(), $sorting_item = null ) {
+		$misc_renderer = new CAF_PRO_Builder_Misc_Renderer(
+			$this->data_handler,
+			$this->css_builder,
+			$this->query_builder,
+			$this->style_generator
+		);
+
+		return $misc_renderer->render_sorting( $query_args, $sorting_item );
+	}
+
+	/**
+	 * Render pagination placeholder.
+	 *
+	 * @param WP_Query $query Query object.
+	 * @return string
+	 */
+	protected function render_pagination_placeholder( $query, $pagination_item = null ) {
+		// var_dump($query);
+		if ( ! ( $query instanceof WP_Query ) ) {
+			return '';
+		}
+
+		$query_args   = $this->query_builder->get_query_args();
+		$current_page = isset( $query_args['paged'] ) ? (int) $query_args['paged'] : 1;
+
+		$pagination_renderer = new CAF_PRO_Builder_Pagination_Renderer(
+			$this->data_handler,
+			$this->css_builder,
+			$this->style_generator,
+			$query,
+			$current_page,
+			$pagination_item
+		);
+
+		return $pagination_renderer->render();
+	}
+
+	/**
+	 * Render custom CSS block.
+	 *
+	 * For now this keeps compatibility with your old approach.
+	 * Later you should move this into wp_add_inline_style() after sanitization.
+	 *
+	 * @return string
+	 */
+	protected function render_custom_css_block() {
+		$container_data = $this->data_handler->get_misc_container_data();
+
+		if ( empty( $container_data->custom_css ) || ! is_string( $container_data->custom_css ) ) {
+			return '';
+		}
+
+		return '<style id="caf-builder-custom-css">' . wp_strip_all_tags( $container_data->custom_css ) . '</style>';
+	}
+
+	/**
+	 * Build HTML attributes string.
+	 *
+	 * @param array $attributes Attributes array.
+	 * @return string
+	 */
+	protected function build_html_attributes( $attributes ) {
+		$output = array();
+
+		foreach ( $attributes as $key => $value ) {
+			if ( '' === $value || null === $value ) {
+				continue;
+			}
+
+			$output[] = sprintf(
+				'%1$s="%2$s"',
+				esc_attr( $key ),
+				esc_attr( $value )
+			);
+		}
+
+		return implode( ' ', $output );
+	}
+
+	/**
+	 * Build common hook context.
+	 *
+	 * @param array $extra Extra context values.
+	 * @return array
+	 */
+	protected function get_hook_context( $extra = array() ) {
+		$context = array(
+			'builder_index'  => $this->data_handler->get_short_index(),
+			'instance_class' => $this->data_handler->get_instance_class(),
+			'post_type'      => $this->data_handler->get_post_type(),
+			'is_ajax'        => wp_doing_ajax(),
+		);
+
+		if ( ! empty( $extra ) ) {
+			$context = array_merge( $context, $extra );
+		}
+
+		return $context;
+	}
+}

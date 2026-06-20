@@ -16,6 +16,22 @@ class CAF_shortcode_render
     }
     public function caf_filter_call($atts)
     {
+        $atts = shortcode_atts(
+            array(
+                'id' => '',
+            ),
+            $atts
+        );
+        $id = isset( $atts['id'] ) ? $atts['id'] : '';
+
+        if ( '' === $id ) {
+            return "<div class='error-of-missing-id error-caf'>" . esc_html__('Nothing Found, Missing id as an argument.', 'category-ajax-filter') . ' <a href="https://caf.trustyplugins.com/docs/documentation/getting-started/" target="_blank">' . esc_html__('See Documentation', 'category-ajax-filter') . "</a></div>";
+        }
+
+        if ( class_exists( 'CAF_Builder_Frontend' ) && CAF_Builder_Frontend::instance()->is_builder_shortcode_id( $id ) ) {
+            return CAF_Builder_Frontend::instance()->render_shortcode( $id );
+        }
+
         ob_start();
         if (class_exists('TC_CAF_PRO')) {
          $caf_pro_class=new TC_CAF_PRO();
@@ -30,9 +46,6 @@ class CAF_shortcode_render
 
         $caf_filter = new CAF_front_filter();
         static $b = 1;
-        $atts = shortcode_atts(array(
-            'id' => '',
-        ), $atts);
         $id = $atts['id'];
         if (!get_post_meta($id, 'caf_taxonomy')) {
             return "<h2 style='background: #333348;color: #fff;font-size: 14px;line-height: 18px;padding: 10px;margin: 0;width: 100%;display: inline-block;text-align: center;border: none;text-shadow: none;box-shadow: none;'>" . esc_html__('Please select Taxonomy from specific CAF Filter. It is required to properly work for your Filter.', 'category-ajax-filter') . "</h2>";

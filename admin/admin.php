@@ -4,6 +4,7 @@ if (!defined('ABSPATH')) {
 }
 require_once TC_CAF_PATH . 'includes/builder/class-caf-builder-tier.php';
 require_once TC_CAF_PATH . 'includes/admin/class-caf-support-diagnostics.php';
+require_once TC_CAF_PATH . 'includes/class-caf-builder-frontend.php';
 require_once TC_CAF_PATH . 'admin/functions.php';
 new CAF_init();
 new CAF_Embed_Admin_Css_Js;
@@ -11,6 +12,7 @@ new CAF_Meta_Boxes();
 require_once TC_CAF_PATH . 'admin/class-caf-builder-admin.php';
 require_once TC_CAF_PATH . 'admin/builder-functions.php';
 CAF_Support_Diagnostics::init();
+CAF_Builder_Frontend::instance();
 new CAF_load_scripts();
 new CAF_shortcode();
 require TC_CAF_PATH . 'admin/ajax-actions.php';

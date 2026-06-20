@@ -221,4 +221,41 @@ class CAF_Builder_Tier {
 
 		return self::count_active_layouts() < $max;
 	}
+
+	/**
+	 * Max revision snapshots allowed for the current tier (builder session history).
+	 *
+	 * @return int
+	 */
+	public static function get_revision_max() {
+		$limits = self::get_limits();
+
+		if ( self::is_pro() ) {
+			if ( isset( $limits['revision_display_max'] ) ) {
+				return max( 1, (int) $limits['revision_display_max'] );
+			}
+			return 10;
+		}
+
+		if ( isset( $limits['revision_max'] ) ) {
+			return max( 0, (int) $limits['revision_max'] );
+		}
+
+		return 2;
+	}
+
+	/**
+	 * Trim a revision list to the tier maximum (defense-in-depth for any server-side storage).
+	 *
+	 * @param array<int, mixed> $revisions Revision entries.
+	 * @return array<int, mixed>
+	 */
+	public static function cap_revision_entries( array $revisions ) {
+		$max = self::get_revision_max();
+		if ( $max <= 0 || count( $revisions ) <= $max ) {
+			return $revisions;
+		}
+
+		return array_slice( $revisions, -$max );
+	}
 }
