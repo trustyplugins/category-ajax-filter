@@ -2238,6 +2238,52 @@ function caf_filter_post_layout_modules_by_tier( $initial_data ) {
 }
 
 /**
+ * Remove filter modules that are not allowed on the current tier.
+ *
+ * @param array<int, mixed> $initial_data Filter layout initial_data tree.
+ * @return array<int, mixed>
+ */
+function caf_filter_filter_layout_modules_by_tier( $initial_data ) {
+	if ( ! is_array( $initial_data ) || ! class_exists( 'CAF_Builder_Tier' ) ) {
+		return is_array( $initial_data ) ? $initial_data : array();
+	}
+
+	foreach ( $initial_data as $row_index => $row ) {
+		$row = is_object( $row ) ? $row : (object) $row;
+		if ( empty( $row->data ) || ! is_array( $row->data ) ) {
+			continue;
+		}
+
+		foreach ( $row->data as $column_index => $column ) {
+			$column = is_object( $column ) ? $column : (object) $column;
+			if ( empty( $column->data ) || ! is_array( $column->data ) ) {
+				continue;
+			}
+
+			$column->data = array_values(
+				array_filter(
+					$column->data,
+					static function ( $module ) {
+						$module = is_object( $module ) ? $module : (object) $module;
+						if ( empty( $module->key ) ) {
+							return true;
+						}
+
+						return CAF_Builder_Tier::can_use_filter_module( (string) $module->key );
+					}
+				)
+			);
+
+			$row->data[ $column_index ] = $column;
+		}
+
+		$initial_data[ $row_index ] = $row;
+	}
+
+	return $initial_data;
+}
+
+/**
  * Strip Pro-only search module settings on free tier saves.
  *
  * @param object $settings Search module settings object.
@@ -2666,6 +2712,10 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 		$layout_data->post_layout_data->initial_data = array();
 	}
 
+	$layout_data->filter_layout_data->initial_data = caf_filter_filter_layout_modules_by_tier(
+		$layout_data->filter_layout_data->initial_data
+	);
+
 	$layout_data->post_layout_data->initial_data = caf_filter_post_layout_modules_by_tier(
 		$layout_data->post_layout_data->initial_data
 	);
@@ -2694,6 +2744,11 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 			$layout_data->filter_layout_data->extra_data->meta_relation = 'IN';
 			if ( isset( $layout_data->filter_layout_data->filter_query_data ) && is_object( $layout_data->filter_layout_data->filter_query_data ) ) {
 				$layout_data->filter_layout_data->filter_query_data->meta_relation = 'IN';
+			}
+		}
+		if ( ! CAF_Builder_Tier::can_use_feature( 'filter_custom_field' ) ) {
+			if ( isset( $layout_data->filter_layout_data->filter_query_data ) && is_object( $layout_data->filter_layout_data->filter_query_data ) ) {
+				$layout_data->filter_layout_data->filter_query_data->custom_field_data = array();
 			}
 		}
 	}
@@ -3096,7 +3151,7 @@ function caf_export_builder_layout( $request ) {
 		$layout_label = $options[ $index ]['label'];
 		$title        = 'caf_' . $layout . '_' . $index;
 		if ( get_option( $title ) ) {
-			$baseLayoutData = get_option( $title );
+			$baseLayoutData = caf_normalize_builder_layout_data( get_option( $title ) );
 			$json_data      = json_encode( $baseLayoutData, JSON_PRETTY_PRINT );
 			header( 'Content-Type: application/json' );
 			header( 'Content-Disposition: attachment; filename=' . $layout_label . '.json"' );
@@ -3155,7 +3210,7 @@ function caf_clone_builder_layout( $request ) {
 
 		$title = 'caf_' . $layout . '_' . $index;
 		if ( get_option( $title ) ) {
-			$baseLayoutData = get_option( $title );
+			$baseLayoutData = caf_normalize_builder_layout_data( get_option( $title ) );
 			// $copy_suffix = "_Copy";
 			// $new_layout_name = $layout_label . $copy_suffix;
 			$new_layout_name = caf_generate_unique_layout_name( $layout_label );

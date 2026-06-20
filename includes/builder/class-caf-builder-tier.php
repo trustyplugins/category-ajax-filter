@@ -71,7 +71,6 @@ class CAF_Builder_Tier {
 				'filter_url',
 				'schema',
 				'import_library',
-				'export',
 				'sorting',
 				'result_counter',
 				'active_filters',
