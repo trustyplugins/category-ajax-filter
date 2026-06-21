@@ -2382,6 +2382,50 @@ function caf_sanitize_free_post_module_settings( $module_key, $settings ) {
 }
 
 /**
+ * Flatten a stored CSS gradient string to its first solid stop (free tier).
+ *
+ * @param mixed  $value    Color value.
+ * @param string $fallback Fallback solid color.
+ * @return mixed
+ */
+function caf_flatten_gradient_color_value( $value, $fallback = '#000000' ) {
+	if ( ! is_string( $value ) || false === stripos( $value, 'gradient(' ) ) {
+		return $value;
+	}
+
+	if ( preg_match( '/(rgba?\([^)]+\)|#[0-9a-fA-F]{3,8})/', $value, $matches ) ) {
+		return $matches[1];
+	}
+
+	return $fallback;
+}
+
+/**
+ * Recursively replace gradient color strings in layout JSON.
+ *
+ * @param mixed $node Layout node.
+ * @return void
+ */
+function caf_walk_and_flatten_gradient_colors( &$node ) {
+	if ( is_array( $node ) ) {
+		foreach ( $node as &$child ) {
+			caf_walk_and_flatten_gradient_colors( $child );
+		}
+		return;
+	}
+
+	if ( is_object( $node ) ) {
+		foreach ( get_object_vars( $node ) as $key => &$value ) {
+			if ( is_string( $value ) && false !== stripos( $value, 'gradient(' ) ) {
+				$value = caf_flatten_gradient_color_value( $value );
+			} else {
+				caf_walk_and_flatten_gradient_colors( $value );
+			}
+		}
+	}
+}
+
+/**
  * Default loader used on free tier (simple spinner, no overlay).
  *
  * @return object
@@ -2689,6 +2733,10 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 	);
 
 	$layout_data = caf_sanitize_free_preview_template_data( $layout_data );
+
+	if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'gradient_colors' ) ) {
+		caf_walk_and_flatten_gradient_colors( $layout_data );
+	}
 
 	return $layout_data;
 }
