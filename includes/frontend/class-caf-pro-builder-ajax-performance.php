@@ -198,18 +198,6 @@ class CAF_PRO_Builder_Ajax_Performance {
 			return true;
 		}
 
-		$result_count_item = $data_handler->get_misc_result_count_data();
-		if (
-			! empty( $result_count_item )
-			&& is_object( $result_count_item )
-			&& ! empty( $result_count_item->settings )
-			&& is_object( $result_count_item->settings )
-			&& ! empty( $result_count_item->settings->is_enable )
-			&& 'true' === (string) $result_count_item->settings->is_enable
-		) {
-			return true;
-		}
-
 		return (bool) apply_filters( 'caf_builder_ajax_needs_found_rows', false, $data_handler );
 	}
 

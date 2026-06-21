@@ -97,10 +97,6 @@ class CAF_PRO_Filter_Dropdown_Module extends CAF_PRO_Filter_Base_Module {
 			return $this->render_taxonomy_terms( $settings );
 		}
 
-		if ( isset( $settings->data_source ) && 'custom_field' === $settings->data_source ) {
-			return $this->render_custom_field_terms( $settings );
-		}
-
 		return '';
 	}
 
@@ -120,8 +116,6 @@ class CAF_PRO_Filter_Dropdown_Module extends CAF_PRO_Filter_Base_Module {
 		// echo '</pre>';
 		$active_icon      = ! empty( $settings->dropdown_data->icons->active_icon ) ? $settings->dropdown_data->icons->active_icon : '';
 		$inactive_icon    = ! empty( $settings->dropdown_data->icons->inactive_icon ) ? $settings->dropdown_data->icons->inactive_icon : '';
-		$groups           = $this->get_custom_field_groups( $settings );
-		$first_group      = ! empty( $groups ) && is_object( $groups[0] ) ? $groups[0] : new stdClass();
 		$all_option_value = ! empty( $settings->dropdown_data->all_option->value ) ? $settings->dropdown_data->all_option->value : __( 'All', 'tc-caf-pro' );
 		$toggle_class     = $this->get_toggle_closed_class();
 
@@ -144,8 +138,8 @@ class CAF_PRO_Filter_Dropdown_Module extends CAF_PRO_Filter_Base_Module {
 		$html .= ' column-id="' . esc_attr( $this->column_key ) . '"';
 		$html .= ' module-id="' . esc_attr( $this->module_key ) . '"';
 		$html .= ' category-relation="' . esc_attr( isset( $settings->category_relation ) ? $settings->category_relation : '' ) . '"';
-		$html .= ' meta-operator="' . esc_attr( isset( $first_group->compare_operator ) ? $first_group->compare_operator : '' ) . '"';
-		$html .= ' meta-type="' . esc_attr( isset( $first_group->meta_type ) ? $first_group->meta_type : '' ) . '">';
+		$html .= ' meta-operator=""';
+		$html .= ' meta-type="">';
 		$html .= '<li class="caf-terms-list-item-wrraper" term-value="all" term-id="0">';
 		$html .= '<div class="caf-selected-term-main' . ( empty( $settings->predefined_terms ) ? ' caf-all-selected' : '' ) . '">';
 		$selectmeta = $this->get_style_section( 'selectmeta' );
@@ -250,181 +244,6 @@ class CAF_PRO_Filter_Dropdown_Module extends CAF_PRO_Filter_Base_Module {
 
 						return $html;
 					}
-				}
-			}
-		}
-
-		return $this->render_all_option_with_icons( $settings, $all_option_value );
-	}
-
-	/**
-	 * Render custom field dropdown.
-	 *
-	 * @param object $settings Module settings.
-	 * @return string
-	 */
-	protected function render_custom_field_terms( $settings ) {
-		$groups = $this->get_custom_field_groups( $settings );
-		if ( empty( $groups ) ) {
-			return '';
-		}
-		$multiple_term = isset( $settings->multiple_term ) ? (string) $settings->multiple_term : 'false';
-		$first_group = is_object( $groups[0] ) ? $groups[0] : new stdClass();
-		$active_icon      = ! empty( $settings->dropdown_data->icons->active_icon ) ? $settings->dropdown_data->icons->active_icon : '';
-		$inactive_icon    = ! empty( $settings->dropdown_data->icons->inactive_icon ) ? $settings->dropdown_data->icons->inactive_icon : '';
-		$all_option_value = ! empty( $settings->dropdown_data->all_option->value ) ? $settings->dropdown_data->all_option->value : __( 'All', 'tc-caf-pro' );
-		$toggle_class     = $this->get_toggle_closed_class();
-		$all_active_class = '';
-		if ( empty( $settings->cf_predefined_terms ) ) {
-			$all_active_class = 'active';
-		}
-		$all_cf_values_for_label = array();
-		foreach ( $groups as $group ) {
-			if ( ! is_object( $group ) ) {
-				continue;
-			}
-			$vals = array();
-			if ( isset( $group->custom_field_value ) && is_array( $group->custom_field_value ) ) {
-				$vals = $group->custom_field_value;
-			} elseif ( isset( $group->custom_field_value_list ) && is_array( $group->custom_field_value_list ) ) {
-				$vals = $group->custom_field_value_list;
-			}
-			foreach ( $vals as $t ) {
-				if ( is_object( $t ) && isset( $t->key ) ) {
-					$all_cf_values_for_label[] = $t;
-				}
-			}
-		}
-
-		$predefine_value = '';
-		if ( ! empty( $settings->cf_predefined_terms ) && ! empty( $settings->cf_predefined_terms[0] ) ) {
-			$first_cf = $settings->cf_predefined_terms[0];
-			if ( is_object( $first_cf ) && isset( $first_cf->value ) ) {
-				$predefine_value = (string) $first_cf->value;
-			} elseif ( is_array( $first_cf ) && isset( $first_cf['value'] ) ) {
-				$predefine_value = (string) $first_cf['value'];
-			} else {
-				$predefine_value = (string) $first_cf;
-			}
-		}
-		$html  = '<div class="caf-manage-dropdown-labels-filter-dropdown">';
-		$html .= '<ul class="caf-terms-list caf-dropdown custom-field ' . esc_attr( $toggle_class ) . '"';
-		$html .= ' data-source="custom_field"';
-		$html .= ' data-all-option-label="' . esc_attr( $all_option_value ) . '"';
-		$html .= ' multiple-term="' . esc_attr( $multiple_term ) . '"';
-		$html .= ' filter-type="dropdown"';
-		$html .= ' active-icon="' . esc_attr( is_string( $active_icon ) ? $active_icon : '' ) . '"';
-		$html .= ' inactive-icon="' . esc_attr( is_string( $inactive_icon ) ? $inactive_icon : '' ) . '"';
-		$html .= ' row-id="' . esc_attr( $this->row_key ) . '"';
-		$html .= ' column-id="' . esc_attr( $this->column_key ) . '"';
-		$html .= ' module-id="' . esc_attr( $this->module_key ) . '"';
-		$html .= ' category-relation="' . esc_attr( isset( $settings->category_relation ) ? $settings->category_relation : '' ) . '"';
-		$html .= ' meta-operator="' . esc_attr( isset( $first_group->compare_operator ) ? $first_group->compare_operator : '' ) . '"';
-		$html .= ' meta-type="' . esc_attr( isset( $first_group->meta_type ) ? $first_group->meta_type : '' ) . '">';
-		$html .= '<li class="caf-terms-list-item-wrraper" term-value="all" term-id="0">';
-		$html .= '<div class="caf-selected-term-main' . ( empty( $settings->cf_predefined_terms ) ? ' caf-all-selected' : '' ) . '">';
-		$selectmeta = $this->get_style_section( 'selectmeta' );
-		$meta1      = $this->get_style_section( 'meta1' );
-		$selectbox  = $this->get_style_justify_content( $selectmeta, 'flex-start' );
-		$textcount  = $this->get_style_justify_content( $meta1, 'flex-start' );
-		$html      .= '<div class="result caf-layout-' . esc_attr( $selectbox ) . '"><div class="manage-text-lbl caf-layout-' . esc_attr( $textcount ) . '">';
-		$html      .= $this->render_custom_field_selected_label( $settings, $all_option_value, $predefine_value, $all_cf_values_for_label );
-		$html      .= '</div></div>';
-		$html .= '<span class="selected-icon"><i class="fas fa-chevron-down"></i></span>';
-		$html .= '</div>';
-		$html .= '<ul class="caf-dropdown-child caf-disable">';
-		if ( ! empty( $groups ) ) {
-			$html .= $this->render_dropdown_all_list_item(
-				$settings,
-				$all_option_value,
-				$all_active_class,
-				$textcount,
-				isset( $first_group->custom_field_key ) ? (string) $first_group->custom_field_key : '',
-				'all',
-				'cf-value-name'
-			);
-		}
-		foreach ( $groups as $group ) {
-			if ( ! is_object( $group ) ) {
-				continue;
-			}
-			$custom_field_key = isset( $group->custom_field_key ) ? $group->custom_field_key : '';
-			$custom_field_values = array();
-			if ( isset( $group->custom_field_value ) && is_array( $group->custom_field_value ) ) {
-				$custom_field_values = $group->custom_field_value;
-			} elseif ( isset( $group->custom_field_value_list ) && is_array( $group->custom_field_value_list ) ) {
-				$custom_field_values = $group->custom_field_value_list;
-			}
-			foreach ( $custom_field_values as $term ) {
-				if ( ! is_object( $term ) || ! isset( $term->key ) ) {
-					continue;
-				}
-				$term_predefine    = 'false';
-				$term_active_class = '';
-				if ( $this->is_predefined_custom_field_value( $settings, (string) $custom_field_key, (string) $term->key )
-					|| ( ! empty( $term->predefine ) && 'true' === (string) $term->predefine ) ) {
-					$term_predefine    = 'true';
-					$term_active_class = 'active';
-				}
-
-				$label = $this->get_custom_field_value_label( $term );
-
-				$html .= '<li class="caf-terms-list-item caf-custom-field-list-item ' . esc_attr( $term_active_class ) . ' caf-layout-' . esc_attr( $textcount ) . '" predefine="' . esc_attr( $term_predefine ) . '" term-value="' . esc_attr( $term->key ) . '" term-id="' . esc_attr( $term->key ) . '" data-key="' . esc_attr( $custom_field_key ) . '">';
-
-				if ( ! empty( $term->icons->icon ) && ! empty( $term->icons->position ) && $settings->show_icon == 'true' && 'before' === $term->icons->position ) {
-					$html .= $this->render_icon_markup( $term->icons, 'filter-before-icon' );
-				}
-
-				$html .= '<div class="manage-text-lbl caf-layout-' . esc_attr( $textcount ) . '">';
-				$html .= '<span class="trm-name cf-value-name">' . esc_html( $label ) . '</span>';
-
-				if ( ! empty( $term->count ) && $settings->show_count == 'true' ) {
-					$html .= '<span class="count-span">' . $this->format_count_text( $term->count, $settings ) . '</span>';
-				}
-
-				$html .= '</div>';
-
-				if ( ! empty( $term->icons->icon ) && ! empty( $term->icons->position ) && $settings->show_icon == 'true' && 'after' === $term->icons->position ) {
-					$html .= $this->render_icon_markup( $term->icons, 'filter-after-icon' );
-				}
-
-				$html .= '</li>';
-			}
-		}
-		$html .= '</ul>';
-		$html .= '</li>';
-		$html .= '</ul>';
-		$html .= '</div>';
-		return $html;
-	}
-
-	/**
-	 * Render custom field selected label.
-	 *
-	 * @param object $settings            Module settings.
-	 * @param string $all_option_value    All option value.
-	 * @param string $predefine_value     Selected predefined value.
-	 * @param array  $custom_field_values Values.
-	 * @return string
-	 */
-	protected function render_custom_field_selected_label( $settings, $all_option_value, $predefine_value, $custom_field_values ) {
-		if ( ! empty( $predefine_value ) && is_array( $custom_field_values ) ) {
-			foreach ( $custom_field_values as $term ) {
-				if ( (string) $term->key === (string) $predefine_value ) {
-					$html  = '';
-					$label = $this->get_custom_field_value_label( $term );
-
-					if ( ! empty( $term->icons->icon ) && ! empty( $term->icons->position ) && 'before' === $term->icons->position ) {
-						$html .= $this->render_icon_markup( $term->icons, 'filter-before-icon' );
-					}
-
-					$html .= esc_html( $label );
-
-					if ( ! empty( $term->icons->icon ) && ! empty( $term->icons->position ) && 'after' === $term->icons->position ) {
-						$html .= $this->render_icon_markup( $term->icons, 'filter-after-icon' );
-					}
-
-					return $html;
 				}
 			}
 		}

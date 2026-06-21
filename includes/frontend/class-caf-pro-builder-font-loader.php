@@ -35,18 +35,20 @@ class CAF_PRO_Builder_Font_Loader {
 
 		self::$enqueued_fonts[] = $font_family;
 
-		if ( ! class_exists( 'CAF_PRO_Builder_Custom_Fonts' ) ) {
-			$custom_fonts_file = defined( 'TC_CAF_PATH' )
-				? TC_CAF_PATH . 'includes/admin/class-caf-pro-builder-custom-fonts.php'
-				: '';
-			if ( $custom_fonts_file && file_exists( $custom_fonts_file ) ) {
-				require_once $custom_fonts_file;
+		$custom_css_url = '';
+		if ( ! class_exists( 'CAF_Builder_Tier' ) || CAF_Builder_Tier::can_use_feature( 'custom_fonts' ) ) {
+			if ( ! class_exists( 'CAF_PRO_Builder_Custom_Fonts' ) ) {
+				$custom_fonts_file = defined( 'TC_CAF_PATH' )
+					? TC_CAF_PATH . 'includes/admin/class-caf-pro-builder-custom-fonts.php'
+					: '';
+				if ( $custom_fonts_file && file_exists( $custom_fonts_file ) ) {
+					require_once $custom_fonts_file;
+				}
+			}
+			if ( class_exists( 'CAF_PRO_Builder_Custom_Fonts' ) ) {
+				$custom_css_url = CAF_PRO_Builder_Custom_Fonts::get_css_url_for_family( $font_family );
 			}
 		}
-
-		$custom_css_url = class_exists( 'CAF_PRO_Builder_Custom_Fonts' )
-			? CAF_PRO_Builder_Custom_Fonts::get_css_url_for_family( $font_family )
-			: '';
 
 		if ( ! empty( $custom_css_url ) ) {
 			wp_enqueue_style(

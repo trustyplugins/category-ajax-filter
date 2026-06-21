@@ -197,27 +197,6 @@ class CAF_PRO_Builder_Query {
 								}
 							}
 						}
-
-						if ( isset( $module_settings->data_source ) && 'custom_field' === $module_settings->data_source ) {
-							$module_meta_query = $this->build_meta_query_from_module( $module_settings, $multiple_term, $module_type );
-
-							$module_meta_query = apply_filters(
-								'caf_builder_module_meta_query',
-								$module_meta_query,
-								$this->get_hook_context(
-									array(
-										'mode'            => 'page_load',
-										'module_type'     => $module_type,
-										'module'          => $module,
-										'module_settings' => $module_settings,
-									)
-								)
-							);
-
-							if ( ! empty( $module_meta_query ) ) {
-								$meta_query[] = $module_meta_query;
-							}
-						}
 					}
 				}
 			}
@@ -327,14 +306,6 @@ class CAF_PRO_Builder_Query {
 				$tax_query = $this->build_tax_query_groups( $taxonomy_data );
 			}
 		}
-
-		if ( isset( $filter_query_data->data_source->custom_field ) && 'true' === $filter_query_data->data_source->custom_field ) {
-			$custom_field_data = isset( $filter_query_data->custom_field_data ) ? $filter_query_data->custom_field_data : array();
-
-			if ( is_array( $custom_field_data ) && ! empty( $custom_field_data ) ) {
-				$meta_query = $this->build_meta_query_groups( $custom_field_data );
-			}
-		}
 		$tax_query  = apply_filters( 'caf_builder_filter_tax_query', $tax_query, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
 		$meta_query = apply_filters( 'caf_builder_filter_meta_query', $meta_query, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
 
@@ -425,54 +396,6 @@ class CAF_PRO_Builder_Query {
 		}
 
 		return $tax_query;
-	}
-
-	/**
-	 * Build meta query array from grouped custom field data.
-	 *
-	 * @param array $custom_field_data Grouped custom field data.
-	 * @return array
-	 */
-	public function build_meta_query_groups( $custom_field_data ) {
-		$meta_query = array(
-			'relation' => 'OR',
-		);
-
-		foreach ( $custom_field_data as $group ) {
-			$group_entry = array(
-				'relation' => 'AND',
-			);
-
-			foreach ( $group as $field ) {
-				$values = isset( $field->custom_field_value_list ) ? (array) $field->custom_field_value_list : array();
-
-				if ( empty( $values ) ) {
-					continue;
-				}
-
-				$compare = isset( $field->compare_operator ) ? $field->compare_operator : '=';
-				$value   = count( $values ) > 1 ? $values : $values[0];
-
-				if ( count( $values ) > 1 && '=' === $compare ) {
-					$compare = 'IN';
-				}
-
-				$group_entry[] = array(
-					'key'     => isset( $field->custom_field_key ) ? $field->custom_field_key : '',
-					'value'   => $value,
-					'compare' => $compare,
-					'type'    => isset( $field->meta_type ) ? $field->meta_type : 'CHAR',
-				);
-			}
-
-			if ( count( $group_entry ) <= 1 ) {
-				continue;
-			}
-
-			$meta_query[] = $group_entry;
-		}
-
-		return count( $meta_query ) > 1 ? $meta_query : array();
 	}
 
 	/**
@@ -752,132 +675,6 @@ class CAF_PRO_Builder_Query {
 		}
 
 		return array( $nested );
-	}
-
-	/**
-	 * Build one meta query item from one filter module.
-	 *
-	 * @param object $module_settings Module settings.
-	 * @param string $multiple_term   Multiple term flag.
-	 * @param string $module_type     Module key (unused in free tier).
-	 * @return array
-	 */
-	protected function get_primary_custom_field_group_for_page_load( $module_settings ) {
-		if ( empty( $module_settings->custom_field_data ) ) {
-			return null;
-		}
-		$data = $module_settings->custom_field_data;
-		if ( is_array( $data ) && ! empty( $data[0] ) && is_object( $data[0] ) ) {
-			return $data[0];
-		}
-		if ( is_object( $data ) ) {
-			return $data;
-		}
-		return null;
-	}
-
-	/**
-	 * @param mixed $entry cf_predefined_terms row (object, array, or scalar).
-	 * @return string
-	 */
-	protected function normalize_cf_predefined_entry_to_scalar( $entry ) {
-		if ( is_object( $entry ) && isset( $entry->value ) ) {
-			return (string) $entry->value;
-		}
-		if ( is_array( $entry ) && isset( $entry['value'] ) ) {
-			return (string) $entry['value'];
-		}
-		if ( is_object( $entry ) && isset( $entry->key ) ) {
-			return (string) $entry->key;
-		}
-		return (string) $entry;
-	}
-
-	/**
-	 * Values marked predefine on custom_field_value rows (checkbox multi).
-	 *
-	 * @param object $module_settings Module settings.
-	 * @return string[]
-	 */
-	protected function collect_cf_predefine_values_from_field_groups( $module_settings ) {
-		$vals   = array();
-		$groups = array();
-		if ( ! empty( $module_settings->custom_field_data ) && is_array( $module_settings->custom_field_data ) ) {
-			$groups = $module_settings->custom_field_data;
-		} elseif ( ! empty( $module_settings->custom_field_data ) && is_object( $module_settings->custom_field_data ) ) {
-			$groups = array( $module_settings->custom_field_data );
-		}
-		foreach ( $groups as $group ) {
-			if ( ! is_object( $group ) ) {
-				continue;
-			}
-			$list = array();
-			if ( isset( $group->custom_field_value ) && is_array( $group->custom_field_value ) ) {
-				$list = $group->custom_field_value;
-			} elseif ( isset( $group->custom_field_value_list ) && is_array( $group->custom_field_value_list ) ) {
-				$list = $group->custom_field_value_list;
-			}
-			foreach ( $list as $tv ) {
-				if ( is_object( $tv ) && isset( $tv->key ) && ! empty( $tv->predefine ) && 'true' === (string) $tv->predefine ) {
-					$k = (string) $tv->key;
-					if ( '' !== $k && ! in_array( $k, $vals, true ) ) {
-						$vals[] = $k;
-					}
-				}
-			}
-		}
-		return $vals;
-	}
-
-	protected function build_meta_query_from_module( $module_settings, $multiple_term, $module_type = '' ) {
-		$custom_field_data = $this->get_primary_custom_field_group_for_page_load( $module_settings );
-		if ( ! $custom_field_data ) {
-			return array();
-		}
-
-		$custom_field_key = isset( $custom_field_data->custom_field_key ) ? trim( (string) $custom_field_data->custom_field_key ) : '';
-		if ( '' === $custom_field_key || '0' === $custom_field_key ) {
-			return array();
-		}
-
-		$value = '';
-		if ( 'true' === $multiple_term ) {
-			$value = array();
-			if ( ! empty( $module_settings->cf_predefined_terms ) && is_array( $module_settings->cf_predefined_terms ) ) {
-				foreach ( $module_settings->cf_predefined_terms as $entry ) {
-					$v = $this->normalize_cf_predefined_entry_to_scalar( $entry );
-					if ( '' !== $v && ! in_array( $v, $value, true ) ) {
-						$value[] = $v;
-					}
-				}
-			}
-			foreach ( $this->collect_cf_predefine_values_from_field_groups( $module_settings ) as $v ) {
-				if ( '' !== $v && ! in_array( $v, $value, true ) ) {
-					$value[] = $v;
-				}
-			}
-		} else {
-			if ( ! empty( $module_settings->cf_predefined_terms ) && is_array( $module_settings->cf_predefined_terms ) && isset( $module_settings->cf_predefined_terms[0] ) ) {
-				$value = $this->normalize_cf_predefined_entry_to_scalar( $module_settings->cf_predefined_terms[0] );
-			}
-			if ( '' === $value ) {
-				$from_groups = $this->collect_cf_predefine_values_from_field_groups( $module_settings );
-				if ( ! empty( $from_groups[0] ) ) {
-					$value = $from_groups[0];
-				}
-			}
-		}
-
-		if ( '' === $value || array() === $value ) {
-			return array();
-		}
-
-		return array(
-			'key'     => $custom_field_key,
-			'value'   => $value,
-			'compare' => isset( $custom_field_data->compare_operator ) ? $custom_field_data->compare_operator : '=',
-			'type'    => isset( $custom_field_data->meta_type ) ? $custom_field_data->meta_type : 'CHAR',
-		);
 	}
 
 	/**

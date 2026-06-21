@@ -1,17 +1,6 @@
 <?php
-if ( class_exists( 'CAF_PRO_Builder_Custom_Fonts' ) ) { require_once TC_CAF_PATH . 'includes/admin/class-caf-pro-builder-custom-fonts.php'; }
+require_once TC_CAF_PATH . 'includes/admin/class-caf-pro-builder-custom-fonts.php';
 require_once TC_CAF_PATH . 'includes/builder/class-caf-builder-tier.php';
-add_filter(
-	'upload_mimes',
-	static function ( $mimes ) {
-		return array_merge(
-			$mimes,
-			array(
-				'ttf' => 'application/x-font-ttf',
-			)
-		);
-	}
-);
 // add_action('admin_menu', 'caf_builder_admin_page');
 add_action( 'wp_ajax_get_caf_builder_posts', 'get_caf_builder_posts' );
 add_action( 'wp_ajax_nopriv_get_caf_builder_posts', 'get_caf_builder_posts' );

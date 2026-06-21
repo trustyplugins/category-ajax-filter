@@ -130,24 +130,6 @@ class CAF_PRO_Builder_Misc_Renderer {
 	}
 
 	/**
-	 * Render selected filters container.
-	 *
-	 * @param array $selected_filters Selected Tags.
-	 * @return string
-	 */
-	public function render_selected_filters( $selected_filters = array(), $selected_filter_item = null ) {
-		return '';
-	}
-
-	public function render_result_count( $posts_per_page, $current_page, $total_posts, $result_count_item = null ) {
-		return '';
-	}
-
-	public function render_sorting( $query_args = array(), $sorting_item = null ) {
-		return '';
-	}
-
-	/**
 	 * Collect default and hover CSS for misc module.
 	 *
 	 * @param mixed  $style    Style object.

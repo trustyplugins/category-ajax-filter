@@ -418,28 +418,6 @@ abstract class CAF_PRO_Filter_Base_Module {
 	}
 
 	/**
-	 * Resolve display label for a custom field value object.
-	 *
-	 * @param object $value_obj Custom field value object.
-	 * @return string
-	 */
-	protected function get_custom_field_value_label( $value_obj ) {
-		if ( ! is_object( $value_obj ) ) {
-			return '';
-		}
-
-		if ( isset( $value_obj->label ) && '' !== (string) $value_obj->label ) {
-			return (string) $value_obj->label;
-		}
-
-		if ( isset( $value_obj->value ) && '' !== (string) $value_obj->value ) {
-			return (string) $value_obj->value;
-		}
-
-		return isset( $value_obj->key ) ? (string) $value_obj->key : '';
-	}
-
-	/**
 	 * Format count value according to settings separator rules.
 	 *
 	 * @param mixed  $count    Count value.
@@ -462,54 +440,6 @@ abstract class CAF_PRO_Filter_Base_Module {
 			return esc_html( $prefix ) . $count_str . esc_html( $suffix );
 		}
 		return $count_str;
-	}
-
-	/**
-	 * Normalize custom field groups from new/legacy structures.
-	 *
-	 * @param object $settings Module settings.
-	 * @return array
-	 */
-	protected function get_custom_field_groups( $settings ) {
-		$groups = array();
-		if ( ! empty( $settings->custom_field_data ) && is_array( $settings->custom_field_data ) ) {
-			$groups = $settings->custom_field_data;
-		} elseif ( ! empty( $settings->custom_field_data ) && is_object( $settings->custom_field_data ) ) {
-			$groups = array( $settings->custom_field_data );
-		}
-		return $groups;
-	}
-
-	/**
-	 * Check if value matches predefined terms (new/legacy formats).
-	 *
-	 * @param object $settings  Module settings.
-	 * @param string $field_key Field key.
-	 * @param string $value_key Value key.
-	 * @return bool
-	 */
-	protected function is_predefined_custom_field_value( $settings, $field_key, $value_key ) {
-		if ( empty( $settings->cf_predefined_terms ) || ! is_array( $settings->cf_predefined_terms ) ) {
-			return false;
-		}
-		foreach ( $settings->cf_predefined_terms as $item ) {
-			if ( is_object( $item ) && isset( $item->key, $item->value ) ) {
-				if ( (string) $item->key === (string) $field_key && (string) $item->value === (string) $value_key ) {
-					return true;
-				}
-				continue;
-			}
-			if ( is_array( $item ) && isset( $item['key'], $item['value'] ) ) {
-				if ( (string) $item['key'] === (string) $field_key && (string) $item['value'] === (string) $value_key ) {
-					return true;
-				}
-				continue;
-			}
-			if ( (string) $item === (string) $value_key ) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	/**

@@ -63,15 +63,6 @@ class CAF_PRO_Builder_Post_Renderer {
 	 * @return string
 	 */
 	public function render() {
-		$extra_data = $this->data_handler->get_post_layout_extra_data();
-		if (
-			! empty( $extra_data->layout_source )
-			&& 'elementor_loop' === (string) $extra_data->layout_source
-			&& ! empty( $extra_data->loop_template_id )
-		) {
-			return $this->render_elementor_loop_posts( absint( $extra_data->loop_template_id ) );
-		}
-
 		$loop_data       = $this->data_handler->get_post_layout_loop_data();
 		$dummy_image_url = $this->data_handler->get_dummy_image_url();
 
@@ -418,12 +409,6 @@ class CAF_PRO_Builder_Post_Renderer {
 			case 'categories':
 				return $this->render_categories_module( $module, $row_key, $column_key, $module_key, $post_id );
 
-			case 'customtext':
-				return $this->render_custom_text_module( $module );
-
-			case 'customfield':
-				return $this->render_custom_field_module( $module, $post_id );
-
 			default:
 				return '<!-- Post module renderer not attached for: ' . esc_html( $module_type ) . ' -->';
 		}
@@ -447,46 +432,11 @@ class CAF_PRO_Builder_Post_Renderer {
 		$image_src     = '';
 		$attachment_id = 0;
 		$image_size    = ! empty( $settings->image_size ) ? (string) $settings->image_size : 'full';
-		$image_mode    = ! empty( $settings->image_source ) ? (string) $settings->image_source : 'featured_image';
-
-		if ( 'custom_field' === $image_mode ) {
-			$field_key   = isset( $settings->custom_field ) ? (string) $settings->custom_field : '';
-			$field_value = ( '' !== $field_key && '0' !== $field_key ) ? $this->get_custom_field_value( $field_key, $post_id ) : '';
-
-			if ( is_array( $field_value ) ) {
-				if ( ! empty( $field_value['sizes'] ) && is_array( $field_value['sizes'] ) && ! empty( $field_value['sizes'][ $image_size ] ) ) {
-					$image_src = $field_value['sizes'][ $image_size ];
-				} elseif ( ! empty( $field_value['url'] ) ) {
-					$image_src = $field_value['url'];
-				} elseif ( ! empty( $field_value['ID'] ) ) {
-					$attachment_id = absint( $field_value['ID'] );
-					$sized         = wp_get_attachment_image_src( $attachment_id, $image_size );
-					$image_src     = ( is_array( $sized ) && ! empty( $sized[0] ) ) ? $sized[0] : wp_get_attachment_url( $attachment_id );
-					if ( is_array( $sized ) && ! empty( $sized[1] ) && ! empty( $sized[2] ) ) {
-						$image_data = $sized;
-					}
-				}
-			} elseif ( is_string( $field_value ) || is_numeric( $field_value ) ) {
-				$field_value = trim( (string) $field_value );
-				if ( '' !== $field_value ) {
-					if ( is_numeric( $field_value ) && get_post_mime_type( (int) $field_value ) ) {
-						$attachment_id = absint( $field_value );
-						$sized         = wp_get_attachment_image_src( $attachment_id, $image_size );
-						$image_src     = ( is_array( $sized ) && ! empty( $sized[0] ) ) ? $sized[0] : wp_get_attachment_url( $attachment_id );
-						if ( is_array( $sized ) && ! empty( $sized[1] ) && ! empty( $sized[2] ) ) {
-							$image_data = $sized;
-						}
-					} elseif ( filter_var( $field_value, FILTER_VALIDATE_URL ) ) {
-						$image_src = $field_value;
-					}
-				}
-			}
-		}
 
 		$fallback_src = ! empty( $settings->placeholder_image ) ? (string) $settings->placeholder_image : $dummy_image_url;
 
 		if ( '' === $image_src ) {
-			if ( 'featured_image' === $image_mode && is_array( $image_data ) && ! empty( $image_data[0] ) ) {
+			if ( is_array( $image_data ) && ! empty( $image_data[0] ) ) {
 				$thumb_id = get_post_thumbnail_id( $post_id );
 				if ( $thumb_id ) {
 					$attachment_id = absint( $thumb_id );
@@ -521,12 +471,6 @@ class CAF_PRO_Builder_Post_Renderer {
 
 			if ( ! empty( $link_data->type ) && 'custom-url' === $link_data->type && ! empty( $link_data->customlink ) ) {
 				$link_url = $link_data->customlink;
-			}
-			if ( ! empty( $link_data->type ) && 'custom-url' === $link_data->type && ! empty( $link_data->custom_field ) ) {
-				$custom_link = $this->get_custom_field_value( (string) $link_data->custom_field, $post_id );
-				if ( is_string( $custom_link ) && '' !== $custom_link ) {
-					$link_url = $custom_link;
-				}
 			}
 
 			if ( ! empty( $link_data->target ) && 'new-tab' === $link_data->target ) {
@@ -585,12 +529,6 @@ class CAF_PRO_Builder_Post_Renderer {
 
 			if ( ! empty( $link_data->type ) && 'custom-url' === $link_data->type && ! empty( $link_data->customlink ) ) {
 				$url = $link_data->customlink;
-			}
-			if ( ! empty( $link_data->type ) && 'custom-url' === $link_data->type && ! empty( $link_data->custom_field ) ) {
-				$custom_link = $this->get_custom_field_value( (string) $link_data->custom_field, $post_id );
-				if ( is_string( $custom_link ) && '' !== $custom_link ) {
-					$url = $custom_link;
-				}
 			}
 
 			if ( ! empty( $link_data->target ) && 'new-tab' === $link_data->target ) {
@@ -856,12 +794,6 @@ class CAF_PRO_Builder_Post_Renderer {
 			if ( ! empty( $link_data->type ) && 'custom-url' === $link_data->type && ! empty( $link_data->customlink ) ) {
 				$url = $link_data->customlink;
 			}
-			if ( ! empty( $link_data->type ) && 'custom-url' === $link_data->type && ! empty( $link_data->custom_field ) ) {
-				$custom_link = $this->get_custom_field_value( (string) $link_data->custom_field, $post_id );
-				if ( is_string( $custom_link ) && '' !== $custom_link ) {
-					$url = $custom_link;
-				}
-			}
 
 			if ( ! empty( $link_data->target ) && 'new-tab' === $link_data->target ) {
 				$target = '_blank';
@@ -979,85 +911,6 @@ class CAF_PRO_Builder_Post_Renderer {
 		}
 
 		return $html;
-	}
-
-	/**
-	 * Render custom text module.
-	 *
-	 * @param object $module Module object.
-	 * @return string
-	 */
-	protected function render_custom_text_module( $module ) {
-		$settings    = isset( $module->settings ) ? $module->settings : new stdClass();
-		$custom_text = isset( $settings->customText ) ? $settings->customText : __( 'Custom Text', 'tc-caf-pro' );
-		$icon_data   = isset( $settings->icons ) ? $settings->icons : new stdClass();
-		$html        = '';
-
-		$html .= $this->render_inline_icon( $icon_data, 'before-customtext', 'margin-right: 5px;' );
-		$html .= wp_kses_post( (string) $custom_text );
-		$html .= $this->render_inline_icon( $icon_data, 'after-customtext', 'margin-left: 5px;' );
-
-		return $html;
-	}
-
-	/**
-	 * Render custom field module.
-	 *
-	 * @param object $module  Module object.
-	 * @param int    $post_id Post ID.
-	 * @return string
-	 */
-	protected function render_custom_field_module( $module, $post_id ) {
-		$settings         = isset( $module->settings ) ? $module->settings : new stdClass();
-		$label_data       = isset( $settings->label ) ? $settings->label : new stdClass();
-		$icon_data        = isset( $label_data->icons ) ? $label_data->icons : new stdClass();
-		$prefix           = isset( $settings->prefix ) ? $settings->prefix : new stdClass();
-		$suffix           = isset( $settings->suffix ) ? $settings->suffix : new stdClass();
-		$custom_field_key = isset( $settings->customField ) ? $settings->customField : ( isset( $settings->custom_field ) ? $settings->custom_field : '0' );
-		$custom_field_val = '';
-
-		if ( '0' !== (string) $custom_field_key ) {
-			$field_value = $this->get_custom_field_value( (string) $custom_field_key, $post_id );
-			if ( ! $this->is_custom_field_display_value_empty( $field_value ) ) {
-				$custom_field_val = is_scalar( $field_value ) ? (string) $field_value : wp_json_encode( $field_value );
-			}
-		}
-
-		if ( '' === $custom_field_val ) {
-			return '';
-		}
-
-		if ( ! empty( $label_data->is_label ) && 'true' === $label_data->is_label && '0' !== (string) $custom_field_key ) {
-			$label_text = ! empty( $label_data->value ) ? $label_data->value : __( 'Label', 'tc-caf-pro' );
-			$html       = '<div class="caf-builder-custom-filed-label">';
-			$html      .= $this->render_wrapped_icon( $icon_data, 'before-label', 'before', 'custom-field-label', 'margin-right: 5px;' );
-			$html .= esc_html( $label_text );
-			$html .= $this->render_wrapped_icon( $icon_data, 'after-label', 'after', 'custom-field-label', 'margin-left: 5px;' );
-			$html .= '</div>';
-
-			$module_style = isset( $module->style ) ? $module->style : null;
-			$html        .= $this->build_affix_layout_content_html(
-				$this->render_title_meta_affix( $prefix, 'prefix' ),
-				esc_html( $custom_field_val ),
-				'caf-builder-custom-filed-value',
-				$this->render_title_meta_affix( $suffix, 'suffix' ),
-				'caf-builder-custom-filed-suffix-wrapper',
-				$module_style
-			);
-
-			return $html;
-		}
-
-		$module_style = isset( $module->style ) ? $module->style : null;
-
-		return $this->build_affix_layout_content_html(
-			$this->render_title_meta_affix( $prefix, 'prefix' ),
-			esc_html( $custom_field_val ),
-			'caf-builder-custom-filed-value',
-			$this->render_title_meta_affix( $suffix, 'suffix' ),
-			'caf-builder-custom-filed-suffix-wrapper',
-			$module_style
-		);
 	}
 
 	/**
@@ -1337,7 +1190,6 @@ class CAF_PRO_Builder_Post_Renderer {
 			'date'         => '.caf-builder-date-suffix-wrapper',
 			'commentcount' => '.caf-builder-comment-suffix-wrapper',
 			'button'       => '.caf-builder-button-suffix-wrapper',
-			'customfield'  => '.caf-builder-custom-filed-suffix-wrapper',
 		);
 
 		$meta_selectors = array();
@@ -1475,46 +1327,6 @@ class CAF_PRO_Builder_Post_Renderer {
 	}
 
 	/**
-	 * Render posts using an Elementor loop-item template.
-	 *
-	 * @param int $template_id Elementor library template ID.
-	 * @return string
-	 */
-	protected function render_elementor_loop_posts( $template_id ) {
-		if ( $template_id <= 0 || ! ( $this->query instanceof WP_Query ) ) {
-			return $this->render_empty_message();
-		}
-
-		if ( ! $this->query->have_posts() ) {
-			return $this->render_empty_message();
-		}
-
-		if ( ! did_action( 'elementor/loaded' ) || ! class_exists( '\Elementor\Plugin' ) ) {
-			return $this->render_empty_message();
-		}
-
-		if ( ! defined( 'ELEMENTOR_PRO_VERSION' ) || ! class_exists( '\ElementorPro\Plugin' ) ) {
-			return $this->render_empty_message();
-		}
-
-		ob_start();
-
-		while ( $this->query->have_posts() ) {
-			$this->query->the_post();
-			global $post;
-
-			$post_id = isset( $post->ID ) ? absint( $post->ID ) : 0;
-			echo '<article class="caf-builder-post-area post-id-' . esc_attr( $post_id ) . '" data-post-id="' . esc_attr( $post_id ) . '">';
-			echo \Elementor\Plugin::instance()->frontend->get_builder_content( $template_id, true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo '</article>';
-		}
-
-		wp_reset_postdata();
-
-		return ob_get_clean();
-	}
-
-	/**
 	 * Build device visibility classes from builder settings.
 	 *
 	 * @param object|null $settings Settings object.
@@ -1584,53 +1396,6 @@ class CAF_PRO_Builder_Post_Renderer {
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Whether a custom field value should be treated as empty for display.
-	 *
-	 * @param mixed $value Field value.
-	 * @return bool
-	 */
-	protected function is_custom_field_display_value_empty( $value ) {
-		if ( null === $value || false === $value ) {
-			return true;
-		}
-
-		if ( is_string( $value ) ) {
-			return '' === trim( $value );
-		}
-
-		if ( is_array( $value ) ) {
-			return empty( $value );
-		}
-
-		if ( is_object( $value ) ) {
-			return empty( get_object_vars( $value ) );
-		}
-
-		return false;
-	}
-
-	/**
-	 * Get custom field value from ACF or post meta.
-	 *
-	 * @param string $field_key Field key/meta key.
-	 * @param int    $post_id   Post ID.
-	 * @return mixed
-	 */
-	protected function get_custom_field_value( $field_key, $post_id ) {
-		if ( '' === $field_key ) {
-			return '';
-		}
-		if ( function_exists( 'get_field' ) ) {
-			$acf_value = get_field( $field_key, $post_id );
-			if ( null !== $acf_value && '' !== $acf_value ) {
-				return $acf_value;
-			}
-		}
-		$meta_value = get_post_meta( $post_id, $field_key, true );
-		return $meta_value;
 	}
 
 	/**
