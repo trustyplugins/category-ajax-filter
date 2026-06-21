@@ -94,6 +94,7 @@ class CAF_Builder_Tier {
 				'preview_loader_settings',
 				'pagination_button',
 				'pagination_load_more',
+				'multiple_filters_per_page',
 			),
 		);
 	}
@@ -291,5 +292,50 @@ class CAF_Builder_Tier {
 		}
 
 		return array_slice( $revisions, -$max );
+	}
+
+	/**
+	 * Whether more than one [caf_filter] shortcode may render on the same front-end page.
+	 *
+	 * @return bool
+	 */
+	public static function allows_multiple_filters_per_page() {
+		return self::can_use_feature( 'multiple_filters_per_page' );
+	}
+
+	/**
+	 * Reserve one front-end filter slot per page (free tier: first shortcode only).
+	 *
+	 * @return bool False when a second filter shortcode should not render.
+	 */
+	public static function reserve_page_filter_instance() {
+		if ( self::allows_multiple_filters_per_page() || is_admin() ) {
+			return true;
+		}
+
+		static $count = 0;
+		if ( $count >= 1 ) {
+			return false;
+		}
+
+		++$count;
+		return true;
+	}
+
+	/**
+	 * Message shown when a second filter shortcode is blocked on free.
+	 *
+	 * @return string
+	 */
+	public static function get_multiple_filters_per_page_message() {
+		$config = self::get_ajax_config();
+		$url    = isset( $config['upgrade_url'] ) ? $config['upgrade_url'] : 'https://trustyplugins.com/category-ajax-filter-pro';
+
+		return sprintf(
+			'<div class="error-caf error-of-multiple-filters">%s <a href="%s" target="_blank" rel="noopener noreferrer">%s</a></div>',
+			esc_html__( 'Only one CAF filter shortcode is allowed per page on the free version.', 'category-ajax-filter' ),
+			esc_url( $url ),
+			esc_html__( 'Upgrade to Pro', 'category-ajax-filter' )
+		);
 	}
 }

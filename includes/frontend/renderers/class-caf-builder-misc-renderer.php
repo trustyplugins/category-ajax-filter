@@ -80,7 +80,7 @@ class CAF_Builder_Misc_Renderer {
 		$content_selector   = '.caf-builder-container .caf-builder-template-preview-loader-container .caf-builder-template-preview-loader-content';
 		$image_selector     = '.caf-builder-container .caf-builder-template-preview-loader-container .caf-builder-template-preview-loader-content .common-img';
 
-		if ( ! empty( $loader_data->icon_data->style ) ) {
+		if ( ! empty( $loader_data->icon_data->style ) && ! empty( $loader_data->overlay ) && 'true' === $loader_data->overlay ) {
 			$this->collect_loader_css( $loader_data->icon_data->style, $container_selector );
 		}
 

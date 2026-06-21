@@ -102,6 +102,10 @@ class CAF_Builder_Frontend {
 			return $posts;
 		}
 
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::allows_multiple_filters_per_page() ) {
+			$builder_ids = array_slice( $builder_ids, 0, 1 );
+		}
+
 		$this->enqueue_builder_frontend_bootstrap();
 		foreach ( $builder_ids as $builder_id ) {
 			$this->prerender_builder_shortcode_for_head( $builder_id );
