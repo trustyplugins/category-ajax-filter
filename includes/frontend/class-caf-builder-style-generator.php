@@ -2,14 +2,14 @@
 /**
  * Frontend Builder Style Generator
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAF_PRO_Builder_Style_Generator {
+class CAF_Builder_Style_Generator {
 
 	/**
 	 * Optional font enqueue callback.

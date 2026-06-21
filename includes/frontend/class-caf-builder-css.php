@@ -2,14 +2,14 @@
 /**
  * Frontend Builder CSS Collector
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAF_PRO_Builder_Css {
+class CAF_Builder_Css {
 
 	/**
 	 * Collected CSS rules.
@@ -154,11 +154,11 @@ class CAF_PRO_Builder_Css {
 	/**
 	 * Merge another CSS collector into this one.
 	 *
-	 * @param CAF_PRO_Builder_Css $css_builder Another CSS builder instance.
+	 * @param CAF_Builder_Css $css_builder Another CSS builder instance.
 	 * @return void
 	 */
 	public function merge( $css_builder ) {
-		if ( ! $css_builder instanceof CAF_PRO_Builder_Css ) {
+		if ( ! $css_builder instanceof CAF_Builder_Css ) {
 			return;
 		}
 

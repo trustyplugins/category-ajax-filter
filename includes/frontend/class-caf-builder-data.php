@@ -2,14 +2,14 @@
 /**
  * Frontend Builder Data Handler
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAF_PRO_Builder_Data {
+class CAF_Builder_Data {
 
 	/**
 	 * Raw builder data.

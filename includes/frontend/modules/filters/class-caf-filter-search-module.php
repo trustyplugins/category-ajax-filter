@@ -2,14 +2,14 @@
 /**
  * Frontend Builder Search Filter Module
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAF_PRO_Filter_Search_Module extends CAF_PRO_Filter_Base_Module {
+class CAF_Filter_Search_Module extends CAF_Filter_Base_Module {
 
 	/**
 	 * Render module.

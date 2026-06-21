@@ -2,14 +2,14 @@
 /**
  * Frontend Builder Dropdown Filter Module
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAF_PRO_Filter_Dropdown_Module extends CAF_PRO_Filter_Base_Module {
+class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 	/**
 	 * Render module.
 	 *
@@ -116,7 +116,7 @@ class CAF_PRO_Filter_Dropdown_Module extends CAF_PRO_Filter_Base_Module {
 		// echo '</pre>';
 		$active_icon      = ! empty( $settings->dropdown_data->icons->active_icon ) ? $settings->dropdown_data->icons->active_icon : '';
 		$inactive_icon    = ! empty( $settings->dropdown_data->icons->inactive_icon ) ? $settings->dropdown_data->icons->inactive_icon : '';
-		$all_option_value = ! empty( $settings->dropdown_data->all_option->value ) ? $settings->dropdown_data->all_option->value : __( 'All', 'tc-caf-pro' );
+		$all_option_value = ! empty( $settings->dropdown_data->all_option->value ) ? $settings->dropdown_data->all_option->value : __( 'All', 'category-ajax-filter' );
 		$toggle_class     = $this->get_toggle_closed_class();
 
 		$all_active_class = '';

@@ -5,9 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Frontend Builder Framework
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
-class CAF_PRO_Builder_Framework {
+class CAF_Builder_Framework {
 
 	/**
 	 * Raw builder data.
@@ -26,33 +26,33 @@ class CAF_PRO_Builder_Framework {
 	/**
 	 * Normalized builder data handler.
 	 *
-	 * @var CAF_PRO_Builder_Data
+	 * @var CAF_Builder_Data
 	 */
 	protected $data_handler;
 
 	/**
 	 * Query builder instance.
 	 *
-	 * @var CAF_PRO_Builder_Query
+	 * @var CAF_Builder_Query
 	 */
 	protected $query_builder;
 
 	/**
 	 * CSS collector instance.
 	 *
-	 * @var CAF_PRO_Builder_Css
+	 * @var CAF_Builder_Css
 	 */
 	protected $css_builder;
 	/**
 	 * Style generator instance.
 	 *
-	 * @var CAF_PRO_Builder_Style_Generator
+	 * @var CAF_Builder_Style_Generator
 	 */
 	protected $style_generator;
 	/**
 	 * Main renderer instance.
 	 *
-	 * @var CAF_PRO_Builder_Renderer
+	 * @var CAF_Builder_Renderer
 	 */
 	protected $renderer;
 
@@ -75,18 +75,18 @@ class CAF_PRO_Builder_Framework {
 	 * @return void
 	 */
 	protected function boot() {
-		$this->data_handler    = new CAF_PRO_Builder_Data(
+		$this->data_handler    = new CAF_Builder_Data(
 			$this->builder_data,
 			$this->short_index
 		);
-		$this->css_builder     = new CAF_PRO_Builder_Css();
-		$this->style_generator = new CAF_PRO_Builder_Style_Generator(
-			array( 'CAF_PRO_Builder_Font_Loader', 'enqueue_font_family' )
+		$this->css_builder     = new CAF_Builder_Css();
+		$this->style_generator = new CAF_Builder_Style_Generator(
+			array( 'CAF_Builder_Font_Loader', 'enqueue_font_family' )
 		);
-		$this->query_builder   = new CAF_PRO_Builder_Query(
+		$this->query_builder   = new CAF_Builder_Query(
 			$this->data_handler
 		);
-		$this->renderer        = new CAF_PRO_Builder_Renderer(
+		$this->renderer        = new CAF_Builder_Renderer(
 			$this->data_handler,
 			$this->query_builder,
 			$this->css_builder,
@@ -108,11 +108,11 @@ class CAF_PRO_Builder_Framework {
 			wp_add_inline_style( 'caf-builder-style', $dynamic_css );
 		}
 
-		if ( class_exists( 'CAF_PRO_Builder_Ajax_Performance' ) ) {
-			CAF_PRO_Builder_Ajax_Performance::set_layout_css_snapshot( $this->short_index, $dynamic_css );
-			$html = CAF_PRO_Builder_Ajax_Performance::inject_css_hash_on_container(
+		if ( class_exists( 'CAF_Builder_Ajax_Performance' ) ) {
+			CAF_Builder_Ajax_Performance::set_layout_css_snapshot( $this->short_index, $dynamic_css );
+			$html = CAF_Builder_Ajax_Performance::inject_css_hash_on_container(
 				$html,
-				CAF_PRO_Builder_Ajax_Performance::get_dynamic_css_hash( $dynamic_css )
+				CAF_Builder_Ajax_Performance::get_dynamic_css_hash( $dynamic_css )
 			);
 		}
 

@@ -185,16 +185,16 @@ class CAF_Builder_Frontend {
 		$this->enqueue_builder_assets();
 		$this->load_builder_dependencies();
 
-		if ( ! class_exists( 'CAF_PRO_Builder_Ajax_Performance' ) || ! class_exists( 'CAF_PRO_Builder_Framework' ) ) {
+		if ( ! class_exists( 'CAF_Builder_Ajax_Performance' ) || ! class_exists( 'CAF_Builder_Framework' ) ) {
 			return null;
 		}
 
-		$layout_bundle = CAF_PRO_Builder_Ajax_Performance::get_layout_bundle( $shortindex );
+		$layout_bundle = CAF_Builder_Ajax_Performance::get_layout_bundle( $shortindex );
 		if ( empty( $layout_bundle ) || empty( $layout_bundle['builder_data'] ) ) {
 			return null;
 		}
 
-		$builder = new CAF_PRO_Builder_Framework( $layout_bundle['builder_data'], $shortindex );
+		$builder = new CAF_Builder_Framework( $layout_bundle['builder_data'], $shortindex );
 		$html    = $builder->render();
 
 		self::$builder_render_cache[ $shortindex ] = $html;
@@ -315,23 +315,23 @@ class CAF_Builder_Frontend {
 		$loaded = true;
 
 		$base = TC_CAF_PATH . 'includes/frontend/';
-		require_once $base . 'class-caf-pro-builder-data.php';
-		require_once $base . 'class-caf-pro-builder-css.php';
-		require_once $base . 'class-caf-pro-builder-font-loader.php';
-		require_once $base . 'class-caf-pro-builder-style-generator.php';
-		require_once $base . 'class-caf-pro-builder-query.php';
-		require_once $base . 'modules/filters/class-caf-pro-filter-base-module.php';
-		require_once $base . 'modules/filters/class-caf-pro-filter-search-module.php';
-		require_once $base . 'modules/filters/class-caf-pro-filter-reset-module.php';
-		require_once $base . 'modules/filters/class-caf-pro-filter-checkbox-module.php';
-		require_once $base . 'modules/filters/class-caf-pro-filter-dropdown-module.php';
-		require_once $base . 'modules/filters/class-caf-pro-filter-module-factory.php';
-		require_once $base . 'renderers/class-caf-pro-builder-filter-renderer.php';
-		require_once $base . 'renderers/class-caf-pro-builder-post-renderer.php';
-		require_once $base . 'renderers/class-caf-pro-builder-pagination-renderer.php';
-		require_once $base . 'renderers/class-caf-pro-builder-misc-renderer.php';
-		require_once $base . 'class-caf-pro-builder-renderer.php';
-		require_once $base . 'class-caf-pro-builder-ajax-performance.php';
-		require_once $base . 'class-caf-pro-builder-framework.php';
+		require_once $base . 'class-caf-builder-data.php';
+		require_once $base . 'class-caf-builder-css.php';
+		require_once $base . 'class-caf-builder-font-loader.php';
+		require_once $base . 'class-caf-builder-style-generator.php';
+		require_once $base . 'class-caf-builder-query.php';
+		require_once $base . 'modules/filters/class-caf-filter-base-module.php';
+		require_once $base . 'modules/filters/class-caf-filter-search-module.php';
+		require_once $base . 'modules/filters/class-caf-filter-reset-module.php';
+		require_once $base . 'modules/filters/class-caf-filter-checkbox-module.php';
+		require_once $base . 'modules/filters/class-caf-filter-dropdown-module.php';
+		require_once $base . 'modules/filters/class-caf-filter-module-factory.php';
+		require_once $base . 'renderers/class-caf-builder-filter-renderer.php';
+		require_once $base . 'renderers/class-caf-builder-post-renderer.php';
+		require_once $base . 'renderers/class-caf-builder-pagination-renderer.php';
+		require_once $base . 'renderers/class-caf-builder-misc-renderer.php';
+		require_once $base . 'class-caf-builder-renderer.php';
+		require_once $base . 'class-caf-builder-ajax-performance.php';
+		require_once $base . 'class-caf-builder-framework.php';
 	}
 }

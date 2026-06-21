@@ -2,32 +2,32 @@
 /**
  * Frontend Builder Post Renderer
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAF_PRO_Builder_Post_Renderer {
+class CAF_Builder_Post_Renderer {
 
 	/**
 	 * Builder data handler.
 	 *
-	 * @var CAF_PRO_Builder_Data
+	 * @var CAF_Builder_Data
 	 */
 	protected $data_handler;
 
 	/**
 	 * Builder CSS collector.
 	 *
-	 * @var CAF_PRO_Builder_Css
+	 * @var CAF_Builder_Css
 	 */
 	protected $css_builder;
 	/**
 	 * Style generator instance.
 	 *
-	 * @var CAF_PRO_Builder_Style_Generator
+	 * @var CAF_Builder_Style_Generator
 	 */
 	protected $style_generator;
 	/**
@@ -45,12 +45,12 @@ class CAF_PRO_Builder_Post_Renderer {
 	/**
 	 * Constructor.
 	 *
-	 * @param CAF_PRO_Builder_Data            $data_handler Builder data handler.
-	 * @param CAF_PRO_Builder_Css             $css_builder  CSS collector.
+	 * @param CAF_Builder_Data            $data_handler Builder data handler.
+	 * @param CAF_Builder_Css             $css_builder  CSS collector.
 	 * @param WP_Query                        $query        Query object.
-	 * @param CAF_PRO_Builder_Style_Generator $style_generator Style generator.
+	 * @param CAF_Builder_Style_Generator $style_generator Style generator.
 	 */
-	public function __construct( CAF_PRO_Builder_Data $data_handler, CAF_PRO_Builder_Css $css_builder, $query, CAF_PRO_Builder_Style_Generator $style_generator ) {
+	public function __construct( CAF_Builder_Data $data_handler, CAF_Builder_Css $css_builder, $query, CAF_Builder_Style_Generator $style_generator ) {
 		$this->data_handler    = $data_handler;
 		$this->css_builder     = $css_builder;
 		$this->query           = $query;
@@ -586,7 +586,7 @@ class CAF_PRO_Builder_Post_Renderer {
 			}
 		} elseif ( 'avatar' === $meta_type && ! empty( $avatar_url ) ) {
 			$meta_type_specific = '-avatar';
-			$alt_text           = is_string( $avatar_alt ) && '' !== trim( $avatar_alt ) ? trim( $avatar_alt ) : __( 'Author avatar', 'tc-caf-pro' );
+			$alt_text           = is_string( $avatar_alt ) && '' !== trim( $avatar_alt ) ? trim( $avatar_alt ) : __( 'Author avatar', 'category-ajax-filter' );
 			$content            = '<img class="caf-author-avatar" src="' . esc_url( $avatar_url ) . '" alt="' . esc_attr( $alt_text ) . '" />';
 		} else {
 			$meta_text = isset( $affix_data->meta_text ) ? wp_kses_post( (string) $affix_data->meta_text ) : '';
@@ -775,7 +775,7 @@ class CAF_PRO_Builder_Post_Renderer {
 		$icon_data   = isset( $settings->icons ) ? $settings->icons : new stdClass();
 		$prefix      = isset( $settings->prefix ) ? $settings->prefix : new stdClass();
 		$suffix      = isset( $settings->suffix ) ? $settings->suffix : new stdClass();
-		$button_text = ! empty( $settings->changeButtonValue ) ? $settings->changeButtonValue : __( 'Read More', 'tc-caf-pro' );
+		$button_text = ! empty( $settings->changeButtonValue ) ? $settings->changeButtonValue : __( 'Read More', 'category-ajax-filter' );
 		$module_style = isset( $module->style ) ? $module->style : null;
 		$button_html  = $this->build_affix_layout_content_html(
 			$this->render_title_meta_affix( $prefix, 'prefix' ),
@@ -919,7 +919,7 @@ class CAF_PRO_Builder_Post_Renderer {
 	 * @return string
 	 */
 	protected function render_empty_message() {
-		$empty_message = __( 'No Result Found', 'tc-caf-pro' );
+		$empty_message = __( 'No Result Found', 'category-ajax-filter' );
 		$misc_data     = $this->data_handler->get_misc_preview_data();
 
 		if (

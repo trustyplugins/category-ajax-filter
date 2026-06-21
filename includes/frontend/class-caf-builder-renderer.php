@@ -5,47 +5,47 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Frontend Builder Main Renderer
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
-class CAF_PRO_Builder_Renderer {
+class CAF_Builder_Renderer {
 
 	/**
 	 * Builder data handler.
 	 *
-	 * @var CAF_PRO_Builder_Data
+	 * @var CAF_Builder_Data
 	 */
 	protected $data_handler;
 
 	/**
 	 * Builder query handler.
 	 *
-	 * @var CAF_PRO_Builder_Query
+	 * @var CAF_Builder_Query
 	 */
 	protected $query_builder;
 
 	/**
 	 * Builder CSS collector.
 	 *
-	 * @var CAF_PRO_Builder_Css
+	 * @var CAF_Builder_Css
 	 */
 	protected $css_builder;
 
 	/**
 	 * Style generator.
 	 *
-	 * @var CAF_PRO_Builder_Style_Generator
+	 * @var CAF_Builder_Style_Generator
 	 */
 	protected $style_generator;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param CAF_PRO_Builder_Data            $data_handler  Builder data handler.
-	 * @param CAF_PRO_Builder_Query           $query_builder Query builder.
-	 * @param CAF_PRO_Builder_Css             $css_builder   CSS builder.
-	 * @param CAF_PRO_Builder_Style_Generator $style_generator   CSS generator.
+	 * @param CAF_Builder_Data            $data_handler  Builder data handler.
+	 * @param CAF_Builder_Query           $query_builder Query builder.
+	 * @param CAF_Builder_Css             $css_builder   CSS builder.
+	 * @param CAF_Builder_Style_Generator $style_generator   CSS generator.
 	 */
-	public function __construct( CAF_PRO_Builder_Data $data_handler, CAF_PRO_Builder_Query $query_builder, CAF_PRO_Builder_Css $css_builder, CAF_PRO_Builder_Style_Generator $style_generator ) {
+	public function __construct( CAF_Builder_Data $data_handler, CAF_Builder_Query $query_builder, CAF_Builder_Css $css_builder, CAF_Builder_Style_Generator $style_generator ) {
 		$this->data_handler    = $data_handler;
 		$this->query_builder   = $query_builder;
 		$this->css_builder     = $css_builder;
@@ -187,7 +187,7 @@ class CAF_PRO_Builder_Renderer {
 	 * Render filter area.
 	 *
 	 * For now this is a placeholder wrapper.
-	 * Later it will delegate to CAF_PRO_Builder_Filter_Renderer.
+	 * Later it will delegate to CAF_Builder_Filter_Renderer.
 	 *
 	 * @return string
 	 */
@@ -225,7 +225,7 @@ class CAF_PRO_Builder_Renderer {
 			);
 		}
 
-		$filter_renderer = new CAF_PRO_Builder_Filter_Renderer(
+		$filter_renderer = new CAF_Builder_Filter_Renderer(
 			$this->data_handler,
 			$this->css_builder,
 			$this->style_generator
@@ -299,7 +299,7 @@ class CAF_PRO_Builder_Renderer {
 
 		$this->collect_post_container_css( $post_preview_data, $instance_class );
 
-		$post_renderer = new CAF_PRO_Builder_Post_Renderer(
+		$post_renderer = new CAF_Builder_Post_Renderer(
 			$this->data_handler,
 			$this->css_builder,
 			$query,
@@ -329,7 +329,7 @@ class CAF_PRO_Builder_Renderer {
 		}
 
 		$html .= '<div class="caf-builder-template-preview-search-result-container">';
-		$html .= esc_html__( 'Search Results for: ', 'tc-caf-pro' );
+		$html .= esc_html__( 'Search Results for: ', 'category-ajax-filter' );
 		$html .= '<span class="search-keyword"></span>';
 		$html .= '</div>';
 
@@ -737,7 +737,7 @@ class CAF_PRO_Builder_Renderer {
 	 * @return string
 	 */
 	protected function render_loader_placeholder() {
-		$misc_renderer = new CAF_PRO_Builder_Misc_Renderer(
+		$misc_renderer = new CAF_Builder_Misc_Renderer(
 			$this->data_handler,
 			$this->css_builder,
 			$this->query_builder,
@@ -762,7 +762,7 @@ class CAF_PRO_Builder_Renderer {
 		$query_args   = $this->query_builder->get_query_args();
 		$current_page = isset( $query_args['paged'] ) ? (int) $query_args['paged'] : 1;
 
-		$pagination_renderer = new CAF_PRO_Builder_Pagination_Renderer(
+		$pagination_renderer = new CAF_Builder_Pagination_Renderer(
 			$this->data_handler,
 			$this->css_builder,
 			$this->style_generator,

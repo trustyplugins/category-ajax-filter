@@ -2,7 +2,7 @@
 /**
  * AJAX performance helpers for the builder frontend.
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * In-request caches, object cache, and lightweight AJAX optimizations.
  */
-class CAF_PRO_Builder_Ajax_Performance {
+class CAF_Builder_Ajax_Performance {
 
 	const CACHE_GROUP = 'caf_builder';
 
@@ -182,10 +182,10 @@ class CAF_PRO_Builder_Ajax_Performance {
 	/**
 	 * Whether WP_Query should calculate found rows for this layout.
 	 *
-	 * @param CAF_PRO_Builder_Data $data_handler Builder data handler.
+	 * @param CAF_Builder_Data $data_handler Builder data handler.
 	 * @return bool
 	 */
-	public static function query_needs_found_rows( CAF_PRO_Builder_Data $data_handler ) {
+	public static function query_needs_found_rows( CAF_Builder_Data $data_handler ) {
 		$pagination_item = $data_handler->get_misc_pagination();
 		if (
 			! empty( $pagination_item )

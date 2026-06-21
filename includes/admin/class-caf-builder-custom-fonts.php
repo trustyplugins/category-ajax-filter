@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAF_PRO_Builder_Custom_Fonts {
+class CAF_Builder_Custom_Fonts {
 
 	const OPTION_KEY = 'caf_builder_custom_fonts';
 

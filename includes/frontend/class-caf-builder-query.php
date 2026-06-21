@@ -2,19 +2,19 @@
 /**
  * Frontend Builder Query Handler
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAF_PRO_Builder_Query {
+class CAF_Builder_Query {
 
 	/**
 	 * Builder data handler instance.
 	 *
-	 * @var CAF_PRO_Builder_Data
+	 * @var CAF_Builder_Data
 	 */
 	protected $data_handler;
 
@@ -28,9 +28,9 @@ class CAF_PRO_Builder_Query {
 	/**
 	 * Constructor.
 	 *
-	 * @param CAF_PRO_Builder_Data $data_handler Builder data handler.
+	 * @param CAF_Builder_Data $data_handler Builder data handler.
 	 */
-	public function __construct( CAF_PRO_Builder_Data $data_handler ) {
+	public function __construct( CAF_Builder_Data $data_handler ) {
 		$this->data_handler = $data_handler;
 	}
 
@@ -253,7 +253,7 @@ class CAF_PRO_Builder_Query {
 	 * @return bool
 	 */
 	protected function should_log_page_load_debug() {
-		if ( defined( 'CAF_PRO_DEBUG_PAGE_LOAD' ) && CAF_PRO_DEBUG_PAGE_LOAD ) {
+		if ( defined( 'CAF_BUILDER_DEBUG_PAGE_LOAD' ) && CAF_BUILDER_DEBUG_PAGE_LOAD ) {
 			return true;
 		}
 		if ( apply_filters( 'caf_pro_debug_page_load_query', false, $this->get_hook_context( array( 'mode' => 'page_load' ) ) ) ) {

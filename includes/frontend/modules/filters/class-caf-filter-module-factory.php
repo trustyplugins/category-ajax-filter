@@ -2,14 +2,14 @@
 /**
  * Frontend Builder Filter Module Factory
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAF_PRO_Filter_Module_Factory {
+class CAF_Filter_Module_Factory {
 
 	/**
 	 * Create filter module instance.
@@ -18,8 +18,8 @@ class CAF_PRO_Filter_Module_Factory {
 	 * @param int                             $row_key         Row key.
 	 * @param int                             $column_key      Column key.
 	 * @param int                             $module_key      Module key.
-	 * @param CAF_PRO_Builder_Css             $css_builder     CSS builder.
-	 * @param CAF_PRO_Builder_Style_Generator $style_generator       Style generator.
+	 * @param CAF_Builder_Css             $css_builder     CSS builder.
+	 * @param CAF_Builder_Style_Generator $style_generator       Style generator.
 	 * @param string                          $instance_css_prefix Optional instance scope (e.g. ".caf-builder-instance-1").
 	 * @return object|null
 	 */
@@ -28,15 +28,15 @@ class CAF_PRO_Filter_Module_Factory {
 		$row_key,
 		$column_key,
 		$module_key,
-		CAF_PRO_Builder_Css $css_builder,
-		CAF_PRO_Builder_Style_Generator $style_generator,
+		CAF_Builder_Css $css_builder,
+		CAF_Builder_Style_Generator $style_generator,
 		$instance_css_prefix = ''
 	) {
 		$module_type = isset( $module->key ) ? sanitize_key( $module->key ) : '';
 
 		switch ( $module_type ) {
 			case 'search':
-				return new CAF_PRO_Filter_Search_Module(
+				return new CAF_Filter_Search_Module(
 					$module,
 					$row_key,
 					$column_key,
@@ -47,7 +47,7 @@ class CAF_PRO_Filter_Module_Factory {
 				);
 
 			case 'reset':
-				return new CAF_PRO_Filter_Reset_Module(
+				return new CAF_Filter_Reset_Module(
 					$module,
 					$row_key,
 					$column_key,
@@ -57,7 +57,7 @@ class CAF_PRO_Filter_Module_Factory {
 					$instance_css_prefix
 				);
 			case 'checkbox_filter':
-				return new CAF_PRO_Filter_Checkbox_Module(
+				return new CAF_Filter_Checkbox_Module(
 					$module,
 					$row_key,
 					$column_key,
@@ -67,7 +67,7 @@ class CAF_PRO_Filter_Module_Factory {
 					$instance_css_prefix
 				);
 			case 'dropdown_filter':
-				return new CAF_PRO_Filter_Dropdown_Module(
+				return new CAF_Filter_Dropdown_Module(
 					$module,
 					$row_key,
 					$column_key,

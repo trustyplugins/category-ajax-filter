@@ -2,14 +2,14 @@
 /**
  * Frontend Builder Font Loader
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAF_PRO_Builder_Font_Loader {
+class CAF_Builder_Font_Loader {
 
 	/**
 	 * Enqueued fonts.
@@ -37,16 +37,16 @@ class CAF_PRO_Builder_Font_Loader {
 
 		$custom_css_url = '';
 		if ( ! class_exists( 'CAF_Builder_Tier' ) || CAF_Builder_Tier::can_use_feature( 'custom_fonts' ) ) {
-			if ( ! class_exists( 'CAF_PRO_Builder_Custom_Fonts' ) ) {
+			if ( ! class_exists( 'CAF_Builder_Custom_Fonts' ) ) {
 				$custom_fonts_file = defined( 'TC_CAF_PATH' )
-					? TC_CAF_PATH . 'includes/admin/class-caf-pro-builder-custom-fonts.php'
+					? TC_CAF_PATH . 'includes/admin/class-caf-builder-custom-fonts.php'
 					: '';
 				if ( $custom_fonts_file && file_exists( $custom_fonts_file ) ) {
 					require_once $custom_fonts_file;
 				}
 			}
-			if ( class_exists( 'CAF_PRO_Builder_Custom_Fonts' ) ) {
-				$custom_css_url = CAF_PRO_Builder_Custom_Fonts::get_css_url_for_family( $font_family );
+			if ( class_exists( 'CAF_Builder_Custom_Fonts' ) ) {
+				$custom_css_url = CAF_Builder_Custom_Fonts::get_css_url_for_family( $font_family );
 			}
 		}
 

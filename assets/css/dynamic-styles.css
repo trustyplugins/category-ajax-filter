@@ -446,29 +446,16 @@ ul.caf-builder-template-preview-selected-tags-container {
     align-items: center;
 }
 
-.caf-builder-preview-pagination .load-more-pagination .load-more-btn {
-    cursor: pointer;
-    
-}
-
 .caf-builder-container .caf-builder-preview-pagination-container .caf-builder-preview-prev-btn,
 .caf-builder-container .caf-builder-preview-pages span.caf-builder-preview-page-no,
 .caf-builder-container .caf-builder-preview-pagination-container .caf-builder-preview-next-btn,
 .caf-builder-container .caf-builder-preview-pagination-container span.caf-builder-preview-page-no,
 .caf-builder-container .caf-builder-preview-pagination .caf-builder-preview-prev-btn,
 .caf-builder-container .caf-builder-preview-pagination .caf-builder-preview-next-btn,
-.caf-builder-container .caf-builder-preview-pagination .caf-builder-preview-page-no,
-.caf-builder-preview-pagination .caf-builder-preview-load-more-btn {
+.caf-builder-container .caf-builder-preview-pagination .caf-builder-preview-page-no {
     cursor: pointer;
     display: flex;
     gap: 5px;
-    justify-content: center;
-    align-items: center;
-}
-
-.caf-builder-container .caf-builder-preview-pagination-container .caf-builder-preview-load-more-btn,
-.caf-builder-container .load-more-pagination .load-more-btn {
-    display: flex;
     justify-content: center;
     align-items: center;
 }
@@ -748,161 +735,6 @@ span.clear-icon.on-type {
     top: -2px;
     position: relative;
 }
-.caf-builder-template-preview-sorting-container .caf-custom-dropdown-wrapper {
-    position: relative;
-    width: auto;
-    cursor: pointer;
-}
-.caf-builder-template-preview-sorting-container .caf-dropdown-opt-list {
-    display: none;
-    position: absolute;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    z-index: 999;
-}
-.caf-custom-dropdown-wrapper .caf-dropdown-opt-list {
-    display: none;
-}
-
-.caf-custom-dropdown-wrapper.active .caf-dropdown-opt-list {
-    display: block;
-}
-.caf-dropdown-opt-list {
-    display: none;
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: all 0.2s ease;
-    pointer-events: none;
-}
-
-.caf-custom-dropdown-wrapper.active .caf-dropdown-opt-list {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
-.caf-builder-template-preview-sorting-container .caf-dropdown-arrow i {
-    font-family: "Font Awesome 5 Free", FontAwesome;
-    font-style: inherit;
-    font-weight: 900;
-}
-
-/* .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-filter-module-search-output.toggle_closed{
-display: none ;
-} */
-.caf-range-slider-output {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.caf-range-slider-output .caf-range-slider-ui-wrapper {
-    width: 100%;
-    box-sizing: border-box;
-}
-.caf-range-slider-output .ui-slider-vertical {
-    width: 16px;
-    height: 130px;
-    min-height: 130px;
-}
-/* Vertical single (range min/max): jQuery sets height only; anchor like jQuery UI base slider.css */
-.caf-range-slider-output .ui-slider-vertical .ui-slider-range-min {
-    bottom: 0;
-    top: auto;
-}
-.caf-range-slider-output .ui-slider-vertical .ui-slider-range-max {
-    top: 0;
-    bottom: auto;
-}
-.caf-range-slider-ui.ui-slider-horizontal .ui-slider-range.ui-widget-header {
-position: absolute;
-height: 100%;
-}
-.caf-range-slider-ui.ui-slider-vertical .ui-slider-range.ui-widget-header {
-    position: absolute;
-    }
-
-/* Floating filter frontend */
-.caf-builder-container.floating .caf-builder-template-preview-filter,
-.caf-builder-preview-template-container.floating .caf-builder-template-preview-filter {
-    position: fixed;
-    z-index:9999999;
-    box-sizing: border-box;
-    transition: transform 0.35s ease;
-}
-.caf-builder-container.floating .caf-builder-template-preview-filter.slide-right-left,
-.caf-builder-preview-template-container.floating .caf-builder-template-preview-filter.slide-right-left {
-    right: 0;
-    top: 10px;
-    transform: translateX(100%);
-}
-.caf-builder-container.floating .caf-builder-template-preview-filter.slide-left-right,
-.caf-builder-preview-template-container.floating .caf-builder-template-preview-filter.slide-left-right {
-    left: 0;
-    top: 10px;
-    transform: translateX(-100%);
-}
-.caf-builder-container.floating .caf-builder-template-preview-filter.slide-top-bottom,
-.caf-builder-preview-template-container.floating .caf-builder-template-preview-filter.slide-top-bottom {
-    left: 0;
-    top: 0;
-    transform: translateY(-100%);
-}
-.caf-builder-container.floating .caf-builder-template-preview-filter.slide-bottom-top,
-.caf-builder-preview-template-container.floating .caf-builder-template-preview-filter.slide-bottom-top {
-    left: 0;
-    bottom: 0;
-    transform: translateY(100%);
-}
-.caf-builder-container.floating .caf-builder-template-preview-filter.filter-open,
-.caf-builder-preview-template-container.floating .caf-builder-template-preview-filter.filter-open {
-    transform: translate(0, 0);
-}
-.caf-builder-container .caf-builder-template-preview-filter-floating .caf-filter-slide-button {
-    cursor: pointer;
-    box-sizing: border-box;
-    border: 1px solid #000;
-    color: inherit;
-    background-color: buttonface;
-}
-.caf-builder-container .caf-builder-template-preview-filter-floating .caf-filter-slide-button i {
-    line-height: 1;
-}
-.caf-builder-container .caf-builder-template-preview-filter-floating .caf-filter-slide-button.has-float-icon:not(.has-float-text) {
-    min-width: 40px;
-    min-height: 40px;
-}
-.caf-builder-container .caf-builder-template-preview-filter-floating .caf-floating-filter-button-text {
-    display: inline-block;
-}
-.caf-builder-container .caf-builder-filter-close {
-    right: 5px;
-    position: absolute;
-    top: 5px;
-    border-radius: 15px;
-    width: 30px;
-    height: 30px;
-    border: 1px solid #ddd;
-    color: #333;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 999999999;
-    padding: 0;
-    background-color: buttonface;
-}
-.caf-builder-container .caf-builder-filter-post-overlay {
-    display: none;
-}
-.caf-builder-container .caf-builder-filter-post-overlay.filter-open {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 9998;
-    backdrop-filter: blur(4px);
-}
-
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.toggle_closed {
     display: none;
 }

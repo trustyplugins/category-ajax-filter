@@ -5,27 +5,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Frontend Builder Pagination Renderer
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
-class CAF_PRO_Builder_Pagination_Renderer {
+class CAF_Builder_Pagination_Renderer {
 
 	/**
 	 * Builder data handler.
 	 *
-	 * @var CAF_PRO_Builder_Data
+	 * @var CAF_Builder_Data
 	 */
 	protected $data_handler;
 
 	/**
 	 * Builder CSS collector.
 	 *
-	 * @var CAF_PRO_Builder_Css
+	 * @var CAF_Builder_Css
 	 */
 	protected $css_builder;
 	/**
 	 * Style generator instance.
 	 *
-	 * @var CAF_PRO_Builder_Style_Generator
+	 * @var CAF_Builder_Style_Generator
 	 */
 	protected $style_generator;
 	/**
@@ -51,16 +51,16 @@ class CAF_PRO_Builder_Pagination_Renderer {
 	/**
 	 * Constructor.
 	 *
-	 * @param CAF_PRO_Builder_Data            $data_handler    Data handler.
-	 * @param CAF_PRO_Builder_Css             $css_builder     CSS builder.
-	 * @param CAF_PRO_Builder_Style_Generator $style_generator Style generator.
+	 * @param CAF_Builder_Data            $data_handler    Data handler.
+	 * @param CAF_Builder_Css             $css_builder     CSS builder.
+	 * @param CAF_Builder_Style_Generator $style_generator Style generator.
 	 * @param WP_Query                        $query           Query object.
 	 * @param int                             $current_page    Current page (1-based).
 	 */
 	public function __construct(
-		CAF_PRO_Builder_Data $data_handler,
-		CAF_PRO_Builder_Css $css_builder,
-		CAF_PRO_Builder_Style_Generator $style_generator,
+		CAF_Builder_Data $data_handler,
+		CAF_Builder_Css $css_builder,
+		CAF_Builder_Style_Generator $style_generator,
 		WP_Query $query,
 		int $current_page = 1,
 		$pagination_item_override = null
@@ -295,7 +295,7 @@ class CAF_PRO_Builder_Pagination_Renderer {
 		$config = $this->get_pagination_setting( $pagination_data, 'prev' === $direction ? 'prev' : 'next' );
 
 		if ( empty( $config ) || ! is_object( $config ) ) {
-			return esc_html( 'prev' === $direction ? __( 'Previous', 'tc-caf-pro' ) : __( 'Next', 'tc-caf-pro' ) );
+			return esc_html( 'prev' === $direction ? __( 'Previous', 'category-ajax-filter' ) : __( 'Next', 'category-ajax-filter' ) );
 		}
 
 		$type = isset( $config->type ) ? (string) $config->type : 'text';
@@ -311,7 +311,7 @@ class CAF_PRO_Builder_Pagination_Renderer {
 			return $this->render_pagination_icon_markup( $icon_data );
 		}
 
-		$fallback = 'prev' === $direction ? __( 'Previous', 'tc-caf-pro' ) : __( 'Next', 'tc-caf-pro' );
+		$fallback = 'prev' === $direction ? __( 'Previous', 'category-ajax-filter' ) : __( 'Next', 'category-ajax-filter' );
 		$text     = ! empty( $config->text ) ? (string) $config->text : $fallback;
 
 		return esc_html( $text );

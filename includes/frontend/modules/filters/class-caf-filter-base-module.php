@@ -2,14 +2,14 @@
 /**
  * Frontend Builder Base Filter Module
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-abstract class CAF_PRO_Filter_Base_Module {
+abstract class CAF_Filter_Base_Module {
 
 	/**
 	 * Module object.
@@ -42,14 +42,14 @@ abstract class CAF_PRO_Filter_Base_Module {
 	/**
 	 * CSS builder.
 	 *
-	 * @var CAF_PRO_Builder_Css
+	 * @var CAF_Builder_Css
 	 */
 	protected $css_builder;
 
 	/**
 	 * Style generator.
 	 *
-	 * @var CAF_PRO_Builder_Style_Generator
+	 * @var CAF_Builder_Style_Generator
 	 */
 	protected $style_generator;
 	/**
@@ -71,8 +71,8 @@ abstract class CAF_PRO_Filter_Base_Module {
 	 * @param int                             $row_key             Row key.
 	 * @param int                             $column_key          Column key.
 	 * @param int                             $module_key          Module key.
-	 * @param CAF_PRO_Builder_Css             $css_builder         CSS builder.
-	 * @param CAF_PRO_Builder_Style_Generator $style_generator     Style generator.
+	 * @param CAF_Builder_Css             $css_builder         CSS builder.
+	 * @param CAF_Builder_Style_Generator $style_generator     Style generator.
 	 * @param string                          $instance_css_prefix Optional. Prepended to filter selectors for instance scoping.
 	 */
 	public function __construct(
@@ -80,8 +80,8 @@ abstract class CAF_PRO_Filter_Base_Module {
 		$row_key,
 		$column_key,
 		$module_key,
-		CAF_PRO_Builder_Css $css_builder,
-		CAF_PRO_Builder_Style_Generator $style_generator,
+		CAF_Builder_Css $css_builder,
+		CAF_Builder_Style_Generator $style_generator,
 		$instance_css_prefix = ''
 	) {
 		$this->module          = $module;
@@ -268,7 +268,7 @@ abstract class CAF_PRO_Filter_Base_Module {
 			array( 'allowed_properties' => $layout_properties )
 		);
 
-		$label_text = ! empty( $settings->label->value ) ? $settings->label->value : __( 'Label', 'tc-caf-pro' );
+		$label_text = ! empty( $settings->label->value ) ? $settings->label->value : __( 'Label', 'category-ajax-filter' );
 		$icon_data  = isset( $settings->label->icons ) ? $settings->label->icons : null;
 		$icon_pos   = isset( $icon_data->position ) ? (string) $icon_data->position : 'before-label';
 		$show_icon  = $this->is_truthy( isset( $icon_data->visibility ) ? $icon_data->visibility : false );

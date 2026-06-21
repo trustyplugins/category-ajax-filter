@@ -1,5 +1,5 @@
 <?php
-require_once TC_CAF_PATH . 'includes/admin/class-caf-pro-builder-custom-fonts.php';
+require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-custom-fonts.php';
 require_once TC_CAF_PATH . 'includes/builder/class-caf-builder-tier.php';
 // add_action('admin_menu', 'caf_builder_admin_page');
 add_action( 'wp_ajax_get_caf_builder_posts', 'get_caf_builder_posts' );
@@ -400,103 +400,11 @@ function caf_builder_apply_keyword_source_search( $search, $wp_query ) {
  
 	return $search_sql;
 }
-// function get_caf_builder_posts() {
-// if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'tc_caf_ajax_nonce' ) ) {
-// wp_send_json_error(
-// array(
-// 'message' => esc_html__( 'Security check failed.', 'tc-caf-pro' ),
-// )
-// );
-// }
-// $args       = isset( $_POST['params'] ) && is_array( $_POST['params'] ) ? $_POST['params'] : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-// $shortindex = isset( $_POST['caf_index'] ) ? absint( $_POST['caf_index'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-// if ( empty( $args ) || empty( $shortindex ) ) {
-// wp_send_json_error(
-// array(
-// 'message' => esc_html__( 'Invalid request.', 'tc-caf-pro' ),
-// )
-// );
-// }
-// $savedlayouts = get_option( 'caf_builder_layouts_list' );
-// if ( ! is_array( $savedlayouts ) || ! isset( $savedlayouts[ $shortindex ] ) ) {
-// wp_send_json_error(
-// array(
-// 'message' => esc_html__( 'Layout does not exist.', 'tc-caf-pro' ),
-// )
-// );
-// }
-// $layout_data   = $savedlayouts[ $shortindex ];
-// $optionkey     = isset( $layout_data['key'] ) ? $layout_data['key'] : '';
-// $layout_status = isset( $layout_data['post_status'] ) ? $layout_data['post_status'] : '';
-// if ( '' === $optionkey ) {
-// wp_send_json_error(
-// array(
-// 'message' => esc_html__( 'Invalid layout configuration.', 'tc-caf-pro' ),
-// )
-// );
-// }
-// if ( 'publish' !== $layout_status ) {
-// wp_send_json_error(
-// array(
-// 'message' => esc_html__( 'Layout is not published.', 'tc-caf-pro' ),
-// )
-// );
-// }
-// $builder_data = get_option( 'caf_' . $optionkey . '_' . $shortindex );
-// if ( empty( $builder_data ) ) {
-// wp_send_json_error(
-// array(
-// 'message' => esc_html__( 'Builder data does not exist.', 'tc-caf-pro' ),
-// )
-// );
-// }
-// $args  = clean_query_args( $args );
-// $query = new WP_Query( $args );
-// echo load_builder_ajax_dependencies();
-// $data_handler    = new CAF_PRO_Builder_Data( $builder_data, $shortindex );
-// $css_builder     = new CAF_PRO_Builder_Css();
-// $style_generator = new CAF_PRO_Builder_Style_Generator();
-// $query_builder   = new CAF_PRO_Builder_Query( $data_handler );
-// $posts_per_page = isset( $args['posts_per_page'] ) ? absint( $args['posts_per_page'] ) : 10;
-// $current_page   = isset( $args['paged'] ) ? absint( $args['paged'] ) : 1;
-// $post_renderer = new CAF_PRO_Builder_Post_Renderer(
-// $data_handler,
-// $css_builder,
-// $query,
-// $style_generator
-// );
-// $pagination_renderer = new CAF_PRO_Builder_Pagination_Renderer(
-// $data_handler,
-// $css_builder,
-// $query,
-// $current_page,
-// $style_generator
-// );
-// $misc_renderer = new CAF_PRO_Builder_Misc_Renderer(
-// $data_handler,
-// $css_builder,
-// $query_builder,
-// $style_generator
-// );
-// wp_send_json_success(
-// array(
-// 'posts_data'        => $post_renderer->render(),
-// 'pagination_data'   => $pagination_renderer->render(),
-// 'result_count_data' => $misc_renderer->render_result_count(
-// $posts_per_page,
-// $current_page,
-// (int) $query->found_posts
-// ),
-// 'dynamic_css'       => $css_builder->get_unique_css(),
-// 'message'           => esc_html__( 'Data fetched successfully.', 'tc-caf-pro' ),
-// )
-// );
-// }
 function get_caf_builder_posts() {
 	if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'tc_caf_ajax_nonce' ) ) {
 		wp_send_json_error(
 			array(
-				'message' => esc_html__( 'Security check failed.', 'tc-caf-pro' ),
+				'message' => esc_html__( 'Security check failed.', 'category-ajax-filter' ),
 			)
 		);
 	}
@@ -508,22 +416,22 @@ function get_caf_builder_posts() {
 	if ( empty( $args ) ) {
 		wp_send_json_error(
 			array(
-				'message' => esc_html__( 'Invalid request.', 'tc-caf-pro' ),
+				'message' => esc_html__( 'Invalid request.', 'category-ajax-filter' ),
 			)
 		);
 	}
 	load_builder_ajax_dependencies();
-	$layout_bundle = CAF_PRO_Builder_Ajax_Performance::get_layout_bundle( $shortindex );
+	$layout_bundle = CAF_Builder_Ajax_Performance::get_layout_bundle( $shortindex );
 	if ( empty( $layout_bundle ) ) {
 		wp_send_json_error(
 			array(
-				'message' => esc_html__( 'Layout does not exist or is not published.', 'tc-caf-pro' ),
+				'message' => esc_html__( 'Layout does not exist or is not published.', 'category-ajax-filter' ),
 			)
 		);
 	}
 	$builder_data = $layout_bundle['builder_data'];
 	$args         = clean_query_args( $args );
-	$data_handler = new CAF_PRO_Builder_Data( $builder_data, $shortindex );
+	$data_handler = new CAF_Builder_Data( $builder_data, $shortindex );
 	$args         = $data_handler->strip_placeholder_sort_from_query_args( $args );
 	$args         = apply_filters(
 		'caf_builder_ajax_query_args',
@@ -536,21 +444,21 @@ function get_caf_builder_posts() {
 		)
 	);
 	$args = caf_builder_validate_query_args( $args );
-	if ( ! CAF_PRO_Builder_Ajax_Performance::query_needs_found_rows( $data_handler ) ) {
+	if ( ! CAF_Builder_Ajax_Performance::query_needs_found_rows( $data_handler ) ) {
 		$args['no_found_rows'] = true;
 	}
 	$query             = new WP_Query( $args );
-	$css_builder       = new CAF_PRO_Builder_Css();
-	$style_generator   = new CAF_PRO_Builder_Style_Generator();
-	$query_builder     = new CAF_PRO_Builder_Query( $data_handler );
+	$css_builder       = new CAF_Builder_Css();
+	$style_generator   = new CAF_Builder_Style_Generator();
+	$query_builder     = new CAF_Builder_Query( $data_handler );
 	$query_builder->set_query_args( $args );
-	$post_renderer     = new CAF_PRO_Builder_Post_Renderer(
+	$post_renderer     = new CAF_Builder_Post_Renderer(
 		$data_handler,
 		$css_builder,
 		$query,
 		$style_generator
 	);
-	$builder_renderer  = new CAF_PRO_Builder_Renderer(
+	$builder_renderer  = new CAF_Builder_Renderer(
 		$data_handler,
 		$query_builder,
 		$css_builder,
@@ -559,7 +467,7 @@ function get_caf_builder_posts() {
 	$post_count_per_page = isset( $args['posts_per_page'] ) ? absint( $args['posts_per_page'] ) : 10;
 	$current_page        = isset( $args['paged'] ) ? absint( $args['paged'] ) : 1;
 	$found_posts           = (int) $query->found_posts;
-	$response_mode         = CAF_PRO_Builder_Ajax_Performance::normalize_response_mode( $response_mode );
+	$response_mode         = CAF_Builder_Ajax_Performance::normalize_response_mode( $response_mode );
 	$skip_css_collection   = ( 'posts' === $response_mode );
 
 	if ( $skip_css_collection ) {
@@ -582,13 +490,13 @@ function get_caf_builder_posts() {
 			$selected_filters
 		);
 	if ( $skip_css_collection ) {
-		$css_payload      = CAF_PRO_Builder_Ajax_Performance::resolve_ajax_css_payload( $shortindex, $client_css_hash );
+		$css_payload      = CAF_Builder_Ajax_Performance::resolve_ajax_css_payload( $shortindex, $client_css_hash );
 		$dynamic_css      = $css_payload['css'];
 		$dynamic_css_hash = $css_payload['hash'];
 	} else {
 		$dynamic_css      = $css_builder->get_unique_css();
-		$dynamic_css_hash = CAF_PRO_Builder_Ajax_Performance::get_dynamic_css_hash( $dynamic_css );
-		CAF_PRO_Builder_Ajax_Performance::set_layout_css_snapshot( $shortindex, $dynamic_css );
+		$dynamic_css_hash = CAF_Builder_Ajax_Performance::get_dynamic_css_hash( $dynamic_css );
+		CAF_Builder_Ajax_Performance::set_layout_css_snapshot( $shortindex, $dynamic_css );
 	}
 
 	$response = array(
@@ -596,7 +504,7 @@ function get_caf_builder_posts() {
 		'dynamic_css_hash' => $dynamic_css_hash,
 		'found_posts'      => $found_posts,
 		'response_mode'    => $response_mode,
-		'message'          => esc_html__( 'Data fetched successfully.', 'tc-caf-pro' ),
+		'message'          => esc_html__( 'Data fetched successfully.', 'category-ajax-filter' ),
 	) + $zones;
 
 	if ( '' !== $dynamic_css && ( $skip_css_collection || '' === $client_css_hash || $client_css_hash !== $dynamic_css_hash ) ) {
@@ -626,23 +534,23 @@ function get_caf_builder_posts() {
  */
 function load_builder_ajax_dependencies() {
 	$base = TC_CAF_PATH . 'includes/frontend/';
-	require_once $base . 'class-caf-pro-builder-ajax-performance.php';
-	require_once $base . 'class-caf-pro-builder-data.php';
-	require_once $base . 'class-caf-pro-builder-css.php';
-	require_once $base . 'class-caf-pro-builder-style-generator.php';
-	require_once $base . 'class-caf-pro-builder-query.php';
-	require_once $base . 'modules/filters/class-caf-pro-filter-base-module.php';
-	require_once $base . 'modules/filters/class-caf-pro-filter-search-module.php';
-	require_once $base . 'modules/filters/class-caf-pro-filter-reset-module.php';
-	require_once $base . 'modules/filters/class-caf-pro-filter-checkbox-module.php';
-	require_once $base . 'modules/filters/class-caf-pro-filter-dropdown-module.php';
-	require_once $base . 'modules/filters/class-caf-pro-filter-module-factory.php';
-	require_once $base . 'renderers/class-caf-pro-builder-filter-renderer.php';
-	require_once $base . 'renderers/class-caf-pro-builder-post-renderer.php';
-	require_once $base . 'renderers/class-caf-pro-builder-pagination-renderer.php';
-	require_once $base . 'renderers/class-caf-pro-builder-misc-renderer.php';
-	require_once $base . 'class-caf-pro-builder-framework.php';
-	require_once $base . 'class-caf-pro-builder-renderer.php';
+	require_once $base . 'class-caf-builder-ajax-performance.php';
+	require_once $base . 'class-caf-builder-data.php';
+	require_once $base . 'class-caf-builder-css.php';
+	require_once $base . 'class-caf-builder-style-generator.php';
+	require_once $base . 'class-caf-builder-query.php';
+	require_once $base . 'modules/filters/class-caf-filter-base-module.php';
+	require_once $base . 'modules/filters/class-caf-filter-search-module.php';
+	require_once $base . 'modules/filters/class-caf-filter-reset-module.php';
+	require_once $base . 'modules/filters/class-caf-filter-checkbox-module.php';
+	require_once $base . 'modules/filters/class-caf-filter-dropdown-module.php';
+	require_once $base . 'modules/filters/class-caf-filter-module-factory.php';
+	require_once $base . 'renderers/class-caf-builder-filter-renderer.php';
+	require_once $base . 'renderers/class-caf-builder-post-renderer.php';
+	require_once $base . 'renderers/class-caf-builder-pagination-renderer.php';
+	require_once $base . 'renderers/class-caf-builder-misc-renderer.php';
+	require_once $base . 'class-caf-builder-framework.php';
+	require_once $base . 'class-caf-builder-renderer.php';
 }
 /* Start Filter Layout Api Functions*/
 add_action( 'rest_api_init', 'caf_post_filter_init_fun' );
@@ -1131,13 +1039,13 @@ function caf_builder_layout_init_fun() {
 			},
 		)
 	);
-	if ( class_exists( 'CAF_Builder_Tier' ) && CAF_Builder_Tier::can_use_feature( 'custom_fonts' ) && class_exists( 'CAF_PRO_Builder_Custom_Fonts' ) ) {
+	if ( class_exists( 'CAF_Builder_Tier' ) && CAF_Builder_Tier::can_use_feature( 'custom_fonts' ) && class_exists( 'CAF_Builder_Custom_Fonts' ) ) {
 		register_rest_route(
 			'caf-custom-builder/v1',
 			'/custom-fonts/',
 			array(
 				'methods'             => 'GET',
-				'callback'            => array( 'CAF_PRO_Builder_Custom_Fonts', 'rest_list_fonts' ),
+				'callback'            => array( 'CAF_Builder_Custom_Fonts', 'rest_list_fonts' ),
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
 				},
@@ -1148,7 +1056,7 @@ function caf_builder_layout_init_fun() {
 			'/custom-fonts/',
 			array(
 				'methods'             => 'POST',
-				'callback'            => array( 'CAF_PRO_Builder_Custom_Fonts', 'rest_upload_font' ),
+				'callback'            => array( 'CAF_Builder_Custom_Fonts', 'rest_upload_font' ),
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
 				},
@@ -1166,7 +1074,7 @@ function caf_builder_layout_init_fun() {
 			'/custom-fonts/(?P<slug>[a-z0-9\-]+)',
 			array(
 				'methods'             => 'DELETE',
-				'callback'            => array( 'CAF_PRO_Builder_Custom_Fonts', 'rest_delete_font' ),
+				'callback'            => array( 'CAF_Builder_Custom_Fonts', 'rest_delete_font' ),
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
 				},
@@ -3562,11 +3470,11 @@ function caf_save_builder_layout_option( $data ) {
  * @return void
  */
 function caf_builder_invalidate_layout_cache( $shortindex ) {
-	if ( ! class_exists( 'CAF_PRO_Builder_Ajax_Performance' ) ) {
+	if ( ! class_exists( 'CAF_Builder_Ajax_Performance' ) ) {
 		return;
 	}
-	require_once TC_CAF_PATH . 'includes/frontend/class-caf-pro-builder-ajax-performance.php';
-	CAF_PRO_Builder_Ajax_Performance::invalidate_layout_cache( $shortindex );
+	require_once TC_CAF_PATH . 'includes/frontend/class-caf-builder-ajax-performance.php';
+	CAF_Builder_Ajax_Performance::invalidate_layout_cache( $shortindex );
 }
 function save_new_layout_list( $layout_name ) {
 	ob_start();

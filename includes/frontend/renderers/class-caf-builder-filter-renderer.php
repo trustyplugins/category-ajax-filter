@@ -2,42 +2,42 @@
 /**
  * Frontend Builder Filter Renderer
  *
- * @package TC_CAF_PRO
+ * @package Category_Ajax_Filter
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class CAF_PRO_Builder_Filter_Renderer {
+class CAF_Builder_Filter_Renderer {
 
 	/**
 	 * Builder data handler.
 	 *
-	 * @var CAF_PRO_Builder_Data
+	 * @var CAF_Builder_Data
 	 */
 	protected $data_handler;
 
 	/**
 	 * Builder CSS collector.
 	 *
-	 * @var CAF_PRO_Builder_Css
+	 * @var CAF_Builder_Css
 	 */
 	protected $css_builder;
 	/**
 	 * Style generator instance.
 	 *
-	 * @var CAF_PRO_Builder_Style_Generator
+	 * @var CAF_Builder_Style_Generator
 	 */
 	protected $style_generator;
 	/**
 	 * Constructor.
 	 *
-	 * @param CAF_PRO_Builder_Data            $data_handler    Builder data handler.
-	 * @param CAF_PRO_Builder_Css             $css_builder     CSS collector.
-	 * @param CAF_PRO_Builder_Style_Generator $style_generator Style generator.
+	 * @param CAF_Builder_Data            $data_handler    Builder data handler.
+	 * @param CAF_Builder_Css             $css_builder     CSS collector.
+	 * @param CAF_Builder_Style_Generator $style_generator Style generator.
 	 */
-	public function __construct( CAF_PRO_Builder_Data $data_handler, CAF_PRO_Builder_Css $css_builder, CAF_PRO_Builder_Style_Generator $style_generator ) {
+	public function __construct( CAF_Builder_Data $data_handler, CAF_Builder_Css $css_builder, CAF_Builder_Style_Generator $style_generator ) {
 		$this->data_handler    = $data_handler;
 		$this->css_builder     = $css_builder;
 		$this->style_generator = $style_generator;
@@ -220,7 +220,7 @@ class CAF_PRO_Builder_Filter_Renderer {
 	 */
 	protected function render_module_content( $module, $row_key, $column_key, $module_key ) {
 		$instance_css_prefix = $this->get_filter_layout_css_scope_prefix();
-		$module_instance     = CAF_PRO_Filter_Module_Factory::create(
+		$module_instance     = CAF_Filter_Module_Factory::create(
 			$module,
 			$row_key,
 			$column_key,
