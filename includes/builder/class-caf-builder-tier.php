@@ -95,6 +95,7 @@ class CAF_Builder_Tier {
 				'pagination_button',
 				'pagination_load_more',
 				'multiple_filters_per_page',
+				'gradient_colors',
 			),
 		);
 	}
