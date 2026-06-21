@@ -105,16 +105,8 @@ class CAF_PRO_Builder_Pagination_Renderer {
 			$html .= $this->render_number_pagination( $pagination_data, false );
 		}
 
-		if ( ! empty( $pagination_data->settings->pagination_type ) && 'load-more' === $pagination_data->settings->pagination_type ) {
-			$html .= $this->render_load_more_pagination( $pagination_data );
-		}
-
 		if ( ! empty( $pagination_data->settings->pagination_type ) && 'number2' === $pagination_data->settings->pagination_type ) {
 			$html .= $this->render_number_pagination( $pagination_data, true );
-		}
-
-		if ( ! empty( $pagination_data->settings->pagination_type ) && 'button' === $pagination_data->settings->pagination_type ) {
-			$html .= $this->render_button_pagination( $pagination_data );
 		}
 
 		$html .= '</div>';
@@ -293,52 +285,6 @@ class CAF_PRO_Builder_Pagination_Renderer {
 	}
 
 	/**
-	 * Render prev/next button pagination.
-	 *
-	 * @param object $pagination_data Pagination data.
-	 * @return string
-	 */
-	protected function render_button_pagination( $pagination_data ) {
-		$total_pages = max( 1, (int) $this->query->max_num_pages );
-		$style       = isset( $pagination_data->style ) ? $pagination_data->style : null;
-
-		if ( $total_pages <= 1 ) {
-			return '';
-		}
-
-		if ( ! empty( $style ) ) {
-			$this->collect_pagination_css(
-				$style->container,
-				'.caf-builder-container .caf-builder-preview-pagination-container'
-			);
-			$this->collect_pagination_css(
-				$style->meta,
-				'.caf-builder-container .caf-builder-preview-pagination .caf-builder-preview-prev-btn'
-			);
-			$this->collect_pagination_css(
-				$style->meta,
-				'.caf-builder-container .caf-builder-preview-pagination .caf-builder-preview-next-btn'
-			);
-		}
-
-		$html = '';
-
-		if ( $this->current_page > 1 ) {
-			$html .= '<div class="caf-builder-preview-prev-btn" type="prev">';
-			$html .= $this->render_pagination_button_content( $pagination_data, 'prev' );
-			$html .= '</div>';
-		}
-
-		if ( $this->current_page < $total_pages ) {
-			$html .= '<div class="caf-builder-preview-next-btn" type="next">';
-			$html .= $this->render_pagination_button_content( $pagination_data, 'next' );
-			$html .= '</div>';
-		}
-
-		return $html;
-	}
-
-	/**
 	 * Render pagination button inner content (text or icon).
 	 *
 	 * @param object $pagination_data Pagination data.
@@ -395,91 +341,6 @@ class CAF_PRO_Builder_Pagination_Renderer {
 		return '';
 	}
 
-	/**
-	 * Render load more pagination.
-	 *
-	 * @param object $pagination_data Pagination data.
-	 * @return string
-	 */
-	protected function render_load_more_pagination( $pagination_data ) {
-		if ( (int) $this->query->max_num_pages <= $this->current_page ) {
-			return '';
-		}
-
-		$style            = isset( $pagination_data->style ) ? $pagination_data->style : null;
-		$load_more_config = $this->get_pagination_setting( $pagination_data, 'load_more' );
-
-		if ( ! empty( $style ) ) {
-			$this->collect_pagination_css(
-				$style->container,
-				'.caf-builder-container .caf-builder-preview-pagination-container'
-			);
-			$this->collect_pagination_css(
-				$style->meta,
-				'.caf-builder-container .caf-builder-preview-pagination-container .caf-builder-preview-load-more-btn'
-			);
-		}
-
-		$button_text = ( ! empty( $load_more_config ) && ! empty( $load_more_config->text ) )
-			? (string) $load_more_config->text
-			: __( 'Load More', 'tc-caf-pro' );
-
-		$html  = '<div class="caf-builder-preview-load-more-btn" page="' . esc_attr( $this->current_page ) . '">';
-		$html .= '<span class="caf-load-more-btn-text">' . esc_html( $button_text ) . '</span>';
-
-		if (
-			! empty( $load_more_config )
-			&& ! empty( $load_more_config->icon_enable )
-			&& 'true' === (string) $load_more_config->icon_enable
-			&& ! empty( $load_more_config->icons )
-			&& is_object( $load_more_config->icons )
-		) {
-			$html .= $this->render_pagination_icon_markup( $load_more_config->icons );
-		}
-
-		$html .= '</div>';
-
-		return $html;
-	}
-
-	/**
-	 * Render input number pagination.
-	 *
-	 * @param object $pagination_data Pagination data.
-	 * @return string
-	 */
-	protected function render_input_number_pagination( $pagination_data ) {
-
-		$total_pages = max( 1, (int) $this->query->max_num_pages );
-		$style       = isset( $pagination_data->style ) ? $pagination_data->style : null;
-
-		if ( ! empty( $style ) ) {
-			$this->collect_pagination_css(
-				$style,
-				'.caf-builder-container .caf-builder-preview-pagination .caf-builder-preview-prev-btn.input-number'
-			);
-
-			$this->collect_pagination_css(
-				$style,
-				'.caf-builder-container .caf-builder-preview-pagination .caf-builder-preview-next-btn.input-number'
-			);
-		}
-
-		$html  = '<div class="caf-builder-preview-prev-btn input-number">';
-		$html .= '<span class="prev-btn">&lt;</span>';
-		$html .= '</div>';
-
-		$html .= '<div class="caf-builder-preview-input-number-main">';
-		$html .= '<input type="text" value="' . esc_attr( $this->current_page ) . '" class="caf-builder-preview-page-no-input" min="1" />';
-		$html .= '<span class="caf-builder-preview-total-page"> ' . esc_html__( 'of', 'tc-caf-pro' ) . ' ' . esc_html( $total_pages ) . '</span>';
-		$html .= '</div>';
-
-		$html .= '<div class="caf-builder-preview-next-btn input-number">';
-		$html .= '<span class="next-btn">&gt;</span>';
-		$html .= '</div>';
-
-		return $html;
-	}
 	/**
 	 * Whether a builder boolean flag is enabled.
 	 *

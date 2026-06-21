@@ -63,9 +63,7 @@ class CAF_PRO_Builder_Renderer {
 
 		$html  = $this->render_wrapper_open();
 		$html .= $this->render_container_css();
-		$html .= $this->render_floating_overlay();
 		$html .= $this->render_preview_layout_wrapper_open();
-		$html .= $this->render_floating_filter_toggle_button();
 
 		if ( $this->data_handler->has_filters() ) {
 			$html .= $this->render_filter_area( $query );
@@ -108,17 +106,7 @@ class CAF_PRO_Builder_Renderer {
 	 */
 	protected function render_wrapper_open() {
 		$attributes = $this->data_handler->get_wrapper_attributes();
-		if ( $this->is_filter_floating() ) {
-			$existing_class = isset( $attributes['class'] ) ? (string) $attributes['class'] : '';
-			$attributes['class'] = trim( $existing_class . ' floating' );
-		}
 		$attributes = apply_filters( 'caf_builder_wrapper_attributes', $attributes, $this->get_hook_context() );
-
-		if ( class_exists( 'CAF_PRO_Builder_Url_State' ) ) {
-			if ( CAF_PRO_Builder_Url_State::request_has_state( $this->data_handler->get_short_index() ) ) {
-				$attributes['data-caf-url-applied'] = '1';
-			}
-		}
 
 		$html = '<div ' . $this->build_html_attributes( $attributes ) . '>';
 		return apply_filters( 'caf_builder_wrapper_open_html', $html, $attributes, $this->get_hook_context() );
@@ -176,18 +164,9 @@ class CAF_PRO_Builder_Renderer {
 	 */
 	protected function render_preview_layout_wrapper_open() {
 		$classes   = array( 'caf-builder-preview-template-container' );
-		$position  = (string) $this->get_float_setting( 'filterPosition', 'inline' );
-		$is_float  = $this->is_filter_floating();
 		$container = $this->data_handler->get_misc_container_data();
 		$custom    = isset( $container->custom_class ) ? sanitize_html_class( $container->custom_class ) : '';
 
-		if ( '' !== $position ) {
-			$classes[] = sanitize_html_class( $position );
-		}
-
-		if ( $is_float ) {
-			$classes[] = 'floating';
-		}
 		if ( '' !== $custom ) {
 			$classes[] = $custom;
 		}
@@ -218,8 +197,6 @@ class CAF_PRO_Builder_Renderer {
 		$instance_class      = '.' . $this->data_handler->get_instance_class();
 		$custom_class        = ! empty( $filter_preview_data->custom_class ) ? sanitize_html_class( $filter_preview_data->custom_class ) : '';
 		$filter_area_class   = 'caf-builder-filter filter-layout-container';
-		$animation_type      = $this->get_float_setting( 'animationType', 'slide-right-left' );
-		$filter_position     = $this->get_float_setting( 'filterPosition', 'inline' );
 		$filter_style        = isset( $filter_preview_data->style ) ? $filter_preview_data->style : null;
 		$post_count_per_page = isset( $query_args['posts_per_page'] ) ? (int) $query_args['posts_per_page'] : 0;
 		$current_page        = isset( $query_args['paged'] ) ? (int) $query_args['paged'] : 1;
@@ -227,9 +204,6 @@ class CAF_PRO_Builder_Renderer {
 
 		if ( ! empty( $custom_class ) ) {
 			$filter_area_class .= ' ' . $custom_class;
-		}
-		if ( 'floating' === $filter_position ) {
-			$filter_area_class .= ' caf-builder-template-preview-filter filter-close ' . sanitize_html_class( $animation_type );
 		}
 
 		
@@ -284,9 +258,6 @@ class CAF_PRO_Builder_Renderer {
 		);
 
 		$html = '<div class="' . esc_attr( $filter_area_class ) . '">';
-		if ( 'floating' === $filter_position ) {
-			$html .= '<button class="caf-builder-filter-close" type="button" aria-label="' . esc_attr__( 'Close Filter', 'tc-caf-pro' ) . '">X</button>';
-		}
 
 		if ( '' !== $filter_top_html ) {
 			$html .= '<div class="' . esc_attr( $this->get_misc_zone_wrapper_class( 'caf-builder-template-preview-filter-top-wrapper', $filter_top_zone ) ) . '">';
@@ -305,188 +276,6 @@ class CAF_PRO_Builder_Renderer {
 		$html .= '</div>';
 
 		return apply_filters( 'caf_builder_filter_area_html', $html, $this->get_hook_context( array( 'query' => $query ) ) );
-	}
-
-	/**
-	 * Render floating-filter overlay.
-	 *
-	 * @return string
-	 */
-	protected function render_floating_overlay() {
-		if ( ! $this->is_filter_floating() ) {
-			return '';
-		}
-		$overlay = $this->get_float_setting( 'overlay', 'rgba(32, 31, 31, 0.624)' );
-		$style   = 'background-color:' . esc_attr( (string) $overlay ) . ';';
-		return '<div class="caf-builder-filter-post-overlay" style="' . $style . '"></div>';
-	}
-
-	/**
-	 * Render floating-filter toggle button.
-	 *
-	 * @return string
-	 */
-	protected function render_floating_filter_toggle_button() {
-		if ( ! $this->is_filter_floating() ) {
-			return '';
-		}
-
-		$this->collect_floating_filter_button_css();
-
-		$button_enabled = $this->to_bool( $this->get_float_setting( 'floatButton', true ) );
-		$icon_enabled   = $this->to_bool( $this->get_float_setting( 'floatIcon', false ) );
-		$button_text    = (string) $this->get_float_setting( 'floatButtonValue', __( 'Filter', 'tc-caf-pro' ) );
-		$icon_class     = (string) $this->get_float_setting( 'floatIconValue', '' );
-
-		if ( ! $button_enabled && ! $icon_enabled ) {
-			return '';
-		}
-
-		$button_classes = array( 'caf-filter-slide-button' );
-		if ( $icon_enabled ) {
-			$button_classes[] = 'has-float-icon';
-		}
-		if ( $button_enabled ) {
-			$button_classes[] = 'has-float-text';
-		}
-
-		$html  = '<div class="caf-builder-template-preview-filter-floating">';
-		$html .= '<button class="' . esc_attr( implode( ' ', $button_classes ) ) . '" type="button" aria-label="' . esc_attr__( 'Open Filter', 'tc-caf-pro' ) . '">';
-		if ( $icon_enabled && '' !== trim( $icon_class ) ) {
-			$html .= '<i class="' . esc_attr( $icon_class ) . '" aria-hidden="true"></i>';
-		}
-		if ( $button_enabled ) {
-			$html .= '<span class="caf-floating-filter-button-text">' . esc_html( $button_text ) . '</span>';
-		}
-		$html .= '</button>';
-		$html .= '</div>';
-
-		return $html;
-	}
-
-	/**
-	 * Collect floating trigger button CSS from float-button design settings.
-	 *
-	 * @return void
-	 */
-	protected function collect_floating_filter_button_css() {
-		$misc_data = $this->data_handler->get_misc_preview_data();
-		if ( empty( $misc_data ) || ! is_object( $misc_data ) ) {
-			return;
-		}
-
-		$float_button_style = null;
-		if ( isset( $misc_data->meta ) && is_object( $misc_data->meta ) ) {
-			$float_button_style = isset( $misc_data->meta->style ) && is_object( $misc_data->meta->style )
-				? $misc_data->meta->style
-				: $misc_data->meta;
-		}
-		if ( empty( $float_button_style ) ) {
-			return;
-		}
-
-		$instance_selector = '.' . $this->data_handler->get_instance_class();
-		$selector          = $instance_selector . ' .caf-builder-template-preview-filter-floating .caf-filter-slide-button';
-
-		$this->css_builder->add(
-			$this->style_generator->generate_responsive_css(
-				$float_button_style,
-				'default',
-				$selector,
-				array(
-					'background_image_mode' => 'always',
-				)
-			)
-		);
-
-		$this->css_builder->add(
-			$this->style_generator->generate_responsive_css(
-				$float_button_style,
-				'hover',
-				$selector . ':hover',
-				array(
-					'background_image_mode' => 'always',
-				)
-			)
-		);
-	}
-
-	/**
-	 * Check whether filter panel should render as floating.
-	 *
-	 * @return bool
-	 */
-	protected function is_filter_floating() {
-		return 'floating' === $this->get_float_setting( 'filterPosition', 'inline' );
-	}
-
-	/**
-	 * Resolve floating setting from misc preview extra data.
-	 *
-	 * @param string $key     Setting key.
-	 * @param mixed  $default Fallback value.
-	 * @return mixed
-	 */
-	protected function get_float_setting( $key, $default = null ) {
-		$misc_data = $this->data_handler->get_misc_preview_data();
-		if ( empty( $misc_data ) || ! is_object( $misc_data ) || empty( $misc_data->extra ) || ! is_object( $misc_data->extra ) ) {
-			return $default;
-		}
-
-		$extra         = $misc_data->extra;
-		$active_device = $this->get_active_frontend_device_key();
-
-		if ( isset( $extra->{$active_device} ) && is_object( $extra->{$active_device} ) && isset( $extra->{$active_device}->{$key} ) ) {
-			return $extra->{$active_device}->{$key};
-		}
-
-		if ( isset( $extra->desktop ) && is_object( $extra->desktop ) && isset( $extra->desktop->{$key} ) ) {
-			return $extra->desktop->{$key};
-		}
-
-		if ( isset( $extra->{$key} ) ) {
-			return $extra->{$key};
-		}
-
-		return $default;
-	}
-
-	/**
-	 * Resolve active frontend device key.
-	 *
-	 * @return string One of: desktop|tablet|mobile.
-	 */
-	protected function get_active_frontend_device_key() {
-		$user_agent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? strtolower( (string) wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '';
-
-		$is_tablet = false !== strpos( $user_agent, 'ipad' )
-			|| false !== strpos( $user_agent, 'tablet' )
-			|| false !== strpos( $user_agent, 'kindle' )
-			|| false !== strpos( $user_agent, 'silk' )
-			|| false !== strpos( $user_agent, 'playbook' );
-
-		if ( $is_tablet ) {
-			return 'tablet';
-		}
-
-		if ( wp_is_mobile() ) {
-			return 'mobile';
-		}
-
-		return 'desktop';
-	}
-
-	/**
-	 * Convert mixed builder value to bool.
-	 *
-	 * @param mixed $value Value to normalize.
-	 * @return bool
-	 */
-	protected function to_bool( $value ) {
-		if ( is_bool( $value ) ) {
-			return $value;
-		}
-		return in_array( strtolower( (string) $value ), array( '1', 'true', 'yes', 'on' ), true );
 	}
 
 	/**
@@ -550,16 +339,6 @@ class CAF_PRO_Builder_Renderer {
 		$html .= $post_renderer->render();
 		$html .= '</div>';
 
-		if ( class_exists( 'CAF_PRO_Builder_Seo' ) && CAF_PRO_Builder_Seo::is_enabled( $this->data_handler->get_short_index() ) ) {
-			$html .= CAF_PRO_Builder_Seo::render_itemlist_json_ld(
-				$query,
-				CAF_PRO_Builder_Seo::get_list_url(),
-				array(
-					'shortindex' => $this->data_handler->get_short_index(),
-				)
-			);
-		}
-
 		// Render draggable misc items assigned to post_bottom.
 
 		$post_bottom_html = $this->render_misc_zone(
@@ -619,6 +398,10 @@ class CAF_PRO_Builder_Renderer {
 			}
 			$is_enabled = isset( $item->settings->is_enable ) ? (string) $item->settings->is_enable : 'false';
 			if ( 'true' !== $is_enabled ) {
+				continue;
+			}
+
+			if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_render_misc_item( (string) $item->key ) ) {
 				continue;
 			}
 
@@ -754,21 +537,10 @@ class CAF_PRO_Builder_Renderer {
 	 */
 	public function render_misc_item( $item, $query, $post_count_per_page, $current_page, $found_posts, $selected_filters = array() ) {
 		$key = isset( $item->key ) ? $item->key : '';
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_render_misc_item( (string) $key ) ) {
+			return '';
+		}
 		switch ( $key ) {
-			case 'selected':
-				return $this->render_selected_filters_placeholder( $selected_filters, $item );
-
-			case 'result_count':
-				return $this->render_result_count_placeholder(
-					$post_count_per_page,
-					$current_page,
-					$found_posts,
-					$item
-				);
-
-			case 'sorting':
-				return $this->render_sorting_placeholder( $this->query_builder->get_query_args(), $item );
-
 			case 'pagination':
 				return $this->render_pagination_placeholder( $query, $item );
 
@@ -973,59 +745,6 @@ class CAF_PRO_Builder_Renderer {
 		);
 
 		return $misc_renderer->render_loader();
-	}
-
-	/**
-	 * Render selected filters placeholder.
-	 *
-	 * @param array $selected_filters Selected Tags.
-	 * @return string
-	 */
-	protected function render_selected_filters_placeholder( $selected_filters = array(), $selected_item = null ) {
-		$misc_renderer = new CAF_PRO_Builder_Misc_Renderer(
-			$this->data_handler,
-			$this->css_builder,
-			$this->query_builder,
-			$this->style_generator
-		);
-
-		return $misc_renderer->render_selected_filters( $selected_filters, $selected_item );
-	}
-
-	/**
-	 * Render result count placeholder.
-	 *
-	 * @param int $posts_per_page Posts per page.
-	 * @param int $current_page   Current page.
-	 * @param int $total_posts    Total found posts.
-	 * @return string
-	 */
-	protected function render_result_count_placeholder( $posts_per_page, $current_page, $total_posts, $result_count_item = null ) {
-		$misc_renderer = new CAF_PRO_Builder_Misc_Renderer(
-			$this->data_handler,
-			$this->css_builder,
-			$this->query_builder,
-			$this->style_generator
-		);
-
-		return $misc_renderer->render_result_count( $posts_per_page, $current_page, $total_posts, $result_count_item );
-	}
-
-	/**
-	 * Render sorting placeholder.
-	 *
-	 * @param array $query_args Query Arguments.
-	 * @return string
-	 */
-	protected function render_sorting_placeholder( $query_args = array(), $sorting_item = null ) {
-		$misc_renderer = new CAF_PRO_Builder_Misc_Renderer(
-			$this->data_handler,
-			$this->css_builder,
-			$this->query_builder,
-			$this->style_generator
-		);
-
-		return $misc_renderer->render_sorting( $query_args, $sorting_item );
 	}
 
 	/**

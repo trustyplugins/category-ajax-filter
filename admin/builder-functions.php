@@ -570,7 +570,6 @@ function get_caf_builder_posts() {
 	$post_count_per_page = isset( $args['posts_per_page'] ) ? absint( $args['posts_per_page'] ) : 10;
 	$current_page        = isset( $args['paged'] ) ? absint( $args['paged'] ) : 1;
 	$found_posts           = (int) $query->found_posts;
-	$schema_append         = ! empty( $_POST['schema_append'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	$response_mode         = CAF_PRO_Builder_Ajax_Performance::normalize_response_mode( $response_mode );
 	$skip_css_collection   = ( 'posts' === $response_mode );
 
@@ -611,16 +610,6 @@ function get_caf_builder_posts() {
 		'message'          => esc_html__( 'Data fetched successfully.', 'tc-caf-pro' ),
 	) + $zones;
 
-	if ( class_exists( 'CAF_PRO_Builder_Seo' ) && CAF_PRO_Builder_Seo::is_enabled( $shortindex ) ) {
-		$response['itemlist_json_ld'] = CAF_PRO_Builder_Seo::render_ajax_itemlist_json_ld(
-			$query,
-			$current_page,
-			$post_count_per_page,
-			$schema_append,
-			$shortindex
-		);
-	}
-
 	if ( '' !== $dynamic_css && ( $skip_css_collection || '' === $client_css_hash || $client_css_hash !== $dynamic_css_hash ) ) {
 		$response['dynamic_css'] = $dynamic_css;
 	}
@@ -651,7 +640,6 @@ function load_builder_ajax_dependencies() {
 	require_once $base . 'class-caf-pro-builder-ajax-performance.php';
 	require_once $base . 'class-caf-pro-builder-data.php';
 	require_once $base . 'class-caf-pro-builder-css.php';
-	require_once TC_CAF_PATH . 'includes/admin/class-caf-pro-builder-custom-fonts.php';
 	require_once $base . 'class-caf-pro-builder-style-generator.php';
 	require_once $base . 'class-caf-pro-builder-query.php';
 	require_once $base . 'modules/filters/class-caf-pro-filter-base-module.php';
@@ -659,7 +647,6 @@ function load_builder_ajax_dependencies() {
 	require_once $base . 'modules/filters/class-caf-pro-filter-reset-module.php';
 	require_once $base . 'modules/filters/class-caf-pro-filter-checkbox-module.php';
 	require_once $base . 'modules/filters/class-caf-pro-filter-dropdown-module.php';
-	require_once $base . 'modules/filters/class-caf-pro-filter-range-slider-module.php';
 	require_once $base . 'modules/filters/class-caf-pro-filter-module-factory.php';
 	require_once $base . 'renderers/class-caf-pro-builder-filter-renderer.php';
 	require_once $base . 'renderers/class-caf-pro-builder-post-renderer.php';
@@ -667,11 +654,6 @@ function load_builder_ajax_dependencies() {
 	require_once $base . 'renderers/class-caf-pro-builder-misc-renderer.php';
 	require_once $base . 'class-caf-pro-builder-framework.php';
 	require_once $base . 'class-caf-pro-builder-renderer.php';
-	$seo_file = $base . 'class-caf-pro-builder-seo.php';
-	if ( file_exists( $seo_file ) ) {
-		require_once $seo_file;
-	}
-	require_once $base . 'class-caf-pro-builder-url-state.php';
 }
 /* Start Filter Layout Api Functions*/
 add_action( 'rest_api_init', 'caf_post_filter_init_fun' );
@@ -3235,6 +3217,9 @@ function caf_clone_builder_layout( $request ) {
 			$baseLayoutData->common_data->layout_index   = $layout_key['index'];
 
 			update_option( $new_layout_key, $baseLayoutData );
+			if ( isset( $layout_key['index'] ) && is_numeric( $layout_key['index'] ) ) {
+				caf_builder_invalidate_layout_cache( (int) $layout_key['index'] );
+			}
 			echo json_encode(
 				array(
 					'status'  => 'success',

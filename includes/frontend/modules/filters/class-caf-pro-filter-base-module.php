@@ -228,10 +228,6 @@ abstract class CAF_PRO_Filter_Base_Module {
 	 * @return string
 	 */
 	protected function get_term_slug_attr( $taxonomy, $term_id ) {
-		if ( class_exists( 'CAF_PRO_Builder_Url_State' ) ) {
-			return CAF_PRO_Builder_Url_State::get_term_slug_for_url( $taxonomy, $term_id );
-		}
-
 		$term = get_term( (int) $term_id, sanitize_key( (string) $taxonomy ) );
 		if ( $term && ! is_wp_error( $term ) && ! empty( $term->slug ) ) {
 			return (string) $term->slug;

@@ -76,16 +76,6 @@ class CAF_PRO_Filter_Module_Factory {
 					$style_generator,
 					$instance_css_prefix
 				);
-			case 'range_slider':
-				return new CAF_PRO_Filter_Range_Slider_Module(
-					$module,
-					$row_key,
-					$column_key,
-					$module_key,
-					$css_builder,
-					$style_generator,
-					$instance_css_prefix
-				);
 
 			default:
 				return null;

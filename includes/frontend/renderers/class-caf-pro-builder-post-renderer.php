@@ -273,7 +273,11 @@ class CAF_PRO_Builder_Post_Renderer {
 			return '';
 		}
 
-		$module_type     = isset( $module->key ) ? sanitize_key( $module->key ) : 'unknown';
+		$module_type = isset( $module->key ) ? sanitize_key( $module->key ) : 'unknown';
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_post_module( $module_type ) ) {
+			return '';
+		}
+
 		$module_settings = isset( $module->settings ) ? $module->settings : new stdClass();
 		$module_settings = apply_filters(
 			'caf_builder_module_settings',

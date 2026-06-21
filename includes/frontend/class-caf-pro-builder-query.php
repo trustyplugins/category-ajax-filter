@@ -252,10 +252,6 @@ class CAF_PRO_Builder_Query {
 
 		$args = apply_filters( 'caf_builder_page_load_query_args', $args, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 
-		if ( class_exists( 'CAF_PRO_Builder_Url_State' ) ) {
-			$args = CAF_PRO_Builder_Url_State::apply_to_page_load_args( $args, $this->data_handler->get_short_index() );
-		}
-
 		if ( $this->should_log_page_load_debug() ) {
 			$this->log_page_load_debug(
 				array(
@@ -759,112 +755,11 @@ class CAF_PRO_Builder_Query {
 	}
 
 	/**
-	 * First custom_field_data row for range slider (array or object storage).
-	 *
-	 * @param object $module_settings Module settings.
-	 * @return object|null
-	 */
-	protected function get_range_slider_custom_field_row( $module_settings ) {
-		if ( empty( $module_settings->custom_field_data ) ) {
-			return null;
-		}
-		$data = $module_settings->custom_field_data;
-		if ( is_array( $data ) && ! empty( $data[0] ) && is_object( $data[0] ) ) {
-			return $data[0];
-		}
-		if ( is_object( $data ) ) {
-			return $data;
-		}
-		return null;
-	}
-
-	/**
-	 * Meta query for range_slider on initial page load (mirrors frontend collectRangeSliderMeta + module render).
-	 *
-	 * @param object $module_settings Module settings.
-	 * @return array
-	 */
-	protected function build_range_slider_meta_query_for_page_load( $module_settings ) {
-		$cf_row = $this->get_range_slider_custom_field_row( $module_settings );
-		if ( ! $cf_row ) {
-			return array();
-		}
-		$meta_key = isset( $cf_row->custom_field_key ) ? trim( (string) $cf_row->custom_field_key ) : '';
-		if ( '' === $meta_key || '0' === $meta_key ) {
-			return array();
-		}
-		$meta_type = isset( $cf_row->meta_type ) ? (string) $cf_row->meta_type : 'NUMERIC';
-
-		$slider = isset( $module_settings->range_slider ) ? $module_settings->range_slider : new stdClass();
-		$min    = isset( $slider->min ) ? (float) $slider->min : 0;
-		$max    = isset( $slider->max ) ? (float) $slider->max : 100;
-		$step   = isset( $slider->step ) ? (float) $slider->step : 1;
-		$type   = isset( $slider->type ) ? sanitize_key( (string) $slider->type ) : 'double';
-		if ( ! in_array( $type, array( 'single', 'double' ), true ) ) {
-			$type = 'double';
-		}
-
-		if ( $max < $min ) {
-			$tmp = $min;
-			$min = $max;
-			$max = $tmp;
-		}
-		if ( $step <= 0 ) {
-			$step = 1;
-		}
-
-		$defaults_obj     = isset( $slider->default_values ) ? $slider->default_values : null;
-		$defaults_enabled = true;
-		if ( is_object( $defaults_obj ) && isset( $defaults_obj->is_enable ) ) {
-			$defaults_enabled = ( 'true' === (string) $defaults_obj->is_enable );
-		}
-
-		// Default values off: do not constrain posts until the user moves the slider (matches JS).
-		if ( ! $defaults_enabled ) {
-			return array();
-		}
-
-		$start_min = isset( $slider->start_min ) ? $slider->start_min : null;
-		$start_max = isset( $slider->start_max ) ? $slider->start_max : null;
-		$start_min = ( '' === $start_min || null === $start_min ) ? $min : (float) $start_min;
-		$start_max = ( '' === $start_max || null === $start_max ) ? $max : (float) $start_max;
-		$start_min = max( $min, min( $start_min, $max ) );
-		$start_max = max( $min, min( $start_max, $max ) );
-		if ( 'double' === $type && $start_min > $start_max ) {
-			$start_max = $start_min;
-		}
-
-		// Full span = neutral (no meta), same as data-min/data-max check in builder-framework.js.
-		if ( 'single' === $type ) {
-			if ( $start_max === $max ) {
-				return array();
-			}
-			return array(
-				'key'     => $meta_key,
-				'value'   => $start_max,
-				'compare' => '<=',
-				'type'    => $meta_type,
-			);
-		}
-
-		if ( $start_min === $min && $start_max === $max ) {
-			return array();
-		}
-
-		return array(
-			'key'     => $meta_key,
-			'value'   => array( $start_min, $start_max ),
-			'compare' => 'BETWEEN',
-			'type'    => $meta_type,
-		);
-	}
-
-	/**
 	 * Build one meta query item from one filter module.
 	 *
 	 * @param object $module_settings Module settings.
 	 * @param string $multiple_term   Multiple term flag.
-	 * @param string $module_type     Module key (e.g. range_slider).
+	 * @param string $module_type     Module key (unused in free tier).
 	 * @return array
 	 */
 	protected function get_primary_custom_field_group_for_page_load( $module_settings ) {
@@ -935,10 +830,6 @@ class CAF_PRO_Builder_Query {
 	}
 
 	protected function build_meta_query_from_module( $module_settings, $multiple_term, $module_type = '' ) {
-		if ( 'range_slider' === sanitize_key( (string) $module_type ) ) {
-			return $this->build_range_slider_meta_query_for_page_load( $module_settings );
-		}
-
 		$custom_field_data = $this->get_primary_custom_field_group_for_page_load( $module_settings );
 		if ( ! $custom_field_data ) {
 			return array();

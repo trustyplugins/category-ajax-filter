@@ -178,6 +178,40 @@ class CAF_Builder_Tier {
 	}
 
 	/**
+	 * Whether a layout-control (DnD misc) item may render on the public frontend.
+	 *
+	 * @param string $item_key Misc item key (sorting, result_count, selected, pagination, …).
+	 * @return bool
+	 */
+	public static function can_render_misc_item( $item_key ) {
+		if ( self::is_pro() ) {
+			return true;
+		}
+
+		$map = array(
+			'sorting'      => 'sorting',
+			'result_count' => 'result_counter',
+			'selected'     => 'active_filters',
+		);
+
+		$item_key = (string) $item_key;
+		if ( ! isset( $map[ $item_key ] ) ) {
+			return true;
+		}
+
+		return self::can_use_feature( $map[ $item_key ] );
+	}
+
+	/**
+	 * Default wp_option value for per-layout toggles (Enable vs Disable).
+	 *
+	 * @return string
+	 */
+	public static function get_layout_toggle_option_default() {
+		return self::is_pro() ? 'Enable' : 'Disable';
+	}
+
+	/**
 	 * @return int -1 means unlimited.
 	 */
 	public static function get_max_layouts() {

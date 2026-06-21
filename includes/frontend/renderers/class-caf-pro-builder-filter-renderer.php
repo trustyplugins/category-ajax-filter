@@ -173,8 +173,12 @@ class CAF_PRO_Builder_Filter_Renderer {
 			return '';
 		}
 
+		$module_type = isset( $module->key ) ? sanitize_key( $module->key ) : 'unknown';
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_filter_module( $module_type ) ) {
+			return '';
+		}
+
 		$scope            = $this->get_filter_layout_css_scope_prefix();
-		$module_type       = isset( $module->key ) ? sanitize_key( $module->key ) : 'unknown';
 		$module_class      = 'caf-builder-module-main caf-module-filter caf-fl-module-' . absint( $module_key ) . ' caf-module-type-' . $module_type;
 		$custom_class      = '';
 		$module_style      = isset( $module->style->container ) ? $module->style->container : null;

@@ -18,6 +18,24 @@ class CAF_PRO_Filter_Search_Module extends CAF_PRO_Filter_Base_Module {
 	 */
 	public function render() {
 		$settings = isset( $this->module->settings ) ? $this->module->settings : new stdClass();
+		if ( ! isset( $settings->smart_ai_search ) || ! is_object( $settings->smart_ai_search ) ) {
+			$settings->smart_ai_search = new stdClass();
+		}
+		$settings->smart_ai_search->is_enable = 'false';
+		if ( ! isset( $settings->keyword_search ) || ! is_object( $settings->keyword_search ) ) {
+			$settings->keyword_search = new stdClass();
+		}
+		$settings->keyword_search->is_enable = 'true';
+		if ( ! isset( $settings->source ) || ! is_object( $settings->source ) ) {
+			$settings->source = new stdClass();
+		}
+		$settings->source->custom_field = false;
+		$settings->custom_field         = '0';
+		if ( ! isset( $settings->voice_icon ) || ! is_object( $settings->voice_icon ) ) {
+			$settings->voice_icon = new stdClass();
+		}
+		$settings->voice_icon->is_enable = 'false';
+
 		$search_icon_data = isset( $settings->search_icon ) && is_object( $settings->search_icon ) ? clone $settings->search_icon : (object) array();
 		$voice_icon_data  = isset( $settings->voice_icon ) && is_object( $settings->voice_icon ) ? clone $settings->voice_icon : (object) array();
 		$clear_icon_data  = isset( $settings->clear_icon ) && is_object( $settings->clear_icon ) ? clone $settings->clear_icon : (object) array();
@@ -45,8 +63,8 @@ class CAF_PRO_Filter_Search_Module extends CAF_PRO_Filter_Base_Module {
 		$search_icon_enabled  = ! isset( $settings->search_icon->is_enable ) || 'true' === (string) $settings->search_icon->is_enable;
 		$search_icon_position = isset( $settings->search_icon->position ) && '' !== (string) $settings->search_icon->position ? $settings->search_icon->position : 'right';
 
-		$voice_icon_enabled  = ! isset( $settings->voice_icon->is_enable ) || 'true' === (string) $settings->voice_icon->is_enable;
-		$voice_icon_position = isset( $settings->voice_icon->position ) && '' !== (string) $settings->voice_icon->position ? $settings->voice_icon->position : 'right';
+		$voice_icon_enabled  = false;
+		$voice_icon_position = 'right';
 
 		$clear_icon_enabled    = ! isset( $settings->clear_icon->is_enable ) || 'true' === (string) $settings->clear_icon->is_enable;
 		$clear_icon_position   = isset( $settings->clear_icon->position ) && '' !== (string) $settings->clear_icon->position ? $settings->clear_icon->position : 'right';
@@ -70,7 +88,7 @@ class CAF_PRO_Filter_Search_Module extends CAF_PRO_Filter_Base_Module {
 		$char_limit     = $this->normalize_attr_value( isset( $settings->char_limit->limit ) ? $settings->char_limit->limit : '' );
 		$voice_placeholder = $this->normalize_attr_value( isset( $settings->voice_icon->placeholder ) ? $settings->voice_icon->placeholder : '' );
 		$char_limit_enabled = isset( $settings->char_limit->is_enable ) ? (string) $settings->char_limit->is_enable : 'false';
-		$smart_search_enabled = isset( $settings->smart_ai_search->is_enable ) ? $settings->smart_ai_search->is_enable : 'true';
+		$smart_search_enabled = 'false';
 		$keyword_search_enabled = isset( $settings->keyword_search->is_enable ) ? $settings->keyword_search->is_enable : 'true';
 
 		$this->collect_css();

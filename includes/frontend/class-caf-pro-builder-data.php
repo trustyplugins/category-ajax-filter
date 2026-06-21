@@ -542,37 +542,24 @@ class CAF_PRO_Builder_Data {
 	 * @return array
 	 */
 	public function get_wrapper_attributes() {
-		$misc_preview_data         = $this->get_misc_preview_data();
-		$misc_loader_data          = $this->get_misc_loader_data();
-		$misc_selected_filter_data = $this->get_misc_selected_filter_data();
-		$misc_pagination_data      = $this->get_misc_pagination_data();
-		$misc_result_count_data    = $this->get_misc_result_count_data();
-		$filter_layout_extra_data  = $this->get_filter_layout_extra_data();
-		$misc_pagination           = $this->get_misc_pagination();
-		$builder_index             = absint( $this->get_short_index() );
-		$analytics_enabled         = ( 'Enable' === (string) get_option( 'caf_enable_analytics_builder_' . $builder_index, 'Disable' ) ) ? '1' : '0';
-		$filter_url_enabled        = class_exists( 'CAF_PRO_Builder_Url_State' ) && CAF_PRO_Builder_Url_State::is_enabled( $builder_index ) ? '1' : '0';
-		$schema_enabled            = class_exists( 'CAF_PRO_Builder_Seo' ) && CAF_PRO_Builder_Seo::is_enabled( $builder_index ) ? '1' : '0';
-		$default_sort_orderby      = $this->get_default_sort_orderby();
-		$default_sort_order        = $this->get_default_sort_order();
-		// var_dump( $misc_selected_filter_data );
+		$misc_loader_data         = $this->get_misc_loader_data();
+		$misc_pagination_data     = $this->get_misc_pagination_data();
+		$filter_layout_extra_data = $this->get_filter_layout_extra_data();
+		$misc_pagination          = $this->get_misc_pagination();
+		$taxonomy_relation        = isset( $filter_layout_extra_data->taxonomy_relation ) ? $filter_layout_extra_data->taxonomy_relation : '';
+
 		return array(
 			'class'             => implode( ' ', $this->get_wrapper_classes() ),
 			'loader-status'     => isset( $misc_loader_data->is_enable ) ? $misc_loader_data->is_enable : 'false',
-			'selected-tag'      => isset( $misc_selected_filter_data->settings->is_enable ) ? $misc_selected_filter_data->settings->is_enable : 'false',
+			'selected-tag'      => 'false',
 			'pagination'        => isset( $misc_pagination_data->is_enable ) ? $misc_pagination_data->is_enable : 'false',
-			'result-count'      => isset( $misc_result_count_data->is_enable ) ? $misc_result_count_data->is_enable : 'false',
-			'taxonomy-relation' => isset( $filter_layout_extra_data->taxonomy_relation ) ? $filter_layout_extra_data->taxonomy_relation : '',
-			'meta-relation'     => isset( $filter_layout_extra_data->meta_relation ) ? $filter_layout_extra_data->meta_relation : '',
+			'result-count'      => 'false',
+			'taxonomy-relation' => $taxonomy_relation,
+			'meta-relation'     => 'IN',
 			'post-type'         => $this->get_post_type(),
 			'post-per-page'     => isset( $misc_pagination->settings->posts_per_page ) ? absint( $misc_pagination->settings->posts_per_page ) : 10,
-			'caf-index'                     => $this->get_short_index(),
-			'pagination-type'               => isset( $misc_pagination->settings->pagination_type ) ? $misc_pagination->settings->pagination_type : '',
-			'data-caf-analytics-enabled'    => $analytics_enabled,
-			'data-caf-filter-urls'          => $filter_url_enabled,
-			'data-caf-schema-enabled'       => $schema_enabled,
-			'data-default-orderby'          => $default_sort_orderby,
-			'data-default-order'            => $default_sort_order,
+			'caf-index'         => $this->get_short_index(),
+			'pagination-type'   => isset( $misc_pagination->settings->pagination_type ) ? $misc_pagination->settings->pagination_type : '',
 		);
 	}
 }

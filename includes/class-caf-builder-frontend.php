@@ -220,18 +220,15 @@ class CAF_Builder_Frontend {
 			true
 		);
 
-		$custom_font_css_map = class_exists( 'CAF_PRO_Builder_Custom_Fonts' )
-			? CAF_PRO_Builder_Custom_Fonts::get_family_css_map()
-			: array();
+		$custom_font_css_map = array();
 
 		wp_localize_script(
 			'tc-caf-builder-ajax-config',
 			'tc_caf_ajax',
 			array(
-				'ajax_url'     => admin_url( 'admin-ajax.php' ),
-				'nonce'        => wp_create_nonce( 'tc_caf_ajax_nonce' ),
-				'plugin_path'  => TC_CAF_URL,
-				'custom_fonts' => $custom_font_css_map,
+				'ajax_url'    => admin_url( 'admin-ajax.php' ),
+				'nonce'       => wp_create_nonce( 'tc_caf_ajax_nonce' ),
+				'plugin_path' => TC_CAF_URL,
 			)
 		);
 
@@ -266,13 +263,11 @@ class CAF_Builder_Frontend {
 	protected function enqueue_builder_assets() {
 		$this->register_frontend_asset_handles();
 
-		wp_enqueue_script( 'jquery-ui-slider' );
-
 		if ( ! wp_script_is( 'tc-caf-builder-front-script', 'registered' ) ) {
 			wp_register_script(
 				'tc-caf-builder-front-script',
 				TC_CAF_URL . 'assets/js/builder-framework.js',
-				array( 'jquery', 'jquery-ui-slider', 'tc-caf-builder-ajax-config' ),
+				array( 'jquery', 'tc-caf-builder-ajax-config' ),
 				TC_CAF_PLUGIN_VERSION,
 				true
 			);
@@ -322,7 +317,6 @@ class CAF_Builder_Frontend {
 		$base = TC_CAF_PATH . 'includes/frontend/';
 		require_once $base . 'class-caf-pro-builder-data.php';
 		require_once $base . 'class-caf-pro-builder-css.php';
-		require_once TC_CAF_PATH . 'includes/admin/class-caf-pro-builder-custom-fonts.php';
 		require_once $base . 'class-caf-pro-builder-font-loader.php';
 		require_once $base . 'class-caf-pro-builder-style-generator.php';
 		require_once $base . 'class-caf-pro-builder-query.php';
@@ -331,7 +325,6 @@ class CAF_Builder_Frontend {
 		require_once $base . 'modules/filters/class-caf-pro-filter-reset-module.php';
 		require_once $base . 'modules/filters/class-caf-pro-filter-checkbox-module.php';
 		require_once $base . 'modules/filters/class-caf-pro-filter-dropdown-module.php';
-		require_once $base . 'modules/filters/class-caf-pro-filter-range-slider-module.php';
 		require_once $base . 'modules/filters/class-caf-pro-filter-module-factory.php';
 		require_once $base . 'renderers/class-caf-pro-builder-filter-renderer.php';
 		require_once $base . 'renderers/class-caf-pro-builder-post-renderer.php';
@@ -339,11 +332,6 @@ class CAF_Builder_Frontend {
 		require_once $base . 'renderers/class-caf-pro-builder-misc-renderer.php';
 		require_once $base . 'class-caf-pro-builder-renderer.php';
 		require_once $base . 'class-caf-pro-builder-ajax-performance.php';
-		$seo_file = $base . 'class-caf-pro-builder-seo.php';
-		if ( file_exists( $seo_file ) ) {
-			require_once $seo_file;
-		}
-		require_once $base . 'class-caf-pro-builder-url-state.php';
 		require_once $base . 'class-caf-pro-builder-framework.php';
 	}
 }
