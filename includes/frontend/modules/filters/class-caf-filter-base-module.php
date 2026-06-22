@@ -185,6 +185,66 @@ abstract class CAF_Filter_Base_Module {
 		}
 	}
 
+	/**
+	 * Remove layout sizing from focus/selected layers so focus styles inherit default dimensions.
+	 *
+	 * @param mixed $style Style object.
+	 * @return mixed
+	 */
+	protected function strip_focus_layout_from_style( $style ) {
+		if ( empty( $style ) || ! is_object( $style ) ) {
+			return $style;
+		}
+
+		$layout_keys = array(
+			'width',
+			'height',
+			'maxWidth',
+			'minWidth',
+			'maxHeight',
+			'minHeight',
+			'paddingTop',
+			'paddingRight',
+			'paddingBottom',
+			'paddingLeft',
+			'marginTop',
+			'marginRight',
+			'marginBottom',
+			'marginLeft',
+			'display',
+			'flexFlow',
+			'alignItems',
+			'justifyContent',
+			'gap',
+			'float',
+			'position',
+			'top',
+			'right',
+			'bottom',
+			'left',
+			'flexWrap',
+		);
+
+		$clone = json_decode( wp_json_encode( $style ) );
+		if ( ! is_object( $clone ) ) {
+			return $style;
+		}
+
+		foreach ( array( 'desktop', 'tablet', 'mobile' ) as $device ) {
+			if ( ! isset( $clone->$device ) || ! is_object( $clone->$device ) ) {
+				continue;
+			}
+			if ( ! isset( $clone->$device->selected ) || ! is_object( $clone->$device->selected ) ) {
+				continue;
+			}
+			foreach ( $layout_keys as $key ) {
+				unset( $clone->$device->selected->$key );
+			}
+		}
+
+		return $clone;
+	}
+
 
 	/**
 	 * Verify taxonomy term exists.

@@ -211,7 +211,7 @@ class CAF_Filter_Search_Module extends CAF_Filter_Base_Module {
 		$this->collect_default_and_hover_css( $meta1_style, $meta1_selector );
 		$this->collect_default_and_hover_css( $meta2_style, $meta2_selector );
 		$this->collect_default_and_hover_css( $input_style, $input_selector );
-		$this->collect_default_and_hover_css( $input_style, $focused, 'selected' );
+		$this->collect_default_and_hover_css( $this->strip_focus_layout_from_style( $input_style ), $focused, 'selected' );
 		$this->collect_default_and_hover_css( $input_style, $placeholder, 'placeholder' );
 		$this->collect_default_and_hover_css( $icon_style, $icon_selector );
 		$this->collect_default_and_hover_css( $icon2_style, $icon2_selector );
