@@ -484,6 +484,7 @@ ul.caf-builder-template-preview-selected-tags-container {
     border: none;
     background-color: transparent !important;
     margin: 0;
+    list-style-type: none;
 }
 
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-button .caf-taxo-button-main .caf-taxo-input {
@@ -596,11 +597,9 @@ ul.caf-builder-template-preview-selected-tags-container {
 #left-area .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-dropdown ul.caf-dropdown-child,
 .entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-dropdown ul.caf-dropdown-child,
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-dropdown ul.caf-dropdown-child {
-   
-    background-color: transparent !important;
     margin: 0;
     padding: 0;
-   
+    list-style-type: none;
 }
 
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list-item a {
@@ -608,13 +607,31 @@ ul.caf-builder-template-preview-selected-tags-container {
     box-sizing: border-box;
     text-decoration: none;
 }
-
-ul.caf-dropdown-child.caf-disable {
-    display: none !important;
+.caf-builder-module-main.caf-module-filter.caf-module-type-dropdown_filter {
+    overflow: visible;
 }
 
-ul.caf-dropdown-child.caf-enable {
-    display: flex !important;
+#left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child,
+.entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child,
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child {
+    display: flex;
+    flex-direction: column;
+    position: absolute !important;
+    z-index: 9999999;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+}
+
+#left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child.caf-enable,
+.entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child.caf-enable,
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child.caf-enable {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
 }
 
 .filter-layout-container .caf-builder-module-main.caf-module-filter .filter-after-icon {

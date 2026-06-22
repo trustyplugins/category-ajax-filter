@@ -397,6 +397,31 @@ jQuery(function ($) {
             }
         },
 
+        setFilterDropdownOpen($dropdownChild, isOpen, $icon) {
+            if (!$dropdownChild || !$dropdownChild.length) {
+                return;
+            }
+            $dropdownChild.toggleClass("caf-enable", isOpen).toggleClass("caf-disable", !isOpen);
+            if ($icon && $icon.length) {
+                this.updateDropdownToggleIcon($icon, isOpen);
+            }
+        },
+
+        closeOtherFilterDropdowns($exceptChild) {
+            $(".caf-module-filter .caf-dropdown-child.caf-enable").each((_, el) => {
+                const $open = $(el);
+                if ($exceptChild && $open.is($exceptChild)) {
+                    return;
+                }
+                const $module = $open.closest(".caf-module-filter");
+                this.setFilterDropdownOpen(
+                    $open,
+                    false,
+                    $module.find(".caf-selected-term-main .selected-icon i")
+                );
+            });
+        },
+
         resetDropdownModuleToAll($module) {
             const $dropdownChild = $module.find(".caf-dropdown-child").first();
             if (!$dropdownChild.length) {
@@ -542,8 +567,15 @@ jQuery(function ($) {
                 CAFBuilder.buildQuery($builder);
             });
 
-            $(document).on("click", ".caf-module-filter .caf-selected-term-main", function () {
+            $(document).on("click", ".caf-module-filter .caf-selected-term-main", function (e) {
+                e.stopPropagation();
                 self.toggleDropdown($(this));
+            });
+
+            $(document).on("click", function (e) {
+                if (!$(e.target).closest(".caf-module-filter .caf-selected-term-main, .caf-module-filter .caf-dropdown-child").length) {
+                    self.closeOtherFilterDropdowns(null);
+                }
             });
 
             $(document).on("click", ".caf-module-filter .caf-dropdown-child .caf-terms-list-item", function () {
@@ -633,12 +665,12 @@ jQuery(function ($) {
             const $module = $trigger.closest(".caf-module-filter");
             const $dropdownChild = $module.find(".caf-dropdown-child");
             const $icon = $trigger.find(".selected-icon i");
+            const willOpen = $dropdownChild.hasClass("caf-disable");
 
-            $dropdownChild.slideToggle(() => {
-                const isClosed = $dropdownChild.hasClass("caf-disable");
-                $dropdownChild.toggleClass("caf-disable caf-enable");
-                this.updateDropdownToggleIcon($icon, isClosed);
-            });
+            if (willOpen) {
+                this.closeOtherFilterDropdowns($dropdownChild);
+            }
+            this.setFilterDropdownOpen($dropdownChild, willOpen, $icon);
         },
 
         handleDropdownSelection($item) {
@@ -675,10 +707,11 @@ jQuery(function ($) {
             $module.find(".caf-selected-term-main").first().toggleClass("caf-all-selected", !hasNonAllActive);
 
             CAFQueryBuilder.updateDropdownSelectedLabel($termsList, $dropdownChild);
-            $dropdownChild.slideToggle(() => {
-                $dropdownChild.addClass("caf-disable").removeClass("caf-enable");
-                this.updateDropdownToggleIcon($module.find(".caf-selected-term-main .selected-icon i"), false);
-            });
+            this.setFilterDropdownOpen(
+                $dropdownChild,
+                false,
+                $module.find(".caf-selected-term-main .selected-icon i")
+            );
             this.updateSearchResultUI($builder);
             this.buildQuery($builder);
         },
