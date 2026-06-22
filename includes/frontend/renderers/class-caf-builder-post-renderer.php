@@ -66,13 +66,13 @@ class CAF_Builder_Post_Renderer {
 		$loop_data       = $this->data_handler->get_post_layout_loop_data();
 		$dummy_image_url = $this->data_handler->get_dummy_image_url();
 
+		$this->collect_post_layout_css( $loop_data );
+
 		if ( ! ( $this->query instanceof WP_Query ) ) {
-			$this->maybe_collect_post_item_css_without_posts( $loop_data, $dummy_image_url );
 			return $this->render_empty_message();
 		}
 
 		if ( ! $this->query->have_posts() ) {
-			$this->maybe_collect_post_item_css_without_posts( $loop_data, $dummy_image_url );
 			return $this->render_empty_message();
 		}
 
@@ -95,7 +95,6 @@ class CAF_Builder_Post_Renderer {
 			}
 
 			echo '</article>';
-			$this->post_item_css_collected = true;
 		}
 
 		wp_reset_postdata();
@@ -104,16 +103,15 @@ class CAF_Builder_Post_Renderer {
 	}
 
 	/**
-	 * Collect post-item CSS from layout JSON when the query has no posts.
+	 * Collect row/column/module CSS from layout JSON (independent of post content).
 	 *
-	 * Mirrors the first-post render pass so AJAX hash snapshots stay complete
-	 * even when the initial filter returns zero results.
+	 * Ensures module styles are registered even when the first rendered post
+	 * skips a module because its value is empty (e.g. custom field).
 	 *
-	 * @param array  $loop_data       Post layout rows from builder data.
-	 * @param string $dummy_image_url Dummy image URL.
+	 * @param array $loop_data Post layout rows from builder data.
 	 * @return void
 	 */
-	protected function maybe_collect_post_item_css_without_posts( $loop_data, $dummy_image_url ) {
+	protected function collect_post_layout_css( $loop_data ) {
 		if ( $this->post_item_css_collected || empty( $loop_data ) || ! is_array( $loop_data ) ) {
 			return;
 		}
@@ -122,16 +120,99 @@ class CAF_Builder_Post_Renderer {
 			return;
 		}
 
-		$post_id   = 0;
-		$image_url = '';
-
-		ob_start();
 		foreach ( $loop_data as $row_key => $row ) {
-			echo $this->render_row( $row, $row_key, $post_id, $image_url, $dummy_image_url ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			if ( empty( $row ) || ! is_object( $row ) || empty( $row->type ) || 'row' !== $row->type ) {
+				continue;
+			}
+
+			$row_settings = isset( $row->settings ) ? $row->settings : new stdClass();
+			$row_style    = isset( $row->style ) ? $row->style : null;
+			$row_selector = '.caf-builder-post-area .caf-row-' . absint( $row_key );
+			$this->collect_row_css( $row_style, $row_selector, $row_settings );
+
+			$row_data = isset( $row->data ) && is_array( $row->data ) ? $row->data : array();
+			foreach ( $row_data as $column_key => $column ) {
+				if ( empty( $column ) || ! is_object( $column ) || empty( $column->type ) || 'column' !== $column->type ) {
+					continue;
+				}
+
+				$column_settings = isset( $column->settings ) ? $column->settings : new stdClass();
+				$column_style    = isset( $column->style ) ? $column->style : null;
+				$column_selector = '.caf-builder-post-area .caf-row-' . absint( $row_key ) . ' .caf-column-' . absint( $column_key );
+				$this->collect_column_css( $column_style, $column_selector, $column_settings );
+
+				$column_data = isset( $column->data ) && is_array( $column->data ) ? $column->data : array();
+				foreach ( $column_data as $module_key => $module ) {
+					if ( empty( $module ) || ! is_object( $module ) ) {
+						continue;
+					}
+
+					$module_type = isset( $module->key ) ? sanitize_key( $module->key ) : 'unknown';
+					if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_post_module( $module_type ) ) {
+						continue;
+					}
+
+					$module_settings = $this->resolve_module_settings_for_css(
+						$module,
+						$module_type,
+						$row_key,
+						$column_key,
+						$module_key
+					);
+					$module_style    = isset( $module->style ) ? $module->style : null;
+					$module_selector = '.caf-builder-post-area .caf-row-' . absint( $row_key ) . ' .caf-column-' . absint( $column_key ) . ' .caf-module-' . absint( $module_key );
+					$this->collect_module_css( $module_style, $module_selector, $module_type, $module_settings );
+				}
+			}
 		}
-		ob_end_clean();
 
 		$this->post_item_css_collected = true;
+	}
+
+	/**
+	 * Resolve module settings for layout-level CSS collection.
+	 *
+	 * @param object $module      Module object.
+	 * @param string $module_type Module type slug.
+	 * @param int    $row_key     Row key.
+	 * @param int    $column_key  Column key.
+	 * @param int    $module_key  Module key.
+	 * @return object
+	 */
+	protected function resolve_module_settings_for_css( $module, $module_type, $row_key, $column_key, $module_key ) {
+		$module_settings = isset( $module->settings ) ? $module->settings : new stdClass();
+		$module_settings = apply_filters(
+			'caf_builder_module_settings',
+			$module_settings,
+			$this->get_hook_context(
+				array(
+					'scope'       => 'post_layout_css',
+					'module_type' => $module_type,
+					'module'      => $module,
+					'row_key'     => $row_key,
+					'column_key'  => $column_key,
+					'module_key'  => $module_key,
+					'post_id'     => 0,
+				)
+			)
+		);
+
+		if ( ! is_object( $module_settings ) ) {
+			$module_settings = is_array( $module_settings ) ? (object) $module_settings : new stdClass();
+		}
+
+		return $module_settings;
+	}
+
+	/**
+	 * Collect post-item CSS from layout JSON when the query has no posts.
+	 *
+	 * @param array  $loop_data       Post layout rows from builder data.
+	 * @param string $dummy_image_url Dummy image URL.
+	 * @return void
+	 */
+	protected function maybe_collect_post_item_css_without_posts( $loop_data, $dummy_image_url ) {
+		$this->collect_post_layout_css( $loop_data );
 	}
 
 	/**
@@ -1361,6 +1442,10 @@ class CAF_Builder_Post_Renderer {
 	 */
 	protected function render_inline_icon( $icon_data, $position, $style = '' ) {
 		if ( empty( $icon_data ) || ! is_object( $icon_data ) ) {
+			return '';
+		}
+
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'label_show_icon' ) ) {
 			return '';
 		}
 

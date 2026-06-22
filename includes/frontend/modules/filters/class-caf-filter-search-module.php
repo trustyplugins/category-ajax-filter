@@ -62,6 +62,9 @@ class CAF_Filter_Search_Module extends CAF_Filter_Base_Module {
 
 		$search_icon_enabled  = ! isset( $settings->search_icon->is_enable ) || 'true' === (string) $settings->search_icon->is_enable;
 		$search_icon_position = isset( $settings->search_icon->position ) && '' !== (string) $settings->search_icon->position ? $settings->search_icon->position : 'right';
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'search_show_icon' ) ) {
+			$search_icon_enabled = false;
+		}
 
 		$voice_icon_enabled  = false;
 		$voice_icon_position = 'right';
@@ -69,6 +72,9 @@ class CAF_Filter_Search_Module extends CAF_Filter_Base_Module {
 		$clear_icon_enabled    = ! isset( $settings->clear_icon->is_enable ) || 'true' === (string) $settings->clear_icon->is_enable;
 		$clear_icon_position   = isset( $settings->clear_icon->position ) && '' !== (string) $settings->clear_icon->position ? $settings->clear_icon->position : 'right';
 		$clear_icon_visibility = isset( $settings->clear_icon->visibility ) ? $settings->clear_icon->visibility : '';
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'search_clear_input' ) ) {
+			$clear_icon_enabled = false;
+		}
 
 		$has_left_icons = (
 			( $search_icon_enabled && 'left' === $search_icon_position ) ||

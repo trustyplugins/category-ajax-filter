@@ -593,12 +593,14 @@ ul.caf-builder-template-preview-selected-tags-container {
     margin: 0 10px;
 }
 
+#left-area .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-dropdown ul.caf-dropdown-child,
+.entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-dropdown ul.caf-dropdown-child,
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-dropdown ul.caf-dropdown-child {
-    border: none;
+   
     background-color: transparent !important;
     margin: 0;
     padding: 0;
-    padding-top: 10px;
+   
 }
 
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list-item a {

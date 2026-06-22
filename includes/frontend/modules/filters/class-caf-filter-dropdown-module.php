@@ -317,6 +317,9 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 
 		$all_option_icons = isset( $settings->dropdown_data->all_option->icons ) ? $settings->dropdown_data->all_option->icons : null;
 		$show_icon        = ! empty( $settings->show_icon ) && 'true' === $settings->show_icon;
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'filter_show_icon' ) ) {
+			$show_icon = false;
+		}
 		$icon_visible     = $this->is_truthy( isset( $all_option_icons->visibility ) ? $all_option_icons->visibility : false ) && $show_icon;
 		$icon_position    = isset( $all_option_icons->position ) ? (string) $all_option_icons->position : 'before-option';
 		$icon_markup      = $this->render_icon_markup( $all_option_icons, 'filter-before-icon' );
@@ -350,6 +353,9 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 
 		$all_option_icons = isset( $settings->dropdown_data->all_option->icons ) ? $settings->dropdown_data->all_option->icons : null;
 		$show_icon        = ! empty( $settings->show_icon ) && 'true' === $settings->show_icon;
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'filter_show_icon' ) ) {
+			$show_icon = false;
+		}
 		$icon_visible     = $this->is_truthy( isset( $all_option_icons->visibility ) ? $all_option_icons->visibility : false ) && $show_icon;
 		$icon_position    = isset( $all_option_icons->position ) ? (string) $all_option_icons->position : 'before-option';
 		$icon_markup      = $this->render_icon_markup( $all_option_icons, 'filter-before-icon' );

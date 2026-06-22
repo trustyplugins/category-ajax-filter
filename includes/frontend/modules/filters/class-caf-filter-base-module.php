@@ -237,6 +237,21 @@ abstract class CAF_Filter_Base_Module {
 	}
 
 	/**
+	 * Whether label collapse/toggle is enabled for this module.
+	 *
+	 * @return bool
+	 */
+	protected function is_label_collapse_enabled() {
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'filter_label_collapse' ) ) {
+			return false;
+		}
+
+		$settings = $this->get_settings();
+
+		return ! empty( $settings->enable_toggle ) && 'true' === (string) $settings->enable_toggle;
+	}
+
+	/**
 	 * Render common module label.
 	 *
 	 * @return string
@@ -272,10 +287,13 @@ abstract class CAF_Filter_Base_Module {
 		$icon_data  = isset( $settings->label->icons ) ? $settings->label->icons : null;
 		$icon_pos   = isset( $icon_data->position ) ? (string) $icon_data->position : 'before-label';
 		$show_icon  = $this->is_truthy( isset( $icon_data->visibility ) ? $icon_data->visibility : false );
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'label_show_icon' ) ) {
+			$show_icon = false;
+		}
 		$toggle_pos = isset( $settings->toggle_position ) ? (string) $settings->toggle_position : 'right';
 
 		$html  = '<div class="caf-filter-label-common label-header">';
-		if ( ! empty( $settings->enable_toggle ) && 'true' === $settings->enable_toggle && 'left' === $toggle_pos ) {
+		if ( $this->is_label_collapse_enabled() && 'left' === $toggle_pos ) {
 			$is_closed = ! empty( $settings->close_toggle ) && 'true' === $settings->close_toggle;
 			$html     .= '<div class="caf-builder-filter-toggle-icon"><span class="label-icon-common">';
 			$html     .= $is_closed ? '<i class="fas fa-chevron-down"></i>' : '<i class="fas fa-chevron-up"></i>';
@@ -291,7 +309,7 @@ abstract class CAF_Filter_Base_Module {
 		}
 		$html .= '</div>';
 
-		if ( ! empty( $settings->enable_toggle ) && 'true' === $settings->enable_toggle && 'left' !== $toggle_pos ) {
+		if ( $this->is_label_collapse_enabled() && 'left' !== $toggle_pos ) {
 			$is_closed = ! empty( $settings->close_toggle ) && 'true' === $settings->close_toggle;
 
 			$html .= '<div class="caf-builder-filter-toggle-icon">';
@@ -316,7 +334,7 @@ abstract class CAF_Filter_Base_Module {
 	protected function get_toggle_closed_style() {
 		$settings = $this->get_settings();
 
-		if ( ! empty( $settings->enable_toggle ) && ! empty( $settings->close_toggle ) && 'true' === $settings->close_toggle ) {
+		if ( $this->is_label_collapse_enabled() && ! empty( $settings->close_toggle ) && 'true' === $settings->close_toggle ) {
 			return 'display:none;';
 		}
 
@@ -325,7 +343,7 @@ abstract class CAF_Filter_Base_Module {
 	protected function get_toggle_closed_class() {
 		$settings = $this->get_settings();
 
-		if ( ! empty( $settings->enable_toggle ) && ! empty( $settings->close_toggle ) && 'true' === $settings->close_toggle ) {
+		if ( $this->is_label_collapse_enabled() && ! empty( $settings->close_toggle ) && 'true' === $settings->close_toggle ) {
 			return 'toggle_closed';
 		}
 

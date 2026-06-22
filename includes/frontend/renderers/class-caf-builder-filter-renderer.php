@@ -189,7 +189,11 @@ class CAF_Builder_Filter_Renderer {
 			$custom_class  = sanitize_html_class( $module_settings->custom_class );
 			$module_class .= ' ' . $custom_class;
 		}
-		if ( ! empty( $module_settings->enable_toggle ) && 'true' === (string) $module_settings->enable_toggle ) {
+		if (
+			! empty( $module_settings->enable_toggle )
+			&& 'true' === (string) $module_settings->enable_toggle
+			&& ( ! class_exists( 'CAF_Builder_Tier' ) || CAF_Builder_Tier::can_use_feature( 'filter_label_collapse' ) )
+		) {
 			$module_class .= ' toggled';
 		}
 		$module_class .= $this->get_visibility_classes( $module_settings );

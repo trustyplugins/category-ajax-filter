@@ -2177,6 +2177,56 @@ function caf_filter_filter_layout_modules_by_tier( $initial_data ) {
 }
 
 /**
+ * Strip Pro-only label icons from filter module settings on free tier saves.
+ *
+ * @param object $settings Module settings object.
+ * @return object
+ */
+function caf_strip_filter_label_icons( $settings ) {
+	if ( ! is_object( $settings ) ) {
+		return $settings;
+	}
+
+	if ( ! class_exists( 'CAF_Builder_Tier' ) || CAF_Builder_Tier::can_use_feature( 'label_show_icon' ) ) {
+		return $settings;
+	}
+
+	if ( ! isset( $settings->label ) || ! is_object( $settings->label ) ) {
+		$settings->label = new stdClass();
+	}
+
+	$settings->label->icons = (object) array(
+		'visibility' => false,
+		'icon'       => '',
+		'type'       => 'icon',
+		'position'   => 'before-label',
+	);
+
+	return $settings;
+}
+
+/**
+ * Strip Pro-only label collapse settings from filter module settings on free tier saves.
+ *
+ * @param object $settings Module settings object.
+ * @return object
+ */
+function caf_strip_filter_label_collapse( $settings ) {
+	if ( ! is_object( $settings ) ) {
+		return $settings;
+	}
+
+	if ( ! class_exists( 'CAF_Builder_Tier' ) || CAF_Builder_Tier::can_use_feature( 'filter_label_collapse' ) ) {
+		return $settings;
+	}
+
+	$settings->enable_toggle = 'false';
+	$settings->close_toggle  = 'false';
+
+	return $settings;
+}
+
+/**
  * Strip Pro-only search module settings on free tier saves.
  *
  * @param object $settings Search module settings object.
@@ -2216,7 +2266,22 @@ function caf_sanitize_free_search_module_settings( $settings ) {
 		$settings->voice_icon->is_enable = 'false';
 	}
 
-	return $settings;
+	if ( ! CAF_Builder_Tier::can_use_feature( 'search_show_icon' ) ) {
+		if ( ! isset( $settings->search_icon ) || ! is_object( $settings->search_icon ) ) {
+			$settings->search_icon = new stdClass();
+		}
+		$settings->search_icon->is_enable = 'false';
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'search_clear_input' ) ) {
+		if ( ! isset( $settings->clear_icon ) || ! is_object( $settings->clear_icon ) ) {
+			$settings->clear_icon = new stdClass();
+		}
+		$settings->clear_icon->is_enable = 'false';
+	}
+
+	$settings = caf_strip_filter_label_icons( $settings );
+	return caf_strip_filter_label_collapse( $settings );
 }
 
 /**
@@ -2282,6 +2347,16 @@ function caf_sanitize_free_checkbox_dropdown_module_settings( $settings ) {
 
 	if ( ! CAF_Builder_Tier::can_use_feature( 'filter_show_icon' ) ) {
 		$settings->show_icon = 'false';
+		if ( isset( $settings->dropdown_data ) && is_object( $settings->dropdown_data ) ) {
+			if ( ! isset( $settings->dropdown_data->all_option ) || ! is_object( $settings->dropdown_data->all_option ) ) {
+				$settings->dropdown_data->all_option = new stdClass();
+			}
+			$settings->dropdown_data->all_option->icons = (object) array(
+				'visibility' => false,
+				'icon'       => '',
+				'type'       => 'icon',
+			);
+		}
 	}
 
 	$strip_default = ! CAF_Builder_Tier::can_use_feature( 'filter_term_default' );
@@ -2309,7 +2384,8 @@ function caf_sanitize_free_checkbox_dropdown_module_settings( $settings ) {
 		$settings->custom_field_data = array();
 	}
 
-	return $settings;
+	$settings = caf_strip_filter_label_icons( $settings );
+	return caf_strip_filter_label_collapse( $settings );
 }
 
 /**
@@ -2335,7 +2411,8 @@ function caf_sanitize_free_reset_module_settings( $settings ) {
 		);
 	}
 
-	return $settings;
+	$settings = caf_strip_filter_label_icons( $settings );
+	return caf_strip_filter_label_collapse( $settings );
 }
 
 /**
@@ -2379,6 +2456,15 @@ function caf_sanitize_free_post_module_settings( $module_key, $settings ) {
 			'is_enable' => 'false',
 			'meta_type' => 'text',
 			'meta_text' => '',
+		);
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'label_show_icon' ) ) {
+		$settings->icons = (object) array(
+			'visibility' => false,
+			'icon'       => '',
+			'type'       => 'icon',
+			'position'   => '',
 		);
 	}
 
@@ -2563,16 +2649,23 @@ function caf_sanitize_free_dnd_column_data( $dnd_column_data ) {
 					? (string) $item->settings->pagination_type
 					: 'number2';
 				if (
+					'number2' === $pagination_type
+					&& ! CAF_Builder_Tier::can_use_feature( 'pagination_number2' )
+				) {
+					$item->settings->pagination_type = 'number';
+					$pagination_type                  = 'number';
+				}
+				if (
 					'button' === $pagination_type
 					&& ! CAF_Builder_Tier::can_use_feature( 'pagination_button' )
 				) {
-					$item->settings->pagination_type = 'number2';
+					$item->settings->pagination_type = 'number';
 				}
 				if (
 					'load-more' === $pagination_type
 					&& ! CAF_Builder_Tier::can_use_feature( 'pagination_load_more' )
 				) {
-					$item->settings->pagination_type = 'number2';
+					$item->settings->pagination_type = 'number';
 				}
 				continue;
 			}

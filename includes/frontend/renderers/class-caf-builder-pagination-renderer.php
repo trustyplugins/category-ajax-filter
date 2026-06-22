@@ -105,8 +105,19 @@ class CAF_Builder_Pagination_Renderer {
 			$html .= $this->render_number_pagination( $pagination_data, false );
 		}
 
-		if ( ! empty( $pagination_data->settings->pagination_type ) && 'number2' === $pagination_data->settings->pagination_type ) {
+		$can_use_number_with_buttons = ! class_exists( 'CAF_Builder_Tier' ) || CAF_Builder_Tier::can_use_feature( 'pagination_number2' );
+		if (
+			$can_use_number_with_buttons
+			&& ! empty( $pagination_data->settings->pagination_type )
+			&& 'number2' === $pagination_data->settings->pagination_type
+		) {
 			$html .= $this->render_number_pagination( $pagination_data, true );
+		} elseif (
+			! $can_use_number_with_buttons
+			&& ! empty( $pagination_data->settings->pagination_type )
+			&& 'number2' === $pagination_data->settings->pagination_type
+		) {
+			$html .= $this->render_number_pagination( $pagination_data, false );
 		}
 
 		$html .= '</div>';
