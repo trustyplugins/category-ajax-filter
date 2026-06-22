@@ -5,8 +5,8 @@ Description: Filter posts/custom post types by category without page reload. Eas
 Version: 3.0.0
 Author: Trusty Plugins
 Author URI: https://trustyplugins.com
-License: GPL3
-License URI: https://www.gnu.org/licenses/gpl-3.0.html
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: category-ajax-filter
 Domain Path: /languages
  */

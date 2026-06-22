@@ -73,12 +73,8 @@ class CAF_Filter_Reset_Module extends CAF_Filter_Base_Module {
 		if ( 'icon' === $icon_data->type && ( ! isset( $icon_data->icon ) || '' === (string) $icon_data->icon ) ) {
 			$icon_data->icon = self::DEFAULT_RESET_ICON;
 		}
-
 		$html  = $this->render_icon_markup( $icon_data );
-		$html .= '<div class="caf-builder-reset-label">';
 		$html .= esc_html( $reset_label );
-		$html .= '</div>';
-
 		return $html;
 	}
 
@@ -125,7 +121,7 @@ class CAF_Filter_Reset_Module extends CAF_Filter_Base_Module {
 		$icon_selector_svg = $module_selector . ' svg';
 		$icon_selector_img = $module_selector . ' img.caf-inline-svg-icon';
 
-		$this->collect_default_and_hover_css( $container_style, $output_selector );
+		//$this->collect_default_and_hover_css( $container_style, $output_selector );
 		$this->collect_default_and_hover_css( $icon_style, $icon_selector_i );
 		$this->collect_default_and_hover_css( $icon_style, $icon_selector_svg );
 		$this->collect_default_and_hover_css( $icon_style, $icon_selector_img );

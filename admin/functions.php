@@ -87,59 +87,59 @@ class CAF_Meta_Boxes
             return $post_id;
         }
 
-        if (!isset($_POST['caf_post_meta_option']) || !wp_verify_nonce($_POST['caf_post_meta_option'], basename(__FILE__))) {
+        if ( ! isset( $_POST['caf_post_meta_option'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['caf_post_meta_option'] ) ), basename( __FILE__ ) ) ) {
             return $post_id;
         }
 
         /* Get the posted data and sanitize it for use on frontend. */
         if (isset($_POST['custom-post-type-select'])) {
-            $cpt_val = sanitize_text_field($_POST['custom-post-type-select']);
+            $cpt_val = sanitize_text_field( wp_unslash( $_POST['custom-post-type-select'] ) );
             update_post_meta($post_id, 'caf_cpt_value', $cpt_val);
         }
 
         if (isset($_POST['caf-taxonomy'])) {
-            $tax_val = sanitize_text_field($_POST['caf-taxonomy']);
+            $tax_val = sanitize_text_field( wp_unslash( $_POST['caf-taxonomy'] ) );
             update_post_meta($post_id, 'caf_taxonomy', $tax_val);
         }
         if (isset($_POST['category-list'])) {
-            $terms = sanitize_html_class($_POST['category-list']);
+            $terms = sanitize_html_class( wp_unslash( $_POST['category-list'] ) );
 
             update_post_meta($post_id, 'caf_terms', $terms);
         }
         if (isset($_POST['caf-post-orders-by'])) {
-            $caf_post_orders_by = sanitize_text_field($_POST['caf-post-orders-by']);
+            $caf_post_orders_by = sanitize_text_field( wp_unslash( $_POST['caf-post-orders-by'] ) );
             update_post_meta($post_id, 'caf_post_orders_by', $caf_post_orders_by);
         }
         if (isset($_POST['caf-posts-order-type'])) {
-            $caf_post_order_type = sanitize_text_field($_POST['caf-posts-order-type']);
+            $caf_post_order_type = sanitize_text_field( wp_unslash( $_POST['caf-posts-order-type'] ) );
             update_post_meta($post_id, 'caf_post_order_type', $caf_post_order_type);
         }
         if (isset($_POST['caf-sec-bg-color'])) {
-            $caf_sec_bg_color = sanitize_text_field($_POST['caf-sec-bg-color']);
+            $caf_sec_bg_color = sanitize_text_field( wp_unslash( $_POST['caf-sec-bg-color'] ) );
             update_post_meta($post_id, 'caf_sec_bg_color', $caf_sec_bg_color);
         }
         if (isset($_POST['caf-filter-status'])) {
-            $filter_status = sanitize_text_field($_POST['caf-filter-status']);
+            $filter_status = sanitize_text_field( wp_unslash( $_POST['caf-filter-status'] ) );
             update_post_meta($post_id, 'caf_filter_status', $filter_status);
         }
         if (isset($_POST['caf-filter-layout'])) {
-            $filter_layout = sanitize_text_field($_POST['caf-filter-layout']);
+            $filter_layout = sanitize_text_field( wp_unslash( $_POST['caf-filter-layout'] ) );
             update_post_meta($post_id, 'caf_filter_layout', $filter_layout);
         }
         if (isset($_POST['caf-filter-primary-color'])) {
-            $caf_filter_primary_color = sanitize_text_field($_POST['caf-filter-primary-color']);
+            $caf_filter_primary_color = sanitize_text_field( wp_unslash( $_POST['caf-filter-primary-color'] ) );
             update_post_meta($post_id, 'caf_filter_primary_color', $caf_filter_primary_color);
         }
         if (isset($_POST['caf-filter-sec-color'])) {
-            $caf_filter_sec_color = sanitize_text_field($_POST['caf-filter-sec-color']);
+            $caf_filter_sec_color = sanitize_text_field( wp_unslash( $_POST['caf-filter-sec-color'] ) );
             update_post_meta($post_id, 'caf_filter_sec_color', $caf_filter_sec_color);
         }
         if (isset($_POST['caf-filter-sec-color2'])) {
-            $caf_filter_sec_color2 = sanitize_text_field($_POST['caf-filter-sec-color2']);
+            $caf_filter_sec_color2 = sanitize_text_field( wp_unslash( $_POST['caf-filter-sec-color2'] ) );
             update_post_meta($post_id, 'caf_filter_sec_color2', $caf_filter_sec_color2);
         }
         if (isset($_POST['caf-post-layout'])) {
-            $post_layout = sanitize_text_field($_POST['caf-post-layout']);
+            $post_layout = sanitize_text_field( wp_unslash( $_POST['caf-post-layout'] ) );
             update_post_meta($post_id, 'caf_post_layout', $post_layout);
         }
         if (isset($_POST["caf_desktop_col"]) || isset($_POST["caf_tablet_col"]) || isset($_POST["caf_mobile_col"])) {
@@ -147,83 +147,85 @@ class CAF_Meta_Boxes
             $desktop = "3";
             $tablet = "2";
             $mobile = "1";
-            $desktop_large = sanitize_text_field($_POST["caf_desktop_large_col"]);
-            $desktop = sanitize_text_field($_POST["caf_desktop_col"]);
-            $tablet = sanitize_text_field($_POST["caf_tablet_col"]);
-            $mobile = sanitize_text_field($_POST["caf_mobile_col"]);
+            if ( isset( $_POST['caf_desktop_large_col'] ) ) {
+                $desktop_large = sanitize_text_field( wp_unslash( $_POST['caf_desktop_large_col'] ) );
+            }
+            $desktop = sanitize_text_field( wp_unslash( $_POST['caf_desktop_col'] ) );
+            $tablet = sanitize_text_field( wp_unslash( $_POST['caf_tablet_col'] ) );
+            $mobile = sanitize_text_field( wp_unslash( $_POST['caf_mobile_col'] ) );
             $caf_col_opt = array("caf_col_desktop_large" => $desktop_large, "caf_col_desktop" => $desktop, "caf_col_tablet" => $tablet, "caf_col_mobile" => $mobile);
             update_post_meta($post_id, 'caf_col_opt', $caf_col_opt);
         }
         if (isset($_POST['caf-post-primary-color'])) {
-            $caf_post_primary_color = sanitize_text_field($_POST['caf-post-primary-color']);
+            $caf_post_primary_color = sanitize_text_field( wp_unslash( $_POST['caf-post-primary-color'] ) );
             update_post_meta($post_id, 'caf_post_primary_color', $caf_post_primary_color);
         }
         if (isset($_POST['caf-post-sec-color'])) {
-            $caf_post_sec_color = sanitize_text_field($_POST['caf-post-sec-color']);
+            $caf_post_sec_color = sanitize_text_field( wp_unslash( $_POST['caf-post-sec-color'] ) );
             update_post_meta($post_id, 'caf_post_sec_color', $caf_post_sec_color);
         }
         if (isset($_POST['caf-post-sec-color2'])) {
-            $caf_post_sec_color2 = sanitize_text_field($_POST['caf-post-sec-color2']);
+            $caf_post_sec_color2 = sanitize_text_field( wp_unslash( $_POST['caf-post-sec-color2'] ) );
             update_post_meta($post_id, 'caf_post_sec_color2', $caf_post_sec_color2);
         }
         if (isset($_POST['caf-post-image-size'])) {
-            $caf_image_size = sanitize_text_field($_POST['caf-post-image-size']);
+            $caf_image_size = sanitize_text_field( wp_unslash( $_POST['caf-post-image-size'] ) );
             update_post_meta($post_id, 'caf_image_size', $caf_image_size);
         }
         if (isset($_POST['caf-post-animation'])) {
-            $caf_post_animation = sanitize_text_field($_POST['caf-post-animation']);
+            $caf_post_animation = sanitize_text_field( wp_unslash( $_POST['caf-post-animation'] ) );
             update_post_meta($post_id, 'caf_post_animation', $caf_post_animation);
         }
         if (isset($_POST['caf-empty-result'])) {
-            $caf_empty_res = sanitize_text_field($_POST['caf-empty-result']);
+            $caf_empty_res = sanitize_text_field( wp_unslash( $_POST['caf-empty-result'] ) );
             update_post_meta($post_id, 'caf_empty_res', $caf_empty_res);
         }
         if (isset($_POST['caf-link-target'])) {
-            $caf_link_target = sanitize_text_field($_POST['caf-link-target']);
+            $caf_link_target = sanitize_text_field( wp_unslash( $_POST['caf-link-target'] ) );
             update_post_meta($post_id, 'caf_link_target', $caf_link_target);
         }
         if (isset($_POST['caf-per-page'])) {
-            $caf_per_page = sanitize_text_field($_POST['caf-per-page']);
+            $caf_per_page = sanitize_text_field( wp_unslash( $_POST['caf-per-page'] ) );
             update_post_meta($post_id, 'caf_per_page', $caf_per_page);
         }
         if (isset($_POST['caf-pagination-type'])) {
-            $caf_pagi_type = sanitize_text_field($_POST['caf-pagination-type']);
+            $caf_pagi_type = sanitize_text_field( wp_unslash( $_POST['caf-pagination-type'] ) );
             update_post_meta($post_id, 'caf_pagination_type', $caf_pagi_type);
         }
         if (isset($_POST['caf-filter-font'])) {
-            $caf_filter_font = sanitize_text_field($_POST['caf-filter-font']);
+            $caf_filter_font = sanitize_text_field( wp_unslash( $_POST['caf-filter-font'] ) );
             update_post_meta($post_id, 'caf_filter_font', $caf_filter_font);
         }
         if (isset($_POST['caf-filter-transform'])) {
-            $caf_filter_transform = sanitize_text_field($_POST['caf-filter-transform']);
+            $caf_filter_transform = sanitize_text_field( wp_unslash( $_POST['caf-filter-transform'] ) );
             update_post_meta($post_id, 'caf_filter_transform', $caf_filter_transform);
         }
         if (isset($_POST['caf-filter-font-size'])) {
-            $caf_filter_font_size = sanitize_text_field($_POST['caf-filter-font-size']);
+            $caf_filter_font_size = sanitize_text_field( wp_unslash( $_POST['caf-filter-font-size'] ) );
             update_post_meta($post_id, 'caf_filter_font_size', $caf_filter_font_size);
         }
         if (isset($_POST['caf-post-font'])) {
-            $caf_post_font = sanitize_text_field($_POST['caf-post-font']);
+            $caf_post_font = sanitize_text_field( wp_unslash( $_POST['caf-post-font'] ) );
             update_post_meta($post_id, 'caf_post_font', $caf_post_font);
         }
         if (isset($_POST['caf-post-title-transform'])) {
-            $caf_post_title_transform = sanitize_text_field($_POST['caf-post-title-transform']);
+            $caf_post_title_transform = sanitize_text_field( wp_unslash( $_POST['caf-post-title-transform'] ) );
             update_post_meta($post_id, 'caf_post_title_transform', $caf_post_title_transform);
         }
         if (isset($_POST['caf-post-title-font-size'])) {
-            $caf_post_title_font_size = sanitize_text_field($_POST['caf-post-title-font-size']);
+            $caf_post_title_font_size = sanitize_text_field( wp_unslash( $_POST['caf-post-title-font-size'] ) );
             update_post_meta($post_id, 'caf_post_title_font_size', $caf_post_title_font_size);
         }
         if (isset($_POST['caf-post-title-font-color'])) {
-            $caf_post_title_font_color = sanitize_text_field($_POST['caf-post-title-font-color']);
+            $caf_post_title_font_color = sanitize_text_field( wp_unslash( $_POST['caf-post-title-font-color'] ) );
             update_post_meta($post_id, 'caf_post_title_font_color', $caf_post_title_font_color);
         }
         if (isset($_POST['caf-special-post-class'])) {
-            $caf_special_post_class = sanitize_text_field($_POST['caf-special-post-class']);
+            $caf_special_post_class = sanitize_text_field( wp_unslash( $_POST['caf-special-post-class'] ) );
             update_post_meta($post_id, 'caf_special_post_class', $caf_special_post_class);
         }
         if (isset($_POST['caf-special-security'])) {
-            $caf_special_security = sanitize_text_field($_POST['caf-special-security']);
+            $caf_special_security = sanitize_text_field( wp_unslash( $_POST['caf-special-security'] ) );
             update_post_meta($post_id, 'caf_special_security', $caf_special_security);
         }
     }

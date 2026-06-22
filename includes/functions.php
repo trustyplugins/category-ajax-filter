@@ -124,13 +124,27 @@ class CAF_get_filter_posts
     }
     public function get_filter_posts()
     {
-        $filter_id = sanitize_text_field($_POST['params']['filter-id']);
+        if ( ! isset( $_POST['params'] ) || ! is_array( $_POST['params'] ) ) {
+            die(
+                wp_json_encode(
+                    array(
+                        'status'  => 500,
+                        'message' => 'Invalid request.',
+                        'content' => false,
+                        'found'   => 0,
+                    )
+                )
+            );
+        }
+
+        $params    = wp_unslash( $_POST['params'] );
+        $filter_id = isset( $params['filter-id'] ) ? sanitize_text_field( $params['filter-id'] ) : '';
         $caf_security = 'disable';
         if (get_post_meta($filter_id, "caf_special_security", true)) {
             $caf_security = get_post_meta($filter_id, "caf_special_security", true);
         }
         if ($caf_security == 'enable') {
-            if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'tc_caf_ajax_nonce')) {
+            if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'tc_caf_ajax_nonce')) {
                 die('Permission denied');
             }
 
@@ -142,14 +156,14 @@ class CAF_get_filter_posts
             'content' => false,
             'found' => 0,
         ];
-        $tax = sanitize_text_field($_POST['params']['tax']);
-        $post_type = sanitize_text_field($_POST['params']['post-type']);
+        $tax = isset( $params['tax'] ) ? sanitize_text_field( $params['tax'] ) : '';
+        $post_type = isset( $params['post-type'] ) ? sanitize_text_field( $params['post-type'] ) : '';
 
-        $term = sanitize_text_field($_POST['params']['term']);
-        $page = intval($_POST['params']['page']);
-        $per_page = intval($_POST['params']['per-page']);
-        $caf_post_layout = sanitize_text_field($_POST['params']['caf-post-layout']);
-        $target_div = sanitize_text_field($_POST['params']['data-target-div']);
+        $term = isset( $params['term'] ) ? sanitize_text_field( $params['term'] ) : '';
+        $page = isset( $params['page'] ) ? intval( $params['page'] ) : 1;
+        $per_page = isset( $params['per-page'] ) ? intval( $params['per-page'] ) : 10;
+        $caf_post_layout = isset( $params['caf-post-layout'] ) ? sanitize_text_field( $params['caf-post-layout'] ) : '';
+        $target_div = isset( $params['data-target-div'] ) ? sanitize_text_field( $params['data-target-div'] ) : '';
         if ($per_page == '-1') {$per_page = '5';}
         /*** Check if term exists ***/
         $terms = explode(',', $term);

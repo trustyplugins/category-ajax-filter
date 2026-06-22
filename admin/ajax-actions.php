@@ -15,8 +15,9 @@ class CAF_admin_ajax
     public function tc_caf_get_taxonomy()
     {
         check_ajax_referer('tc_caf_ajax_nonce', 'nonce_ajax');
+        $posttype = '';
         if (isset($_POST["cpt"])) {
-            $posttype = sanitize_text_field($_POST["cpt"]);
+            $posttype = sanitize_text_field( wp_unslash( $_POST["cpt"] ) );
         }
 
         $data['tax'] = get_object_taxonomies($posttype);
@@ -37,8 +38,9 @@ class CAF_admin_ajax
     public function tc_caf_get_terms()
     {
         check_ajax_referer('tc_caf_ajax_nonce', 'nonce_ajax');
+        $taxonomy = '';
         if (isset($_POST["taxonomy"])) {
-            $taxonomy = sanitize_text_field($_POST["taxonomy"]);
+            $taxonomy = sanitize_text_field( wp_unslash( $_POST["taxonomy"] ) );
         }
         if ($taxonomy) {
             $terms = get_terms([

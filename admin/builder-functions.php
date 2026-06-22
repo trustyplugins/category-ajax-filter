@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-custom-fonts.php';
 require_once TC_CAF_PATH . 'includes/builder/class-caf-builder-tier.php';
 // add_action('admin_menu', 'caf_builder_admin_page');
@@ -408,9 +412,9 @@ function get_caf_builder_posts() {
 			)
 		);
 	}
-	$args             = isset( $_POST['params'] ) && is_array( $_POST['params'] ) ? $_POST['params'] : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+	$args             = isset( $_POST['params'] ) && is_array( $_POST['params'] ) ? wp_unslash( $_POST['params'] ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	$shortindex       = isset( $_POST['caf_index'] ) ? absint( $_POST['caf_index'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
-	$selected_filters = isset( $_POST['selected_filters'] ) && is_array( $_POST['selected_filters'] ) ? $_POST['selected_filters'] : array();
+	$selected_filters = isset( $_POST['selected_filters'] ) && is_array( $_POST['selected_filters'] ) ? wp_unslash( $_POST['selected_filters'] ) : array();
 	$response_mode    = isset( $_POST['response_mode'] ) ? sanitize_key( wp_unslash( $_POST['response_mode'] ) ) : 'posts'; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	$client_css_hash  = isset( $_POST['dynamic_css_hash'] ) ? sanitize_text_field( wp_unslash( $_POST['dynamic_css_hash'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 	if ( empty( $args ) ) {
@@ -3088,25 +3092,27 @@ function caf_export_builder_layout( $request ) {
 		$layout_label = $options[ $index ]['label'];
 		$title        = 'caf_' . $layout . '_' . $index;
 		if ( get_option( $title ) ) {
-			$baseLayoutData = caf_normalize_builder_layout_data( get_option( $title ) );
-			$json_data      = json_encode( $baseLayoutData, JSON_PRETTY_PRINT );
-			header( 'Content-Type: application/json' );
-			header( 'Content-Disposition: attachment; filename=' . $layout_label . '.json"' );
-			echo $json_data;
+			$base_layout_data = caf_normalize_builder_layout_data( get_option( $title ) );
+			$json_data        = wp_json_encode( $base_layout_data, JSON_PRETTY_PRINT );
+			nocache_headers();
+			header( 'Content-Type: application/json; charset=utf-8' );
+			header(
+				'Content-Disposition: attachment; filename="' . sanitize_file_name( $layout_label ) . '.json"'
+			);
+			// JSON file download; payload is already encoded.
+			echo $json_data; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			exit;
 		} else {
-			echo json_encode(
+			wp_send_json_error(
 				array(
-					'status'  => 'error',
-					'message' => 'Failed to export filter.',
+					'message' => __( 'Failed to export filter.', 'category-ajax-filter' ),
 				)
 			);
 		}
 	} else {
-		echo json_encode(
+		wp_send_json_error(
 			array(
-				'status'  => 'error',
-				'message' => 'Index id Not Found.',
+				'message' => __( 'Index id not found.', 'category-ajax-filter' ),
 			)
 		);
 	}

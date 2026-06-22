@@ -1,14 +1,14 @@
-=== Category AJAX Filter — Advanced Filter for Posts & Custom Post Types ===
+=== Category AJAX Filter – Advanced Filter for Posts & Custom Post Types ===
 Contributors: TrustyPlugins
 Donate link: https://www.buymeacoffee.com/jasveer
-Plugin URI: https://trustyplugins.com/category-ajax-filter-pro
+Plugin URI: https://wordpress.org/plugins/category-ajax-filter/
 Tags: ajax filter, category filter, taxonomy filter, custom post type, filter
 Requires at least: 6.0
-Tested up to: 7.0
+Tested up to: 6.7
 Stable tag: 3.0.0
-Requires PHP: 7.0
-License: GPL3
-License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Requires PHP: 7.4
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Instantly filter WordPress posts and custom post types by category, tag or taxonomy — no page reload. Works with Elementor, Divi, Gutenberg and more.
 
@@ -21,6 +21,7 @@ Whether you run a blog, portfolio, directory, or events site, CAF makes it easy 
 = ⚡ Key Features (Free) =
 
 * **Custom Post Types & Taxonomies** – Filter any post type: blogs, portfolios, events, directories, recipes and more.
+* **Visual Filter Builder** – Design filter and post layouts in a drag-and-drop admin builder (free tier includes core layouts and modules).
 * **3 Pre-built Filter Layouts** – Get started fast with ready-made filter designs.
 * **4 Pre-built Post Layouts** – Choose how filtered results are displayed.
 * **Flexible Design Controls** – Customize colors, fonts, spacing and sizing to match your brand.
@@ -138,9 +139,9 @@ Don't start from scratch — import any layout from the demo site in seconds:
 
 https://www.youtube.com/watch?v=uyEhRD0RiP0
 
-= 🛠️ Coming Soon: CAF Builder =
+= 🛠️ CAF Visual Builder =
 
-We're building a visual drag-and-drop builder for filters and post layouts. Design the UI, connect your taxonomies and custom fields, and create fully custom filtering experiences — no code needed. Stay tuned.
+Create and manage AJAX filters from **CAF → Filters** using the built-in visual builder. Customize filter modules, post layouts, colors, and typography without writing code. Upgrade to [CAF Pro](https://trustyplugins.com/category-ajax-filter-pro) for advanced modules, unlimited layouts, and more design options.
 
 == Installation ==
 
@@ -199,8 +200,11 @@ No. CAF is built to be lightweight and only loads assets on pages where a filter
 == Changelog ==
 
 = 3.0.0 = (08/06/2026)
-* readme Updated
-
+* Added visual drag-and-drop filter builder in the admin.
+* New React-based builder UI for filter and post layout design.
+* Free tier includes core builder layouts, modules, and tier limits.
+* WordPress Plugin Check and coding standards improvements.
+* Security and escaping fixes for export and template output.
 
 = 2.8.5.1 = (08/06/2026)
 * readme Updated
@@ -455,5 +459,5 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 
 == Upgrade Notice ==
 
-= 2.8.5 =
-Recommended update — includes admin design improvements and WordPress 7.0 compatibility.
+= 3.0.0 =
+Major update — introduces the visual CAF Builder for designing AJAX filters and post layouts from the admin.

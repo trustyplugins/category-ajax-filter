@@ -247,12 +247,9 @@ li.selection-list-default i {
     flex-direction: row;
     flex-wrap: nowrap;
     align-content: center;
-    /* justify-content: center; */
     align-items: center;
-    /* position: relative; */
     overflow: hidden;
     box-sizing: border-box;
-    cursor: pointer;
 }
 .caf-builder-module-main.caf-module-filter.caf-module-type-range_slider {
     overflow: initial;
@@ -477,10 +474,11 @@ ul.caf-builder-template-preview-selected-tags-container {
     padding: 0 7px;
 }
 
+#left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list,
+.entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list,
 .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list {
     width: 100%;
     padding: 0;
-    gap: unset;
     display: flex;
     flex-wrap: wrap;
     border: none;
