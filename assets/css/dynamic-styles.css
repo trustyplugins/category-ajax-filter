@@ -623,6 +623,7 @@ ul.caf-builder-template-preview-selected-tags-container {
     pointer-events: none;
     transform: translateY(-8px);
     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    overflow: auto;
 }
 
 #left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child.caf-enable,
