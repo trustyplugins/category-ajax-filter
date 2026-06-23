@@ -621,6 +621,7 @@ jQuery(function ($) {
             const $list = $module.find("ul.caf-terms-list");
             const $searchOutput = $module.find(".caf-filter-module-search-output");
             const $resetOutput = $module.find(".caf-filter-module-reset-output");
+            const $rangeOutput = $module.find(".caf-range-slider-output");
             const $icon = $header.find("i");
 
             if ($list.length) {
@@ -643,6 +644,15 @@ jQuery(function ($) {
                     const isClosed = $resetOutput.hasClass("toggle_closed");
                     $resetOutput.toggleClass("toggle_closed");
                     $resetOutput.css("display", isClosed ? "flex" : "none");
+                });
+            }
+
+            if ($rangeOutput.length) {
+                $rangeOutput.slideToggle(() => {
+                    const isClosed = $rangeOutput.hasClass("toggle_closed");
+                    $rangeOutput.toggleClass("toggle_closed");
+                    $rangeOutput.css("display", isClosed ? "flex" : "none");
+                    $icon.toggleClass("fa-chevron-up fa-chevron-down");
                 });
             }
         },

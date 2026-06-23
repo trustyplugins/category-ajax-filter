@@ -148,7 +148,7 @@ class CAF_Builder_Query {
 							continue;
 						}
 
-						if ( in_array( $module->key, array( 'search', 'reset' ), true ) ) {
+						if ( in_array( $module->key, array( 'search', 'reset', 'customtext' ), true ) ) {
 							continue;
 						}
 

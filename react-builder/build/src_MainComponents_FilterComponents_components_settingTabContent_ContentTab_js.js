@@ -452,8 +452,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ModuleContentData_ModuleFilterGeneral__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ModuleContentData/ModuleFilterGeneral */ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/ModuleFilterGeneral.js");
 /* harmony import */ var _ModuleContentData_ModuleSearchGenerals__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ModuleContentData/ModuleSearchGenerals */ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/ModuleSearchGenerals.js");
 /* harmony import */ var _ModuleContentData_ModuleResetGeneral__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ModuleContentData/ModuleResetGeneral */ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/ModuleResetGeneral.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _ModuleContentData_ModuleCustomTextFilterGeneral__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ModuleContentData/ModuleCustomTextFilterGeneral */ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/ModuleCustomTextFilterGeneral.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__);
+
 
 
 
@@ -476,41 +478,46 @@ const ContentTab = props => {
   const onSettingChange = data => {
     props.onChangeStyle(data);
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
     className: "setting-pop-content caf-filter",
-    children: [type === "row" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+    children: [type === "row" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
       className: "rowdata",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
         className: "caf-builder-setting-row-label",
         children: "Row Data"
       })
-    }) : "", type === "column" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+    }) : "", type === "column" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
       className: "columndata",
       children: "Column Data"
-    }) : "", type === "module" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+    }) : "", type === "module" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
       className: "moduledata",
-      children: module.key === "checkbox_filter" || module.key === "range_slider" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_ModuleContentData_ModuleFilterGeneral__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      children: module.key === "checkbox_filter" || module.key === "range_slider" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ModuleContentData_ModuleFilterGeneral__WEBPACK_IMPORTED_MODULE_1__["default"], {
         mainBuilderData: props.mainBuilderData,
         openBuilderSetting: props.openBuilderSetting,
         data: props.data,
         indexes: props.indexes,
         onSettingChange: onSettingChange,
         selectedDevice: props.selectedDevice
-      }) : module.key === "dropdown_filter" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_ModuleContentData_ModuleFilterGeneral__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      }) : module.key === "dropdown_filter" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ModuleContentData_ModuleFilterGeneral__WEBPACK_IMPORTED_MODULE_1__["default"], {
         mainBuilderData: props.mainBuilderData,
         openBuilderSetting: props.openBuilderSetting,
         data: props.data,
         indexes: props.indexes,
         onSettingChange: onSettingChange,
         selectedDevice: props.selectedDevice
-      }) : module.key === "search" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_ModuleContentData_ModuleSearchGenerals__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      }) : module.key === "search" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ModuleContentData_ModuleSearchGenerals__WEBPACK_IMPORTED_MODULE_2__["default"], {
         mainBuilderData: props.mainBuilderData,
         data: props.data,
         indexes: props.indexes,
         onSettingChange: onSettingChange,
         selectedDevice: props.selectedDevice
-      }) : module.key === "reset" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_ModuleContentData_ModuleResetGeneral__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      }) : module.key === "reset" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ModuleContentData_ModuleResetGeneral__WEBPACK_IMPORTED_MODULE_3__["default"], {
         mainBuilderData: props.mainBuilderData,
+        data: props.data,
+        indexes: props.indexes,
+        onSettingChange: onSettingChange,
+        selectedDevice: props.selectedDevice
+      }) : module.key === "customtext" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ModuleContentData_ModuleCustomTextFilterGeneral__WEBPACK_IMPORTED_MODULE_4__["default"], {
         data: props.data,
         indexes: props.indexes,
         onSettingChange: onSettingChange,
@@ -935,7 +942,7 @@ function ContentIcons(props) {
     };
 
     //item = {...props?.allOptArray}
-  } else if (props?.tab === "reset_icon") {
+  } else if (props?.tab === "reset_icon" || props?.tab === "customtext_icon") {
     item = {
       ...modSettings
     };
@@ -963,7 +970,7 @@ function ContentIcons(props) {
   const commitLayoutFromItem = refItem => {
     if (!moduleTarget) return;
     const t = props?.tab;
-    if (t === "reset_icon") {
+    if (t === "reset_icon" || t === "customtext_icon") {
       (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_7__.commitFilterModuleReplaceSettings)({
         data: props.data,
         rowindex,
@@ -1037,7 +1044,7 @@ function ContentIcons(props) {
   // }
   const [iconPosition, setIconPosition] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(item?.icons?.position);
   const [dropdownIconPosition, setDropdownIconPosition] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(item?.icons?.position ?? 'right');
-  const [selectedIcon, setSelectedIcon] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(props?.tab === "inactive_icon" ? item?.icons?.inactive_icon : props?.tab === "active_icon" ? item?.icons?.active_icon : props?.tab === "all_option" ? item?.icons?.icon : props?.tab === "label" ? item?.icons?.icon : props?.tab === "search_icon" ? item?.icon : props?.tab === "voice_icon" ? item?.icon : props?.tab === "clear_icon" ? item?.icon : props?.tab === "reset_icon" ? item?.icons?.icon : "");
+  const [selectedIcon, setSelectedIcon] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(props?.tab === "inactive_icon" ? item?.icons?.inactive_icon : props?.tab === "active_icon" ? item?.icons?.active_icon : props?.tab === "all_option" ? item?.icons?.icon : props?.tab === "label" ? item?.icons?.icon : props?.tab === "search_icon" ? item?.icon : props?.tab === "voice_icon" ? item?.icon : props?.tab === "clear_icon" ? item?.icon : props?.tab === "reset_icon" ? item?.icons?.icon : props?.tab === "customtext_icon" ? item?.icons?.icon : "");
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (props?.tab !== "label") return;
     const labelState = modSettings?.label;
@@ -1077,6 +1084,19 @@ function ContentIcons(props) {
       setSelectedIcon(item?.icons?.icon ?? "");
     }
   }, [props?.allOptArray]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    if (props?.tab !== "customtext_icon") return;
+    const iconsConfig = modSettings?.icons;
+    if (!iconsConfig) return;
+    if (iconsConfig.type === "svg" && iconsConfig.icon?.url) {
+      setSelectedIcon(iconsConfig.icon);
+    } else if (typeof iconsConfig.icon === "string") {
+      setSelectedIcon(iconsConfig.icon);
+    }
+    if (iconsConfig.position) {
+      setIconPosition(iconsConfig.position);
+    }
+  }, [props?.tab, props.data, rowindex, columnindex, moduleindex]);
   let icons = props?.tab === "inactive_icon" || props?.tab === "active_icon" ? {
     icon_switch: true,
     active_icon: item?.icons?.active_icon,
@@ -1097,6 +1117,11 @@ function ContentIcons(props) {
     visibility: true,
     icon: item?.icons?.icon,
     type: item?.icons?.type
+  } : props?.tab === "customtext_icon" ? {
+    visibility: true,
+    icon: item?.icons?.icon,
+    type: item?.icons?.type,
+    position: item?.icons?.position
   } : {};
   const handlePopUpChange = newOpen => {
     setPopUpOpen(newOpen);
@@ -1111,7 +1136,7 @@ function ContentIcons(props) {
       ...icons,
       ...ic
     };
-    if (props?.tab === "label") {
+    if (props?.tab === "label" || props?.tab === "customtext_icon") {
       commitLayoutFromItem(item);
     }
   };
@@ -1157,6 +1182,9 @@ function ContentIcons(props) {
         ic.type = "icon";
       } else if (props?.tab === "reset_icon") {
         ic.icon = safeIcon;
+        ic.type = "icon";
+      } else if (props?.tab === "customtext_icon") {
+        ic.icon = icon;
         ic.type = "icon";
       }
 
@@ -1245,6 +1273,9 @@ function ContentIcons(props) {
         } else if (props?.tab === "reset_icon") {
           ic.icon = selectedImage;
           ic.type = "svg";
+        } else if (props?.tab === "customtext_icon") {
+          ic.icon = selectedImage;
+          ic.type = "svg";
         }
         item.icons = {
           ...icons,
@@ -1294,7 +1325,7 @@ function ContentIcons(props) {
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
           className: "icon-wrapper-fa",
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.Fragment, {
-            children: [(props?.tab === "inactive_icon" || props?.tab === "active_icon" ? item?.icons?.[props.type] === "icon" : props?.tab === "all_option" ? item?.icons?.type === "icon" : props?.tab === "label" ? item?.icons?.type === "icon" : props?.tab === "reset_icon" ? item?.icons?.type === "icon" : props?.tab === "search_icon" && item?.icon !== "" ? item?.type === "icon" : props?.tab === "voice_icon" && item?.icon !== "" ? item?.type === "icon" : props?.tab === "clear_icon" && item?.icon !== "" ? item?.type === "icon" : false) ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("i", {
+            children: [(props?.tab === "inactive_icon" || props?.tab === "active_icon" ? item?.icons?.[props.type] === "icon" : props?.tab === "all_option" ? item?.icons?.type === "icon" : props?.tab === "label" ? item?.icons?.type === "icon" : props?.tab === "reset_icon" ? item?.icons?.type === "icon" : props?.tab === "customtext_icon" ? item?.icons?.type === "icon" : props?.tab === "search_icon" && item?.icon !== "" ? item?.type === "icon" : props?.tab === "voice_icon" && item?.icon !== "" ? item?.type === "icon" : props?.tab === "clear_icon" && item?.icon !== "" ? item?.type === "icon" : false) ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("i", {
               "data-icon-name": selectedIcon,
               value: selectedIcon,
               className: selectedIcon
@@ -1334,6 +1365,10 @@ function ContentIcons(props) {
           icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_6__["default"], {}),
           onClick: () => handleIconSelect("", "1")
         }), props?.tab === "reset_icon" && shouldShowResetDeleteButton(item?.icons) && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          shape: "circle",
+          icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_6__["default"], {}),
+          onClick: () => handleIconSelect("", "1")
+        }), props?.tab === "customtext_icon" && (typeof item?.icons?.icon === "string" && item.icons?.icon !== "" || typeof item?.icons?.icon === "object" && item.icons?.icon !== null && Object.keys(item.icons?.icon).length > 0) && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
           shape: "circle",
           icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_6__["default"], {}),
           onClick: () => handleIconSelect("", "1")
@@ -1378,6 +1413,34 @@ function ContentIcons(props) {
           onClick: handleWpUploader1,
           children: "Upload SVG"
         })]
+      })]
+    }), props?.tab === "customtext_icon" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+      className: "module-content-tab-row caf-design-two-half",
+      style: {
+        marginTop: "20px"
+      },
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(antd__WEBPACK_IMPORTED_MODULE_5__["default"], {
+        classNames: {
+          root: "caf-builder-tooltip"
+        },
+        placement: "topLeft",
+        title: "Choose icon placement relative to custom text.",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("label", {
+          children: "Icon Position"
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        style: {
+          width: "100%"
+        },
+        onChange: handlePositionChange,
+        value: iconPosition || "before-customtext",
+        options: [{
+          value: "before-customtext",
+          label: "Before Text"
+        }, {
+          value: "after-customtext",
+          label: "After Text"
+        }]
       })]
     }), props?.tab === "active_icon" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
       class: "module-content-tab-row caf-design-two-half",
@@ -10549,6 +10612,173 @@ const RangeSliderFilter = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
 
 /***/ },
 
+/***/ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/ModuleCustomTextFilterGeneral.js"
+/*!*****************************************************************************************************************************!*\
+  !*** ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/ModuleCustomTextFilterGeneral.js ***!
+  \*****************************************************************************************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var antd_es_input_TextArea__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! antd/es/input/TextArea */ "./node_modules/antd/es/input/TextArea.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/switch/index.js");
+/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/tooltip/index.js");
+/* harmony import */ var _api_client__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../api/client */ "./src/api/client.js");
+/* harmony import */ var _ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ContentComponents/ContentIcons1 */ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/ContentComponents/ContentIcons1.js");
+/* harmony import */ var _filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./filterSettingsSnapshot */ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/filterSettingsSnapshot.js");
+/* harmony import */ var _shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./shared/filterModuleTier */ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/shared/filterModuleTier.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__);
+
+
+
+
+
+
+
+
+const ModuleCustomTextFilterGeneral = props => {
+  const pathUrl = tc_caf_ajax.plugin_path;
+  const iconsUrl = `${pathUrl}admin/fa-icons/fontawesome-5.json`;
+  const {
+    rowindex,
+    columnindex,
+    moduleindex
+  } = props.indexes;
+  const modSettings = props.data[rowindex]?.data[columnindex]?.data[moduleindex]?.settings;
+  const [text, setText] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(modSettings?.customText ?? "");
+  const [showIcon, setShowIcon] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(modSettings?.icons?.visibility ?? false);
+  const [iconsArray, setIconsArray] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    setText(modSettings?.customText ?? "");
+    setShowIcon(modSettings?.icons?.visibility ?? false);
+  }, [props.data, rowindex, columnindex, moduleindex]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const fetchIcons = async () => {
+      try {
+        const response = await _api_client__WEBPACK_IMPORTED_MODULE_4__["default"].get(iconsUrl);
+        if (response.data) {
+          setIconsArray(response.data);
+        }
+      } catch (error) {
+        console.error("Error ", error);
+      }
+    };
+    fetchIcons();
+  }, [iconsUrl]);
+  const onChangeText = e => {
+    const value = e.target.value;
+    setText(value);
+    (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_6__.commitFilterModuleSettingsPatch)({
+      data: props.data,
+      rowindex,
+      columnindex,
+      moduleindex,
+      onSettingChange: props.onSettingChange,
+      patch: settings => {
+        settings.customText = value;
+      }
+    });
+  };
+  const handleShowIcon = checked => {
+    if (!(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_7__.canUseCustomTextModuleIcon)()) {
+      return;
+    }
+    setShowIcon(checked);
+    (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_6__.commitFilterModuleSettingsPatch)({
+      data: props.data,
+      rowindex,
+      columnindex,
+      moduleindex,
+      onSettingChange: props.onSettingChange,
+      patch: settings => {
+        const icons = {
+          ...(settings.icons || {})
+        };
+        icons.visibility = checked;
+        if (!icons.position) {
+          icons.position = "before-customtext";
+        }
+        if (!icons.type) {
+          icons.type = "icon";
+        }
+        settings.icons = icons;
+      }
+    });
+  };
+  const showIconControls = (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_7__.canUseCustomTextModuleIcon)() ? showIcon : true;
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("label", {
+      className: "setting-label-main",
+      children: "Custom Text"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+      className: "module-content-tab-row",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(antd__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        classNames: {
+          root: "caf-builder-tooltip"
+        },
+        placement: "topLeft",
+        title: "Enter custom text or HTML content.",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("label", {
+          children: "Content"
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(antd_es_input_TextArea__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        placeholder: "Add your text here ....",
+        onChange: onChangeText,
+        value: text
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+      className: "caf-filter-label-inner-row",
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_7__.CustomTextModuleIconLockedSection, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+          className: "module-content-tab-row caf-pad-20",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
+            className: "module-content-tab-row caf-design-two-half",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(antd__WEBPACK_IMPORTED_MODULE_3__["default"], {
+              classNames: {
+                root: "caf-builder-tooltip"
+              },
+              placement: "topLeft",
+              title: "Enable or disable icon before/after custom text.",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("label", {
+                children: "Show Icon"
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"], {
+              onChange: handleShowIcon,
+              checked: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_7__.canUseCustomTextModuleIcon)() ? showIcon : true,
+              disabled: !(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_7__.canUseCustomTextModuleIcon)()
+            })]
+          }), showIconControls && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+            className: "module-content-tab-row caf-pad-10",
+            children: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_7__.canUseCustomTextModuleIcon)() && iconsArray ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_5__["default"], {
+              title: "Icons",
+              data: props.data,
+              indexes: props.indexes,
+              iconsArray: iconsArray,
+              onSettingChange: props.onSettingChange,
+              tab: "customtext_icon",
+              type: ""
+            }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("div", {
+              className: "caf-reset-icon-locked-placeholder",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("i", {
+                className: "fas fa-font",
+                "aria-hidden": "true"
+              })
+            })
+          })]
+        })
+      })
+    })]
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ModuleCustomTextFilterGeneral);
+
+/***/ },
+
 /***/ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/ModuleFilterGeneral.js"
 /*!*******************************************************************************************************************!*\
   !*** ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/ModuleFilterGeneral.js ***!
@@ -12197,4 +12427,4 @@ const BUILDER_TOOLTIP_CLASS_NAMES = {
 /***/ }
 
 }]);
-//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js.js.map?ver=b4d1e000ed0f9377d741
+//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js.js.map?ver=2c0e3357785b9f394b3a

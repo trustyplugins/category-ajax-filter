@@ -546,6 +546,7 @@ function load_builder_ajax_dependencies() {
 	require_once $base . 'modules/filters/class-caf-filter-base-module.php';
 	require_once $base . 'modules/filters/class-caf-filter-search-module.php';
 	require_once $base . 'modules/filters/class-caf-filter-reset-module.php';
+	require_once $base . 'modules/filters/class-caf-filter-custom-text-module.php';
 	require_once $base . 'modules/filters/class-caf-filter-checkbox-module.php';
 	require_once $base . 'modules/filters/class-caf-filter-dropdown-module.php';
 	require_once $base . 'modules/filters/class-caf-filter-module-factory.php';
@@ -2416,6 +2417,33 @@ function caf_sanitize_free_reset_module_settings( $settings ) {
 }
 
 /**
+ * Strip Pro-only custom text module icon settings on free tier saves.
+ *
+ * @param object $settings Module settings object.
+ * @return object
+ */
+function caf_sanitize_free_customtext_module_settings( $settings ) {
+	if ( ! is_object( $settings ) ) {
+		$settings = new stdClass();
+	}
+
+	if ( ! class_exists( 'CAF_Builder_Tier' ) ) {
+		return $settings;
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'customtext_module_icon' ) ) {
+		$settings->icons = (object) array(
+			'visibility' => false,
+			'icon'       => '',
+			'type'       => 'icon',
+			'position'   => 'before-customtext',
+		);
+	}
+
+	return $settings;
+}
+
+/**
  * Strip Pro-only post module settings on free tier saves.
  *
  * @param string $module_key Post module key slug.
@@ -2807,6 +2835,11 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 
 			if ( 'reset' === $module_key ) {
 				$module->settings = caf_sanitize_free_reset_module_settings( $module->settings );
+				return;
+			}
+
+			if ( 'customtext' === $module_key ) {
+				$module->settings = caf_sanitize_free_customtext_module_settings( $module->settings );
 			}
 		}
 	);

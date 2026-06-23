@@ -490,6 +490,9 @@ ul.caf-builder-template-preview-selected-tags-container {
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-button .caf-taxo-button-main .caf-taxo-input {
     display: none;
 }
+ul.caf-terms-list.caf-checkbox {
+    overflow: auto;
+}
 .caf-filter-module-reset-output {
     cursor: pointer;
 }
@@ -762,6 +765,10 @@ span.clear-icon.on-type {
 }
 
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-filter-module-reset-output.toggle_closed {
+    display: none;
+}
+
+.filter-layout-container .caf-builder-module-main.caf-module-filter .caf-range-slider-output.toggle_closed {
     display: none;
 }
 

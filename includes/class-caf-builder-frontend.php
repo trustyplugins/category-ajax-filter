@@ -327,6 +327,7 @@ class CAF_Builder_Frontend {
 		require_once $base . 'modules/filters/class-caf-filter-base-module.php';
 		require_once $base . 'modules/filters/class-caf-filter-search-module.php';
 		require_once $base . 'modules/filters/class-caf-filter-reset-module.php';
+		require_once $base . 'modules/filters/class-caf-filter-custom-text-module.php';
 		require_once $base . 'modules/filters/class-caf-filter-checkbox-module.php';
 		require_once $base . 'modules/filters/class-caf-filter-dropdown-module.php';
 		require_once $base . 'modules/filters/class-caf-filter-module-factory.php';

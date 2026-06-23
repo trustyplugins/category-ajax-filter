@@ -54,7 +54,7 @@ class CAF_Builder_Tier {
 			'max_layouts'           => -1,
 			'revision_max'          => 2,
 			'revision_display_max'  => 10,
-			'filter_modules'        => array( 'checkbox', 'dropdown', 'search', 'reset' ),
+			'filter_modules'        => array( 'checkbox', 'dropdown', 'search', 'reset', 'customtext' ),
 			'post_modules'          => array(
 				'image',
 				'title',
@@ -91,6 +91,7 @@ class CAF_Builder_Tier {
 				'filter_term_default',
 				'filter_term_icon',
 				'reset_module_icon',
+				'customtext_module_icon',
 				'meta_relation',
 				'post_image_custom_field',
 				'post_link_custom_field',

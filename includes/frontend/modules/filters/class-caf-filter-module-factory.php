@@ -56,6 +56,16 @@ class CAF_Filter_Module_Factory {
 					$style_generator,
 					$instance_css_prefix
 				);
+			case 'customtext':
+				return new CAF_Filter_Custom_Text_Module(
+					$module,
+					$row_key,
+					$column_key,
+					$module_key,
+					$css_builder,
+					$style_generator,
+					$instance_css_prefix
+				);
 			case 'checkbox_filter':
 				return new CAF_Filter_Checkbox_Module(
 					$module,

@@ -5338,7 +5338,7 @@ const DesignTab = props => {
   //     },
   //   ];
   // }
-  if (module.key === "reset") {
+  if (module.key === "reset" || module.key === "customtext") {
     tab_items = [{
       key: "container",
       label: "Container"
@@ -5726,7 +5726,7 @@ const DesignTab = props => {
     displayProperty
   });
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.Fragment, {
-    children: [type === "module" && module.key !== "reset" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(antd__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    children: [type === "module" && module.key !== "reset" && module.key !== "customtext" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(antd__WEBPACK_IMPORTED_MODULE_3__["default"], {
       defaultActiveKey: "container",
       items: tab_items,
       onChange: onChangeTab,
@@ -5750,7 +5750,7 @@ const DesignTab = props => {
               items: (() => {
                 if (settings?.label?.is_label === "true") {
                   return ContainerItems;
-                } else if (module?.key === "reset") {
+                } else if (module?.key === "reset" || module?.key === "customtext") {
                   return ContainerItems;
                 } else {
                   return ContainerItems.filter(item => item.key !== "1");
@@ -6205,7 +6205,7 @@ function buildFilterDesignTabContainerItems(ctx) {
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.Fragment, {
       children: [type === 'module' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
-        children: module.key !== 'reset' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs, {
+        children: module.key !== 'reset' && module.key !== 'customtext' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("0"),
           activeKey: selectedMetaContainer,
           onChange: value => handleSettingChangeContainer(value),
@@ -6405,7 +6405,7 @@ function buildFilterDesignTabContainerItems(ctx) {
     label: "Text",
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.Fragment, {
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.Fragment, {
-        children: [type === 'module' && module.key !== 'reset' && settings?.label?.is_label === "true" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
+        children: [type === 'module' && module.key !== 'reset' && module.key !== 'customtext' && settings?.label?.is_label === "true" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
           className: "caf-builder-setting-row-label meta-dropdown-dyn",
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs
           // activeKey={'header'}
@@ -6419,7 +6419,7 @@ function buildFilterDesignTabContainerItems(ctx) {
             }].filter(Boolean)
             //defaultActiveKey={'header'}
           })
-        }), type === 'module' && module.key === 'reset' && settings?.icons?.visibility && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
+        }), type === 'module' && (module.key === 'reset' || module.key === 'customtext') && settings?.icons?.visibility && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
           className: "caf-builder-setting-row-label meta-dropdown-dyn",
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs, {
             isCollapseOpen: isCollapsePanelOpen("1"),
@@ -6427,7 +6427,7 @@ function buildFilterDesignTabContainerItems(ctx) {
             onChange: value => handleSettingChangeContainer(value),
             items: [{
               key: "container",
-              label: "Button"
+              label: module.key === "customtext" ? "Text" : "Button"
             }, {
               key: "icon",
               label: "Icon"
@@ -6472,7 +6472,7 @@ function buildFilterDesignTabContainerItems(ctx) {
     key: "2",
     label: "Sizing",
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.Fragment, {
-      children: [type === 'module' && module.key !== 'reset' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
+      children: [type === 'module' && module.key !== 'reset' && module.key !== 'customtext' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("2"),
@@ -6490,7 +6490,7 @@ function buildFilterDesignTabContainerItems(ctx) {
           }].filter(Boolean),
           defaultActiveKey: 'container'
         })
-      }), type === 'module' && module.key === 'reset' && settings?.icons?.visibility && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
+      }), type === 'module' && (module.key === 'reset' || module.key === 'customtext') && settings?.icons?.visibility && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("2"),
@@ -6498,7 +6498,7 @@ function buildFilterDesignTabContainerItems(ctx) {
           onChange: value => handleSettingChangeContainer(value),
           items: [{
             key: "container",
-            label: "Button"
+            label: module.key === "customtext" ? "Text" : "Button"
           }, {
             key: "icon",
             label: "Icon"
@@ -6538,7 +6538,7 @@ function buildFilterDesignTabContainerItems(ctx) {
     key: "3",
     label: "Spacing",
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.Fragment, {
-      children: [type === 'module' && module.key !== 'reset' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
+      children: [type === 'module' && module.key !== 'reset' && module.key !== 'customtext' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("3"),
@@ -6556,7 +6556,7 @@ function buildFilterDesignTabContainerItems(ctx) {
           }].filter(Boolean),
           defaultActiveKey: 'container'
         })
-      }), type === 'module' && module.key === 'reset' && settings?.icons?.visibility && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
+      }), type === 'module' && (module.key === 'reset' || module.key === 'customtext') && settings?.icons?.visibility && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("3"),
@@ -6564,7 +6564,7 @@ function buildFilterDesignTabContainerItems(ctx) {
           onChange: value => handleSettingChangeContainer(value),
           items: [{
             key: "container",
-            label: "Button"
+            label: module.key === "customtext" ? "Text" : "Button"
           }, {
             key: "icon",
             label: "Icon"
@@ -6919,7 +6919,7 @@ function buildFilterDesignTabContainerItems(ctx) {
     key: "5",
     label: "Background",
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.Fragment, {
-      children: [type === 'module' && module.key !== 'reset' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
+      children: [type === 'module' && module.key !== 'reset' && module.key !== 'customtext' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("5"),
@@ -6937,7 +6937,7 @@ function buildFilterDesignTabContainerItems(ctx) {
           }].filter(Boolean),
           defaultActiveKey: 'container'
         })
-      }), type === 'module' && module.key === 'reset' && settings?.icons?.visibility && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
+      }), type === 'module' && (module.key === 'reset' || module.key === 'customtext') && settings?.icons?.visibility && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("5"),
@@ -6945,7 +6945,7 @@ function buildFilterDesignTabContainerItems(ctx) {
           onChange: value => handleSettingChangeContainer(value),
           items: [{
             key: "container",
-            label: "Button"
+            label: module.key === "customtext" ? "Text" : "Button"
           }, {
             key: "icon",
             label: "Icon"
@@ -6989,7 +6989,7 @@ function buildFilterDesignTabContainerItems(ctx) {
     key: "6",
     label: "Border",
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.Fragment, {
-      children: [type === 'module' && module.key !== 'reset' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
+      children: [type === 'module' && module.key !== 'reset' && module.key !== 'customtext' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("6"),
@@ -7007,7 +7007,7 @@ function buildFilterDesignTabContainerItems(ctx) {
           }].filter(Boolean),
           defaultActiveKey: 'container'
         })
-      }), type === 'module' && module.key === 'reset' && settings?.icons?.visibility && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
+      }), type === 'module' && (module.key === 'reset' || module.key === 'customtext') && settings?.icons?.visibility && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("6"),
@@ -7015,7 +7015,7 @@ function buildFilterDesignTabContainerItems(ctx) {
           onChange: value => handleSettingChangeContainer(value),
           items: [{
             key: "container",
-            label: "Button"
+            label: module.key === "customtext" ? "Text" : "Button"
           }, {
             key: "icon",
             label: "Icon"
@@ -7058,7 +7058,7 @@ function buildFilterDesignTabContainerItems(ctx) {
     key: "7",
     label: "Box Shadow",
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.Fragment, {
-      children: [type === 'module' && module.key !== 'reset' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
+      children: [type === 'module' && module.key !== 'reset' && module.key !== 'customtext' && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("7"),
@@ -7076,7 +7076,7 @@ function buildFilterDesignTabContainerItems(ctx) {
           }].filter(Boolean),
           defaultActiveKey: 'container'
         })
-      }), type === 'module' && module.key === 'reset' && settings?.icons?.visibility && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
+      }), type === 'module' && (module.key === 'reset' || module.key === 'customtext') && settings?.icons?.visibility && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_29__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_9__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("7"),
@@ -7084,7 +7084,7 @@ function buildFilterDesignTabContainerItems(ctx) {
           onChange: value => handleSettingChangeContainer(value),
           items: [{
             key: "container",
-            label: "Button"
+            label: module.key === "customtext" ? "Text" : "Button"
           }, {
             key: "icon",
             label: "Icon"
@@ -10280,4 +10280,4 @@ function buildFilterDesignTabMetaItems(ctx) {
 /***/ }
 
 }]);
-//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_DesignTab_js.js.map?ver=e81c61c9223e588672b3
+//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_DesignTab_js.js.map?ver=c8d204fca42151bb942f
