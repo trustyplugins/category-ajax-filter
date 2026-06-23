@@ -81,9 +81,37 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 		$this->collect_default_and_hover_css( $selectmeta_style, $selectmeta_selector_selected, 'selected' );
 		$this->collect_default_and_hover_css( $selecticon_style, $selecticon_selector_selected, 'selected' );
 		$this->collect_default_and_hover_css( $selecticon_style, $selecticon2_selector_selected, 'selected' );
+	}
 
-		// $this->collect_default_and_hover_css( $meta_style, $selected_selector );
-		// $this->collect_default_and_hover_css( $meta_style, $active_selector );
+	/**
+	 * Build dropdown inline layout classes used by frontend markup.
+	 *
+	 * Mirrors the React builder: design CSS is always emitted, only the
+	 * caf-layout-* justify class falls back to flex-start when a toggle is off.
+	 *
+	 * @param object $settings Module settings.
+	 * @return array{list_item:string,text:string,select:string,selected_text:string}
+	 */
+	protected function get_dropdown_layout_classes( $settings ) {
+		$show_icon  = $this->is_truthy( isset( $settings->show_icon ) ? $settings->show_icon : '' );
+		$show_count = $this->is_truthy( isset( $settings->show_count ) ? $settings->show_count : '' );
+
+		$list_item = $show_icon
+			? $this->get_style_justify_content( $this->get_style_section( 'meta1' ), 'flex-start' )
+			: 'flex-start';
+
+		if ( $show_count || ! $show_icon ) {
+			$text = $this->get_style_justify_content( $this->get_style_section( 'meta3' ), 'flex-start' );
+		} else {
+			$text = 'flex-start';
+		}
+
+		return array(
+			'list_item'     => $list_item,
+			'text'          => $text,
+			'select'        => $this->get_style_justify_content( $this->get_style_section( 'selectmeta' ), 'flex-start' ),
+			'selected_text' => $this->get_style_justify_content( $this->get_style_section( 'meta4' ), 'flex-start' ),
+		);
 	}
 
 	/**
@@ -142,16 +170,10 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 		$html .= ' meta-type="">';
 		$html .= '<li class="caf-terms-list-item-wrraper" term-value="all" term-id="0">';
 		$html .= '<div class="caf-selected-term-main' . ( empty( $settings->predefined_terms ) ? ' caf-all-selected' : '' ) . '">';
-		$selectmeta = $this->get_style_section( 'selectmeta' );
-		$meta1      = $this->get_style_section( 'meta1' );
-		// echo '<pre>';
-		// var_dump($selectmeta);
-		// echo '</pre>';
-		$selectbox = $this->get_style_justify_content( $selectmeta, 'flex-start' );
-		$textcount = $this->get_style_justify_content( $meta1, 'flex-start' );
-		$html     .= '<div class="result caf-layout-' . $selectbox . '"><div class="manage-text-lbl caf-layout-' . $textcount . '">';
-		$html     .= $this->render_taxonomy_selected_label( $settings, $all_option_value );
-		$html     .= '</div></div>';
+		$layout_classes = $this->get_dropdown_layout_classes( $settings );
+		$html          .= '<div class="result caf-layout-' . esc_attr( $layout_classes['select'] ) . '"><div class="manage-text-lbl caf-layout-' . esc_attr( $layout_classes['selected_text'] ) . '">';
+		$html          .= $this->render_taxonomy_selected_label( $settings, $all_option_value );
+		$html          .= '</div></div>';
 		$html .= '<span class="selected-icon"><i class="fas fa-chevron-down"></i></span>';
 
 		$html .= '</div>';
@@ -163,7 +185,8 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 				$settings,
 				$all_option_value,
 				$all_active_class,
-				$textcount,
+				$layout_classes['list_item'],
+				$layout_classes['text'],
 				$first_taxonomy_key,
 				'0'
 			);
@@ -187,12 +210,12 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 					$term_active_class = 'active';
 				}
 
-				$html .= '<li class="caf-terms-list-item ' . esc_attr( $term_active_class ) . ' caf-layout-' . $textcount . '" taxonomy="' . esc_attr( $taxonomy->key ) . '" data-key="' . esc_attr( $taxonomy->key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy->key, $term->key ) ) . '" predefine="' . esc_attr( $term_predefine ) . '">';
+				$html .= '<li class="caf-terms-list-item ' . esc_attr( $term_active_class ) . ' caf-layout-' . esc_attr( $layout_classes['list_item'] ) . '" taxonomy="' . esc_attr( $taxonomy->key ) . '" data-key="' . esc_attr( $taxonomy->key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy->key, $term->key ) ) . '" predefine="' . esc_attr( $term_predefine ) . '">';
 
 				if ( ! empty( $term->icons->icon ) && ! empty( $term->icons->position ) && $settings->show_icon == 'true' ) {
 					$html .= '<i class="fa-solid ' . esc_attr( $term->icons->icon ) . ' filter-before-icon"></i>';
 				}
-				$html .= '<div class="manage-text-lbl caf-layout-' . $textcount . '">';
+				$html .= '<div class="manage-text-lbl caf-layout-' . esc_attr( $layout_classes['text'] ) . '">';
 				$html .= '<span class="trm-name">' . esc_html( $term->value ) . '</span>';
 				if ( $settings->show_count == 'true' ) {
 					$html .= '<span class="count-span">' . $this->format_count_text( $term->count, $settings ) . '</span>';
@@ -299,14 +322,15 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 	 * @param object $settings         Module settings.
 	 * @param string $all_option_value All option label.
 	 * @param string $active_class     Active class string.
-	 * @param string $textcount        Layout class suffix.
+	 * @param string $list_item        List item layout class suffix.
+	 * @param string $text             Text label layout class suffix.
 	 * @param string $data_key         Taxonomy or custom-field key.
 	 * @param string $term_id          All term id attribute.
 	 * @param string $label_class      Label span class.
 	 * @return string
 	 */
-	protected function render_dropdown_all_list_item( $settings, $all_option_value, $active_class, $textcount, $data_key = '', $term_id = '0', $label_class = 'trm-name' ) {
-		$html  = '<li class="caf-terms-list-item caf-dropdown-all-option ' . esc_attr( $active_class ) . ' caf-layout-' . esc_attr( $textcount ) . '"';
+	protected function render_dropdown_all_list_item( $settings, $all_option_value, $active_class, $list_item, $text, $data_key = '', $term_id = '0', $label_class = 'trm-name' ) {
+		$html  = '<li class="caf-terms-list-item caf-dropdown-all-option ' . esc_attr( $active_class ) . ' caf-layout-' . esc_attr( $list_item ) . '"';
 		$html .= ' predefine="false"';
 		$html .= ' term-value="all"';
 		$html .= ' term-id="' . esc_attr( $term_id ) . '"';
@@ -328,7 +352,7 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 			$html .= $icon_markup;
 		}
 
-		$html .= '<div class="manage-text-lbl caf-layout-' . esc_attr( $textcount ) . '">';
+		$html .= '<div class="manage-text-lbl caf-layout-' . esc_attr( $text ) . '">';
 		$html .= '<span class="' . esc_attr( $label_class ) . '">' . esc_html( $all_option_value ) . '</span>';
 		$html .= '</div>';
 

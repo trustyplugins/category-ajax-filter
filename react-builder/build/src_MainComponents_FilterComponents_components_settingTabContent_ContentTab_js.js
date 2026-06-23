@@ -2149,7 +2149,7 @@ const CheckboxFilter = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
   });
   const [iconSwitch, setIconSwitch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   const [selectedIcon, setSelectedIcon] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
-  const [labelIconSwitch, setLabelIconSwitch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.label?.icons?.visibility);
+  const [labelIconSwitch, setLabelIconSwitch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)((0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseLabelShowIcon)() ? settingData?.label?.icons?.visibility : false);
   const [metaKeys, setMetaKeys] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   // custom field
   const [contentIconDetailCusField, setcontentIconDetailCusField] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
@@ -2163,10 +2163,7 @@ const CheckboxFilter = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
   const [checkError, setCheckError] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [checkLabel, setCheckLabel] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData.label.is_label === "false" ? false : true);
   const [labelInput, setLabelInput] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData.label.value);
-  const [toggle, setToggle] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
-    enable: settingData.enable_toggle === "false" ? false : true,
-    close: settingData.close_toggle === "false" ? false : true
-  });
+  const [toggle, setToggle] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(() => (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.resolveFilterLabelCollapseToggleState)(settingData));
   // const [allOptionInput, setAllOptionInput] = useState(
   //   settingData.dropdown_data.all_option.value
   // );
@@ -2836,9 +2833,9 @@ const CheckboxFilter = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
     }
     setToggle(prev => ({
       ...prev,
-      enable: data.enable_toggle === "false" ? false : true
+      enable: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.resolveFilterLabelCollapseToggleState)(data).enable
     }));
-    if (data.enable_toggle === "false") {
+    if (!(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterLabelCollapse)() || data.enable_toggle === "false") {
       data.close_toggle = "false";
       setToggle(prev => ({
         ...prev,
@@ -2846,7 +2843,7 @@ const CheckboxFilter = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
       }));
     }
     setCompareOperator(data?.custom_field_data?.compare_operator);
-    const nextSettings = (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_25__.enforceSingleDefaultTermsInSettings)(data);
+    const nextSettings = (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_25__.enforceSingleDefaultTermsInSettings)((0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.applyFilterLabelCollapseTierToSettings)(data));
     (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_25__.commitFilterModuleReplaceSettings)({
       data: props.data,
       rowindex,
@@ -2874,9 +2871,9 @@ const CheckboxFilter = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
     }
     setToggle(prev => ({
       ...prev,
-      enable: data.enable_toggle === "false" ? false : true
+      enable: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.resolveFilterLabelCollapseToggleState)(data).enable
     }));
-    if (data.enable_toggle === "false") {
+    if (!(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterLabelCollapse)() || data.enable_toggle === "false") {
       data.close_toggle = "false";
       setToggle(prev => ({
         ...prev,
@@ -2900,7 +2897,7 @@ const CheckboxFilter = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
     // items[rowindex].data[columnindex].data[moduleindex]["style"] = styleData ;
     // props.onSettingChange(items);
 
-    const nextSettings = (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_25__.enforceSingleDefaultTermsInSettings)(data);
+    const nextSettings = (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_25__.enforceSingleDefaultTermsInSettings)((0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.applyFilterLabelCollapseTierToSettings)(data));
     (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_25__.commitFilterModuleReplaceSettings)({
       data: props.data,
       rowindex,
@@ -3979,6 +3976,9 @@ const CheckboxFilter = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
     // }
   };
   const onLabelIconSwitch = checked => {
+    if (!(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseLabelShowIcon)()) {
+      return;
+    }
     setLabelIconSwitch(checked);
     let itm = {
       ...settingData?.label
@@ -4798,68 +4798,74 @@ const CheckboxFilter = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
                   onChange: e => handleLabel(e.target.value),
                   value: labelInput
                 })]
-              }), iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)("div", {
+              }), iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.FilterLabelShowIconLockedSection, {
                 className: "module-content-tab-row caf-builder-show-label-icon",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)("div", {
-                  class: "module-content-tab-row caf-design-two-half",
-                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(antd__WEBPACK_IMPORTED_MODULE_9__["default"], {
-                    classNames: {
-                      root: "caf-builder-tooltip"
-                    },
-                    placement: "topLeft",
-                    title: "Enable label icon settings.",
-                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("label", {
-                      children: "Show Icon"
-                    })
-                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
-                    className: "module-content-icon-switch",
-                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(antd__WEBPACK_IMPORTED_MODULE_8__["default"], {
-                      onChange: onLabelIconSwitch,
-                      checked: labelIconSwitch
-                    })
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)("div", {
+                  className: "module-content-tab-row caf-builder-show-label-icon",
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)("div", {
+                    class: "module-content-tab-row caf-design-two-half",
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(antd__WEBPACK_IMPORTED_MODULE_9__["default"], {
+                      classNames: {
+                        root: "caf-builder-tooltip"
+                      },
+                      placement: "topLeft",
+                      title: "Enable label icon settings.",
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("label", {
+                        children: "Show Icon"
+                      })
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
+                      className: "module-content-icon-switch",
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(antd__WEBPACK_IMPORTED_MODULE_8__["default"], {
+                        onChange: onLabelIconSwitch,
+                        checked: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseLabelShowIcon)() ? labelIconSwitch : false,
+                        disabled: !(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseLabelShowIcon)()
+                      })
+                    })]
+                  }), (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseLabelShowIcon)() && labelIconSwitch && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_19__["default"], {
+                    title: "Icons",
+                    data: props.data,
+                    indexes: props.indexes,
+                    iconsArray: iconsArray,
+                    onSettingChange: props.onSettingChange,
+                    tab: "label",
+                    type: ""
                   })]
-                }), labelIconSwitch && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_19__["default"], {
-                  title: "Icons",
-                  data: props.data,
-                  indexes: props.indexes,
-                  iconsArray: iconsArray,
-                  onSettingChange: props.onSettingChange,
-                  tab: "label",
-                  type: ""
-                })]
+                })
               })]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
-              className: "module-content-tab-row caf-design-two-half",
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_SwitchMain__WEBPACK_IMPORTED_MODULE_22__["default"], {
-                label: "Enable Collapse",
-                property: "enable_toggle",
-                onSettingChange: changeInitialData,
-                data: settingData,
-                currValue: settingData.enable_toggle
-              })
-            }), toggle.enable && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.Fragment, {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_SelectMain__WEBPACK_IMPORTED_MODULE_21__["default"], {
-                label: "Toggle Icon Position",
-                property: "toggle_position",
-                classn: 'caf-design-two-half',
-                options: [{
-                  label: "Left",
-                  value: "left"
-                }, {
-                  label: "Right",
-                  value: "right"
-                }],
-                onSettingChange: changeInitialData,
-                data: settingData
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)(_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.FilterLabelCollapseLockedSection, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
                 className: "module-content-tab-row caf-design-two-half",
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_SwitchMain__WEBPACK_IMPORTED_MODULE_22__["default"], {
-                  label: "Default Collapsed",
-                  property: "close_toggle",
+                  label: "Enable Collapse",
+                  property: "enable_toggle",
                   onSettingChange: changeInitialData,
                   data: settingData,
-                  currValue: settingData.close_toggle
+                  currValue: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterLabelCollapse)() ? settingData.enable_toggle : "false"
                 })
+              }), (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterLabelCollapse)() && toggle.enable && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.Fragment, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_SelectMain__WEBPACK_IMPORTED_MODULE_21__["default"], {
+                  label: "Toggle Icon Position",
+                  property: "toggle_position",
+                  classn: 'caf-design-two-half',
+                  options: [{
+                    label: "Left",
+                    value: "left"
+                  }, {
+                    label: "Right",
+                    value: "right"
+                  }],
+                  onSettingChange: changeInitialData,
+                  data: settingData
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
+                  className: "module-content-tab-row caf-design-two-half",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_SwitchMain__WEBPACK_IMPORTED_MODULE_22__["default"], {
+                    label: "Default Collapsed",
+                    property: "close_toggle",
+                    onSettingChange: changeInitialData,
+                    data: settingData,
+                    currValue: settingData.close_toggle
+                  })
+                })]
               })]
             })]
           })]
@@ -5159,12 +5165,12 @@ const DropdownFilter1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
     iconChecked: true,
     type: 'icon'
   });
-  const [allIconSwitch, setAllIconSwitch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.dropdown_data?.all_option?.icons?.visibility);
+  const [allIconSwitch, setAllIconSwitch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)((0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterShowIcon)() ? settingData?.dropdown_data?.all_option?.icons?.visibility : false);
   const [allOptArray, setAllOptArray] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.dropdown_data?.all_option);
   const [allOptEnable, setAllOptEnable] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.dropdown_data?.all_option?.is_enable === "true" ? true : false);
   const [iconSwitch, setIconSwitch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   const [selectedIcon, setSelectedIcon] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
-  const [labelIconSwitch, setLabelIconSwitch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.label?.icons?.visibility);
+  const [labelIconSwitch, setLabelIconSwitch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)((0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseLabelShowIcon)() ? settingData?.label?.icons?.visibility : false);
   // custom field
   const [contentIconDetailCusField, setcontentIconDetailCusField] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
     icon: "",
@@ -5178,10 +5184,7 @@ const DropdownFilter1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
   const [metaKeys, setMetaKeys] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [checkLabel, setCheckLabel] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData.label.is_label === "false" ? false : true);
   const [labelInput, setLabelInput] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData.label.value);
-  const [toggle, setToggle] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
-    enable: settingData.enable_toggle === "false" ? false : true,
-    close: settingData.close_toggle === "false" ? false : true
-  });
+  const [toggle, setToggle] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(() => (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.resolveFilterLabelCollapseToggleState)(settingData));
   const [allOptionInput, setAllOptionInput] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData.dropdown_data.all_option.value);
   const [customFieldKey, setCustomFieldKey] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.custom_field_data?.custom_field_key || (Array.isArray(settingData?.custom_field_data) ? settingData.custom_field_data?.[0]?.custom_field_key : ""));
   const [openCfRows, setOpenCfRows] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({});
@@ -5355,6 +5358,9 @@ const DropdownFilter1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
   //   }, [postType]);
 
   const onAllIconSwitch = checked => {
+    if (!(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterShowIcon)()) {
+      return;
+    }
     let itm = {
       ...settingData?.dropdown_data?.all_option
     };
@@ -5689,9 +5695,9 @@ const DropdownFilter1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
     }
     setToggle(prev => ({
       ...prev,
-      enable: data.enable_toggle == "false" ? false : true
+      enable: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.resolveFilterLabelCollapseToggleState)(data).enable
     }));
-    if (data.enable_toggle == "false") {
+    if (!(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterLabelCollapse)() || data.enable_toggle == "false") {
       data.close_toggle = "false";
       setToggle(prev => ({
         ...prev,
@@ -5699,10 +5705,10 @@ const DropdownFilter1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
       }));
     }
     setCompareOperator(data?.custom_field_data?.compare_operator);
-    const nextSettings = (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_25__.enforceSingleDefaultTermsInSettings)({
+    const nextSettings = (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_25__.enforceSingleDefaultTermsInSettings)((0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.applyFilterLabelCollapseTierToSettings)({
       ...data,
       multiple_term: "false"
-    }, {
+    }), {
       forceSingle: true
     });
     (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_25__.commitFilterModuleReplaceSettings)({
@@ -5732,9 +5738,9 @@ const DropdownFilter1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
     }
     setToggle(prev => ({
       ...prev,
-      enable: data.enable_toggle == "false" ? false : true
+      enable: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.resolveFilterLabelCollapseToggleState)(data).enable
     }));
-    if (data.enable_toggle == "false") {
+    if (!(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterLabelCollapse)() || data.enable_toggle == "false") {
       data.close_toggle = "false";
       setToggle(prev => ({
         ...prev,
@@ -5754,10 +5760,10 @@ const DropdownFilter1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
     // items[rowindex].data[columnindex].data[moduleindex]["style"] = styleData ;
     // props.onSettingChange(items);
 
-    const nextSettings = (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_25__.enforceSingleDefaultTermsInSettings)({
+    const nextSettings = (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_25__.enforceSingleDefaultTermsInSettings)((0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.applyFilterLabelCollapseTierToSettings)({
       ...data,
       multiple_term: "false"
-    }, {
+    }), {
       forceSingle: true
     });
     (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_25__.commitFilterModuleReplaceSettings)({
@@ -6513,6 +6519,9 @@ const DropdownFilter1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
     }, 100);
   };
   const onLabelIconSwitch = checked => {
+    if (!(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseLabelShowIcon)()) {
+      return;
+    }
     setLabelIconSwitch(checked);
     let itm = {
       ...settingData?.label
@@ -6606,7 +6615,7 @@ const DropdownFilter1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
   };
   const handleCancelAllOption = () => {
     setAllOptionInput(settingData?.dropdown_data?.all_option?.value ?? "");
-    setAllIconSwitch(settingData?.dropdown_data?.all_option?.icons?.visibility ?? false);
+    setAllIconSwitch((0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterShowIcon)() ? settingData?.dropdown_data?.all_option?.icons?.visibility ?? false : false);
     setAllOptArray(settingData?.dropdown_data?.all_option);
     setAllOptModal(false);
   };
@@ -7260,37 +7269,40 @@ const DropdownFilter1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
             value: allOptionInput
           })]
         })]
-      }), iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)("div", {
-        className: "module-content-tab-row",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)("div", {
-          class: "module-content-tab-row caf-design-two-half",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(antd__WEBPACK_IMPORTED_MODULE_9__["default"], {
-            classNames: {
-              root: "caf-builder-tooltip"
-            },
-            placement: "topLeft",
-            title: "Enable placeholder icon settings.",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("label", {
-              children: "Show Icon"
-            })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
-            className: "module-content-icon-switch",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(antd__WEBPACK_IMPORTED_MODULE_8__["default"], {
-              onChange: onAllIconSwitch,
-              checked: allIconSwitch
-            })
+      }), iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.FilterShowIconLockedSection, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)("div", {
+          className: "module-content-tab-row",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)("div", {
+            class: "module-content-tab-row caf-design-two-half",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(antd__WEBPACK_IMPORTED_MODULE_9__["default"], {
+              classNames: {
+                root: "caf-builder-tooltip"
+              },
+              placement: "topLeft",
+              title: "Enable placeholder icon settings.",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("label", {
+                children: "Show Icon"
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
+              className: "module-content-icon-switch",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(antd__WEBPACK_IMPORTED_MODULE_8__["default"], {
+                onChange: onAllIconSwitch,
+                checked: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterShowIcon)() ? allIconSwitch : false,
+                disabled: !(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterShowIcon)()
+              })
+            })]
+          }), (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterShowIcon)() && allIconSwitch && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_23__["default"], {
+            title: "Icons",
+            data: props.data,
+            indexes: props.indexes,
+            iconsArray: iconsArray,
+            onSettingChange: props.onSettingChange,
+            tab: "all_option",
+            type: ""
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("hr", {
+            className: "setting-hr-main"
           })]
-        }), allIconSwitch && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_23__["default"], {
-          title: "Icons",
-          data: props.data,
-          indexes: props.indexes,
-          iconsArray: iconsArray,
-          onSettingChange: props.onSettingChange,
-          tab: "all_option",
-          type: ""
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("hr", {
-          className: "setting-hr-main"
-        })]
+        })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.Fragment, {
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.FilterShowIconLockedSection, {
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)("div", {
@@ -7434,68 +7446,74 @@ const DropdownFilter1 = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(props => {
                   onChange: e => handleLabel(e.target.value),
                   value: labelInput
                 })]
-              }), iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)("div", {
+              }), iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.FilterLabelShowIconLockedSection, {
                 className: "module-content-tab-row caf-builder-show-label-icon",
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)("div", {
-                  class: "module-content-tab-row caf-design-two-half",
-                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(antd__WEBPACK_IMPORTED_MODULE_9__["default"], {
-                    classNames: {
-                      root: "caf-builder-tooltip"
-                    },
-                    placement: "topLeft",
-                    title: "Enable label icon settings.",
-                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("label", {
-                      children: "Show Icons"
-                    })
-                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
-                    className: "module-content-icon-switch",
-                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(antd__WEBPACK_IMPORTED_MODULE_8__["default"], {
-                      onChange: onLabelIconSwitch,
-                      checked: labelIconSwitch
-                    })
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)("div", {
+                  className: "module-content-tab-row caf-builder-show-label-icon",
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)("div", {
+                    class: "module-content-tab-row caf-design-two-half",
+                    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(antd__WEBPACK_IMPORTED_MODULE_9__["default"], {
+                      classNames: {
+                        root: "caf-builder-tooltip"
+                      },
+                      placement: "topLeft",
+                      title: "Enable label icon settings.",
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("label", {
+                        children: "Show Icons"
+                      })
+                    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
+                      className: "module-content-icon-switch",
+                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(antd__WEBPACK_IMPORTED_MODULE_8__["default"], {
+                        onChange: onLabelIconSwitch,
+                        checked: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseLabelShowIcon)() ? labelIconSwitch : false,
+                        disabled: !(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseLabelShowIcon)()
+                      })
+                    })]
+                  }), (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseLabelShowIcon)() && labelIconSwitch && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_23__["default"], {
+                    title: "Icons",
+                    data: props.data,
+                    indexes: props.indexes,
+                    iconsArray: iconsArray,
+                    onSettingChange: props.onSettingChange,
+                    tab: "label",
+                    type: ""
                   })]
-                }), labelIconSwitch && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_23__["default"], {
-                  title: "Icons",
-                  data: props.data,
-                  indexes: props.indexes,
-                  iconsArray: iconsArray,
-                  onSettingChange: props.onSettingChange,
-                  tab: "label",
-                  type: ""
-                })]
+                })
               })]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
-              className: "module-content-tab-row caf-design-two-half",
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_SwitchMain__WEBPACK_IMPORTED_MODULE_22__["default"], {
-                label: "Enable Collapse",
-                property: "enable_toggle",
-                onSettingChange: changeInitialData,
-                data: settingData,
-                currValue: settingData.enable_toggle
-              })
-            }), toggle.enable && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.Fragment, {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_SelectMain__WEBPACK_IMPORTED_MODULE_21__["default"], {
-                label: "Toggle Icon Position",
-                property: "toggle_position",
-                classn: 'caf-design-two-half',
-                options: [{
-                  label: "Left",
-                  value: "left"
-                }, {
-                  label: "Right",
-                  value: "right"
-                }],
-                onSettingChange: changeInitialData,
-                data: settingData
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)(_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.FilterLabelCollapseLockedSection, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
                 className: "module-content-tab-row caf-design-two-half",
                 children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_SwitchMain__WEBPACK_IMPORTED_MODULE_22__["default"], {
-                  label: "Default Collapsed",
-                  property: "close_toggle",
+                  label: "Enable Collapse",
+                  property: "enable_toggle",
                   onSettingChange: changeInitialData,
                   data: settingData,
-                  currValue: settingData.close_toggle
+                  currValue: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterLabelCollapse)() ? settingData.enable_toggle : "false"
                 })
+              }), (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_30__.canUseFilterLabelCollapse)() && toggle.enable && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.Fragment, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_SelectMain__WEBPACK_IMPORTED_MODULE_21__["default"], {
+                  label: "Toggle Icon Position",
+                  property: "toggle_position",
+                  classn: 'caf-design-two-half',
+                  options: [{
+                    label: "Left",
+                    value: "left"
+                  }, {
+                    label: "Right",
+                    value: "right"
+                  }],
+                  onSettingChange: changeInitialData,
+                  data: settingData
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)("div", {
+                  className: "module-content-tab-row caf-design-two-half",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_31__.jsx)(_ContentComponents_SwitchMain__WEBPACK_IMPORTED_MODULE_22__["default"], {
+                    label: "Default Collapsed",
+                    property: "close_toggle",
+                    onSettingChange: changeInitialData,
+                    data: settingData,
+                    currValue: settingData.close_toggle
+                  })
+                })]
               })]
             })]
           })]
@@ -10783,8 +10801,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SearchModeIcon__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./SearchModeIcon */ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/SearchModeIcon.js");
 /* harmony import */ var _tier_capabilities__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../../../../../tier/capabilities */ "./src/tier/capabilities.js");
 /* harmony import */ var _tier_TierLockedWrap__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../../../../tier/TierLockedWrap */ "./src/tier/TierLockedWrap.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__);
+/* harmony import */ var _shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ./shared/filterModuleTier */ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/shared/filterModuleTier.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__);
+
 
 
 
@@ -10802,7 +10822,7 @@ __webpack_require__.r(__webpack_exports__);
 const Tooltip = ({
   classNames,
   ...tooltipProps
-}) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_5__["default"], {
+}) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_5__["default"], {
   classNames: {
     ..._shared_builderTooltipProps__WEBPACK_IMPORTED_MODULE_13__.BUILDER_TOOLTIP_CLASS_NAMES,
     ...classNames
@@ -10832,7 +10852,7 @@ const ModuleSearchGenerals = props => {
     value: "0"
   }];
   if (meta_fields) {
-    Object.keys(meta_fields)?.map((item, i) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.Fragment, {
+    Object.keys(meta_fields)?.map((item, i) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.Fragment, {
       children: meta_object.push({
         value: item,
         label: item
@@ -10840,18 +10860,18 @@ const ModuleSearchGenerals = props => {
     }));
   }
   const [customfield, setCustomfield] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.custom_field ?? "0");
-  const [checkSearch, setCheckSearch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.search_icon?.is_enable === "false" ? false : true);
+  const [checkSearch, setCheckSearch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)((0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseSearchShowIcon)() ? settingData?.search_icon?.is_enable !== "false" : false);
   const [checkVoice, setVoiceSearch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.voice_icon?.is_enable === "false" ? false : true);
-  const [checkClear, setClearSearch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.clear_icon?.is_enable === "false" ? false : true);
+  const [checkClear, setClearSearch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)((0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseSearchClearInput)() ? settingData?.clear_icon?.is_enable !== "false" : false);
   const [label, setLabel] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData.search_label);
   const [placeholder, setPlaceholder] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData.search_placeholder);
   const [headerlabel, setHeaderlabel] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData.label.is_label === "false" ? false : true);
   const [toggle, setToggle] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
-    enable: settingData.enable_toggle === "false" ? false : true,
-    close: settingData.close_toggle === "false" ? false : true
+    enable: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseFilterLabelCollapse)() && settingData.enable_toggle !== "false",
+    close: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseFilterLabelCollapse)() && settingData.close_toggle !== "false"
   });
   const [haederlabelInput, setHaederlabelInput] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData.label.value);
-  const [labelIconSwitch, setLabelIconSwitch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.label?.icons?.visibility);
+  const [labelIconSwitch, setLabelIconSwitch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)((0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseLabelShowIcon)() ? settingData?.label?.icons?.visibility : false);
   const [position, setPosition] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.search_icon?.position ?? "right");
   const [voiceposition, setVoicePosition] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.voice_icon?.position ?? "right");
   const [clearposition, setClearPosition] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(settingData?.clear_icon?.position ?? "right");
@@ -10876,31 +10896,31 @@ const ModuleSearchGenerals = props => {
     return "keyword_search";
   });
   const searchModeOptions = [{
-    label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+    label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
       placement: "topLeft",
       title: "Classic keyword matching based on selected sources.",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("span", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("span", {
         className: "caf-search-mode-tab-label",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(_SearchModeIcon__WEBPACK_IMPORTED_MODULE_14__["default"], {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(_SearchModeIcon__WEBPACK_IMPORTED_MODULE_14__["default"], {
           mode: "keyword_search"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("span", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("span", {
           children: "Keyword"
         })]
       })
     }),
     value: "keyword_search"
   }, {
-    label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+    label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
       placement: "topLeft",
       title: "AI-assisted semantic search for intent-based results.",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("span", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("span", {
         className: "caf-search-mode-tab-label caf-search-mode-tab-label--smart-ai",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(_SearchModeIcon__WEBPACK_IMPORTED_MODULE_14__["default"], {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(_SearchModeIcon__WEBPACK_IMPORTED_MODULE_14__["default"], {
           mode: "smart_ai_search"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("span", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("span", {
           className: "caf-ai-search-btn-label",
           children: "Smart AI Search"
-        }), !canUseSmartAiSearch ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("span", {
+        }), !canUseSmartAiSearch ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("span", {
           className: "caf-builder-tier-locked-wrap__badge caf-search-mode-pro-badge",
           children: "Pro"
         }) : null]
@@ -10911,19 +10931,19 @@ const ModuleSearchGenerals = props => {
     className: !canUseSmartAiSearch ? "caf-builder-tier-locked-segment-item" : undefined
   }];
   const iconPositionOptions = [{
-    label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+    label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
       placement: "topLeft",
       title: "Place the icon on the left side of the input.",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("span", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("span", {
         children: "Left"
       })
     }),
     value: "left"
   }, {
-    label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+    label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
       placement: "topLeft",
       title: "Place the icon on the right side of the input.",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("span", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("span", {
         children: "Right"
       })
     }),
@@ -10932,9 +10952,9 @@ const ModuleSearchGenerals = props => {
   const IconPositionTabs = ({
     value,
     onChange
-  }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("div", {
+  }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("div", {
     className: "hoverswitchguard",
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"], {
       value: value,
       style: {
         marginBottom: 10
@@ -10973,6 +10993,9 @@ const ModuleSearchGenerals = props => {
   // }, [headerlabel]);
 
   const handleSearch = checked => {
+    if (!(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseSearchShowIcon)()) {
+      return;
+    }
     setCheckSearch(checked);
     (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_12__.commitFilterModuleSettingsPatch)({
       data: props.data,
@@ -11008,6 +11031,9 @@ const ModuleSearchGenerals = props => {
     });
   };
   const handleClear = checked => {
+    if (!(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseSearchClearInput)()) {
+      return;
+    }
     setClearSearch(checked);
     (0,_filterSettingsSnapshot__WEBPACK_IMPORTED_MODULE_12__.commitFilterModuleSettingsPatch)({
       data: props.data,
@@ -11056,11 +11082,15 @@ const ModuleSearchGenerals = props => {
         data.icons = {};
       }
     }
+    if (!(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseFilterLabelCollapse)()) {
+      data.enable_toggle = "false";
+      data.close_toggle = "false";
+    }
     setToggle(prev => ({
       ...prev,
-      enable: data.enable_toggle == "false" ? false : true
+      enable: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseFilterLabelCollapse)() && data.enable_toggle !== "false"
     }));
-    if (data.enable_toggle == "false") {
+    if (!(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseFilterLabelCollapse)() || data.enable_toggle === "false") {
       data.close_toggle = "false";
       setToggle(prev => ({
         ...prev,
@@ -11141,6 +11171,9 @@ const ModuleSearchGenerals = props => {
     });
   };
   const onLabelIconSwitch = checked => {
+    if (!(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseLabelShowIcon)()) {
+      return;
+    }
     setLabelIconSwitch(checked);
     let itm = {
       ...settingData?.label
@@ -11358,15 +11391,15 @@ const ModuleSearchGenerals = props => {
       }
     });
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
       className: "module-content-tab-row smart-ai-search-row",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
         className: "setting-label-main",
         children: "Search Type"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
         className: `hoverswitchguard caf-search-type-segmented-wrap${!canUseSmartAiSearch ? " caf-search-type-segmented-wrap--locked" : ""}`,
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"], {
           value: searchMode,
           style: {
             marginBottom: 10
@@ -11374,14 +11407,14 @@ const ModuleSearchGenerals = props => {
           onChange: handleSearchModeChange,
           className: "hoverTabCaf caf-search-type-segmented",
           options: searchModeOptions
-        }), !canUseSmartAiSearch ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+        }), !canUseSmartAiSearch ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
           classNames: {
             root: "caf-builder-tooltip caf-builder-tier-locked-tooltip"
           },
           placement: "topLeft",
-          title: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("span", {
+          title: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("span", {
             className: "caf-builder-tier-locked-section__tooltip-text",
-            children: ["Smart AI Search is available in Category Ajax Filter Pro.", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("a", {
+            children: ["Smart AI Search is available in Category Ajax Filter Pro.", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("a", {
               href: (0,_tier_capabilities__WEBPACK_IMPORTED_MODULE_15__.getUpgradeUrl)(),
               target: "_blank",
               rel: "noopener noreferrer",
@@ -11389,83 +11422,83 @@ const ModuleSearchGenerals = props => {
               children: "Upgrade to Pro"
             })]
           }),
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("div", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("div", {
             className: "caf-builder-tier-locked-segment-overlay caf-builder-tier-locked-segment-overlay--smart-ai",
             "aria-hidden": "true"
           })
         }) : null]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("hr", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("hr", {
         className: "setting-hr-main"
       })]
-    }), searchMode === "keyword_search" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+    }), searchMode === "keyword_search" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
       className: "module-content-tab-row",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
         className: "setting-label-main",
         children: "Search In"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
         className: "module-content-tab-row caf-design-two-half",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
           placement: "topLeft",
           title: "Search across all supported fields.",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
             children: "Search All Fields"
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
           onChange: val => handleSearchSource(val, "everything"),
           checked: source?.everything
         })]
-      }), !source?.everything && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.Fragment, {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+      }), !source?.everything && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.Fragment, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
           className: "module-content-tab-row caf-design-two-half",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
             placement: "topLeft",
             title: "Include post titles in keyword matching.",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
               children: "Title"
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
             onChange: val => handleSearchSource(val, "title"),
             checked: source?.title
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
           className: "module-content-tab-row caf-design-two-half",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
             placement: "topLeft",
             title: "Include post descriptions/excerpts in matching.",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
               children: "Content"
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
             onChange: val => handleSearchSource(val, "descriptions"),
             checked: source?.descriptions
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)(_tier_TierLockedWrap__WEBPACK_IMPORTED_MODULE_16__.TierLockedWrap, {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)(_tier_TierLockedWrap__WEBPACK_IMPORTED_MODULE_16__.TierLockedWrap, {
           locked: !canUseSearchCustomField,
           className: "caf-builder-tier-locked-search-custom-field",
           upgradeMessage: "Custom field search is available in Category Ajax Filter Pro.",
           showProBadge: true,
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
             className: "module-content-tab-row caf-design-two-half",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
               placement: "topLeft",
               title: "Include a specific custom field in matching.",
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
                 children: "Custom Field"
               })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
               onChange: val => handleSearchSource(val, "custom_field"),
               checked: canUseSearchCustomField ? source?.custom_field : false,
               disabled: !canUseSearchCustomField
             })]
-          }), (canUseSearchCustomField ? source?.custom_field : true) && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+          }), (canUseSearchCustomField ? source?.custom_field : true) && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
             className: "module-content-tab-row caf-design-two-half",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
               placement: "topLeft",
               title: "Pick the custom field used for matching.",
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
                 children: "Select Custom Field"
               })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_3__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_3__["default"], {
               defaultValue: customfield,
               style: {
                 width: "100%"
@@ -11477,66 +11510,70 @@ const ModuleSearchGenerals = props => {
             })]
           })]
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("hr", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("hr", {
         className: "setting-hr-main"
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
       className: "module-search-text-row",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
         className: "setting-label-main",
         children: "Text Search"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
-        className: "module-content-tab-row",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
-          className: "module-content-tab-row caf-design-two-half",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
-            placement: "topLeft",
-            title: "Show a search icon inside the input.",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
-              children: "Show Icon"
-            })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"]
-          //checkedChildren="icon"
-          //unCheckedChildren="Button"
-          , {
-            onChange: handleSearch,
-            checked: checkSearch
-          })]
-        }), checkSearch && iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.Fragment, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("div", {
-            className: "module-content-tab-row",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_10__["default"], {
-              title: "Icons",
-              data: props.data,
-              indexes: props.indexes,
-              iconsArray: iconsArray,
-              onSettingChange: props.onSettingChange,
-              tab: "search_icon",
-              type: ""
-            })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(_tier_TierLockedWrap__WEBPACK_IMPORTED_MODULE_16__.TierLockedWrap, {
+        locked: !(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseSearchShowIcon)(),
+        className: "caf-builder-tier-locked-search-show-icon",
+        upgradeMessage: "Search field icons are available in Category Ajax Filter Pro.",
+        showProBadge: true,
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
+          className: "module-content-tab-row",
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
             className: "module-content-tab-row caf-design-two-half",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
               placement: "topLeft",
-              title: "Choose where the icon appears in the field.",
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
-                children: "Icon Position"
+              title: "Show a search icon inside the input.",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
+                children: "Show Icon"
               })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(IconPositionTabs, {
-              value: position,
-              onChange: handlePosition
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
+              onChange: handleSearch,
+              checked: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseSearchShowIcon)() ? checkSearch : false,
+              disabled: !(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseSearchShowIcon)()
+            })]
+          }), (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseSearchShowIcon)() && checkSearch && iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.Fragment, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("div", {
+              className: "module-content-tab-row",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_10__["default"], {
+                title: "Icons",
+                data: props.data,
+                indexes: props.indexes,
+                iconsArray: iconsArray,
+                onSettingChange: props.onSettingChange,
+                tab: "search_icon",
+                type: ""
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
+              className: "module-content-tab-row caf-design-two-half",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
+                placement: "topLeft",
+                title: "Choose where the icon appears in the field.",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
+                  children: "Icon Position"
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(IconPositionTabs, {
+                value: position,
+                onChange: handlePosition
+              })]
             })]
           })]
-        })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
         className: "module-content-tab-row caf-design-two-half",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
           placement: "topLeft",
           title: "Choose when search requests are triggered.",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
             children: "Search Trigger"
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_3__["default"], {
           defaultValue: "0",
           style: {
             width: "100%"
@@ -11551,82 +11588,82 @@ const ModuleSearchGenerals = props => {
           }],
           value: searchTrigger
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
         className: "module-search-min-characters-row",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
           className: "module-content-tab-row caf-design-two-half",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
             placement: "topLeft",
             title: "Require a minimum number of characters before search.",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
               children: "Min Characters"
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
             onChange: handleCharLimit,
             checked: charLimit
           })]
-        }), charLimit && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+        }), charLimit && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
           className: "module-content-tab-row caf-design-two-half",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
             placement: "topLeft",
             title: "Set the minimum characters required to search.",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
               children: "Enter Minimum Characters Limit"
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
             type: "number",
             value: limit,
             defaultValue: limit,
             onChange: e => onChangeLimit(e.target.value)
           })]
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
         className: "module-content-tab-row caf-design-two-half",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
           placement: "topLeft",
           title: "Text shown before the user starts typing.",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
             children: "Placeholder"
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
           onChange: e => handlePlaceholder(e.target.value),
           value: placeholder,
           placeholder: "Search..."
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("hr", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("hr", {
         className: "setting-hr-main"
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)(_tier_TierLockedWrap__WEBPACK_IMPORTED_MODULE_16__.TierLockedWrap, {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)(_tier_TierLockedWrap__WEBPACK_IMPORTED_MODULE_16__.TierLockedWrap, {
       locked: !canUseVoiceSearch,
       className: "caf-builder-tier-locked-search-voice module-search-voice-row",
       upgradeMessage: "Voice Search is available in Category Ajax Filter Pro.",
       showProBadge: true,
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
         className: "setting-label-main",
         children: "Voice Search"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
         className: "module-content-tab-row caf-design-two-half",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
           placement: "topLeft",
           title: "Turn voice search on or off.",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
             children: "Enable"
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
           onChange: handleVoice,
           checked: canUseVoiceSearch ? checkVoice : true,
           disabled: !canUseVoiceSearch
         })]
-      }), (canUseVoiceSearch ? checkVoice : true) && iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.Fragment, {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+      }), (canUseVoiceSearch ? checkVoice : true) && iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.Fragment, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
           className: "module-content-tab-row",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
             placement: "topLeft",
             title: "Select the voice search icon.",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
               children: "Voice Icon"
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_10__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_10__["default"], {
             title: "Icons",
             data: props.data,
             indexes: props.indexes,
@@ -11635,27 +11672,27 @@ const ModuleSearchGenerals = props => {
             tab: "voice_icon",
             type: ""
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
           className: "module-content-tab-row caf-design-two-half",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
             placement: "topLeft",
             title: "Choose voice icon placement in the field.",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
               children: "Icon Position"
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(IconPositionTabs, {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(IconPositionTabs, {
             value: voiceposition,
             onChange: handleVoicePosition
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
           className: "module-content-tab-row caf-design-two-half",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
             placement: "topLeft",
             title: "Prompt shown for voice search input.",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
               children: "Placeholder Text"
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
             type: "text",
             value: inputValue,
             defaultValue: inputValue,
@@ -11663,103 +11700,107 @@ const ModuleSearchGenerals = props => {
             disabled: !canUseVoiceSearch
           })]
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("hr", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("hr", {
         className: "setting-hr-main"
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
-      className: "module-search-clear-row",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
-        className: "setting-label-main",
-        children: "Clear Input"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
-        className: "module-content-tab-row caf-design-two-half",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
-          placement: "topLeft",
-          title: "Turn clear button on or off.",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
-            children: "Enable"
-          })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"]
-        //checkedChildren="icon"
-        //unCheckedChildren="Button"
-        , {
-          onChange: handleClear,
-          checked: checkClear
-        })]
-      }), checkClear && iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.Fragment, {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
-          className: "module-content-tab-row",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
-            placement: "topLeft",
-            title: "Select the clear button icon.",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
-              children: "Clear Icon"
-            })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_10__["default"], {
-            title: "Icons",
-            data: props.data,
-            indexes: props.indexes,
-            iconsArray: iconsArray,
-            onSettingChange: props.onSettingChange,
-            tab: "clear_icon",
-            type: ""
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(_tier_TierLockedWrap__WEBPACK_IMPORTED_MODULE_16__.TierLockedWrap, {
+      locked: !(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseSearchClearInput)(),
+      className: "caf-builder-tier-locked-search-clear-input module-search-clear-row",
+      upgradeMessage: "Clear input controls are available in Category Ajax Filter Pro.",
+      showProBadge: true,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
+        className: "module-search-clear-row",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
+          className: "setting-label-main",
+          children: "Clear Input"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
           className: "module-content-tab-row caf-design-two-half",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
             placement: "topLeft",
-            title: "Choose clear icon placement in the field.",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
-              children: "Icon Position"
+            title: "Turn clear button on or off.",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
+              children: "Enable"
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(IconPositionTabs, {
-            value: clearposition,
-            onChange: handleClearPosition
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
+            onChange: handleClear,
+            checked: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseSearchClearInput)() ? checkClear : false,
+            disabled: !(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseSearchClearInput)()
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
-          className: "module-content-tab-row caf-design-two-half",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
-            placement: "topLeft",
-            title: "Control when the clear button is visible.",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
-              children: "Visibility"
-            })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_3__["default"], {
-            defaultValue: clearVisible,
-            style: {
-              width: "100%"
-            },
-            onChange: handleClearVisible,
-            options: [{
-              value: "type",
-              label: "On Type"
-            },
-            // {
-            //   value: "voice",
-            //   label: "On Voice",
-            // },
-            // {
-            //   value: "both",
-            //   label: "Both",
-            // },
-            {
-              value: "always",
-              label: "Always Visible"
-            }],
-            value: clearVisible
+        }), (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseSearchClearInput)() && checkClear && iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
+            className: "module-content-tab-row",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
+              placement: "topLeft",
+              title: "Select the clear button icon.",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
+                children: "Clear Icon"
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_10__["default"], {
+              title: "Icons",
+              data: props.data,
+              indexes: props.indexes,
+              iconsArray: iconsArray,
+              onSettingChange: props.onSettingChange,
+              tab: "clear_icon",
+              type: ""
+            })]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
+            className: "module-content-tab-row caf-design-two-half",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
+              placement: "topLeft",
+              title: "Choose clear icon placement in the field.",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
+                children: "Icon Position"
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(IconPositionTabs, {
+              value: clearposition,
+              onChange: handleClearPosition
+            })]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
+            className: "module-content-tab-row caf-design-two-half",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
+              placement: "topLeft",
+              title: "Control when the clear button is visible.",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
+                children: "Visibility"
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_3__["default"], {
+              defaultValue: clearVisible,
+              style: {
+                width: "100%"
+              },
+              onChange: handleClearVisible,
+              options: [{
+                value: "type",
+                label: "On Type"
+              },
+              // {
+              //   value: "voice",
+              //   label: "On Voice",
+              // },
+              // {
+              //   value: "both",
+              //   label: "Both",
+              // },
+              {
+                value: "always",
+                label: "Always Visible"
+              }],
+              value: clearVisible
+            })]
           })]
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("hr", {
+          className: "setting-hr-main"
         })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("hr", {
-        className: "setting-hr-main"
-      })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
       className: "module-content-tab-row",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
         className: "setting-label-main",
         children: "Filter Label"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("div", {
         className: "module-content-tab-row caf-design-two-half",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(_ContentComponents_SwitchMain__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(_ContentComponents_SwitchMain__WEBPACK_IMPORTED_MODULE_6__["default"], {
           label: "Enable",
           labelTooltip: "Show or hide the filter label.",
           property: "label",
@@ -11768,87 +11809,93 @@ const ModuleSearchGenerals = props => {
           data: settingData,
           currValue: settingData.label.is_label
         })
-      }), headerlabel && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+      }), headerlabel && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
         className: "caf-filter-label-inner-row",
         style: {
           paddingTop: "15px"
         },
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
           className: "module-content-tab-row caf-design-two-half",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
             placement: "topLeft",
             title: haederlabelInput && String(haederlabelInput).trim() !== "" ? `Current label: ${haederlabelInput}` : "Set the filter label text.",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
               children: "Label Text "
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
             onChange: e => handleHeaderLabel(e.target.value),
             value: haederlabelInput
           })]
-        }), iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
+        }), iconsArray && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.FilterLabelShowIconLockedSection, {
           className: "module-content-tab-row caf-builder-show-label-icon",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)("div", {
-            class: "module-content-tab-row caf-design-two-half",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(Tooltip, {
-              placement: "topLeft",
-              title: "Show an icon next to the filter label.",
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("label", {
-                children: "Show Icon"
-              })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("div", {
-              className: "module-content-icon-switch",
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
-                onChange: onLabelIconSwitch,
-                checked: labelIconSwitch
-              })
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
+            className: "module-content-tab-row caf-builder-show-label-icon",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)("div", {
+              class: "module-content-tab-row caf-design-two-half",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(Tooltip, {
+                placement: "topLeft",
+                title: "Show an icon next to the filter label.",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("label", {
+                  children: "Show Icon"
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("div", {
+                className: "module-content-icon-switch",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(antd__WEBPACK_IMPORTED_MODULE_4__["default"], {
+                  onChange: onLabelIconSwitch,
+                  checked: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseLabelShowIcon)() ? labelIconSwitch : false,
+                  disabled: !(0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseLabelShowIcon)()
+                })
+              })]
+            }), (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseLabelShowIcon)() && labelIconSwitch && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_10__["default"], {
+              title: "Icons",
+              data: props.data,
+              indexes: props.indexes,
+              iconsArray: iconsArray,
+              onSettingChange: props.onSettingChange,
+              tab: "label",
+              type: ""
             })]
-          }), labelIconSwitch && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(_ContentComponents_ContentIcons1__WEBPACK_IMPORTED_MODULE_10__["default"], {
-            title: "Icons",
-            data: props.data,
-            indexes: props.indexes,
-            iconsArray: iconsArray,
-            onSettingChange: props.onSettingChange,
-            tab: "label",
-            type: ""
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("div", {
-          className: "module-content-tab-row caf-design-two-half",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(_ContentComponents_SwitchMain__WEBPACK_IMPORTED_MODULE_6__["default"], {
-            label: "Enable Collapse",
-            labelTooltip: "Allow users to expand or collapse this filter.",
-            property: "enable_toggle",
-            onSettingChange: changeInitialData,
-            data: settingData,
-            currValue: settingData.enable_toggle
           })
-        }), toggle.enable && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.Fragment, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("div", {
-            className: "module-content-tab-row",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(_ContentComponents_SelectMain__WEBPACK_IMPORTED_MODULE_7__["default"], {
-              label: "Toggle Icon Position",
-              labelTooltip: "Choose where the toggle icon appears.",
-              property: "toggle_position",
-              classn: 'caf-design-two-half',
-              options: [{
-                label: "Left",
-                value: "left"
-              }, {
-                label: "Right",
-                value: "right"
-              }],
-              onSettingChange: changeInitialData,
-              data: settingData
-            })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)(_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.FilterLabelCollapseLockedSection, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("div", {
             className: "module-content-tab-row caf-design-two-half",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_17__.jsx)(_ContentComponents_SwitchMain__WEBPACK_IMPORTED_MODULE_6__["default"], {
-              label: "Default Collapsed",
-              labelTooltip: "Load this filter in collapsed state by default.",
-              property: "close_toggle",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(_ContentComponents_SwitchMain__WEBPACK_IMPORTED_MODULE_6__["default"], {
+              label: "Enable Collapse",
+              labelTooltip: "Allow users to expand or collapse this filter.",
+              property: "enable_toggle",
               onSettingChange: changeInitialData,
               data: settingData,
-              currValue: settingData.close_toggle
+              currValue: (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseFilterLabelCollapse)() ? settingData.enable_toggle : "false"
             })
+          }), (0,_shared_filterModuleTier__WEBPACK_IMPORTED_MODULE_17__.canUseFilterLabelCollapse)() && toggle.enable && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.Fragment, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("div", {
+              className: "module-content-tab-row",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(_ContentComponents_SelectMain__WEBPACK_IMPORTED_MODULE_7__["default"], {
+                label: "Toggle Icon Position",
+                labelTooltip: "Choose where the toggle icon appears.",
+                property: "toggle_position",
+                classn: 'caf-design-two-half',
+                options: [{
+                  label: "Left",
+                  value: "left"
+                }, {
+                  label: "Right",
+                  value: "right"
+                }],
+                onSettingChange: changeInitialData,
+                data: settingData
+              })
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("div", {
+              className: "module-content-tab-row caf-design-two-half",
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)(_ContentComponents_SwitchMain__WEBPACK_IMPORTED_MODULE_6__["default"], {
+                label: "Default Collapsed",
+                labelTooltip: "Load this filter in collapsed state by default.",
+                property: "close_toggle",
+                onSettingChange: changeInitialData,
+                data: settingData,
+                currValue: settingData.close_toggle
+              })
+            })]
           })]
         })]
       })]
@@ -12044,161 +12091,6 @@ function FilterModuleLockedPanel({
 
 /***/ },
 
-/***/ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/shared/filterModuleTier.js"
-/*!***********************************************************************************************************************!*\
-  !*** ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/shared/filterModuleTier.js ***!
-  \***********************************************************************************************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   FILTER_MODULE_PRO_MESSAGE: () => (/* binding */ FILTER_MODULE_PRO_MESSAGE),
-/* harmony export */   FilterDataSourceSegment: () => (/* binding */ FilterDataSourceSegment),
-/* harmony export */   FilterShowIconLockedSection: () => (/* binding */ FilterShowIconLockedSection),
-/* harmony export */   FilterTermActionsLockedWrap: () => (/* binding */ FilterTermActionsLockedWrap),
-/* harmony export */   ResetModuleIconLockedSection: () => (/* binding */ ResetModuleIconLockedSection),
-/* harmony export */   areFilterTermActionsLocked: () => (/* binding */ areFilterTermActionsLocked),
-/* harmony export */   canUseFilterCustomField: () => (/* binding */ canUseFilterCustomField),
-/* harmony export */   canUseFilterShowIcon: () => (/* binding */ canUseFilterShowIcon),
-/* harmony export */   canUseFilterTermDefault: () => (/* binding */ canUseFilterTermDefault),
-/* harmony export */   canUseFilterTermIcon: () => (/* binding */ canUseFilterTermIcon),
-/* harmony export */   canUseResetModuleIcon: () => (/* binding */ canUseResetModuleIcon),
-/* harmony export */   resolveFilterDataSource: () => (/* binding */ resolveFilterDataSource),
-/* harmony export */   shouldShowFilterTermIconControl: () => (/* binding */ shouldShowFilterTermIconControl)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/segmented/index.js");
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/tooltip/index.js");
-/* harmony import */ var _tier_capabilities__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../../tier/capabilities */ "./src/tier/capabilities.js");
-/* harmony import */ var _tier_TierLockedWrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../../../tier/TierLockedWrap */ "./src/tier/TierLockedWrap.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__);
-
-
-
-
-
-const FILTER_MODULE_PRO_MESSAGE = "This feature is available in Category Ajax Filter Pro.";
-const canUseFilterCustomField = () => (0,_tier_capabilities__WEBPACK_IMPORTED_MODULE_3__.canUseFeature)("filter_custom_field");
-const canUseFilterShowIcon = () => (0,_tier_capabilities__WEBPACK_IMPORTED_MODULE_3__.canUseFeature)("filter_show_icon");
-const canUseFilterTermDefault = () => (0,_tier_capabilities__WEBPACK_IMPORTED_MODULE_3__.canUseFeature)("filter_term_default");
-const canUseFilterTermIcon = () => (0,_tier_capabilities__WEBPACK_IMPORTED_MODULE_3__.canUseFeature)("filter_term_icon");
-const resolveFilterDataSource = storedValue => {
-  if (canUseFilterCustomField()) {
-    return storedValue === "custom_field" ? "custom_field" : "taxonomy";
-  }
-  return "taxonomy";
-};
-const areFilterTermActionsLocked = () => !canUseFilterTermDefault() || !canUseFilterTermIcon();
-function FilterDataSourceSegment({
-  value,
-  onChange,
-  className = "hoverTabCaf"
-}) {
-  const customFieldLocked = !canUseFilterCustomField();
-  const options = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => [{
-    label: "Taxonomy",
-    value: "taxonomy"
-  }, {
-    label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("span", {
-      className: "caf-filter-data-source-tab-label caf-filter-data-source-tab-label--custom-field",
-      children: ["Custom Field", customFieldLocked ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
-        className: "caf-builder-tier-locked-wrap__badge caf-filter-data-source-pro-badge",
-        children: "Pro"
-      }) : null]
-    }),
-    value: "custom_field",
-    disabled: customFieldLocked,
-    className: customFieldLocked ? "caf-builder-tier-locked-segment-item" : undefined
-  }], [customFieldLocked]);
-  const handleChange = nextValue => {
-    if (nextValue === "custom_field" && customFieldLocked) {
-      return;
-    }
-    onChange(nextValue);
-  };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
-    className: `hoverswitchguard caf-filter-data-source-segmented-wrap${customFieldLocked ? " caf-filter-data-source-segmented-wrap--locked" : ""}`,
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      value: value,
-      style: {
-        marginBottom: 10
-      },
-      onChange: handleChange,
-      className: `${className} caf-filter-data-source-segmented`,
-      options: options
-    }), customFieldLocked ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      classNames: {
-        root: "caf-builder-tooltip caf-builder-tier-locked-tooltip"
-      },
-      placement: "topLeft",
-      title: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("span", {
-        className: "caf-builder-tier-locked-section__tooltip-text",
-        children: ["Custom field filtering is available in Category Ajax Filter Pro.", " ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("a", {
-          href: (0,_tier_capabilities__WEBPACK_IMPORTED_MODULE_3__.getUpgradeUrl)(),
-          target: "_blank",
-          rel: "noopener noreferrer",
-          className: "caf-builder-tier-locked-section__upgrade-link",
-          children: "Upgrade to Pro"
-        })]
-      }),
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
-        className: "caf-builder-tier-locked-segment-overlay caf-builder-tier-locked-segment-overlay--custom-field",
-        "aria-hidden": "true"
-      })
-    }) : null]
-  });
-}
-function FilterShowIconLockedSection({
-  children
-}) {
-  const locked = !canUseFilterShowIcon();
-  if (!locked) {
-    return children;
-  }
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_tier_TierLockedWrap__WEBPACK_IMPORTED_MODULE_4__.TierLockedWrap, {
-    locked: true,
-    className: "caf-builder-tier-locked-filter-show-icon module-content-tab-row no-pad-0",
-    upgradeMessage: FILTER_MODULE_PRO_MESSAGE,
-    showProBadge: true,
-    children: children
-  });
-}
-function FilterTermActionsLockedWrap({
-  children
-}) {
-  const locked = areFilterTermActionsLocked();
-  if (!locked) {
-    return children;
-  }
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_tier_TierLockedWrap__WEBPACK_IMPORTED_MODULE_4__.TierLockedWrap, {
-    locked: true,
-    className: "caf-builder-tier-locked-term-actions",
-    upgradeMessage: FILTER_MODULE_PRO_MESSAGE,
-    children: children
-  });
-}
-const shouldShowFilterTermIconControl = showIconSetting => areFilterTermActionsLocked() || showIconSetting === "true";
-const canUseResetModuleIcon = () => (0,_tier_capabilities__WEBPACK_IMPORTED_MODULE_3__.canUseFeature)("reset_module_icon");
-function ResetModuleIconLockedSection({
-  children
-}) {
-  const locked = !canUseResetModuleIcon();
-  if (!locked) {
-    return children;
-  }
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_tier_TierLockedWrap__WEBPACK_IMPORTED_MODULE_4__.TierLockedWrap, {
-    locked: true,
-    className: "caf-builder-tier-locked-reset-icon-section",
-    upgradeMessage: FILTER_MODULE_PRO_MESSAGE,
-    showProBadge: true,
-    children: children
-  });
-}
-
-/***/ },
-
 /***/ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/termIconUtils.js"
 /*!*************************************************************************************************************!*\
   !*** ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/termIconUtils.js ***!
@@ -12305,4 +12197,4 @@ const BUILDER_TOOLTIP_CLASS_NAMES = {
 /***/ }
 
 }]);
-//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js.js.map?ver=1607888218bcd7b3347e
+//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js.js.map?ver=b4d1e000ed0f9377d741

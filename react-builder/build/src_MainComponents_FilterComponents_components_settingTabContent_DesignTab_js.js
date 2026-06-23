@@ -2629,6 +2629,7 @@ const ColorMain = props => {
     isMeta
   } = props;
   const allowGradient = String(property || "").toLowerCase() !== "color";
+  const gradientAllowed = allowGradient && (0,_utils_colorPicker__WEBPACK_IMPORTED_MODULE_5__.canUseGradientColors)();
   const {
     type,
     rowindex,
@@ -2810,7 +2811,7 @@ const ColorMain = props => {
   }
   const normalizedCurrentValue = (0,_utils_colorPicker__WEBPACK_IMPORTED_MODULE_5__.normalizeColorPickerValue)(currentValue, defaultValue);
   const normalizedStops = typeof normalizedCurrentValue === "string" && normalizedCurrentValue.includes("gradient(") ? (0,_utils_colorPicker__WEBPACK_IMPORTED_MODULE_5__.gradientCssToStops)(normalizedCurrentValue) : null;
-  const pickerValue = !allowGradient && normalizedStops?.length ? normalizedStops[0].color : normalizedStops ? normalizedStops || normalizedCurrentValue : normalizedCurrentValue;
+  const pickerValue = !gradientAllowed && normalizedStops?.length ? normalizedStops[0].color : normalizedStops ? normalizedStops || normalizedCurrentValue : normalizedCurrentValue;
   const setColorHexFun = (value, cssValue) => {
     ChangeStyle(property, (0,_utils_colorPicker__WEBPACK_IMPORTED_MODULE_5__.normalizeColorPickerValue)(value, defaultValue, cssValue));
   };
@@ -2887,7 +2888,7 @@ const ColorMain = props => {
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
       className: "custom-color",
       value: pickerValue,
-      mode: allowGradient ? ["single", "gradient"] : ["single"]
+      mode: (0,_utils_colorPicker__WEBPACK_IMPORTED_MODULE_5__.getColorPickerModes)(allowGradient)
       // format="rgb"
       ,
       onChange: setColorHexFun,
@@ -10279,4 +10280,4 @@ function buildFilterDesignTabMetaItems(ctx) {
 /***/ }
 
 }]);
-//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_DesignTab_js.js.map?ver=0fb6d13694e52718556d
+//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_DesignTab_js.js.map?ver=e81c61c9223e588672b3

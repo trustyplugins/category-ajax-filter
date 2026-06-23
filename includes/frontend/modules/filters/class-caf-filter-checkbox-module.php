@@ -33,6 +33,10 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 	 * @return void
 	 */
 	protected function collect_css() {
+		$settings                      = $this->get_settings();
+		$show_checkbox                 = $this->is_truthy( isset( $settings->show_checkbox ) ? $settings->show_checkbox : '' );
+		$show_icon                     = $this->is_truthy( isset( $settings->show_icon ) ? $settings->show_icon : '' );
+		$show_count                    = $this->is_truthy( isset( $settings->show_count ) ? $settings->show_count : '' );
 		$module_selector               = $this->get_module_selector();
 		$ul_style                      = $this->get_style_section( 'meta' );
 		$ul_selector                   = $module_selector . ' ul.caf-checkbox';
@@ -88,6 +92,38 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 	}
 
 	/**
+	 * Resolve checkbox inline layout class from a style tab only when its UI block is enabled.
+	 *
+	 * @param string $meta_key     Style tab key: meta1, meta2, or meta3.
+	 * @param object $settings     Module settings.
+	 * @param string $setting_key  Feature toggle: show_checkbox, show_icon, or show_count.
+	 * @param string $default      Default justify value.
+	 * @return string
+	 */
+	protected function get_resolved_checkbox_layout_justify( $meta_key, $settings, $setting_key, $default = 'flex-start' ) {
+		$enabled = $this->is_truthy( isset( $settings->{$setting_key} ) ? $settings->{$setting_key} : '' );
+		if ( ! $enabled ) {
+			return $default;
+		}
+
+		return $this->get_style_justify_content( $this->get_style_section( $meta_key ), $default );
+	}
+
+	/**
+	 * Build checkbox layout classes used by frontend markup.
+	 *
+	 * @param object $settings Module settings.
+	 * @return array{row:string,icon:string,text:string}
+	 */
+	protected function get_checkbox_layout_classes( $settings ) {
+		return array(
+			'row'  => $this->get_resolved_checkbox_layout_justify( 'meta1', $settings, 'show_checkbox' ),
+			'icon' => $this->get_resolved_checkbox_layout_justify( 'meta2', $settings, 'show_icon' ),
+			'text' => $this->get_resolved_checkbox_layout_justify( 'meta3', $settings, 'show_count' ),
+		);
+	}
+
+	/**
 	 * Render terms markup.
 	 *
 	 * @param object $settings Module settings.
@@ -138,14 +174,8 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 		$html           .= ' category-relation="' . esc_attr( $category_relation ) . '"';
 		$html           .= ' meta-operator="' . esc_attr( $meta_operator ) . '"';
 		$html           .= ' meta-type="' . esc_attr( $meta_type ) . '">';
-		$meta1           = $this->get_style_section( 'meta1' );
-		$meta2           = $this->get_style_section( 'meta2' );
-		$checkboxContent = $this->get_style_justify_content( $meta1, 'flex-start' );
-		$iconText        = $this->get_style_justify_content( $meta2, 'flex-start' );
+		$layout_classes  = $this->get_checkbox_layout_classes( $settings );
 
-		// echo "<pre>";
-		// print_r($meta1);
-		// echo "</pre>";
 		foreach ( $settings->taxonomy_data as $taxonomy ) {
 			if ( empty( $taxonomy->term_data ) ) {
 				continue;
@@ -161,8 +191,7 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 					$term,
 					$settings,
 					$multiple_term,
-					$checkboxContent,
-					$iconText
+					$layout_classes
 				);
 			}
 		}
@@ -178,11 +207,10 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 	 * @param object $term          Term object.
 	 * @param object $settings      Module settings.
 	 * @param string $multiple_term Multiple term flag.
-	 * @param string $checkboxContent Checkbox layout class.
-	 * @param string $iconText      Icon layout class.
+	 * @param array  $layout_classes Layout classes for row/icon/text wrappers.
 	 * @return string
 	 */
-	protected function render_taxonomy_term_item( $taxonomy_key, $term, $settings, $multiple_term, $checkboxContent, $iconText ) {
+	protected function render_taxonomy_term_item( $taxonomy_key, $term, $settings, $multiple_term, $layout_classes ) {
 		// echo '<pre>';
 		// var_dump( $settings );
 		// echo '</pre>';
@@ -203,19 +231,19 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 			$predefine      = 'true';
 		}
 
-		$html = '<li class="caf-terms-list-item ' . esc_attr( $active_class ) . ' caf-layout-' . esc_attr( $checkboxContent ) . '" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy_key, $term->key ) ) . '" predefine="' . esc_attr( $predefine ) . '">';
+		$html = '<li class="caf-terms-list-item ' . esc_attr( $active_class ) . ' caf-layout-' . esc_attr( $layout_classes['row'] ) . '" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy_key, $term->key ) ) . '" predefine="' . esc_attr( $predefine ) . '">';
 		// $html .= '<label class="caf-taxo-checkbox-main" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" predefine="' . esc_attr( $predefine ) . '" style="display:flex;align-items:center;">';
 		$html .= '<input type="checkbox" style="display:none" class="caf-taxo-input ' . esc_attr( $skin ) . '" ' . $checked . ' value="' . esc_attr( $term->key ) . '" />';
 		if ( $settings->show_checkbox === 'true' ) {
 			$html .= '<span class="caf-checkbox-box"></span>';
 		}
-		$html .= '<div class="manage-ic-lbl caf-layout-' . esc_attr( $iconText ) . '">';
+		$html .= '<div class="manage-ic-lbl caf-layout-' . esc_attr( $layout_classes['icon'] ) . '">';
 		if ( ! empty( $settings->show_icon ) && 'true' === (string) $settings->show_icon ) {
 			if ( ! empty( $term->icons->icon ) && ! empty( $term->icons->position ) && 'before' === $term->icons->position ) {
 				$html .= '<i class="fa-solid ' . esc_attr( $term->icons->icon ) . ' filter-before-icon"></i>';
 			}
 		}
-		$html .= '<div class="manage-text-lbl caf-layout-' . esc_attr( $checkboxContent ) . '">';
+		$html .= '<div class="manage-text-lbl caf-layout-' . esc_attr( $layout_classes['text'] ) . '">';
 
 		$html .= '<span class="trm-name caf-term-label">' . esc_html( ucfirst( $term->value ) ) . '</span>';
 
