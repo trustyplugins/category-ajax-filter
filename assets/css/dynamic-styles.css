@@ -296,6 +296,7 @@ li.selection-list-default i {
 .caf-builder-container .post-layout-container .caf-builder-module-main.caf-module-type-title a,
 .caf-builder-container .post-layout-container .caf-builder-module-main.caf-module-type-button a {
   text-decoration: none;
+  line-height: normal;
 }
 .caf-builder-module-main.caf-module-type-title .caf-builder-title-value {
     margin: 0;
