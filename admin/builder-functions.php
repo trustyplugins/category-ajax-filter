@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-custom-fonts.php';
 require_once TC_CAF_PATH . 'includes/builder/class-caf-builder-tier.php';
+require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-import-library.php';
 // add_action('admin_menu', 'caf_builder_admin_page');
 add_action( 'wp_ajax_get_caf_builder_posts', 'get_caf_builder_posts' );
 add_action( 'wp_ajax_nopriv_get_caf_builder_posts', 'get_caf_builder_posts' );

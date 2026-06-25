@@ -79,6 +79,12 @@ class CAF_Builder_Admin {
 			array(),
 			TC_CAF_PLUGIN_VERSION
 		);
+		wp_enqueue_style(
+			'tc-caf-font-awesome-style',
+			TC_CAF_URL . 'assets/css/fontawesome/css/font-awesome.min.css',
+			array(),
+			TC_CAF_PLUGIN_VERSION
+		);
 
 		wp_enqueue_style(
 			'google-fonts-inter',

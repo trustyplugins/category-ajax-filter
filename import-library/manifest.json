@@ -1,0 +1,80 @@
+[
+  {
+    "id": "library_full_filter_layout",
+    "title": "Default Full Filter Layout",
+    "section": "full_filter_layout",
+    "scope": "full_layout",
+    "description": "Complete filter, post, and preview settings from the default builder layout.",
+    "file": "full-filter-layout/default-full-layout.json"
+  },
+  {
+    "id": "library_filter_full",
+    "title": "Default Filter Layout",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Full filter area from the default builder layout.",
+    "file": "filter/full-filter/default-filter-layout.json",
+    "filterLibraryTab": "full_filter"
+  },
+  {
+    "id": "library_filter_checkbox_filter",
+    "title": "Checkbox Filter",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Single checkbox filter module from the default builder layout.",
+    "file": "filter/checkbox/checkbox-filter.json",
+    "filterLibraryTab": "checkbox_filter"
+  },
+  {
+    "id": "library_filter_dropdown_filter",
+    "title": "Dropdown Filter",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Single dropdown filter module from the default builder layout.",
+    "file": "filter/dropdown/dropdown-filter.json",
+    "filterLibraryTab": "dropdown_filter"
+  },
+  {
+    "id": "library_filter_range_slider",
+    "title": "Range Slider",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Single range slider module from the default builder layout.",
+    "file": "filter/range-slider/range-slider.json",
+    "filterLibraryTab": "range_slider"
+  },
+  {
+    "id": "library_filter_search",
+    "title": "Search",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Single search module from the default builder layout.",
+    "file": "filter/search/search.json",
+    "filterLibraryTab": "search"
+  },
+  {
+    "id": "library_filter_reset",
+    "title": "Reset",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Single reset module from the default builder layout.",
+    "file": "filter/reset/reset.json",
+    "filterLibraryTab": "reset"
+  },
+  {
+    "id": "library_single_post_item",
+    "title": "Default Single Post Item",
+    "section": "single_post_item",
+    "scope": "post_layout",
+    "description": "Post card layout from the default builder layout.",
+    "file": "single-post-item/default-post-item.json"
+  },
+  {
+    "id": "library_layout_settings",
+    "title": "Default Layout Settings",
+    "section": "layout_settings",
+    "scope": "layout_settings",
+    "description": "Preview container, misc items, and layout settings from the default builder layout.",
+    "file": "layout-settings/default-layout-settings.json"
+  }
+]

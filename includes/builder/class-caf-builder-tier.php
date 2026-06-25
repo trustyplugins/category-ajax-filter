@@ -70,7 +70,6 @@ class CAF_Builder_Tier {
 				'analytics',
 				'filter_url',
 				'schema',
-				'import_library',
 				'sorting',
 				'result_counter',
 				'active_filters',
