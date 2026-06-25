@@ -321,6 +321,7 @@ class CAF_Builder_Frontend {
 		$base = TC_CAF_PATH . 'includes/frontend/';
 		require_once $base . 'class-caf-builder-data.php';
 		require_once $base . 'class-caf-builder-css.php';
+		require_once $base . 'class-caf-builder-google-fonts.php';
 		require_once $base . 'class-caf-builder-font-loader.php';
 		require_once $base . 'class-caf-builder-style-generator.php';
 		require_once $base . 'class-caf-builder-query.php';

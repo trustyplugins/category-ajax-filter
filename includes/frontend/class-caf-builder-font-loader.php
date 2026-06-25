@@ -60,9 +60,22 @@ class CAF_Builder_Font_Loader {
 			return;
 		}
 
+		if ( ! class_exists( 'CAF_Builder_Google_Fonts' ) ) {
+			$google_fonts_file = defined( 'TC_CAF_PATH' )
+				? TC_CAF_PATH . 'includes/frontend/class-caf-builder-google-fonts.php'
+				: '';
+			if ( $google_fonts_file && file_exists( $google_fonts_file ) ) {
+				require_once $google_fonts_file;
+			}
+		}
+
+		$google_fonts_url = class_exists( 'CAF_Builder_Google_Fonts' )
+			? CAF_Builder_Google_Fonts::build_stylesheet_url( $font_family )
+			: 'https://fonts.googleapis.com/css2?family=' . rawurlencode( preg_replace( '/\s+/', '+', $font_family ) ) . ':wght@100;200;300;400;500;600;700;800;900&display=swap';
+
 		wp_enqueue_style(
 			'caf-builder-custom-font-' . sanitize_title( $font_family ),
-			'https://fonts.googleapis.com/css?family=' . rawurlencode( $font_family ),
+			$google_fonts_url,
 			array(),
 			defined( 'TC_CAF_PLUGIN_VERSION' ) ? TC_CAF_PLUGIN_VERSION : null
 		);
