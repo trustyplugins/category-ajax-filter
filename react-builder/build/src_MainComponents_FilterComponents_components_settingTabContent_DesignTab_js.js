@@ -2916,8 +2916,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/tooltip/index.js");
 /* harmony import */ var _fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fortawesome/react-fontawesome */ "./node_modules/@fortawesome/react-fontawesome/index.es.js");
 /* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @fortawesome/free-solid-svg-icons */ "./node_modules/@fortawesome/free-solid-svg-icons/index.mjs");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _utils_globalFontFamily__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../../utils/globalFontFamily */ "./src/MainComponents/utils/globalFontFamily.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
+
 
 
 
@@ -3161,6 +3163,9 @@ const SelectMain = props => {
       deviceCopy[styleState] = item;
       swcopy[device] = deviceCopy;
       items[rowindex].data[columnindex].data[moduleindex]["style"][styleTab] = swcopy;
+      if (property === "fontFamily" && value) {
+        (0,_utils_globalFontFamily__WEBPACK_IMPORTED_MODULE_5__.loadFontFamily)(value);
+      }
     }
     props.onChangeStyle(props.data);
   };
@@ -3221,30 +3226,30 @@ const SelectMain = props => {
       cl = 'webflow-dropdown-color';
     }
   }
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
     className: `caf-builder-setting-row-label ${props?.class ? props?.class : ''}`,
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("label", {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("label", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"], {
         classNames: {
           root: "caf-builder-tooltip"
         },
         placement: "topLeft",
         title: `Adjust ${label} settings.`,
         children: label
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"], {
         classNames: {
           root: "caf-builder-tooltip"
         },
         placement: "topLeft",
         title: "Reset",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("span", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("span", {
           onClick: resetValue,
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_3__.FontAwesomeIcon, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_3__.FontAwesomeIcon, {
             icon: _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_4__.faArrowRotateLeft
           })
         })
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(antd__WEBPACK_IMPORTED_MODULE_2__["default"], {
       classNames: {
         root: "caf-builder-tooltip"
       },
@@ -3255,7 +3260,7 @@ const SelectMain = props => {
           fontSize: 12
         }
       },
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
         defaultValue: currentposition,
         style: {
           width: "100%"
@@ -3267,9 +3272,9 @@ const SelectMain = props => {
         popupMatchSelectWidth: true,
         className: cl,
         hoverValue: props?.hoverValue || "",
-        popupRender: menu => props?.hoverValue ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
-            children: [menu, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
+        popupRender: menu => props?.hoverValue ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+            children: [menu, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
               style: {
                 padding: "8px 10px",
                 borderTop: "1px solid #d7d3d3",
@@ -4962,8 +4967,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _SliderMain__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SliderMain */ "./src/MainComponents/FilterComponents/components/design-components/common-component/SliderMain.js");
 /* harmony import */ var _StyleMain__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./StyleMain */ "./src/MainComponents/FilterComponents/components/design-components/common-component/StyleMain.js");
 /* harmony import */ var _TextAlignMain__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./TextAlignMain */ "./src/MainComponents/FilterComponents/components/design-components/common-component/TextAlignMain.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _constants_fontWeightOptions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../constants/fontWeightOptions */ "./src/MainComponents/constants/fontWeightOptions.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__);
+
 
 
 
@@ -5001,8 +5008,8 @@ function TextMain(props) {
   const onChangeStyle = style => {
     props.onChangeStyle(style);
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_SelectMain__WEBPACK_IMPORTED_MODULE_1__["default"], {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_SelectMain__WEBPACK_IMPORTED_MODULE_1__["default"], {
       data: props.data,
       indexes: props.indexes,
       onChangeStyle: onChangeStyle,
@@ -5017,7 +5024,7 @@ function TextMain(props) {
         label: item.family,
         value: item.family
       })) : ''
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_SelectMain__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_SelectMain__WEBPACK_IMPORTED_MODULE_1__["default"], {
       data: props.data,
       indexes: props.indexes,
       onChangeStyle: onChangeStyle,
@@ -5028,23 +5035,8 @@ function TextMain(props) {
       deviceSwitch: props.deviceSwitch,
       styleTab: props.styleTab,
       isMeta: type === 'module' && module?.key === 'search' && styleTab === 'input' ? 'input' : isMeta,
-      options: [{
-        value: "300",
-        label: "Light"
-      }, {
-        value: "400",
-        label: "Regular"
-      }, {
-        value: "600",
-        label: "Semi Bold"
-      }, {
-        value: "700",
-        label: "Bold"
-      }, {
-        value: "800",
-        label: "Ultra Bold"
-      }]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_StyleMain__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      options: _constants_fontWeightOptions__WEBPACK_IMPORTED_MODULE_6__.FONT_WEIGHT_OPTIONS
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_StyleMain__WEBPACK_IMPORTED_MODULE_4__["default"], {
       data: props.data,
       indexes: props.indexes,
       property: "fontStyle",
@@ -5054,7 +5046,7 @@ function TextMain(props) {
       styleTab: props.styleTab,
       isMeta: type === 'module' && module?.key === 'search' && styleTab === 'input' ? 'input' : isMeta,
       styleState: styleState
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ColorMain__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ColorMain__WEBPACK_IMPORTED_MODULE_2__["default"], {
       data: props.data,
       indexes: props.indexes,
       property: "color",
@@ -5065,7 +5057,7 @@ function TextMain(props) {
       deviceSwitch: props.deviceSwitch,
       styleTab: props.styleTab,
       isMeta: type === 'module' && module?.key === 'search' && styleTab === 'input' ? 'input' : isMeta
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_SliderMain__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_SliderMain__WEBPACK_IMPORTED_MODULE_3__["default"], {
       data: props.data,
       indexes: props.indexes,
       property: "fontSize",
@@ -5078,7 +5070,7 @@ function TextMain(props) {
       deviceSwitch: props.deviceSwitch,
       styleTab: props.styleTab,
       isSlider: true
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_SliderMain__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_SliderMain__WEBPACK_IMPORTED_MODULE_3__["default"], {
       data: props.data,
       indexes: props.indexes,
       property: "letterSpacing",
@@ -5091,7 +5083,7 @@ function TextMain(props) {
       deviceSwitch: props.deviceSwitch,
       styleTab: props.styleTab,
       isSlider: true
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_SliderMain__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_SliderMain__WEBPACK_IMPORTED_MODULE_3__["default"], {
       data: props.data,
       indexes: props.indexes,
       property: "lineHeight",
@@ -5104,7 +5096,7 @@ function TextMain(props) {
       deviceSwitch: props.deviceSwitch,
       styleTab: props.styleTab,
       isSlider: true
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_TextAlignMain__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_TextAlignMain__WEBPACK_IMPORTED_MODULE_5__["default"], {
       data: props.data,
       indexes: props.indexes,
       property: "textAlign",
@@ -8319,19 +8311,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _design_components_common_component_BorderMain__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../design-components/common-component/BorderMain */ "./src/MainComponents/FilterComponents/components/design-components/common-component/BorderMain.js");
 /* harmony import */ var _design_components_common_component_BoxShadow__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ../design-components/common-component/BoxShadow */ "./src/MainComponents/FilterComponents/components/design-components/common-component/BoxShadow.js");
 /* harmony import */ var _design_components_common_component_TextMain__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../design-components/common-component/TextMain */ "./src/MainComponents/FilterComponents/components/design-components/common-component/TextMain.js");
-/* harmony import */ var _images_flex_wrap_down_svg__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../../images/flex/wrap-down.svg */ "./src/MainComponents/images/flex/wrap-down.svg");
-/* harmony import */ var _images_flex_wrap_up_svg__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../../images/flex/wrap-up.svg */ "./src/MainComponents/images/flex/wrap-up.svg");
-/* harmony import */ var _images_flex_single_row_svg__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../../images/flex/single-row.svg */ "./src/MainComponents/images/flex/single-row.svg");
-/* harmony import */ var _images_flex_wrap_down2_svg__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../../../images/flex/wrap-down2.svg */ "./src/MainComponents/images/flex/wrap-down2.svg");
-/* harmony import */ var _images_flex_wrap_right_svg__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../../../images/flex/wrap-right.svg */ "./src/MainComponents/images/flex/wrap-right.svg");
-/* harmony import */ var _images_flex_wrap_left_svg__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../../../images/flex/wrap-left.svg */ "./src/MainComponents/images/flex/wrap-left.svg");
-/* harmony import */ var _images_flex_single_column_svg__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../../../images/flex/single-column.svg */ "./src/MainComponents/images/flex/single-column.svg");
-/* harmony import */ var _images_flex_wrap_right2_svg__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../../../images/flex/wrap-right2.svg */ "./src/MainComponents/images/flex/wrap-right2.svg");
-/* harmony import */ var _images_flex_wrap_left2_svg__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../../../images/flex/wrap-left2.svg */ "./src/MainComponents/images/flex/wrap-left2.svg");
-/* harmony import */ var _filterDesignTabDerivedState__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ./filterDesignTabDerivedState */ "./src/MainComponents/FilterComponents/components/settingTabContent/filterDesignTabDerivedState.js");
-/* harmony import */ var _utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ../../../utils/collapseMainContentClass */ "./src/MainComponents/utils/collapseMainContentClass.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__);
+/* harmony import */ var _constants_fontWeightOptions__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../../../constants/fontWeightOptions */ "./src/MainComponents/constants/fontWeightOptions.js");
+/* harmony import */ var _images_flex_wrap_down_svg__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../../images/flex/wrap-down.svg */ "./src/MainComponents/images/flex/wrap-down.svg");
+/* harmony import */ var _images_flex_wrap_up_svg__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../../images/flex/wrap-up.svg */ "./src/MainComponents/images/flex/wrap-up.svg");
+/* harmony import */ var _images_flex_single_row_svg__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../../../images/flex/single-row.svg */ "./src/MainComponents/images/flex/single-row.svg");
+/* harmony import */ var _images_flex_wrap_down2_svg__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../../../images/flex/wrap-down2.svg */ "./src/MainComponents/images/flex/wrap-down2.svg");
+/* harmony import */ var _images_flex_wrap_right_svg__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../../../images/flex/wrap-right.svg */ "./src/MainComponents/images/flex/wrap-right.svg");
+/* harmony import */ var _images_flex_wrap_left_svg__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../../../images/flex/wrap-left.svg */ "./src/MainComponents/images/flex/wrap-left.svg");
+/* harmony import */ var _images_flex_single_column_svg__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../../../images/flex/single-column.svg */ "./src/MainComponents/images/flex/single-column.svg");
+/* harmony import */ var _images_flex_wrap_right2_svg__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../../../images/flex/wrap-right2.svg */ "./src/MainComponents/images/flex/wrap-right2.svg");
+/* harmony import */ var _images_flex_wrap_left2_svg__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ../../../images/flex/wrap-left2.svg */ "./src/MainComponents/images/flex/wrap-left2.svg");
+/* harmony import */ var _filterDesignTabDerivedState__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! ./filterDesignTabDerivedState */ "./src/MainComponents/FilterComponents/components/settingTabContent/filterDesignTabDerivedState.js");
+/* harmony import */ var _utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! ../../../utils/collapseMainContentClass */ "./src/MainComponents/utils/collapseMainContentClass.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__);
+
 
 
 
@@ -8439,11 +8433,11 @@ function buildFilterDesignTabMeta1Items(ctx) {
     device: deviceSwitch,
     styleStateAl
   };
-  const layoutFlexFlow = isSearchLayoutPanel ? (0,_filterDesignTabDerivedState__WEBPACK_IMPORTED_MODULE_25__.resolveFlexFlowForFilterDesignTab)({
+  const layoutFlexFlow = isSearchLayoutPanel ? (0,_filterDesignTabDerivedState__WEBPACK_IMPORTED_MODULE_26__.resolveFlexFlowForFilterDesignTab)({
     ...layoutDerivedCtx,
     styleTab: layoutMetaKey
   }) : flexFlow;
-  const layoutDisplayProperty = isSearchLayoutPanel ? (0,_filterDesignTabDerivedState__WEBPACK_IMPORTED_MODULE_25__.resolveDisplayPropertyForFilterDesignTab)({
+  const layoutDisplayProperty = isSearchLayoutPanel ? (0,_filterDesignTabDerivedState__WEBPACK_IMPORTED_MODULE_26__.resolveDisplayPropertyForFilterDesignTab)({
     ...layoutDerivedCtx,
     styleTab: layoutMetaKey
   }) : displayProperty;
@@ -8453,21 +8447,21 @@ function buildFilterDesignTabMeta1Items(ctx) {
   return [!(module?.key === "range_slider" && styleTab === "meta1") && (settings?.show_checkbox === 'true' || settings?.show_icon === 'true' || settings?.show_count === 'true' || styleTab === "selectmeta" || module?.key === "search" || settings?.show_checkbox === 'false' || settings?.show_icon === 'false' || settings?.show_count === 'false') ? {
     key: "0",
     label: "Layout",
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("0"),
           activeKey: layoutTabsActiveKey,
           onChange: value => handleSettingChange(value),
           items: styleTab === "selectmeta" ? selectedTabsubItems : meta1subItems,
           defaultActiveKey: styleTab === "selectmeta" ? styleTab : null
         })
-      }), isSearchLayoutPanel && layoutMetaKey === "input" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
-        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_26__.collapseMainContentClass)("layout", "webflow-sync"),
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+      }), isSearchLayoutPanel && layoutMetaKey === "input" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
+        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_27__.collapseMainContentClass)("layout", "webflow-sync"),
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
           className: "webflow-slider webflow-gap-slider",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
             data: props.data,
             indexes: props.indexes,
             property: "gap",
@@ -8482,10 +8476,10 @@ function buildFilterDesignTabMeta1Items(ctx) {
             isMeta: "input"
           })
         })
-      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)("div", {
-        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_26__.collapseMainContentClass)("layout", "webflow-sync"),
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_AlignMain__WEBPACK_IMPORTED_MODULE_12__["default"], {
+      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)("div", {
+        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_27__.collapseMainContentClass)("layout", "webflow-sync"),
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_AlignMain__WEBPACK_IMPORTED_MODULE_12__["default"], {
             data: props.data,
             indexes: props.indexes,
             property: "display",
@@ -8504,9 +8498,9 @@ function buildFilterDesignTabMeta1Items(ctx) {
             }],
             isNewTab: true,
             isMeta: layoutPanelIsMeta
-          }), layoutPanelDisplay === "flex" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+          }), layoutPanelDisplay === "flex" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
             className: "webflow-custom-dropdown new-caf-look",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_AlignMain__WEBPACK_IMPORTED_MODULE_12__["default"], {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_AlignMain__WEBPACK_IMPORTED_MODULE_12__["default"], {
               data: props.data,
               indexes: props.indexes,
               property: "flexFlow",
@@ -8519,40 +8513,40 @@ function buildFilterDesignTabMeta1Items(ctx) {
               isMeta: layoutPanelIsMeta,
               options: [{
                 value: 'row',
-                label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(antd__WEBPACK_IMPORTED_MODULE_7__["default"], {
+                label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(antd__WEBPACK_IMPORTED_MODULE_7__["default"], {
                   title: "Horizontal",
-                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_3__["default"], {})
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_3__["default"], {})
                 })
               }, {
                 value: 'column',
-                label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(antd__WEBPACK_IMPORTED_MODULE_7__["default"], {
+                label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(antd__WEBPACK_IMPORTED_MODULE_7__["default"], {
                   title: "Vertical",
-                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_1__["default"], {})
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_1__["default"], {})
                 })
               }, {
                 value: 'row-reverse',
-                label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(antd__WEBPACK_IMPORTED_MODULE_7__["default"], {
+                label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(antd__WEBPACK_IMPORTED_MODULE_7__["default"], {
                   title: "Row Reverse",
-                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_2__["default"], {})
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_2__["default"], {})
                 })
               }, {
                 value: 'column-reverse',
-                label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(antd__WEBPACK_IMPORTED_MODULE_7__["default"], {
+                label: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(antd__WEBPACK_IMPORTED_MODULE_7__["default"], {
                   title: "Column Reverse",
-                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_4__["default"], {})
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_ant_design_icons__WEBPACK_IMPORTED_MODULE_4__["default"], {})
                 })
               }]
             })
           })]
-        }), layoutPanelDisplay === "flex" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)("div", {
+        }), layoutPanelDisplay === "flex" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)("div", {
             className: "align-flex-flow",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("span", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("span", {
               className: "flex-flow-align-label",
               children: "Align"
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)("div", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)("div", {
               className: `flex-align-control ${layoutPanelFlexFlow === 'column wrap' || layoutPanelFlexFlow === 'column wrap-reverse' ? 'caf-reverse-me1' : ''}`,
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SelectMain__WEBPACK_IMPORTED_MODULE_10__["default"], {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SelectMain__WEBPACK_IMPORTED_MODULE_10__["default"], {
                 data: props.data,
                 indexes: props.indexes,
                 property: `${layoutPanelFlexFlow === 'column' || layoutPanelFlexFlow === 'column-reverse' ? 'alignItems' : "justifyContent"}`,
@@ -8565,7 +8559,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
                 options: opt1,
                 styleTab: styleTab,
                 isMeta: layoutPanelIsMeta
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SelectMain__WEBPACK_IMPORTED_MODULE_10__["default"], {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SelectMain__WEBPACK_IMPORTED_MODULE_10__["default"], {
                 data: props.data,
                 indexes: props.indexes,
                 property: `${layoutPanelFlexFlow === 'column' || layoutPanelFlexFlow === 'column-reverse' ? 'justifyContent' : "alignItems"}`,
@@ -8580,9 +8574,9 @@ function buildFilterDesignTabMeta1Items(ctx) {
                 isMeta: layoutPanelIsMeta
               })]
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
             className: "webflow-slider webflow-gap-slider",
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
               data: props.data,
               indexes: props.indexes,
               property: "gap",
@@ -8597,7 +8591,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
               isMeta: layoutPanelIsMeta
             })
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_AlignMain__WEBPACK_IMPORTED_MODULE_12__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_AlignMain__WEBPACK_IMPORTED_MODULE_12__["default"], {
           data: props.data,
           indexes: props.indexes,
           property: "float",
@@ -8625,12 +8619,12 @@ function buildFilterDesignTabMeta1Items(ctx) {
   } : null, {
     key: "1",
     label: "Text",
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-      children: module?.key === "range_slider" && styleTab === "meta1" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)("div", {
-        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_26__.collapseMainContentClass)("text"),
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+      children: module?.key === "range_slider" && styleTab === "meta1" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)("div", {
+        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_27__.collapseMainContentClass)("text"),
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
           className: "hoverswitchguard",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
             value: hoverSwitchText,
             style: {
               marginBottom: 8
@@ -8645,7 +8639,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
               value: true
             }]
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_TextMain__WEBPACK_IMPORTED_MODULE_15__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_TextMain__WEBPACK_IMPORTED_MODULE_15__["default"], {
           data: props.data,
           indexes: props.indexes,
           property: "text",
@@ -8657,10 +8651,10 @@ function buildFilterDesignTabMeta1Items(ctx) {
           styleTab: styleTab,
           isMeta: "meta1"
         })]
-      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
           className: "caf-builder-setting-row-label meta-dropdown-dyn",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
             isCollapseOpen: isCollapsePanelOpen("1"),
             activeKey: selectedMetaDropdown,
             defaultActiveKey: styleTab === "selectmeta" ? "selectmeta" : "meta1",
@@ -8697,11 +8691,11 @@ function buildFilterDesignTabMeta1Items(ctx) {
               label: "Count"
             } : null].filter(Boolean)
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)("div", {
-          className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_26__.collapseMainContentClass)("text"),
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)("div", {
+          className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_27__.collapseMainContentClass)("text"),
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
             className: "hoverswitchguard",
-            children: styleTab === "meta" && module?.key === "search" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
+            children: styleTab === "meta" && module?.key === "search" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
               value: hoverSwitchText,
               style: {
                 marginBottom: 8
@@ -8726,8 +8720,8 @@ function buildFilterDesignTabMeta1Items(ctx) {
                 label: 'Hover',
                 value: true
               }].filter(Boolean)
-            }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-              children: selectedMetaDropdown === 'input' ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
+            }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+              children: selectedMetaDropdown === 'input' ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
                 value: 'selected',
                 style: {
                   marginBottom: 8
@@ -8738,7 +8732,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
                   label: 'Selected',
                   value: 'selected'
                 }].filter(Boolean)
-              }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
+              }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
                 value: hoverSwitchText,
                 style: {
                   marginBottom: 8
@@ -8763,9 +8757,9 @@ function buildFilterDesignTabMeta1Items(ctx) {
                 }].filter(Boolean)
               })
             })
-          }), styleTab === "meta" && module?.key === "search" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-            children: styleTab === "meta" && module?.key === "search" && selectedMetaDropdown === 'input' ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SelectMain__WEBPACK_IMPORTED_MODULE_10__["default"], {
+          }), styleTab === "meta" && module?.key === "search" ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+            children: styleTab === "meta" && module?.key === "search" && selectedMetaDropdown === 'input' ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SelectMain__WEBPACK_IMPORTED_MODULE_10__["default"], {
                 data: props.data,
                 indexes: props.indexes,
                 onChangeStyle: onChangeStyle,
@@ -8780,7 +8774,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
                   label: item.family,
                   value: item.family
                 })) : ''
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SelectMain__WEBPACK_IMPORTED_MODULE_10__["default"], {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SelectMain__WEBPACK_IMPORTED_MODULE_10__["default"], {
                 data: props.data,
                 indexes: props.indexes,
                 onChangeStyle: onChangeStyle,
@@ -8791,23 +8785,8 @@ function buildFilterDesignTabMeta1Items(ctx) {
                 styleTab: styleTab,
                 styleState: styleStateIcon,
                 isMeta: selectedMetaDropdown,
-                options: [{
-                  value: "300",
-                  label: "Light"
-                }, {
-                  value: "400",
-                  label: "Regular"
-                }, {
-                  value: "600",
-                  label: "Semi Bold"
-                }, {
-                  value: "700",
-                  label: "Bold"
-                }, {
-                  value: "800",
-                  label: "Ultra Bold"
-                }]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+                options: _constants_fontWeightOptions__WEBPACK_IMPORTED_MODULE_16__.FONT_WEIGHT_OPTIONS
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
                 data: props.data,
                 indexes: props.indexes,
                 property: "fontSize",
@@ -8820,7 +8799,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
                 styleState: styleStateIcon,
                 isSlider: true,
                 isMeta: selectedMetaDropdown
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_ColorMain__WEBPACK_IMPORTED_MODULE_11__["default"], {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_ColorMain__WEBPACK_IMPORTED_MODULE_11__["default"], {
                 data: props.data,
                 indexes: props.indexes,
                 property: "color",
@@ -8832,8 +8811,8 @@ function buildFilterDesignTabMeta1Items(ctx) {
                 styleTab: styleTab,
                 isMeta: selectedMetaDropdown
               })]
-            }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+            }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
                 data: props.data,
                 indexes: props.indexes,
                 property: "fontSize",
@@ -8846,7 +8825,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
                 styleState: styleStateIcon,
                 isSlider: true,
                 isMeta: selectedMetaDropdown
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_ColorMain__WEBPACK_IMPORTED_MODULE_11__["default"], {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_ColorMain__WEBPACK_IMPORTED_MODULE_11__["default"], {
                 data: props.data,
                 indexes: props.indexes,
                 property: "color",
@@ -8859,9 +8838,9 @@ function buildFilterDesignTabMeta1Items(ctx) {
                 isMeta: selectedMetaDropdown
               })]
             })
-          }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-            children: selectedMetaDropdown === 'icon' ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+          }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+            children: selectedMetaDropdown === 'icon' ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
                 data: props.data,
                 indexes: props.indexes,
                 property: "fontSize",
@@ -8874,7 +8853,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
                 styleState: styleStateIcon,
                 isSlider: true,
                 isMeta: rsOrMetaIsMeta
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_ColorMain__WEBPACK_IMPORTED_MODULE_11__["default"], {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_ColorMain__WEBPACK_IMPORTED_MODULE_11__["default"], {
                 data: props.data,
                 indexes: props.indexes,
                 property: "color",
@@ -8886,8 +8865,8 @@ function buildFilterDesignTabMeta1Items(ctx) {
                 styleTab: styleTab,
                 isMeta: rsOrMetaIsMeta
               })]
-            }) : selectedMetaDropdown === 'input' ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_ColorMain__WEBPACK_IMPORTED_MODULE_11__["default"], {
+            }) : selectedMetaDropdown === 'input' ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_ColorMain__WEBPACK_IMPORTED_MODULE_11__["default"], {
                 data: props.data,
                 indexes: props.indexes,
                 property: "color",
@@ -8899,8 +8878,8 @@ function buildFilterDesignTabMeta1Items(ctx) {
                 styleTab: styleTab,
                 isMeta: 'input'
               })
-            }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_TextMain__WEBPACK_IMPORTED_MODULE_15__["default"], {
+            }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_TextMain__WEBPACK_IMPORTED_MODULE_15__["default"], {
                 data: props.data,
                 indexes: props.indexes,
                 property: "text",
@@ -8922,10 +8901,10 @@ function buildFilterDesignTabMeta1Items(ctx) {
   }, {
     key: "2",
     label: "Sizing",
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("2"),
           activeKey: rsTrackThumbTabsActiveKey,
           defaultActiveKey: styleTab === "selectmeta" ? "selectmeta" : "meta1",
@@ -8947,10 +8926,10 @@ function buildFilterDesignTabMeta1Items(ctx) {
             label: "Checkbox"
           } : null].filter(Boolean)
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
-        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_26__.collapseMainContentClass)("sizing"),
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
+        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_27__.collapseMainContentClass)("sizing"),
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
             data: props.data,
             indexes: props.indexes,
             property: "width",
@@ -8962,7 +8941,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
             styleTab: styleTab,
             isSlider: true,
             isMeta: rsOrMetaIsMeta
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
             data: props.data,
             indexes: props.indexes,
             property: "height",
@@ -8981,10 +8960,10 @@ function buildFilterDesignTabMeta1Items(ctx) {
   }, {
     key: "3",
     label: "Spacing",
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("3"),
           activeKey: rsTrackThumbTabsActiveKey,
           defaultActiveKey: styleTab === "selectmeta" ? "selectmeta" : "meta1",
@@ -9024,11 +9003,11 @@ function buildFilterDesignTabMeta1Items(ctx) {
             label: "Count"
           } : null].filter(Boolean)
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)("div", {
-        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_26__.collapseMainContentClass)("spacing"),
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)("div", {
+        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_27__.collapseMainContentClass)("spacing"),
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
           className: "hoverswitchguard",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
             value: hoverSwitchSpacing,
             style: {
               marginBottom: 8
@@ -9078,13 +9057,13 @@ function buildFilterDesignTabMeta1Items(ctx) {
               value: 'selected'
             }]
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("span", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("span", {
           className: "label-span-spacing",
           children: "Margin"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)("div", {
           className: "caf-spacing-look",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_5__["default"], {
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
               data: props.data,
               indexes: props.indexes,
               property: "marginTop",
@@ -9099,7 +9078,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
               isSpacingJoint: isMarginVerticalJoint,
               styleTab: styleTab,
               isMeta: rsOrMetaIsMeta
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
               data: props.data,
               indexes: props.indexes,
               property: "marginBottom",
@@ -9114,23 +9093,23 @@ function buildFilterDesignTabMeta1Items(ctx) {
               isSpacingJoint: isMarginVerticalJoint,
               styleTab: styleTab,
               isMeta: rsOrMetaIsMeta
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
               className: `spacing-joint ${isMarginVerticalJoint ? "active" : ""}`,
               onClick: toggleMarginVerticalJoint,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("svg", {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("svg", {
                 width: "12",
                 height: "12",
                 viewBox: "0 0 12 12",
                 fill: "none",
                 xmlns: "http://www.w3.org/2000/svg",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("path", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("path", {
                   d: "M7.20001 2.4C6.86863 2.4 6.60001 2.66864 6.60001 3C6.60001 3.33137 6.86863 3.6 7.20001 3.6V2.4ZM4.8 9.60001C5.13138 9.60001 5.4 9.33139 5.4 9.00001C5.4 8.66863 5.13138 8.40001 4.8 8.40001V9.60001ZM7.20001 8.40001C6.86863 8.40001 6.60001 8.66863 6.60001 9.00001C6.60001 9.33139 6.86863 9.60001 7.20001 9.60001V8.40001ZM3.6 5.40001C3.26863 5.40001 3 5.66863 3 6.00001C3 6.33139 3.26863 6.60001 3.6 6.60001V5.40001ZM1.02427 0.175734C0.789949 -0.0585781 0.410052 -0.0585781 0.175734 0.175734C-0.058578 0.410053 -0.058578 0.789949 0.175734 1.02427L1.02427 0.175734ZM10.9757 11.8243C11.2101 12.0586 11.59 12.0586 11.8243 11.8243C12.0586 11.59 12.0586 11.2101 11.8243 10.9758L10.9757 11.8243ZM10.4469 7.25389C10.2734 7.53625 10.3618 7.90579 10.6441 8.07919C10.9265 8.25265 11.296 8.16433 11.4694 7.88197L10.4469 7.25389ZM6.00001 6.60001C6.33139 6.60001 6.60001 6.33139 6.60001 6.00001C6.60001 5.66863 6.33139 5.40001 6.00001 5.40001V6.60001ZM3.6 8.40001C2.27452 8.40001 1.2 7.32547 1.2 6.00001H0C0 7.98823 1.61178 9.60001 3.6 9.60001V8.40001ZM8.40001 3.6C9.72547 3.6 10.8 4.67452 10.8 6.00001H12C12 4.01178 10.3882 2.4 8.40001 2.4V3.6ZM7.20001 3.6H8.40001V2.4H7.20001V3.6ZM4.8 8.40001H3.6V9.60001H4.8V8.40001ZM8.40001 8.40001H7.20001V9.60001H8.40001V8.40001ZM10.8 6.00001C10.8 6.46069 10.6708 6.88939 10.4469 7.25389L11.4694 7.88197C11.806 7.33393 12 6.68869 12 6.00001H10.8ZM3.6 6.60001H6.00001V5.40001H3.6V6.60001ZM0.175734 1.02427L2.626 3.47453L3.47453 2.626L1.02427 0.175734L0.175734 1.02427ZM3.05026 3.05026C2.98992 2.72443 2.67401 2.50451 2.36283 2.6184C0.984036 3.12303 0 4.44611 0 6.00001H1.2C1.2 5.03589 1.7689 4.20379 2.5894 3.82233C2.88989 3.68263 3.1106 3.37609 3.05026 3.05026ZM2.626 3.47453L8.52547 9.37399L9.37399 8.52547L3.47453 2.626L2.626 3.47453ZM8.52547 9.37399L10.9757 11.8243L11.8243 10.9758L9.37399 8.52547L8.52547 9.37399ZM8.92112 8.79531C8.87658 8.55478 8.64463 8.40001 8.40001 8.40001V9.60001C8.42093 9.60001 8.44182 9.59983 8.46266 9.59948C8.79399 9.5938 9.01007 9.27558 8.94973 8.94974L8.92112 8.79531Z",
                   fill: "#383A3D"
                 })
               })
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_5__["default"], {
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
               data: props.data,
               indexes: props.indexes,
               property: "marginLeft",
@@ -9145,7 +9124,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
               isSpacingJoint: isMarginHorizontalJoint,
               styleTab: styleTab,
               isMeta: rsOrMetaIsMeta
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
               data: props.data,
               indexes: props.indexes,
               property: "marginRight",
@@ -9160,30 +9139,30 @@ function buildFilterDesignTabMeta1Items(ctx) {
               isSpacingJoint: isMarginHorizontalJoint,
               styleTab: styleTab,
               isMeta: rsOrMetaIsMeta
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
               className: `spacing-joint ${isMarginHorizontalJoint ? "active" : ""}`,
               onClick: toggleMarginHorizontalJoint,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("svg", {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("svg", {
                 width: "12",
                 height: "12",
                 viewBox: "0 0 12 12",
                 fill: "none",
                 xmlns: "http://www.w3.org/2000/svg",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("path", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("path", {
                   d: "M7.20001 2.4C6.86863 2.4 6.60001 2.66864 6.60001 3C6.60001 3.33137 6.86863 3.6 7.20001 3.6V2.4ZM4.8 9.60001C5.13138 9.60001 5.4 9.33139 5.4 9.00001C5.4 8.66863 5.13138 8.40001 4.8 8.40001V9.60001ZM7.20001 8.40001C6.86863 8.40001 6.60001 8.66863 6.60001 9.00001C6.60001 9.33139 6.86863 9.60001 7.20001 9.60001V8.40001ZM3.6 5.40001C3.26863 5.40001 3 5.66863 3 6.00001C3 6.33139 3.26863 6.60001 3.6 6.60001V5.40001ZM1.02427 0.175734C0.789949 -0.0585781 0.410052 -0.0585781 0.175734 0.175734C-0.058578 0.410053 -0.058578 0.789949 0.175734 1.02427L1.02427 0.175734ZM10.9757 11.8243C11.2101 12.0586 11.59 12.0586 11.8243 11.8243C12.0586 11.59 12.0586 11.2101 11.8243 10.9758L10.9757 11.8243ZM10.4469 7.25389C10.2734 7.53625 10.3618 7.90579 10.6441 8.07919C10.9265 8.25265 11.296 8.16433 11.4694 7.88197L10.4469 7.25389ZM6.00001 6.60001C6.33139 6.60001 6.60001 6.33139 6.60001 6.00001C6.60001 5.66863 6.33139 5.40001 6.00001 5.40001V6.60001ZM3.6 8.40001C2.27452 8.40001 1.2 7.32547 1.2 6.00001H0C0 7.98823 1.61178 9.60001 3.6 9.60001V8.40001ZM8.40001 3.6C9.72547 3.6 10.8 4.67452 10.8 6.00001H12C12 4.01178 10.3882 2.4 8.40001 2.4V3.6ZM7.20001 3.6H8.40001V2.4H7.20001V3.6ZM4.8 8.40001H3.6V9.60001H4.8V8.40001ZM8.40001 8.40001H7.20001V9.60001H8.40001V8.40001ZM10.8 6.00001C10.8 6.46069 10.6708 6.88939 10.4469 7.25389L11.4694 7.88197C11.806 7.33393 12 6.68869 12 6.00001H10.8ZM3.6 6.60001H6.00001V5.40001H3.6V6.60001ZM0.175734 1.02427L2.626 3.47453L3.47453 2.626L1.02427 0.175734L0.175734 1.02427ZM3.05026 3.05026C2.98992 2.72443 2.67401 2.50451 2.36283 2.6184C0.984036 3.12303 0 4.44611 0 6.00001H1.2C1.2 5.03589 1.7689 4.20379 2.5894 3.82233C2.88989 3.68263 3.1106 3.37609 3.05026 3.05026ZM2.626 3.47453L8.52547 9.37399L9.37399 8.52547L3.47453 2.626L2.626 3.47453ZM8.52547 9.37399L10.9757 11.8243L11.8243 10.9758L9.37399 8.52547L8.52547 9.37399ZM8.92112 8.79531C8.87658 8.55478 8.64463 8.40001 8.40001 8.40001V9.60001C8.42093 9.60001 8.44182 9.59983 8.46266 9.59948C8.79399 9.5938 9.01007 9.27558 8.94973 8.94974L8.92112 8.79531Z",
                   fill: "#383A3D"
                 })
               })
             })]
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("span", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("span", {
           className: "label-span-spacing",
           children: "Padding"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)("div", {
           className: "caf-spacing-look",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_5__["default"], {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_5__["default"], {
             className: "without-border",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
               data: props.data,
               indexes: props.indexes,
               property: "paddingTop",
@@ -9198,7 +9177,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
               isSpacingJoint: isPaddingVerticalJoint,
               styleTab: styleTab,
               isMeta: rsOrMetaIsMeta
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
               data: props.data,
               indexes: props.indexes,
               property: "paddingBottom",
@@ -9213,23 +9192,23 @@ function buildFilterDesignTabMeta1Items(ctx) {
               isSpacingJoint: isPaddingVerticalJoint,
               styleTab: styleTab,
               isMeta: rsOrMetaIsMeta
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
               className: `spacing-joint ${isPaddingVerticalJoint ? "active" : ""}`,
               onClick: togglePaddingVerticalJoint,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("svg", {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("svg", {
                 width: "12",
                 height: "12",
                 viewBox: "0 0 12 12",
                 fill: "none",
                 xmlns: "http://www.w3.org/2000/svg",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("path", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("path", {
                   d: "M7.20001 2.4C6.86863 2.4 6.60001 2.66864 6.60001 3C6.60001 3.33137 6.86863 3.6 7.20001 3.6V2.4ZM4.8 9.60001C5.13138 9.60001 5.4 9.33139 5.4 9.00001C5.4 8.66863 5.13138 8.40001 4.8 8.40001V9.60001ZM7.20001 8.40001C6.86863 8.40001 6.60001 8.66863 6.60001 9.00001C6.60001 9.33139 6.86863 9.60001 7.20001 9.60001V8.40001ZM3.6 5.40001C3.26863 5.40001 3 5.66863 3 6.00001C3 6.33139 3.26863 6.60001 3.6 6.60001V5.40001ZM1.02427 0.175734C0.789949 -0.0585781 0.410052 -0.0585781 0.175734 0.175734C-0.058578 0.410053 -0.058578 0.789949 0.175734 1.02427L1.02427 0.175734ZM10.9757 11.8243C11.2101 12.0586 11.59 12.0586 11.8243 11.8243C12.0586 11.59 12.0586 11.2101 11.8243 10.9758L10.9757 11.8243ZM10.4469 7.25389C10.2734 7.53625 10.3618 7.90579 10.6441 8.07919C10.9265 8.25265 11.296 8.16433 11.4694 7.88197L10.4469 7.25389ZM6.00001 6.60001C6.33139 6.60001 6.60001 6.33139 6.60001 6.00001C6.60001 5.66863 6.33139 5.40001 6.00001 5.40001V6.60001ZM3.6 8.40001C2.27452 8.40001 1.2 7.32547 1.2 6.00001H0C0 7.98823 1.61178 9.60001 3.6 9.60001V8.40001ZM8.40001 3.6C9.72547 3.6 10.8 4.67452 10.8 6.00001H12C12 4.01178 10.3882 2.4 8.40001 2.4V3.6ZM7.20001 3.6H8.40001V2.4H7.20001V3.6ZM4.8 8.40001H3.6V9.60001H4.8V8.40001ZM8.40001 8.40001H7.20001V9.60001H8.40001V8.40001ZM10.8 6.00001C10.8 6.46069 10.6708 6.88939 10.4469 7.25389L11.4694 7.88197C11.806 7.33393 12 6.68869 12 6.00001H10.8ZM3.6 6.60001H6.00001V5.40001H3.6V6.60001ZM0.175734 1.02427L2.626 3.47453L3.47453 2.626L1.02427 0.175734L0.175734 1.02427ZM3.05026 3.05026C2.98992 2.72443 2.67401 2.50451 2.36283 2.6184C0.984036 3.12303 0 4.44611 0 6.00001H1.2C1.2 5.03589 1.7689 4.20379 2.5894 3.82233C2.88989 3.68263 3.1106 3.37609 3.05026 3.05026ZM2.626 3.47453L8.52547 9.37399L9.37399 8.52547L3.47453 2.626L2.626 3.47453ZM8.52547 9.37399L10.9757 11.8243L11.8243 10.9758L9.37399 8.52547L8.52547 9.37399ZM8.92112 8.79531C8.87658 8.55478 8.64463 8.40001 8.40001 8.40001V9.60001C8.42093 9.60001 8.44182 9.59983 8.46266 9.59948C8.79399 9.5938 9.01007 9.27558 8.94973 8.94974L8.92112 8.79531Z",
                   fill: "#383A3D"
                 })
               })
             })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_5__["default"], {
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(antd__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
               data: props.data,
               indexes: props.indexes,
               property: "paddingLeft",
@@ -9244,7 +9223,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
               isSpacingJoint: isPaddingHorizontalJoint,
               styleTab: styleTab,
               isMeta: rsOrMetaIsMeta
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_SliderMain__WEBPACK_IMPORTED_MODULE_9__["default"], {
               data: props.data,
               indexes: props.indexes,
               property: "paddingRight",
@@ -9259,16 +9238,16 @@ function buildFilterDesignTabMeta1Items(ctx) {
               isSpacingJoint: isPaddingHorizontalJoint,
               styleTab: styleTab,
               isMeta: rsOrMetaIsMeta
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
               className: `spacing-joint ${isPaddingHorizontalJoint ? "active" : ""}`,
               onClick: togglePaddingHorizontalJoint,
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("svg", {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("svg", {
                 width: "12",
                 height: "12",
                 viewBox: "0 0 12 12",
                 fill: "none",
                 xmlns: "http://www.w3.org/2000/svg",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("path", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("path", {
                   d: "M7.20001 2.4C6.86863 2.4 6.60001 2.66864 6.60001 3C6.60001 3.33137 6.86863 3.6 7.20001 3.6V2.4ZM4.8 9.60001C5.13138 9.60001 5.4 9.33139 5.4 9.00001C5.4 8.66863 5.13138 8.40001 4.8 8.40001V9.60001ZM7.20001 8.40001C6.86863 8.40001 6.60001 8.66863 6.60001 9.00001C6.60001 9.33139 6.86863 9.60001 7.20001 9.60001V8.40001ZM3.6 5.40001C3.26863 5.40001 3 5.66863 3 6.00001C3 6.33139 3.26863 6.60001 3.6 6.60001V5.40001ZM1.02427 0.175734C0.789949 -0.0585781 0.410052 -0.0585781 0.175734 0.175734C-0.058578 0.410053 -0.058578 0.789949 0.175734 1.02427L1.02427 0.175734ZM10.9757 11.8243C11.2101 12.0586 11.59 12.0586 11.8243 11.8243C12.0586 11.59 12.0586 11.2101 11.8243 10.9758L10.9757 11.8243ZM10.4469 7.25389C10.2734 7.53625 10.3618 7.90579 10.6441 8.07919C10.9265 8.25265 11.296 8.16433 11.4694 7.88197L10.4469 7.25389ZM6.00001 6.60001C6.33139 6.60001 6.60001 6.33139 6.60001 6.00001C6.60001 5.66863 6.33139 5.40001 6.00001 5.40001V6.60001ZM3.6 8.40001C2.27452 8.40001 1.2 7.32547 1.2 6.00001H0C0 7.98823 1.61178 9.60001 3.6 9.60001V8.40001ZM8.40001 3.6C9.72547 3.6 10.8 4.67452 10.8 6.00001H12C12 4.01178 10.3882 2.4 8.40001 2.4V3.6ZM7.20001 3.6H8.40001V2.4H7.20001V3.6ZM4.8 8.40001H3.6V9.60001H4.8V8.40001ZM8.40001 8.40001H7.20001V9.60001H8.40001V8.40001ZM10.8 6.00001C10.8 6.46069 10.6708 6.88939 10.4469 7.25389L11.4694 7.88197C11.806 7.33393 12 6.68869 12 6.00001H10.8ZM3.6 6.60001H6.00001V5.40001H3.6V6.60001ZM0.175734 1.02427L2.626 3.47453L3.47453 2.626L1.02427 0.175734L0.175734 1.02427ZM3.05026 3.05026C2.98992 2.72443 2.67401 2.50451 2.36283 2.6184C0.984036 3.12303 0 4.44611 0 6.00001H1.2C1.2 5.03589 1.7689 4.20379 2.5894 3.82233C2.88989 3.68263 3.1106 3.37609 3.05026 3.05026ZM2.626 3.47453L8.52547 9.37399L9.37399 8.52547L3.47453 2.626L2.626 3.47453ZM8.52547 9.37399L10.9757 11.8243L11.8243 10.9758L9.37399 8.52547L8.52547 9.37399ZM8.92112 8.79531C8.87658 8.55478 8.64463 8.40001 8.40001 8.40001V9.60001C8.42093 9.60001 8.44182 9.59983 8.46266 9.59948C8.79399 9.5938 9.01007 9.27558 8.94973 8.94974L8.92112 8.79531Z",
                   fill: "#383A3D"
                 })
@@ -9281,10 +9260,10 @@ function buildFilterDesignTabMeta1Items(ctx) {
   }, {
     key: "4",
     label: "Background",
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("4"),
           activeKey: rsTrackThumbTabsActiveKey,
           defaultActiveKey: styleTab === "selectmeta" ? styleTab : "meta1",
@@ -9324,11 +9303,11 @@ function buildFilterDesignTabMeta1Items(ctx) {
             label: "Count"
           } : null].filter(Boolean)
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)("div", {
-        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_26__.collapseMainContentClass)("background"),
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)("div", {
+        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_27__.collapseMainContentClass)("background"),
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
           className: "hoverswitchguard",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
             value: hoverSwitchBg,
             style: {
               marginBottom: 8
@@ -9387,7 +9366,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
               value: 'selected'
             }]
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_ColorMain__WEBPACK_IMPORTED_MODULE_11__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_ColorMain__WEBPACK_IMPORTED_MODULE_11__["default"], {
           data: props.data,
           indexes: props.indexes,
           property: "backgroundColor",
@@ -9404,10 +9383,10 @@ function buildFilterDesignTabMeta1Items(ctx) {
   }, {
     key: "5",
     label: "Border",
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("5"),
           activeKey: rsTrackThumbTabsActiveKey,
           defaultActiveKey: styleTab === "selectmeta" ? styleTab : "meta1",
@@ -9447,11 +9426,11 @@ function buildFilterDesignTabMeta1Items(ctx) {
             label: "Count"
           } : null].filter(Boolean)
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)("div", {
-        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_26__.collapseMainContentClass)("border"),
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)("div", {
+        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_27__.collapseMainContentClass)("border"),
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
           className: "hoverswitchguard",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
             value: hoverSwitchBr,
             style: {
               marginBottom: 8
@@ -9496,7 +9475,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
               value: 'selected'
             }]
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_BorderMain__WEBPACK_IMPORTED_MODULE_13__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_BorderMain__WEBPACK_IMPORTED_MODULE_13__["default"], {
           data: props.data,
           indexes: props.indexes,
           property: "border",
@@ -9512,10 +9491,10 @@ function buildFilterDesignTabMeta1Items(ctx) {
   }, {
     key: "6",
     label: "Box Shadow",
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.Fragment, {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_FilterDesignTabInnerTabs__WEBPACK_IMPORTED_MODULE_8__.FilterDesignTabInnerTabs, {
           isCollapseOpen: isCollapsePanelOpen("6"),
           activeKey: rsTrackThumbTabsActiveKey,
           defaultActiveKey: styleTab === "selectmeta" ? styleTab : "meta1",
@@ -9552,11 +9531,11 @@ function buildFilterDesignTabMeta1Items(ctx) {
             label: "Icon"
           } : null].filter(Boolean)
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsxs)("div", {
-        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_26__.collapseMainContentClass)("box-shadow"),
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)("div", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsxs)("div", {
+        className: (0,_utils_collapseMainContentClass__WEBPACK_IMPORTED_MODULE_27__.collapseMainContentClass)("box-shadow"),
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)("div", {
           className: "hoverswitchguard",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(antd__WEBPACK_IMPORTED_MODULE_6__["default"], {
             value: hoverSwitchBs,
             style: {
               marginBottom: 8
@@ -9600,7 +9579,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
               value: 'selected'
             }]
           })
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_27__.jsx)(_design_components_common_component_BoxShadow__WEBPACK_IMPORTED_MODULE_14__["default"], {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_28__.jsx)(_design_components_common_component_BoxShadow__WEBPACK_IMPORTED_MODULE_14__["default"], {
           data: props.data,
           indexes: props.indexes,
           property: "boxShadow",
@@ -10280,4 +10259,4 @@ function buildFilterDesignTabMetaItems(ctx) {
 /***/ }
 
 }]);
-//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_DesignTab_js.js.map?ver=c8d204fca42151bb942f
+//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_DesignTab_js.js.map?ver=cf1ef470173fa2786709
