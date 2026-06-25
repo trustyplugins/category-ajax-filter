@@ -501,8 +501,15 @@ ul.caf-terms-list.caf-checkbox {
     list-style: none;
     margin: 0;
     cursor: pointer;
+    line-height: normal;
 }
-
+.caf-builder-container div, 
+.caf-builder-container span, 
+.caf-builder-container ul, 
+.caf-builder-container li, 
+.caf-builder-container input {
+    line-height: normal;
+}
 .filter-layout-container .caf-builder-module-main.caf-module-filter li.caf-terms-list-item .caf-taxo-button-main {
     cursor: pointer;
 }
