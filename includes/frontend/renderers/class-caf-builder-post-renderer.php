@@ -771,6 +771,19 @@ class CAF_Builder_Post_Renderer {
 		$prefix    = isset( $settings->prefix ) ? $settings->prefix : new stdClass();
 		$suffix    = isset( $settings->suffix ) ? $settings->suffix : new stdClass();
 
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'post_prefix_suffix' ) ) {
+			$prefix = (object) array(
+				'is_enable' => 'false',
+				'meta_type' => 'text',
+				'meta_text' => '',
+			);
+			$suffix = (object) array(
+				'is_enable' => 'true',
+				'meta_type' => 'text',
+				'meta_text' => 'comments',
+			);
+		}
+
 		$module_style   = isset( $module->style ) ? $module->style : null;
 		$comment_value  = esc_html( get_comments_number( $post_id ) );
 		$html           = $this->render_wrapped_icon( $icon_data, 'before-comment', 'before', 'commentcount', 'margin-right: 5px;' );

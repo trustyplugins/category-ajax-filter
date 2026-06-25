@@ -63,7 +63,11 @@ class CAF_Filter_Search_Module extends CAF_Filter_Base_Module {
 		$search_icon_enabled  = ! isset( $settings->search_icon->is_enable ) || 'true' === (string) $settings->search_icon->is_enable;
 		$search_icon_position = isset( $settings->search_icon->position ) && '' !== (string) $settings->search_icon->position ? $settings->search_icon->position : 'right';
 		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'search_show_icon' ) ) {
-			$search_icon_enabled = false;
+			// Free tier: show the built-in search icon on the right; icon settings stay locked in the builder.
+			$search_icon_enabled  = true;
+			$search_icon_position = 'right';
+			$search_icon_data->type = 'icon';
+			$search_icon_data->icon = 'fas fa-search';
 		}
 
 		$voice_icon_enabled  = false;
