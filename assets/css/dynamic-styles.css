@@ -705,7 +705,9 @@ ul.caf-terms-list.caf-checkbox {
     width: 100%;
 }
 
-
+.caf-builder-module-main.caf-module-post.caf-module-type-image img {
+    object-fit: cover;
+}
 li.caf-terms-list-item.caf-layout-flex-start .manage-ic-lbl {
     width: 100%;
 }
