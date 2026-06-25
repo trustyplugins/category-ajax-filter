@@ -11149,7 +11149,7 @@ const ModuleSearchGenerals = props => {
           mode: "smart_ai_search"
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("span", {
           className: "caf-ai-search-btn-label",
-          children: "Smart AI Search"
+          children: "AI Search"
         }), !canUseSmartAiSearch ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_18__.jsx)("span", {
           className: "caf-builder-tier-locked-wrap__badge caf-search-mode-pro-badge",
           children: "Pro"
@@ -12427,4 +12427,4 @@ const BUILDER_TOOLTIP_CLASS_NAMES = {
 /***/ }
 
 }]);
-//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js.js.map?ver=7a187a64f642f11fcfb2
+//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js.js.map?ver=9a4ea79878977b5b531f

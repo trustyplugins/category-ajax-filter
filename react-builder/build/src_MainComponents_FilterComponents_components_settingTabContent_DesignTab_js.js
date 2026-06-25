@@ -3272,6 +3272,10 @@ const SelectMain = props => {
         popupMatchSelectWidth: true,
         className: cl,
         hoverValue: props?.hoverValue || "",
+        ...(property === "fontFamily" ? {
+          showSearch: true,
+          optionFilterProp: "label"
+        } : {}),
         popupRender: menu => props?.hoverValue ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
             children: [menu, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
@@ -10259,4 +10263,4 @@ function buildFilterDesignTabMetaItems(ctx) {
 /***/ }
 
 }]);
-//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_DesignTab_js.js.map?ver=cf1ef470173fa2786709
+//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_DesignTab_js.js.map?ver=8824cf59709bdb37bfc2

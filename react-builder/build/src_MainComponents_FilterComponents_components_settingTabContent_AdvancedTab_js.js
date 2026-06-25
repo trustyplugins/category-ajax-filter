@@ -699,6 +699,10 @@ const SelectMain = props => {
         popupMatchSelectWidth: true,
         className: cl,
         hoverValue: props?.hoverValue || "",
+        ...(property === "fontFamily" ? {
+          showSearch: true,
+          optionFilterProp: "label"
+        } : {}),
         popupRender: menu => props?.hoverValue ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
           children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
             children: [menu, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
@@ -1682,4 +1686,4 @@ const AdvancedTab = props => {
 /***/ }
 
 }]);
-//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_AdvancedTab_js.js.map?ver=e03b742aed9bfe624c87
+//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_AdvancedTab_js.js.map?ver=69b0342aaec5a9c54642
