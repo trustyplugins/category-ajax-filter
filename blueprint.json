@@ -1,11 +1,11 @@
 {
   "$schema": "https://playground.wordpress.net/blueprint-schema.json",
   "meta": {
-    "title": "Category AJAX Filter (Free) — Builder Demo",
-    "description": "Installs CAF free v3 from GitHub, seeds sample posts/categories, opens the visual filter builder.",
+    "title": "Category AJAX Filter (Free) — Legacy + Builder Demos",
+    "description": "Installs CAF free, seeds legacy and builder filters with category checkbox terms, and opens the demo hub.",
     "author": "Trusty Plugins"
   },
-  "landingPage": "/wp-admin/edit.php?post_type=caf_posts&builder=1",
+  "landingPage": "/caf-playground/",
   "login": true,
   "preferredVersions": {
     "php": "8.2",
@@ -24,7 +24,7 @@
       "step": "setSiteOptions",
       "options": {
         "blogname": "CAF Free Playground",
-        "blogdescription": "Category AJAX Filter 3.0 builder demo",
+        "blogdescription": "Legacy + builder filter demos with category terms",
         "permalink_structure": "/%postname%/"
       }
     },
@@ -43,7 +43,7 @@
     },
     {
       "step": "runPHP",
-      "code": "<?php require_once '/wordpress/wp-load.php'; flush_rewrite_rules(false); $categories = array( 'News', 'Tutorials', 'Reviews' ); $cat_ids = array(); foreach ( $categories as $name ) { $existing = term_exists( $name, 'category' ); if ( $existing ) { $cat_ids[] = (int) $existing['term_id']; continue; } $result = wp_insert_term( $name, 'category' ); if ( ! is_wp_error( $result ) ) { $cat_ids[] = (int) $result['term_id']; } } if ( empty( $cat_ids ) ) { $cat_ids[] = 1; } for ( $i = 1; $i <= 12; $i++ ) { wp_insert_post( array( 'post_title' => sprintf( 'CAF Demo Post %d', $i ), 'post_content' => 'Sample content for testing Category AJAX Filter checkbox, dropdown, and search modules.', 'post_status' => 'publish', 'post_category' => array( $cat_ids[ ( $i - 1 ) % count( $cat_ids ) ] ), ) ); } wp_insert_post( array( 'post_title' => 'CAF Filter Demo Page', 'post_content' => '<!-- wp:paragraph --><p>Create a layout in <strong>CAF Posts → Builder</strong>, then paste its shortcode on this page to preview filters on the front end.</p><!-- /wp:paragraph -->', 'post_status' => 'publish', 'post_type' => 'page', ) ); ?>"
+      "code": "<?php require_once '/wordpress/wp-load.php'; require_once WP_PLUGIN_DIR . '/category-ajax-filter/includes/playground/seed-demo.php'; caf_playground_seed_demo(); ?>"
     }
   ]
 }
