@@ -33,7 +33,7 @@
       "pluginData": {
         "resource": "git:directory",
         "url": "https://github.com/trustyplugins/category-ajax-filter",
-        "ref": "3.0",
+        "ref": "playground",
         "refType": "branch"
       },
       "options": {
