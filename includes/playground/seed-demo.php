@@ -10,42 +10,101 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Ensure the plugin, post type, and builder helpers are available in runPHP.
+ *
+ * @return void
+ */
+function caf_playground_bootstrap() {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	$plugin_file = 'category-ajax-filter/category-ajax-filter.php';
+	$plugin_path = WP_PLUGIN_DIR . '/' . $plugin_file;
+
+	if ( ! file_exists( $plugin_path ) ) {
+		throw new RuntimeException( 'Category AJAX Filter plugin is not installed.' );
+	}
+
+	if ( ! is_plugin_active( $plugin_file ) && function_exists( 'activate_plugin' ) ) {
+		$activation = activate_plugin( $plugin_file );
+		if ( is_wp_error( $activation ) ) {
+			throw new RuntimeException( 'Could not activate CAF: ' . $activation->get_error_message() );
+		}
+	}
+
+	if ( ! defined( 'TC_CAF_PATH' ) ) {
+		define( 'TC_CAF_PATH', WP_PLUGIN_DIR . '/category-ajax-filter/' );
+	}
+
+	if ( ! post_type_exists( 'caf_posts' ) ) {
+		$functions_file = TC_CAF_PATH . 'admin/functions.php';
+		if ( file_exists( $functions_file ) ) {
+			require_once $functions_file;
+			if ( class_exists( 'CAF_init' ) ) {
+				$caf_init = new CAF_init();
+				$caf_init->register_caf_post_type();
+			}
+		}
+	}
+
+	if ( ! post_type_exists( 'caf_posts' ) ) {
+		throw new RuntimeException( 'caf_posts post type is not registered.' );
+	}
+
+	caf_playground_load_builder_helpers();
+}
+
+/**
+ * Load builder helper functions when admin bootstrap did not run.
+ *
+ * @return void
+ */
+function caf_playground_load_builder_helpers() {
+	if ( function_exists( 'build_term_tree_with_counts' ) && function_exists( 'caf_walk_filter_layout_modules' ) ) {
+		return;
+	}
+
+	$builder_file = TC_CAF_PATH . 'admin/builder-functions.php';
+	if ( ! file_exists( $builder_file ) ) {
+		throw new RuntimeException( 'Missing admin/builder-functions.php.' );
+	}
+
+	require_once $builder_file;
+}
+
+/**
  * Seed playground content for CAF free tier demos.
  *
  * @return array<string, mixed>
  */
 function caf_playground_seed_demo() {
-	if ( ! defined( 'TC_CAF_PATH' ) ) {
-		return array( 'error' => 'TC_CAF_PATH is not defined.' );
-	}
+	try {
+		caf_playground_bootstrap();
 
-	if ( ! function_exists( 'build_term_tree_with_counts' ) ) {
-		require_once TC_CAF_PATH . 'admin/builder-functions.php';
-	}
+		require_once TC_CAF_PATH . 'includes/caf-legacy-variable-defaults.php';
 
-	require_once TC_CAF_PATH . 'includes/caf-legacy-variable-defaults.php';
+		$category_names = array( 'News', 'Tutorials', 'Reviews' );
+		$term_ids       = array();
 
-	$category_names = array( 'News', 'Tutorials', 'Reviews' );
-	$term_ids       = array();
+		foreach ( $category_names as $name ) {
+			$existing = term_exists( $name, 'category' );
+			if ( $existing ) {
+				$term_ids[] = is_array( $existing ) ? (int) $existing['term_id'] : (int) $existing;
+				continue;
+			}
 
-	foreach ( $category_names as $name ) {
-		$existing = term_exists( $name, 'category' );
-		if ( $existing ) {
-			$term_ids[] = (int) $existing['term_id'];
-			continue;
+			$result = wp_insert_term( $name, 'category' );
+			if ( ! is_wp_error( $result ) ) {
+				$term_ids[] = (int) $result['term_id'];
+			}
 		}
 
-		$result = wp_insert_term( $name, 'category' );
-		if ( ! is_wp_error( $result ) ) {
-			$term_ids[] = (int) $result['term_id'];
+		if ( empty( $term_ids ) ) {
+			$term_ids[] = 1;
 		}
-	}
 
-	if ( empty( $term_ids ) ) {
-		$term_ids[] = 1;
-	}
-
-	for ( $i = 1; $i <= 12; $i++ ) {
+		for ( $i = 1; $i <= 12; $i++ ) {
 		$post_id = wp_insert_post(
 			array(
 				'post_title'   => sprintf( 'CAF Demo Post %d', $i ),
@@ -100,13 +159,20 @@ function caf_playground_seed_demo() {
 		update_option( 'page_on_front', $hub_id );
 	}
 
-	flush_rewrite_rules( false );
+		flush_rewrite_rules( false );
 
-	return array(
-		'legacy_filter_id' => $legacy_id,
-		'builder_shortcode' => $builder['shortcode_id'],
-		'builder_layout_key' => $builder['layout_key'],
-	);
+		return array(
+			'legacy_filter_id'   => $legacy_id,
+			'builder_shortcode'  => $builder['shortcode_id'],
+			'builder_layout_key' => $builder['layout_key'],
+		);
+	} catch ( Throwable $e ) {
+		return array(
+			'error' => $e->getMessage(),
+			'file'  => $e->getFile(),
+			'line'  => $e->getLine(),
+		);
+	}
 }
 
 /**
@@ -212,14 +278,11 @@ function caf_playground_create_builder_filter( $taxonomy_payload ) {
 	$raw = file_get_contents( $layout_file );
 	$layout_data = json_decode( (string) $raw, false );
 
-	if ( ! is_object( $layout_data ) || ! function_exists( 'caf_normalize_builder_layout_data' ) ) {
-		return array(
-			'shortcode_id' => 'caf_0',
-			'layout_key'   => '',
-		);
+	if ( ! is_object( $layout_data ) ) {
+		throw new RuntimeException( 'Could not decode default-full-layout.json.' );
 	}
 
-	$layout_data = caf_normalize_builder_layout_data( $layout_data );
+	// Frontend normalizes on read; skip heavy normalize here for Playground memory limits.
 
 	if ( ! isset( $layout_data->common_data ) || ! is_object( $layout_data->common_data ) ) {
 		$layout_data->common_data = new stdClass();

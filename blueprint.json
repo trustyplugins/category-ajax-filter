@@ -43,7 +43,7 @@
     },
     {
       "step": "runPHP",
-      "code": "<?php require_once '/wordpress/wp-load.php'; require_once WP_PLUGIN_DIR . '/category-ajax-filter/includes/playground/seed-demo.php'; caf_playground_seed_demo(); ?>"
+      "code": "<?php define('WP_DEBUG', true); define('WP_DEBUG_DISPLAY', true); @ini_set('display_errors', '1'); @ini_set('memory_limit', '512M'); require_once '/wordpress/wp-load.php'; $seed = WP_PLUGIN_DIR . '/category-ajax-filter/includes/playground/seed-demo.php'; if ( ! file_exists( $seed ) ) { throw new Exception( 'CAF seed file missing at ' . $seed ); } require_once $seed; $result = caf_playground_seed_demo(); if ( ! is_array( $result ) || ! empty( $result['error'] ) ) { $message = is_array( $result ) && ! empty( $result['error'] ) ? (string) $result['error'] : 'CAF seed failed.'; if ( ! empty( $result['file'] ) ) { $message .= ' in ' . $result['file']; } if ( ! empty( $result['line'] ) ) { $message .= ':' . $result['line']; } throw new Exception( $message ); } ?>"
     }
   ]
 }
