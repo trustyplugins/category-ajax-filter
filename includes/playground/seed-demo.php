@@ -82,6 +82,8 @@ function caf_playground_seed_demo() {
 	try {
 		caf_playground_bootstrap();
 
+		caf_playground_set_theme_content_width( '1280px', '1400px' );
+
 		require_once TC_CAF_PATH . 'includes/caf-legacy-variable-defaults.php';
 
 		$category_names = array( 'News', 'Tutorials', 'Reviews' );
@@ -128,7 +130,7 @@ function caf_playground_seed_demo() {
 		array(
 			'post_title'   => 'CAF Playground',
 			'post_name'    => 'caf-playground',
-			'post_content' => caf_playground_hub_page_content( $legacy_id, $builder['shortcode_id'] ),
+			'post_content' => caf_playground_hub_page_content(),
 			'post_status'  => 'publish',
 			'post_type'    => 'page',
 		)
@@ -352,27 +354,74 @@ function caf_playground_create_builder_filter( $taxonomy_payload ) {
 }
 
 /**
- * @param int    $legacy_id Legacy filter post ID.
- * @param string $builder_shortcode Builder shortcode id.
+ * Set Twenty Twenty-Five (block theme) content/wide layout widths via global styles.
+ *
+ * @param string $content_size CSS length for content width.
+ * @param string $wide_size    CSS length for wide alignment.
+ * @return void
+ */
+function caf_playground_set_theme_content_width( $content_size = '1280px', $wide_size = '1400px' ) {
+	if ( ! class_exists( 'WP_Theme_JSON_Resolver' ) || ! class_exists( 'WP_Theme_JSON' ) ) {
+		return;
+	}
+
+	$user_cpt = WP_Theme_JSON_Resolver::get_user_data_from_wp_global_styles( wp_get_theme(), true );
+	if ( empty( $user_cpt['ID'] ) ) {
+		return;
+	}
+
+	$post_id = (int) $user_cpt['ID'];
+	$decoded = json_decode( (string) $user_cpt['post_content'], true );
+
+	if ( ! is_array( $decoded ) ) {
+		$decoded = array(
+			'version'                       => WP_Theme_JSON::LATEST_SCHEMA,
+			'isGlobalStylesUserThemeJSON' => true,
+		);
+	}
+
+	if ( ! isset( $decoded['settings'] ) || ! is_array( $decoded['settings'] ) ) {
+		$decoded['settings'] = array();
+	}
+	if ( ! isset( $decoded['settings']['layout'] ) || ! is_array( $decoded['settings']['layout'] ) ) {
+		$decoded['settings']['layout'] = array();
+	}
+
+	$decoded['version']                              = $decoded['version'] ?? WP_Theme_JSON::LATEST_SCHEMA;
+	$decoded['isGlobalStylesUserThemeJSON']          = true;
+	$decoded['settings']['layout']['contentSize']    = $content_size;
+	$decoded['settings']['layout']['wideSize']       = $wide_size;
+
+	wp_update_post(
+		array(
+			'ID'           => $post_id,
+			'post_content' => wp_json_encode( $decoded ),
+		)
+	);
+
+	WP_Theme_JSON_Resolver::clean_cached_data();
+}
+
+/**
+ * Hub page markup: links only (free tier allows one filter shortcode per page).
+ *
  * @return string
  */
-function caf_playground_hub_page_content( $legacy_id, $builder_shortcode ) {
+function caf_playground_hub_page_content() {
 	$legacy_url  = esc_url( home_url( '/caf-legacy-filter-demo/' ) );
 	$builder_url = esc_url( home_url( '/caf-builder-filter-demo/' ) );
 	$admin_url   = esc_url( admin_url( 'edit.php?post_type=caf_posts&builder=1' ) );
 
 	return sprintf(
 		'<!-- wp:heading --><h2>Category AJAX Filter — Playground Demo</h2><!-- /wp:heading -->'
-		. '<!-- wp:paragraph --><p>Two ready-made filters are configured with demo categories and posts. Checkbox terms are pre-filled from the <strong>category</strong> taxonomy.</p><!-- /wp:paragraph -->'
+		. '<!-- wp:paragraph --><p>Two ready-made filters are configured with demo categories and posts. Each demo lives on its own page (free version supports one filter per page).</p><!-- /wp:paragraph -->'
 		. '<!-- wp:list --><ul>'
-		. '<li><a href="%1$s">Legacy filter demo</a> — classic CAF panel (<code>[caf_filter id="%2$d"]</code>)</li>'
-		. '<li><a href="%3$s">Builder filter demo</a> — visual builder layout (<code>[caf_filter id="%4$s"]</code>)</li>'
-		. '<li><a href="%5$s">Open filter builder</a></li>'
+		. '<li><a href="%1$s">Legacy filter demo</a> — classic CAF panel</li>'
+		. '<li><a href="%2$s">Builder filter demo</a> — visual builder layout with category checkboxes</li>'
+		. '<li><a href="%3$s">Open filter builder</a></li>'
 		. '</ul><!-- /wp:list -->',
 		$legacy_url,
-		(int) $legacy_id,
 		$builder_url,
-		esc_attr( $builder_shortcode ),
 		$admin_url
 	);
 }
