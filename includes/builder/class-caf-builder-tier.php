@@ -95,6 +95,8 @@ class CAF_Builder_Tier {
 				'post_image_custom_field',
 				'post_link_custom_field',
 				'post_prefix_suffix',
+				'post_masonry',
+				'scroll_to_container',
 				'preview_loader_settings',
 				'pagination_button',
 				'pagination_number2',
