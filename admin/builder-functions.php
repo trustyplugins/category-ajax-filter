@@ -5,6 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-custom-fonts.php';
 require_once TC_CAF_PATH . 'includes/builder/class-caf-builder-tier.php';
+$caf_woo_builder_file = TC_CAF_PATH . 'includes/woocommerce/class-caf-woo-builder.php';
+if ( file_exists( $caf_woo_builder_file ) ) {
+	require_once $caf_woo_builder_file;
+}
 require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-import-library.php';
 // add_action('admin_menu', 'caf_builder_admin_page');
 add_action( 'wp_ajax_get_caf_builder_posts', 'get_caf_builder_posts' );
@@ -1952,7 +1956,7 @@ function caf_get_preview_posts( $data ) {
 				? esc_url( $thumbnail_url[0] )
 				: '';
 		}
-		$postsList[] = array(
+		$post_entry = array(
 			'label'        => get_the_title(),
 			'value'        => $post_id,
 			'id'           => $post_id,
@@ -1972,6 +1976,12 @@ function caf_get_preview_posts( $data ) {
 			'customtext'   => 'Custom text',
 			'commentcount' => get_comments_number(),
 		);
+
+		if ( 'product' === $post_type && class_exists( 'CAF_Woo_Post_Helper' ) ) {
+			$post_entry['product'] = CAF_Woo_Post_Helper::get_preview_data( $post_id );
+		}
+
+		$postsList[] = $post_entry;
 	}
 	wp_reset_postdata();
 	$prev         = false;
