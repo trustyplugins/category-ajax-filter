@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once __DIR__ . '/class-caf-builder-css-optimizer.php';
+
 class CAF_Builder_Style_Generator {
 
 	/**
@@ -337,6 +339,8 @@ class CAF_Builder_Style_Generator {
 			$rules[] = 'width:100%;';
 		}
 
+		$rules = CAF_Builder_Css_Optimizer::optimize_declaration_rules( $rules );
+
 		if ( empty( $rules ) ) {
 			return '';
 		}
@@ -360,23 +364,36 @@ class CAF_Builder_Style_Generator {
 				$layers[] = $this->get_style_subtree( $style, 'desktop', 'default' );
 			} elseif ( 'placeholder' === $state ) {
 				$layers[] = $this->get_style_subtree( $style, 'desktop', $state );
-			} else {
+			} elseif ( 'selected' === $state ) {
 				$layers[] = $this->get_style_subtree( $style, 'desktop', 'default' );
+				$layers[] = $this->get_style_subtree( $style, 'desktop', 'selected' );
+			} else {
 				$layers[] = $this->get_style_subtree( $style, 'desktop', $state );
 			}
 		} elseif ( in_array( $device, array( 'tablet', 'mobile' ), true ) ) {
 			if ( 'default' === $state ) {
 				$layers[] = $this->get_style_subtree( $style, 'desktop', 'default' );
 				$layers[] = $this->get_style_subtree( $style, $device, 'default' );
-			} else {
-				$layers[] = $this->get_style_subtree( $style, 'desktop', 'default' );
+			} elseif ( 'placeholder' === $state ) {
 				$layers[] = $this->get_style_subtree( $style, 'desktop', $state );
+				$layers[] = $this->get_style_subtree( $style, $device, $state );
+			} elseif ( 'selected' === $state ) {
+				$layers[] = $this->get_style_subtree( $style, 'desktop', 'default' );
 				$layers[] = $this->get_style_subtree( $style, $device, 'default' );
+				$layers[] = $this->get_style_subtree( $style, 'desktop', 'selected' );
+				$layers[] = $this->get_style_subtree( $style, $device, 'selected' );
+			} else {
+				$layers[] = $this->get_style_subtree( $style, 'desktop', $state );
 				$layers[] = $this->get_style_subtree( $style, $device, $state );
 			}
 		}
 
-		return array_filter( $layers );
+		return array_filter(
+			$layers,
+			function ( $layer ) {
+				return ! empty( $layer ) && is_object( $layer ) && count( get_object_vars( $layer ) ) > 0;
+			}
+		);
 	}
 
 	/**
@@ -413,6 +430,10 @@ class CAF_Builder_Style_Generator {
 		}
 
 		foreach ( $layer as $key => $value ) {
+			if ( '' === $value || null === $value ) {
+				continue;
+			}
+
 			$property = $this->camel_case_to_css_string( $key );
 
 			if ( ! empty( $args['allowed_properties'] ) && ! in_array( $property, $args['allowed_properties'], true ) ) {

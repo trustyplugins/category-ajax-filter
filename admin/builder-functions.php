@@ -2189,6 +2189,62 @@ function caf_filter_filter_layout_modules_by_tier( $initial_data ) {
 }
 
 /**
+ * Free tier: keep only the first checkbox, dropdown, and search module per layout.
+ *
+ * @param array<int, mixed> $initial_data Filter layout initial_data tree.
+ * @return array<int, mixed>
+ */
+function caf_enforce_single_instance_filter_modules( $initial_data ) {
+	if ( ! is_array( $initial_data ) || ! class_exists( 'CAF_Builder_Tier' ) || CAF_Builder_Tier::is_pro() ) {
+		return is_array( $initial_data ) ? $initial_data : array();
+	}
+
+	$limited_keys = array( 'checkbox_filter', 'dropdown_filter', 'search' );
+	$seen         = array();
+
+	foreach ( $initial_data as $row_index => $row ) {
+		$row = is_object( $row ) ? $row : (object) $row;
+		if ( empty( $row->data ) || ! is_array( $row->data ) ) {
+			continue;
+		}
+
+		foreach ( $row->data as $column_index => $column ) {
+			$column = is_object( $column ) ? $column : (object) $column;
+			if ( empty( $column->data ) || ! is_array( $column->data ) ) {
+				continue;
+			}
+
+			$column->data = array_values(
+				array_filter(
+					$column->data,
+					static function ( $module ) use ( &$seen, $limited_keys ) {
+						$module = is_object( $module ) ? $module : (object) $module;
+						$key    = isset( $module->key ) ? (string) $module->key : '';
+
+						if ( ! in_array( $key, $limited_keys, true ) ) {
+							return true;
+						}
+
+						if ( isset( $seen[ $key ] ) ) {
+							return false;
+						}
+
+						$seen[ $key ] = true;
+						return true;
+					}
+				)
+			);
+
+			$row->data[ $column_index ] = $column;
+		}
+
+		$initial_data[ $row_index ] = $row;
+	}
+
+	return $initial_data;
+}
+
+/**
  * Strip Pro-only label icons from filter module settings on free tier saves.
  *
  * @param object $settings Module settings object.
@@ -2782,6 +2838,10 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 	}
 
 	$layout_data->filter_layout_data->initial_data = caf_filter_filter_layout_modules_by_tier(
+		$layout_data->filter_layout_data->initial_data
+	);
+
+	$layout_data->filter_layout_data->initial_data = caf_enforce_single_instance_filter_modules(
 		$layout_data->filter_layout_data->initial_data
 	);
 

@@ -55,6 +55,7 @@ class CAF_Builder_Tier {
 			'revision_max'          => 2,
 			'revision_display_max'  => 10,
 			'filter_modules'        => array( 'checkbox', 'dropdown', 'search', 'reset', 'customtext', 'woo_price_filter', 'woo_stock_filter', 'woo_sale_filter', 'woo_rating_filter' ),
+      'single_instance_filter_modules' => array( 'checkbox_filter', 'dropdown_filter', 'search' ),
 			'post_modules'          => array(
 				'image',
 				'title',

@@ -239,10 +239,6 @@ class CAF_Builder_Renderer {
 			$found_posts
 		);
 		$filter_top_zone = $this->get_misc_zone_data( 'filter_top' );
-		$this->collect_misc_zone_wrapper_css(
-			$filter_top_zone,
-			$instance_class . ' .caf-builder-template-preview-filter-top-wrapper'
-		);
 
 		$filter_bottom_html = $this->render_misc_zone(
 			'filter_bottom',
@@ -252,14 +248,14 @@ class CAF_Builder_Renderer {
 			$found_posts
 		);
 		$filter_bottom_zone = $this->get_misc_zone_data( 'filter_bottom' );
-		$this->collect_misc_zone_wrapper_css(
-			$filter_bottom_zone,
-			$instance_class . ' .caf-builder-template-preview-filter-bottom-wrapper'
-		);
 
 		$html = '<div class="' . esc_attr( $filter_area_class ) . '">';
 
 		if ( '' !== $filter_top_html ) {
+			$this->collect_misc_zone_wrapper_css(
+				$filter_top_zone,
+				$instance_class . ' .caf-builder-template-preview-filter-top-wrapper'
+			);
 			$html .= '<div class="' . esc_attr( $this->get_misc_zone_wrapper_class( 'caf-builder-template-preview-filter-top-wrapper', $filter_top_zone ) ) . '">';
 			$html .= $filter_top_html;
 			$html .= '</div>';
@@ -268,6 +264,10 @@ class CAF_Builder_Renderer {
 		$html .= $filter_renderer->render();
 
 		if ( '' !== $filter_bottom_html ) {
+			$this->collect_misc_zone_wrapper_css(
+				$filter_bottom_zone,
+				$instance_class . ' .caf-builder-template-preview-filter-bottom-wrapper'
+			);
 			$html .= '<div class="' . esc_attr( $this->get_misc_zone_wrapper_class( 'caf-builder-template-preview-filter-bottom-wrapper', $filter_bottom_zone ) ) . '">';
 			$html .= $filter_bottom_html;
 			$html .= '</div>';
@@ -317,12 +317,12 @@ class CAF_Builder_Renderer {
 			$found_posts
 		);
 		$post_top_zone = $this->get_misc_zone_data( 'post_top' );
-		$this->collect_misc_zone_wrapper_css(
-			$post_top_zone,
-			$instance_class . ' .caf-builder-template-preview-post-top-wrapper'
-		);
 
 		if ( '' !== $post_top_html ) {
+			$this->collect_misc_zone_wrapper_css(
+				$post_top_zone,
+				$instance_class . ' .caf-builder-template-preview-post-top-wrapper'
+			);
 			$html .= '<div class="' . esc_attr( $this->get_misc_zone_wrapper_class( 'caf-builder-template-preview-post-top-wrapper', $post_top_zone ) ) . '">';
 			$html .= $post_top_html;
 			$html .= '</div>';
@@ -349,12 +349,12 @@ class CAF_Builder_Renderer {
 			$found_posts
 		);
 		$post_bottom_zone = $this->get_misc_zone_data( 'post_bottom' );
-		$this->collect_misc_zone_wrapper_css(
-			$post_bottom_zone,
-			$instance_class . ' .caf-builder-template-preview-post-bottom-wrapper'
-		);
 
 		if ( '' !== $post_bottom_html ) {
+			$this->collect_misc_zone_wrapper_css(
+				$post_bottom_zone,
+				$instance_class . ' .caf-builder-template-preview-post-bottom-wrapper'
+			);
 			$html .= '<div class="' . esc_attr( $this->get_misc_zone_wrapper_class( 'caf-builder-template-preview-post-bottom-wrapper', $post_bottom_zone ) ) . '">';
 			$html .= $post_bottom_html;
 			$html .= '</div>';

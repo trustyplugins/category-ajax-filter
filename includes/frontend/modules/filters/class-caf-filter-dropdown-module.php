@@ -154,8 +154,8 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 
 		$first_taxonomy_key = $this->get_first_taxonomy_key_with_terms( $settings );
 
-		$html  = '<div class="caf-manage-dropdown-labels-filter-dropdown">';
-		$html .= '<ul class="caf-terms-list caf-dropdown ' . esc_attr( $toggle_class ) . '"';
+		
+		$html = '<ul class="caf-terms-list caf-dropdown ' . esc_attr( $toggle_class ) . '"';
 		$html .= ' data-source="taxonomy"';
 		$html .= ' data-all-option-label="' . esc_attr( $all_option_value ) . '"';
 		$html .= ' multiple-term="' . esc_attr( $multiple_term ) . '"';
@@ -228,7 +228,7 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 		$html .= '</ul>';
 		$html .= '</li>';
 		$html .= '</ul>';
-		$html .= '</div>';
+		
 
 		return $html;
 	}

@@ -146,9 +146,11 @@ class CAF_Builder_Css {
 			return '';
 		}
 
-		$unique_rules = array_unique( $this->rules );
+		if ( ! class_exists( 'CAF_Builder_Css_Optimizer' ) ) {
+			require_once __DIR__ . '/class-caf-builder-css-optimizer.php';
+		}
 
-		return implode( "\n", $unique_rules );
+		return CAF_Builder_Css_Optimizer::optimize_collected_css( $this->rules );
 	}
 
 	/**
