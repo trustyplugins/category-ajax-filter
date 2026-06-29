@@ -364,6 +364,9 @@ class CAF_Builder_Style_Generator {
 				$layers[] = $this->get_style_subtree( $style, 'desktop', 'default' );
 			} elseif ( 'placeholder' === $state ) {
 				$layers[] = $this->get_style_subtree( $style, 'desktop', $state );
+			} elseif ( 'selected' === $state ) {
+				$layers[] = $this->get_style_subtree( $style, 'desktop', 'default' );
+				$layers[] = $this->get_style_subtree( $style, 'desktop', 'selected' );
 			} else {
 				$layers[] = $this->get_style_subtree( $style, 'desktop', $state );
 			}
@@ -374,6 +377,11 @@ class CAF_Builder_Style_Generator {
 			} elseif ( 'placeholder' === $state ) {
 				$layers[] = $this->get_style_subtree( $style, 'desktop', $state );
 				$layers[] = $this->get_style_subtree( $style, $device, $state );
+			} elseif ( 'selected' === $state ) {
+				$layers[] = $this->get_style_subtree( $style, 'desktop', 'default' );
+				$layers[] = $this->get_style_subtree( $style, $device, 'default' );
+				$layers[] = $this->get_style_subtree( $style, 'desktop', 'selected' );
+				$layers[] = $this->get_style_subtree( $style, $device, 'selected' );
 			} else {
 				$layers[] = $this->get_style_subtree( $style, 'desktop', $state );
 				$layers[] = $this->get_style_subtree( $style, $device, $state );
