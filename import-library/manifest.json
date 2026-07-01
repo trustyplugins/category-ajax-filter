@@ -1,80 +1,244 @@
 [
   {
-    "id": "library_full_filter_layout",
-    "title": "Default Full Filter Layout",
+    "id": "library_full_filter_layout_full-width-layout",
+    "title": "Full Width Layout",
     "section": "full_filter_layout",
     "scope": "full_layout",
-    "description": "Complete filter, post, and preview settings from the default builder layout.",
-    "file": "full-filter-layout/default-full-layout.json"
+    "description": "Complete filter, post, and preview settings preset.",
+    "file": "full-filter-layout/full-width-layout.json"
   },
   {
-    "id": "library_filter_full",
-    "title": "Default Filter Layout",
+    "id": "library_full_filter_layout_sidebar-filter-layout",
+    "title": "Sidebar Filter Layout",
+    "section": "full_filter_layout",
+    "scope": "full_layout",
+    "description": "Complete filter, post, and preview settings preset.",
+    "file": "full-filter-layout/sidebar-filter-layout.json"
+  },
+  {
+    "id": "library_full_filter_layout_full-width-with-search",
+    "title": "Full Width with Search",
+    "section": "full_filter_layout",
+    "scope": "full_layout",
+    "description": "Complete filter, post, and preview settings preset.",
+    "file": "full-filter-layout/full-width-with-search.json"
+  },
+  {
+    "id": "library_full_filter_layout_full-width-sidebar",
+    "title": "Full Width Sidebar",
+    "section": "full_filter_layout",
+    "scope": "full_layout",
+    "description": "Complete filter, post, and preview settings preset.",
+    "file": "full-filter-layout/full-width-sidebar.json"
+  },
+  {
+    "id": "library_full_filter_layout_job-board-layout",
+    "title": "Job Board Layout",
+    "section": "full_filter_layout",
+    "scope": "full_layout",
+    "description": "Complete filter, post, and preview settings preset.",
+    "file": "full-filter-layout/job-board-layout.json"
+  },
+  {
+    "id": "library_full_filter_layout_recipe-filter-layout",
+    "title": "Recipe Filter Layout",
+    "section": "full_filter_layout",
+    "scope": "full_layout",
+    "description": "Complete filter, post, and preview settings preset.",
+    "file": "full-filter-layout/recipe-filter-layout.json"
+  },
+  {
+    "id": "library_filter_full_filter_full-sidebar-filter",
+    "title": "Full Sidebar Filter",
     "section": "filter",
     "scope": "filter_layout",
-    "description": "Full filter area from the default builder layout.",
-    "file": "filter/full-filter/default-filter-layout.json",
+    "description": "Full filter area preset.",
+    "file": "filter/full-filter/full-sidebar-filter.json",
     "filterLibraryTab": "full_filter"
   },
   {
-    "id": "library_filter_checkbox_filter",
-    "title": "Checkbox Filter",
+    "id": "library_filter_full_filter_full-width-topbar",
+    "title": "Full Width Topbar",
     "section": "filter",
     "scope": "filter_layout",
-    "description": "Single checkbox filter module from the default builder layout.",
-    "file": "filter/checkbox/checkbox-filter.json",
+    "description": "Full filter area preset.",
+    "file": "filter/full-filter/full-width-topbar.json",
+    "filterLibraryTab": "full_filter"
+  },
+  {
+    "id": "library_filter_full_filter_search-dropdown",
+    "title": "Search + Dropdown",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Full filter area preset.",
+    "file": "filter/full-filter/search-dropdown.json",
+    "filterLibraryTab": "full_filter"
+  },
+  {
+    "id": "library_filter_checkbox_filter_full-width-checkbox",
+    "title": "Full width Checkbox",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Single checkbox filter module preset.",
+    "file": "filter/checkbox/full-width-checkbox.json",
     "filterLibraryTab": "checkbox_filter"
   },
   {
-    "id": "library_filter_dropdown_filter",
-    "title": "Dropdown Filter",
+    "id": "library_filter_checkbox_filter_solid-button",
+    "title": "Solid Button Checkbox",
     "section": "filter",
     "scope": "filter_layout",
-    "description": "Single dropdown filter module from the default builder layout.",
-    "file": "filter/dropdown/dropdown-filter.json",
+    "description": "Single checkbox filter module preset.",
+    "file": "filter/checkbox/solid-button-checkbox.json",
+    "filterLibraryTab": "checkbox_filter"
+  },
+  {
+    "id": "library_filter_checkbox_filter_list-style",
+    "title": "List Style Checkbox",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Single checkbox filter module preset.",
+    "file": "filter/checkbox/list-style-checkbox.json",
+    "filterLibraryTab": "checkbox_filter"
+  },
+  {
+    "id": "library_filter_checkbox_filter_traditional",
+    "title": "Traditional Checkbox",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Single checkbox filter module preset.",
+    "file": "filter/checkbox/traditional-checkbox.json",
+    "filterLibraryTab": "checkbox_filter"
+  },
+  {
+    "id": "library_filter_checkbox_filter_radio-style-checkbox",
+    "title": "Radio Style Checkbox",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Single checkbox filter module preset.",
+    "file": "filter/checkbox/radio-style-checkbox.json",
+    "filterLibraryTab": "checkbox_filter"
+  },
+  {
+    "id": "library_filter_dropdown_filter_dropdown-with-label",
+    "title": "Dropdown with Label",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Single dropdown filter module preset.",
+    "file": "filter/dropdown/dropdown-with-label.json",
     "filterLibraryTab": "dropdown_filter"
   },
   {
-    "id": "library_filter_range_slider",
-    "title": "Range Slider",
+    "id": "library_filter_dropdown_filter_button-style-dropdown",
+    "title": "Button Style Dropdown",
     "section": "filter",
     "scope": "filter_layout",
-    "description": "Single range slider module from the default builder layout.",
-    "file": "filter/range-slider/range-slider.json",
-    "filterLibraryTab": "range_slider"
+    "description": "Single dropdown filter module preset.",
+    "file": "filter/dropdown/button-style-dropdown.json",
+    "filterLibraryTab": "dropdown_filter"
   },
   {
-    "id": "library_filter_search",
-    "title": "Search",
+    "id": "library_filter_dropdown_filter_traditional-dropdown",
+    "title": "Traditional Dropdown",
     "section": "filter",
     "scope": "filter_layout",
-    "description": "Single search module from the default builder layout.",
-    "file": "filter/search/search.json",
-    "filterLibraryTab": "search"
+    "description": "Single dropdown filter module preset.",
+    "file": "filter/dropdown/traditional-dropdown.json",
+    "filterLibraryTab": "dropdown_filter"
   },
   {
-    "id": "library_filter_reset",
-    "title": "Reset",
+    "id": "library_filter_reset_reset-button-text",
+    "title": "Reset Button Text",
     "section": "filter",
     "scope": "filter_layout",
-    "description": "Single reset module from the default builder layout.",
-    "file": "filter/reset/reset.json",
+    "description": "Single reset module preset.",
+    "file": "filter/reset/reset-button-text.json",
     "filterLibraryTab": "reset"
   },
   {
-    "id": "library_single_post_item",
-    "title": "Default Single Post Item",
-    "section": "single_post_item",
-    "scope": "post_layout",
-    "description": "Post card layout from the default builder layout.",
-    "file": "single-post-item/default-post-item.json"
+    "id": "library_filter_reset_reset-button",
+    "title": "Reset Button",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Single reset module preset.",
+    "file": "filter/reset/reset-button.json",
+    "filterLibraryTab": "reset"
   },
   {
-    "id": "library_layout_settings",
-    "title": "Default Layout Settings",
+    "id": "library_filter_search_square-search-box",
+    "title": "Square Search Box",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Single search module preset.",
+    "file": "filter/search/square-search-box.json",
+    "filterLibraryTab": "search"
+  },
+  {
+    "id": "library_filter_search_round-search-box",
+    "title": "Round Search Box",
+    "section": "filter",
+    "scope": "filter_layout",
+    "description": "Single search module preset.",
+    "file": "filter/search/round-search-box.json",
+    "filterLibraryTab": "search"
+  },
+  {
+    "id": "library_single_post_item_glossy-look-post-item",
+    "title": "Glossy Look Post Item",
+    "section": "single_post_item",
+    "scope": "post_layout",
+    "description": "Post card layout preset.",
+    "file": "single-post-item/glossy-look-post-item.json"
+  },
+  {
+    "id": "library_single_post_item_single-post-item-simple",
+    "title": "Single Post Item Simple",
+    "section": "single_post_item",
+    "scope": "post_layout",
+    "description": "Post card layout preset.",
+    "file": "single-post-item/single-post-item-simple.json"
+  },
+  {
+    "id": "library_single_post_item_full-width-post",
+    "title": "Full Width Post",
+    "section": "single_post_item",
+    "scope": "post_layout",
+    "description": "Post card layout preset.",
+    "file": "single-post-item/full-width-post.json"
+  },
+  {
+    "id": "library_single_post_item_fancy-post-item",
+    "title": "Fancy Post Item",
+    "section": "single_post_item",
+    "scope": "post_layout",
+    "description": "Post card layout preset.",
+    "file": "single-post-item/fancy-post-item.json"
+  },
+  {
+    "id": "library_layout_settings_pagination_pagination-square",
+    "title": "Pagination Square",
     "section": "layout_settings",
     "scope": "layout_settings",
-    "description": "Preview container, misc items, and layout settings from the default builder layout.",
-    "file": "layout-settings/default-layout-settings.json"
+    "description": "Layout settings preset.",
+    "file": "layout-settings/pagination/pagination-square.json",
+    "layoutSettingsLibraryTab": "pagination"
+  },
+  {
+    "id": "library_layout_settings_pagination_pagination-text",
+    "title": "Pagination Text",
+    "section": "layout_settings",
+    "scope": "layout_settings",
+    "description": "Layout settings preset.",
+    "file": "layout-settings/pagination/pagination-text.json",
+    "layoutSettingsLibraryTab": "pagination"
+  },
+  {
+    "id": "library_layout_settings_pagination_pagination-circle",
+    "title": "Pagination Circle",
+    "section": "layout_settings",
+    "scope": "layout_settings",
+    "description": "Layout settings preset.",
+    "file": "layout-settings/pagination/pagination-circle.json",
+    "layoutSettingsLibraryTab": "pagination"
   }
 ]

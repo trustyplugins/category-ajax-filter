@@ -2196,11 +2196,15 @@ function caf_filter_filter_layout_modules_by_tier( $initial_data ) {
  * @return array<int, mixed>
  */
 function caf_enforce_single_instance_filter_modules( $initial_data ) {
-	if ( ! is_array( $initial_data ) || ! class_exists( 'CAF_Builder_Tier' ) || CAF_Builder_Tier::is_pro() ) {
-		return is_array( $initial_data ) ? $initial_data : array();
+	if ( ! is_array( $initial_data ) ) {
+		return array();
 	}
 
-	$limited_keys = array( 'checkbox_filter', 'dropdown_filter', 'search' );
+	$limited_keys = array( 'search' );
+	if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::is_pro() ) {
+		$limited_keys = array( 'checkbox_filter', 'dropdown_filter', 'search' );
+	}
+
 	$seen         = array();
 
 	foreach ( $initial_data as $row_index => $row ) {
