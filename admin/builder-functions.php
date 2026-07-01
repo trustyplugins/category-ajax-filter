@@ -1975,6 +1975,7 @@ function caf_get_preview_posts( $data ) {
 			'meta_fields'  => $meta_fields,
 			'customtext'   => 'Custom text',
 			'commentcount' => get_comments_number(),
+			'author_avatar' => get_author_avatar_url( $post_id ),
 		);
 
 		if ( 'product' === $post_type && class_exists( 'CAF_Woo_Post_Helper' ) ) {
@@ -4488,7 +4489,7 @@ function get_author_avatar_url( $postid ) {
 
 	$avatar_url = get_avatar_url( $author_id );
 
-	return esc_url( $avatar_url );
+	return esc_url_raw( $avatar_url );
 }
 
 // add_shortcode( 'author_avatar_url', 'get_author_avatar_url_shortcode' );
