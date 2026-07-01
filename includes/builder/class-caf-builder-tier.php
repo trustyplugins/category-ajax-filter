@@ -93,6 +93,7 @@ class CAF_Builder_Tier {
 				'filter_label_collapse',
 				'filter_term_default',
 				'filter_term_icon',
+				'filter_term_reorder',
 				'reset_module_icon',
 				'customtext_module_icon',
 				'meta_relation',
