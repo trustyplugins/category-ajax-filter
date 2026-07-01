@@ -591,12 +591,15 @@ jQuery(function ($) {
             };
 
             const filterData = this.collectFilterData($builder);
+            const queryOnlyPreset = this.collectQueryOnlyPreset($builder);
 
             if (filterData.taxQuery.length) {
                 queryArgs.tax_query = this.buildTaxQuery(
                     filterData.taxQuery,
                     $builder.attr("taxonomy-relation")
                 );
+            } else if (queryOnlyPreset.taxQuery) {
+                queryArgs.tax_query = queryOnlyPreset.taxQuery;
             }
 
             if (filterData.metaQuery.length) {
@@ -604,6 +607,8 @@ jQuery(function ($) {
                     filterData.metaQuery,
                     $builder.attr("meta-relation")
                 );
+            } else if (queryOnlyPreset.metaQuery) {
+                queryArgs.meta_query = queryOnlyPreset.metaQuery;
             }
 
             const searchKeyword = this.getSearchKeyword($builder);
@@ -631,6 +636,35 @@ jQuery(function ($) {
                 queryArgs.order = sorting.order;
             }
             return queryArgs;
+        },
+
+        collectQueryOnlyPreset($builder) {
+            const preset = { taxQuery: null, metaQuery: null };
+            if (String($builder.attr("data-caf-query-only") || "") !== "1") {
+                return preset;
+            }
+
+            const parsePreset = (raw) => {
+                if (!raw) {
+                    return null;
+                }
+                try {
+                    const parsed = JSON.parse(raw);
+                    if (!parsed) {
+                        return null;
+                    }
+                    if (Array.isArray(parsed)) {
+                        return parsed.length ? parsed : null;
+                    }
+                    return Object.keys(parsed).length ? parsed : null;
+                } catch (error) {
+                    return null;
+                }
+            };
+
+            preset.taxQuery = parsePreset($builder.attr("data-caf-query-tax"));
+            preset.metaQuery = parsePreset($builder.attr("data-caf-query-meta"));
+            return preset;
         },
 
         collectFilterData($builder) {

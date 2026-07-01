@@ -457,7 +457,7 @@ class CAF_Builder_Data {
 		$misc_pagination          = $this->get_misc_pagination();
 		$taxonomy_relation        = isset( $filter_layout_extra_data->taxonomy_relation ) ? $filter_layout_extra_data->taxonomy_relation : '';
 
-		return array(
+		$attributes = array(
 			'class'             => implode( ' ', $this->get_wrapper_classes() ),
 			'loader-status'     => isset( $misc_loader_data->is_enable ) ? $misc_loader_data->is_enable : 'false',
 			'selected-tag'      => 'false',
@@ -470,5 +470,18 @@ class CAF_Builder_Data {
 			'caf-index'         => $this->get_short_index(),
 			'pagination-type'   => isset( $misc_pagination->settings->pagination_type ) ? $misc_pagination->settings->pagination_type : '',
 		);
+
+		if ( ! $this->has_filters() ) {
+			$filter_query_args = ( new CAF_Builder_Query( $this ) )->get_filter_query_args();
+			if ( ! empty( $filter_query_args['tax_query'] ) ) {
+				$attributes['data-caf-query-tax'] = esc_attr( wp_json_encode( $filter_query_args['tax_query'] ) );
+			}
+			if ( ! empty( $filter_query_args['meta_query'] ) ) {
+				$attributes['data-caf-query-meta'] = esc_attr( wp_json_encode( $filter_query_args['meta_query'] ) );
+			}
+			$attributes['data-caf-query-only'] = '1';
+		}
+
+		return $attributes;
 	}
 }
