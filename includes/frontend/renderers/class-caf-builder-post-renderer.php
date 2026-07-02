@@ -162,6 +162,9 @@ class CAF_Builder_Post_Renderer {
 					$module_style    = isset( $module->style ) ? $module->style : null;
 					$module_selector = '.caf-builder-post-area .caf-row-' . absint( $row_key ) . ' .caf-column-' . absint( $column_key ) . ' .caf-module-' . absint( $module_key );
 					$this->collect_module_css( $module_style, $module_selector, $module_type, $module_settings );
+					if ( 'categories' === $module_type ) {
+						$this->collect_categories_term_css( $module_style, $module_selector, $module_settings );
+					}
 				}
 			}
 		}
@@ -921,7 +924,6 @@ class CAF_Builder_Post_Renderer {
 	 */
 	protected function render_categories_module( $module, $row_key, $column_key, $module_key, $post_id ) {
 		$settings   = isset( $module->settings ) ? $module->settings : new stdClass();
-		$style      = isset( $module->style ) ? $module->style : null;
 		$categories = isset( $settings->categories ) ? $settings->categories : array();
 		$html       = '';
 
@@ -938,35 +940,6 @@ class CAF_Builder_Post_Renderer {
 		$link_visibility = $this->is_truthy_setting( isset( $settings->link->visibility ) ? $settings->link->visibility : false );
 		$link_target     = ( ! empty( $settings->link->target ) && 'new-tab' === $settings->link->target ) ? '_blank' : '_self';
 
-		$term_selector = '.caf-builder-post-area .caf-row-' . absint( $row_key ) . ' .caf-column-' . absint( $column_key ) . ' .caf-module-' . absint( $module_key ) . ' .caf-module-term-name';
-		$term_style    = ( ! empty( $style ) && is_object( $style ) && ! empty( $style->meta ) && is_object( $style->meta ) ) ? $style->meta : $style;
-
-		if ( ! empty( $term_style ) ) {
-			$this->css_builder->add(
-				$this->style_generator->generate_responsive_css(
-					$term_style,
-					'default',
-					$term_selector,
-					array(
-						'background_image_mode' => 'conditional',
-						'settings'              => $settings,
-					)
-				)
-			);
-
-			$this->css_builder->add(
-				$this->style_generator->generate_responsive_css(
-					$term_style,
-					'hover',
-					$term_selector . ':hover',
-					array(
-						'background_image_mode' => 'conditional',
-						'settings'              => $settings,
-					)
-				)
-			);
-		}
-
 		foreach ( $categories as $taxonomy ) {
 			$terms = wp_get_post_terms( $post_id, $taxonomy );
 
@@ -979,7 +952,7 @@ class CAF_Builder_Post_Renderer {
 
 			$total = count( $terms );
 			foreach ( $terms as $idx => $term ) {
-				$cls = 'caf-module-term-name caf-module-term-name-' . esc_attr( $module_key ) . ' term-tax-' . esc_attr( $taxonomy );
+				$cls = 'caf-module-term-name caf-module-term-name-' . esc_attr( $idx ) . ' term-tax-' . esc_attr( $taxonomy );
 				if ( $link_visibility ) {
 					$term_link = get_term_link( $term );
 					$html     .= '<a class="' . $cls . '" href="' . esc_url( is_wp_error( $term_link ) ? '#' : $term_link ) . '" target="' . esc_attr( $link_target ) . '" term-id="' . esc_attr( $term->term_id ) . '">';
@@ -1105,6 +1078,56 @@ class CAF_Builder_Post_Renderer {
 				$style,
 				'hover',
 				$selector . ':hover',
+				array(
+					'background_image_mode' => 'conditional',
+					'settings'              => $settings,
+				)
+			)
+		);
+	}
+
+	/**
+	 * Collect categories term item CSS from layout JSON.
+	 *
+	 * @param mixed  $style    Module style object.
+	 * @param string $selector Module selector.
+	 * @param object $settings Module settings.
+	 * @return void
+	 */
+	protected function collect_categories_term_css( $style, $selector, $settings = null ) {
+		$categories = isset( $settings->categories ) ? $settings->categories : array();
+
+		if ( is_string( $categories ) ) {
+			$categories = array( $categories );
+		}
+		if ( empty( $categories ) || ! is_array( $categories ) ) {
+			return;
+		}
+
+		$term_selector = $selector . ' .caf-module-term-name';
+		$term_style    = ( ! empty( $style ) && is_object( $style ) && ! empty( $style->meta ) && is_object( $style->meta ) ) ? $style->meta : $style;
+
+		if ( empty( $term_style ) ) {
+			return;
+		}
+
+		$this->css_builder->add(
+			$this->style_generator->generate_responsive_css(
+				$term_style,
+				'default',
+				$term_selector,
+				array(
+					'background_image_mode' => 'conditional',
+					'settings'              => $settings,
+				)
+			)
+		);
+
+		$this->css_builder->add(
+			$this->style_generator->generate_responsive_css(
+				$term_style,
+				'hover',
+				$term_selector . ':hover',
 				array(
 					'background_image_mode' => 'conditional',
 					'settings'              => $settings,
