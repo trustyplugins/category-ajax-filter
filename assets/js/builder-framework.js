@@ -9,7 +9,7 @@ jQuery(function ($) {
     }
 
     const CAF_RANGE_SLIDER_MODULE_SELECTOR =
-        ".caf-module-filter.caf-module-type-range_slider, .caf-module-filter.caf-module-type-woo_price_filter";
+        ".caf-module-filter.caf-module-type-range_slider";
 
     function cafGetRangeSliderModules($root) {
         if ($root.is(CAF_RANGE_SLIDER_MODULE_SELECTOR)) {
@@ -689,14 +689,6 @@ jQuery(function ($) {
                 if (itemData.dataSource === "custom_field") {
                     this.addMetaFilter(groupedMeta, itemData);
                 }
-
-                if (
-                    itemData.dataSource === "woo_meta" ||
-                    itemData.dataSource === "woo_sale" ||
-                    itemData.dataSource === "woo_rating"
-                ) {
-                    this.addWooMetaFilter(groupedMeta, itemData);
-                }
             });
 
             this.collectRangeSliderMeta($builder).forEach((item) => {
@@ -712,7 +704,7 @@ jQuery(function ($) {
         collectRangeSliderMeta($builder) {
             const clauses = [];
 
-            $builder.find(".caf-module-filter.caf-module-type-range_slider .caf-range-slider-ui, .caf-module-filter.caf-module-type-woo_price_filter .caf-range-slider-ui").each((_, element) => {
+            $builder.find(".caf-module-filter.caf-module-type-range_slider .caf-range-slider-ui").each((_, element) => {
                 const $slider = $(element);
                 const key = String($slider.attr("data-meta-key") || "").trim();
                 if (!key || key === "0") {
@@ -910,32 +902,6 @@ jQuery(function ($) {
 
             if (!groupedMeta[key].value.includes(value)) {
                 groupedMeta[key].value.push(value);
-            }
-        },
-
-        addWooMetaFilter(groupedMeta, itemData) {
-            const key = itemData.dataKey;
-            const value = itemData.termValue || itemData.termId;
-
-            if (!key || !value || value === "0" || value === "all") {
-                return;
-            }
-
-            if (!groupedMeta[key]) {
-                groupedMeta[key] = {
-                    key,
-                    value: [],
-                    compare: itemData.metaCompare || "=",
-                    type: itemData.metaType || "CHAR"
-                };
-            }
-
-            if (!groupedMeta[key].value.includes(value)) {
-                groupedMeta[key].value.push(value);
-            }
-
-            if (groupedMeta[key].value.length > 1 && groupedMeta[key].compare === "=") {
-                groupedMeta[key].compare = "IN";
             }
         },
 
@@ -3851,11 +3817,10 @@ jQuery(function ($) {
                 const valueLabel = rangeType === "single"
                     ? `${safeCurrentMax}`
                     : `${safeCurrentMin} - ${safeCurrentMax}`;
-                const isWooPrice = $module.hasClass("caf-module-type-woo_price_filter");
                 const moduleLabel = $.trim(
                     $module.find(".caf-filter-label-common .caf-builder-filter-label, .caf-filter-label-common .caf-builder-custom-field-label-inner").first().text() || ""
                 );
-                const tagLabel = `${moduleLabel || (isWooPrice ? "Price" : "Range Slider")}: ${valueLabel}`;
+                const tagLabel = `${moduleLabel || "Range Slider"}: ${valueLabel}`;
 
                 const rowId = String($module.attr("data-row-id") || "");
                 const columnId = String($module.attr("data-column-id") || "");
