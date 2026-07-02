@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
   if (!class_exists( 'CAF_Fa_Icons' ) ) {
     class CAF_Fa_Icons {
      var $icons;
