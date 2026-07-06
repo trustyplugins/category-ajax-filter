@@ -27,6 +27,12 @@ if (!defined('TC_CAF_PATH')) {
 if (!defined('CAF_BUILDER_TIER')) {
     define('CAF_BUILDER_TIER', 'free');
 }
+if (!defined('CAF_IMPORT_LIBRARY_API_SECRET')) {
+    define('CAF_IMPORT_LIBRARY_API_SECRET', 'i6Zt/$>0u4r>Pb4!ZHs9R/Dz]LR23mT(S2r%&j:C%3LA}rcIepuF#eEA~op|*L.D');
+}
+if (!defined('CAF_IMPORT_LIBRARY_FREE_LICENSE_KEY')) {
+    define('CAF_IMPORT_LIBRARY_FREE_LICENSE_KEY', 'caf-free-tier');
+}
 class TC_CAF_Plugin
 {
     public function __construct()
