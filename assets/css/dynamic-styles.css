@@ -504,6 +504,11 @@ ul.caf-builder-template-preview-selected-tags-container {
     list-style-type: none;
     line-height: normal;
 }
+#left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox,
+.entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox,
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox {
+    overflow: auto;
+}
 ul.caf-terms-list.caf-checkbox {
     overflow: auto;
 }
@@ -638,7 +643,6 @@ ul.caf-terms-list.caf-checkbox {
 .entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child,
 .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child {
     display: flex;
-    flex-direction: column;
     position: absolute !important;
     z-index: 9999999;
     opacity: 0;

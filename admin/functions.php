@@ -403,19 +403,13 @@ class CAF_load_scripts
                     //echo "yes";
                     $str = get_string_between($post->post_content, "[caf_filter id=", "]");
                     if ($str) {
-                        if (strpos($str, "'") !== false) {
-
-                            $short_ids = trim(str_replace("'", '', $str));
+                        $short_ids = trim(str_replace(array("'", '"'), '', $str));
+                        if ('' !== $short_ids) {
+                            $short_id[] = $short_ids;
+                            $shortcode_found = true; // bingo!
+                            break;
                         }
                     }
-                    if ($str) {
-                        if (strpos($str, '"') !== false) {
-                            $short_ids = trim(str_replace('"', '', $str));
-                        }
-                    }
-                    $short_id[] = $short_ids;
-                    $shortcode_found = true; // bingo!
-                    break;
                 }
             }
 

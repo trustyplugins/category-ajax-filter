@@ -54,8 +54,8 @@ class CAF_Builder_Tier {
 			'max_layouts'           => -1,
 			'revision_max'          => 2,
 			'revision_display_max'  => 10,
-			'filter_modules'        => array( 'checkbox', 'dropdown', 'search', 'reset', 'customtext', 'woo_price_filter', 'woo_stock_filter', 'woo_sale_filter', 'woo_rating_filter' ),
-      'single_instance_filter_modules' => array( 'checkbox_filter', 'dropdown_filter', 'search' ),
+			'filter_modules'        => array( 'checkbox', 'dropdown', 'search', 'reset', 'customtext' ),
+			'single_instance_filter_modules' => array( 'checkbox_filter', 'dropdown_filter', 'search' ),
 			'post_modules'          => array(
 				'image',
 				'title',
@@ -65,9 +65,6 @@ class CAF_Builder_Tier {
 				'date',
 				'commentcount',
 				'categories',
-				'woo_price',
-				'woo_rating',
-				'woo_add_to_cart',
 			),
 			'features'              => array( 'pagination', 'loader' ),
 			'blocked_features'      => array(
@@ -93,6 +90,7 @@ class CAF_Builder_Tier {
 				'filter_label_collapse',
 				'filter_term_default',
 				'filter_term_icon',
+				'filter_term_reorder',
 				'reset_module_icon',
 				'customtext_module_icon',
 				'meta_relation',
@@ -107,29 +105,8 @@ class CAF_Builder_Tier {
 				'pagination_load_more',
 				'multiple_filters_per_page',
 				'gradient_colors',
-				'woo_rating_filter',
 			),
 		);
-	}
-
-	/**
-	 * @return bool
-	 */
-	public static function is_woocommerce_active() {
-		return class_exists( 'WooCommerce', false );
-	}
-
-	/**
-	 * Whether layouts can target WooCommerce products in the builder.
-	 *
-	 * @return bool
-	 */
-	public static function can_use_product_post_type() {
-		if ( ! self::is_woocommerce_active() ) {
-			return false;
-		}
-
-		return self::can_use_feature( 'woo_product_post_type' );
 	}
 
 	/**
@@ -139,12 +116,10 @@ class CAF_Builder_Tier {
 	 */
 	public static function get_ajax_config() {
 		return array(
-			'tier'                      => self::get_tier(),
-			'is_pro'                    => self::is_pro(),
-			'limits'                    => self::get_limits(),
-			'upgrade_url'               => 'https://trustyplugins.com/category-ajax-filter-pro',
-			'woocommerce_active'        => self::is_woocommerce_active(),
-			'product_post_type_enabled' => self::can_use_product_post_type(),
+			'tier'        => self::get_tier(),
+			'is_pro'      => self::is_pro(),
+			'limits'      => self::get_limits(),
+			'upgrade_url' => 'https://trustyplugins.com/category-ajax-filter-pro',
 		);
 	}
 

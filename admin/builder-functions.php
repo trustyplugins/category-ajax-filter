@@ -5,10 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-custom-fonts.php';
 require_once TC_CAF_PATH . 'includes/builder/class-caf-builder-tier.php';
-$caf_woo_builder_file = TC_CAF_PATH . 'includes/woocommerce/class-caf-woo-builder.php';
-if ( file_exists( $caf_woo_builder_file ) ) {
-	require_once $caf_woo_builder_file;
-}
 require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-import-library.php';
 // add_action('admin_menu', 'caf_builder_admin_page');
 add_action( 'wp_ajax_get_caf_builder_posts', 'get_caf_builder_posts' );
@@ -1975,11 +1971,8 @@ function caf_get_preview_posts( $data ) {
 			'meta_fields'  => $meta_fields,
 			'customtext'   => 'Custom text',
 			'commentcount' => get_comments_number(),
+			'author_avatar' => get_author_avatar_url( $post_id ),
 		);
-
-		if ( 'product' === $post_type && class_exists( 'CAF_Woo_Post_Helper' ) ) {
-			$post_entry['product'] = CAF_Woo_Post_Helper::get_preview_data( $post_id );
-		}
 
 		$postsList[] = $post_entry;
 	}
@@ -2195,11 +2188,15 @@ function caf_filter_filter_layout_modules_by_tier( $initial_data ) {
  * @return array<int, mixed>
  */
 function caf_enforce_single_instance_filter_modules( $initial_data ) {
-	if ( ! is_array( $initial_data ) || ! class_exists( 'CAF_Builder_Tier' ) || CAF_Builder_Tier::is_pro() ) {
-		return is_array( $initial_data ) ? $initial_data : array();
+	if ( ! is_array( $initial_data ) ) {
+		return array();
 	}
 
-	$limited_keys = array( 'checkbox_filter', 'dropdown_filter', 'search' );
+	$limited_keys = array( 'search' );
+	if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::is_pro() ) {
+		$limited_keys = array( 'checkbox_filter', 'dropdown_filter', 'search' );
+	}
+
 	$seen         = array();
 
 	foreach ( $initial_data as $row_index => $row ) {
@@ -4488,7 +4485,7 @@ function get_author_avatar_url( $postid ) {
 
 	$avatar_url = get_avatar_url( $author_id );
 
-	return esc_url( $avatar_url );
+	return esc_url_raw( $avatar_url );
 }
 
 // add_shortcode( 'author_avatar_url', 'get_author_avatar_url_shortcode' );

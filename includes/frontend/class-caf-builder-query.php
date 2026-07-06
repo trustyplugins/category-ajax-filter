@@ -303,7 +303,9 @@ class CAF_Builder_Query {
 			$taxonomy_data = isset( $filter_query_data->taxonomy_data ) ? $filter_query_data->taxonomy_data : array();
 
 			if ( is_array( $taxonomy_data ) && ! empty( $taxonomy_data ) ) {
-				$tax_query = $this->build_tax_query_groups( $taxonomy_data );
+				$tax_query = $this->build_tax_query_groups(
+					$this->normalize_grouped_taxonomy_data( $taxonomy_data )
+				);
 			}
 		}
 		$tax_query  = apply_filters( 'caf_builder_filter_tax_query', $tax_query, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
@@ -354,29 +356,39 @@ class CAF_Builder_Query {
 	 * @return array
 	 */
 	public function build_tax_query_groups( $taxonomy_data ) {
-		$tax_query = array();
+		$taxonomy_data = $this->normalize_grouped_taxonomy_data( $taxonomy_data );
+		$tax_query     = array();
 
 		foreach ( $taxonomy_data as $group ) {
 			$group_entry = array(
 				'relation' => 'AND',
 			);
 
-			foreach ( $group as $tax ) {
-				$term_ids = array();
-
-				if ( ! empty( $tax->term_data ) ) {
-					$term_ids = array_column( (array) $tax->term_data, 'key' );
+			foreach ( (array) $group as $tax ) {
+				if ( ! $this->is_taxonomy_query_row( $tax ) ) {
+					continue;
 				}
 
+				$term_ids = $this->extract_term_ids_from_tax_row( $tax );
 				if ( empty( $term_ids ) ) {
 					continue;
 				}
 
+				$taxonomy = sanitize_key( (string) $this->read_tax_row_property( $tax, 'key' ) );
+				if ( '' === $taxonomy ) {
+					continue;
+				}
+
+				$operator = $this->normalize_tax_query_operator(
+					$this->read_tax_row_property( $tax, 'operator' ),
+					count( $term_ids )
+				);
+
 				$group_entry[] = array(
-					'taxonomy' => isset( $tax->key ) ? $tax->key : '',
+					'taxonomy' => $taxonomy,
 					'field'    => 'term_id',
-					'terms'    => $term_ids,
-					'operator' => isset( $tax->operator ) ? $tax->operator : 'IN',
+					'terms'    => count( $term_ids ) > 1 ? $term_ids : $term_ids[0],
+					'operator' => $operator,
 				);
 			}
 
@@ -396,6 +408,121 @@ class CAF_Builder_Query {
 		}
 
 		return $tax_query;
+	}
+
+	/**
+	 * Ensure filter_query taxonomy_data is grouped and decoded as objects.
+	 *
+	 * @param mixed $taxonomy_data Raw taxonomy data from layout JSON.
+	 * @return array
+	 */
+	protected function normalize_grouped_taxonomy_data( $taxonomy_data ) {
+		if ( ! is_array( $taxonomy_data ) || empty( $taxonomy_data ) ) {
+			return array();
+		}
+
+		$decoded = json_decode( wp_json_encode( $taxonomy_data ), false );
+		if ( ! is_array( $decoded ) || empty( $decoded ) ) {
+			return array();
+		}
+
+		if ( $this->is_taxonomy_query_row( $decoded[0] ) ) {
+			return array( $decoded );
+		}
+
+		return $decoded;
+	}
+
+	/**
+	 * @param mixed $tax Taxonomy query row.
+	 * @return bool
+	 */
+	protected function is_taxonomy_query_row( $tax ) {
+		$key       = $this->read_tax_row_property( $tax, 'key' );
+		$term_data = $this->read_tax_row_property( $tax, 'term_data' );
+		return ! empty( $key ) && ( is_array( $term_data ) || is_object( $term_data ) );
+	}
+
+	/**
+	 * @param mixed  $tax  Taxonomy query row.
+	 * @param string $prop Property name.
+	 * @return mixed
+	 */
+	protected function read_tax_row_property( $tax, $prop ) {
+		if ( is_object( $tax ) && isset( $tax->{$prop} ) ) {
+			return $tax->{$prop};
+		}
+		if ( is_array( $tax ) && array_key_exists( $prop, $tax ) ) {
+			return $tax[ $prop ];
+		}
+		return null;
+	}
+
+	/**
+	 * Collect numeric term IDs from saved term_data rows (key or id).
+	 *
+	 * @param mixed $tax Taxonomy query row.
+	 * @return int[]
+	 */
+	protected function extract_term_ids_from_tax_row( $tax ) {
+		$term_data = $this->read_tax_row_property( $tax, 'term_data' );
+		if ( empty( $term_data ) || ( ! is_array( $term_data ) && ! is_object( $term_data ) ) ) {
+			return array();
+		}
+
+		$term_ids = array();
+		foreach ( (array) $term_data as $term_row ) {
+			$raw_id = null;
+			if ( is_object( $term_row ) ) {
+				if ( isset( $term_row->key ) && '' !== (string) $term_row->key ) {
+					$raw_id = $term_row->key;
+				} elseif ( isset( $term_row->id ) && '' !== (string) $term_row->id ) {
+					$raw_id = $term_row->id;
+				}
+			} elseif ( is_array( $term_row ) ) {
+				if ( isset( $term_row['key'] ) && '' !== (string) $term_row['key'] ) {
+					$raw_id = $term_row['key'];
+				} elseif ( isset( $term_row['id'] ) && '' !== (string) $term_row['id'] ) {
+					$raw_id = $term_row['id'];
+				}
+			}
+
+			if ( null === $raw_id || '' === (string) $raw_id ) {
+				continue;
+			}
+
+			$term_id = absint( $raw_id );
+			if ( $term_id > 0 && ! in_array( $term_id, $term_ids, true ) ) {
+				$term_ids[] = $term_id;
+			}
+		}
+
+		return $term_ids;
+	}
+
+	/**
+	 * Map UI operator values to WP_Query tax operators.
+	 *
+	 * @param mixed $operator   Saved operator.
+	 * @param int   $term_count Selected term count.
+	 * @return string
+	 */
+	protected function normalize_tax_query_operator( $operator, $term_count ) {
+		$op = strtoupper( trim( (string) $operator ) );
+
+		if ( 'OR' === $op ) {
+			return 'IN';
+		}
+
+		if ( $term_count <= 1 ) {
+			return 'IN';
+		}
+
+		if ( 'AND' === $op ) {
+			return 'AND';
+		}
+
+		return 'IN';
 	}
 
 	/**

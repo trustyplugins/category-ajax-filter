@@ -4,7 +4,7 @@ Donate link: https://www.buymeacoffee.com/jasveer
 Plugin URI: https://wordpress.org/plugins/category-ajax-filter/
 Tags: ajax filter, category filter, taxonomy filter, custom post type, filter
 Requires at least: 6.0
-Tested up to: 6.7
+Tested up to: 7.0
 Stable tag: 3.0.0
 Requires PHP: 7.4
 License: GPLv2 or later
@@ -200,6 +200,7 @@ No. CAF is built to be lightweight and only loads assets on pages where a filter
 == Changelog ==
 
 = 3.0.0 = (08/06/2026)
+* Major update — introduces the visual CAF Builder for designing AJAX filters and post layouts from the admin.
 * Added visual drag-and-drop filter builder in the admin.
 * New React-based builder UI for filter and post layout design.
 * Free tier includes core builder layouts, modules, and tier limits.
@@ -459,5 +460,4 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 
 == Upgrade Notice ==
 
-= 3.0.0 =
-Major update — introduces the visual CAF Builder for designing AJAX filters and post layouts from the admin.
+
