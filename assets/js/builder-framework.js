@@ -1088,11 +1088,19 @@ jQuery(function ($) {
         },
 
         isEnabled($builder) {
-            return String($builder.attr("data-caf-filter-urls") || "1") === "1";
+            const raw = $builder.attr("data-caf-filter-urls");
+            if (raw === undefined || raw === null || raw === "") {
+                return false;
+            }
+            return String(raw) === "1";
         },
 
         isSchemaEnabled($builder) {
-            return String($builder.attr("data-caf-schema-enabled") || "1") === "1";
+            const raw = $builder.attr("data-caf-schema-enabled");
+            if (raw === undefined || raw === null || raw === "") {
+                return false;
+            }
+            return String(raw) === "1";
         },
 
         encodeBase64Url(value) {

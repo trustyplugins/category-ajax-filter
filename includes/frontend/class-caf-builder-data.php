@@ -446,6 +446,52 @@ class CAF_Builder_Data {
 	}
 
 	/**
+	 * Whether SEO filter URLs are enabled for this layout instance.
+	 *
+	 * @return bool
+	 */
+	protected function is_filter_urls_enabled() {
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'filter_url' ) ) {
+			return false;
+		}
+
+		$common = $this->get_common_data();
+		if ( ! isset( $common->filter_url_enabled ) ) {
+			return false;
+		}
+
+		$raw = $common->filter_url_enabled;
+		if ( true === $raw || 1 === $raw || '1' === $raw ) {
+			return true;
+		}
+
+		return 'true' === strtolower( (string) $raw );
+	}
+
+	/**
+	 * Whether ItemList schema is enabled for this layout instance.
+	 *
+	 * @return bool
+	 */
+	protected function is_schema_enabled() {
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'schema' ) ) {
+			return false;
+		}
+
+		$common = $this->get_common_data();
+		if ( ! isset( $common->schema_enabled ) ) {
+			return false;
+		}
+
+		$raw = $common->schema_enabled;
+		if ( true === $raw || 1 === $raw || '1' === $raw ) {
+			return true;
+		}
+
+		return 'true' === strtolower( (string) $raw );
+	}
+
+	/**
 	 * Get wrapper attributes for frontend container.
 	 *
 	 * @return array
@@ -467,8 +513,10 @@ class CAF_Builder_Data {
 			'meta-relation'     => 'IN',
 			'post-type'         => $this->get_post_type(),
 			'post-per-page'     => isset( $misc_pagination->settings->posts_per_page ) ? absint( $misc_pagination->settings->posts_per_page ) : 10,
-			'caf-index'         => $this->get_short_index(),
-			'pagination-type'   => isset( $misc_pagination->settings->pagination_type ) ? $misc_pagination->settings->pagination_type : '',
+			'caf-index'                     => $this->get_short_index(),
+			'pagination-type'               => isset( $misc_pagination->settings->pagination_type ) ? $misc_pagination->settings->pagination_type : '',
+			'data-caf-filter-urls'          => $this->is_filter_urls_enabled() ? '1' : '0',
+			'data-caf-schema-enabled'       => $this->is_schema_enabled() ? '1' : '0',
 		);
 
 		if ( ! $this->has_filters() ) {

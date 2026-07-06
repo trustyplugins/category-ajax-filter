@@ -18,7 +18,10 @@ class CAF_Filter_Custom_Text_Module extends CAF_Filter_Base_Module {
 	 */
 	public function render() {
 		$settings    = $this->get_settings();
-		$custom_text = isset( $settings->customText ) ? $settings->customText : __( 'Custom Text', 'category-ajax-filter' );
+		$custom_text = __( 'Custom Text', 'category-ajax-filter' );
+		if ( isset( $settings->customText ) && '' !== trim( (string) $settings->customText ) ) {
+			$custom_text = (string) $settings->customText;
+		}
 		$icon_data   = isset( $settings->icons ) ? $settings->icons : new stdClass();
 
 		$this->collect_css();
