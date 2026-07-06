@@ -590,16 +590,19 @@ jQuery(function ($) {
                 post_status: "publish"
             };
 
-            const filterData = this.collectFilterData($builder);
+            const isQueryOnlyMode = String($builder.attr("data-caf-query-only") || "") === "1";
             const queryOnlyPreset = this.collectQueryOnlyPreset($builder);
+            const filterData = this.collectFilterData($builder);
 
-            if (filterData.taxQuery.length) {
+            if (isQueryOnlyMode) {
+                if (queryOnlyPreset.taxQuery) {
+                    queryArgs.tax_query = queryOnlyPreset.taxQuery;
+                }
+            } else if (filterData.taxQuery.length) {
                 queryArgs.tax_query = this.buildTaxQuery(
                     filterData.taxQuery,
                     $builder.attr("taxonomy-relation")
                 );
-            } else if (queryOnlyPreset.taxQuery) {
-                queryArgs.tax_query = queryOnlyPreset.taxQuery;
             }
 
             if (filterData.metaQuery.length) {
