@@ -88,14 +88,7 @@ class CAF_Builder_Renderer {
 			return $this->query_builder->get_page_load_query();
 		}
 
-		// When "filter" is turned off in layout extras, WP still renders filter modules with defaults.
-		// In that case get_page_load_args() can include tax/meta from those modules; use that query
-		// so the first paint matches checked defaults. Otherwise fall back to filter_query_data pool.
-		$page_load_args = $this->query_builder->get_page_load_args();
-		if ( ! empty( $page_load_args['tax_query'] ) || ! empty( $page_load_args['meta_query'] ) ) {
-			return $this->query_builder->get_page_load_query();
-		}
-
+		// Filter with query mode: only filter_query_data taxonomy groups; ignore saved module predefined_terms.
 		return $this->query_builder->get_filter_query();
 	}
 

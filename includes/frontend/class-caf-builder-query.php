@@ -82,7 +82,11 @@ class CAF_Builder_Query {
 	 * @return WP_Query
 	 */
 	public function get_filter_query() {
-		$args = $this->get_filter_query_args();
+		$args                 = $this->get_filter_query_args();
+		$misc_pagination_data = $this->data_handler->get_misc_pagination();
+		$posts_per_page       = isset( $misc_pagination_data->settings->posts_per_page ) ? absint( $misc_pagination_data->settings->posts_per_page ) : 10;
+		$args['posts_per_page'] = $posts_per_page > 0 ? $posts_per_page : 9;
+		$args['paged']          = 1;
 		$args = apply_filters(
 			'caf_builder_query_args',
 			$args,
