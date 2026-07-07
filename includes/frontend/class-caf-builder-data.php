@@ -512,7 +512,9 @@ class CAF_Builder_Data {
 			'taxonomy-relation' => $taxonomy_relation,
 			'meta-relation'     => 'IN',
 			'post-type'         => $this->get_post_type(),
-			'post-per-page'     => isset( $misc_pagination->settings->posts_per_page ) ? absint( $misc_pagination->settings->posts_per_page ) : 10,
+			'post-per-page'     => CAF_Builder_Query::normalize_posts_per_page_setting(
+				isset( $misc_pagination->settings->posts_per_page ) ? $misc_pagination->settings->posts_per_page : -1
+			),
 			'caf-index'                     => $this->get_short_index(),
 			'pagination-type'               => isset( $misc_pagination->settings->pagination_type ) ? $misc_pagination->settings->pagination_type : '',
 			'data-caf-filter-urls'          => $this->is_filter_urls_enabled() ? '1' : '0',

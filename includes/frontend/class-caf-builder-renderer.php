@@ -191,7 +191,7 @@ class CAF_Builder_Renderer {
 		$custom_class        = ! empty( $filter_preview_data->custom_class ) ? sanitize_html_class( $filter_preview_data->custom_class ) : '';
 		$filter_area_class   = 'caf-builder-filter filter-layout-container';
 		$filter_style        = isset( $filter_preview_data->style ) ? $filter_preview_data->style : null;
-		$post_count_per_page = isset( $query_args['posts_per_page'] ) ? (int) $query_args['posts_per_page'] : 0;
+		$post_count_per_page = isset( $query_args['posts_per_page'] ) ? (int) $query_args['posts_per_page'] : -1;
 		$current_page        = isset( $query_args['paged'] ) ? (int) $query_args['paged'] : 1;
 		$found_posts         = ( $query instanceof WP_Query ) ? (int) $query->found_posts : 0;
 
@@ -286,7 +286,7 @@ class CAF_Builder_Renderer {
 		$instance_class       = '.' . $this->data_handler->get_instance_class();
 		$post_container_class = 'post-layout-container';
 		$post_inner_class     = $this->get_post_inner_classes();
-		$post_count_per_page  = isset( $query_args['posts_per_page'] ) ? (int) $query_args['posts_per_page'] : 0;
+		$post_count_per_page  = isset( $query_args['posts_per_page'] ) ? (int) $query_args['posts_per_page'] : -1;
 		$current_page         = isset( $query_args['paged'] ) ? (int) $query_args['paged'] : 1;
 		$found_posts          = ( $query instanceof WP_Query ) ? (int) $query->found_posts : 0;
 
