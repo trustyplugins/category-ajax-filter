@@ -198,7 +198,7 @@ class CAF_Builder_Ajax_Performance {
 			return true;
 		}
 
-		return (bool) apply_filters( 'caf_builder_ajax_needs_found_rows', false, $data_handler );
+		return (bool) caf_builder_apply_filters( 'caf_builder_ajax_needs_found_rows', false, $data_handler );
 	}
 
 	/**

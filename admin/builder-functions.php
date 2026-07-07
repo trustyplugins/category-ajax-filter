@@ -438,7 +438,7 @@ function get_caf_builder_posts() {
 	$args         = clean_query_args( $args );
 	$data_handler = new CAF_Builder_Data( $builder_data, $shortindex );
 	$args         = $data_handler->strip_placeholder_sort_from_query_args( $args );
-	$args         = apply_filters(
+	$args         = caf_builder_apply_filters(
 		'caf_builder_ajax_query_args',
 		$args,
 		array(
@@ -515,7 +515,7 @@ function get_caf_builder_posts() {
 	if ( '' !== $dynamic_css && ( $skip_css_collection || '' === $client_css_hash || $client_css_hash !== $dynamic_css_hash ) ) {
 		$response['dynamic_css'] = $dynamic_css;
 	}
-	$response = apply_filters(
+	$response = caf_builder_apply_filters(
 		'caf_builder_ajax_response',
 		$response,
 		array(
@@ -1539,7 +1539,7 @@ function caf_is_excluded_builder_meta_key( $meta_key ) {
 		return true;
 	}
 	$meta_key_lc = strtolower( $meta_key );
-	$exact_keys  = apply_filters(
+	$exact_keys  = caf_builder_apply_filters(
 		'caf_pro_builder_excluded_meta_keys',
 		array(
 			'_edit_lock',
@@ -1547,7 +1547,7 @@ function caf_is_excluded_builder_meta_key( $meta_key ) {
 			'_wp_old_slug',
 		)
 	);
-	$prefixes    = apply_filters(
+	$prefixes    = caf_builder_apply_filters(
 		'caf_pro_builder_excluded_meta_key_prefixes',
 		array(
 			'_',
@@ -3431,7 +3431,7 @@ function caf_restore_layout( $request ) {
 function caf_get_post_types_list() {
 	$results    = array();
 	$post_types = get_post_types( array( 'public' => true ), 'objects' );
-	$excluded_post_types = apply_filters(
+	$excluded_post_types = caf_builder_apply_filters(
 		'caf_pro_builder_excluded_post_types',
 		array(
 			'attachment',
@@ -3522,13 +3522,13 @@ function caf_get_layouts_list( $data ) {
 		$results,
 		function ( $a, $b ) {
 	
-			$dateA = is_object($a)
-				? strtotime($a->post_date)
-				: strtotime($a['post_date']);
-	
-			$dateB = is_object($b)
-				? strtotime($b->post_date)
-				: strtotime($b['post_date']);
+			$dateA = is_object( $a )
+				? strtotime( $a->post_date ?? '' )
+				: strtotime( $a['post_date'] ?? '' );
+
+			$dateB = is_object( $b )
+				? strtotime( $b->post_date ?? '' )
+				: strtotime( $b['post_date'] ?? '' );
 	
 			return $dateB - $dateA; // DESC (newest first)
 		}
@@ -3625,13 +3625,13 @@ function caf_get_trash_layouts_list( $data ) {
 			$results,
 			function ( $a, $b ) {
 		
-				$dateA = is_object($a)
-					? strtotime($a->post_date)
-					: strtotime($a['post_date']);
-		
-				$dateB = is_object($b)
-					? strtotime($b->post_date)
-					: strtotime($b['post_date']);
+				$dateA = is_object( $a )
+					? strtotime( $a->post_date ?? '' )
+					: strtotime( $a['post_date'] ?? '' );
+
+				$dateB = is_object( $b )
+					? strtotime( $b->post_date ?? '' )
+					: strtotime( $b['post_date'] ?? '' );
 		
 				return $dateB - $dateA; // DESC (newest first)
 			}
@@ -4075,57 +4075,6 @@ function build_term_tree_with_counts( $terms, $taxonomy_name ,$post_type) {
 	return $output;
 }
 
-// function build_term_tree_with_counts($terms, $taxonomy_name) {
-// if (is_wp_error($terms) || empty($terms)) {
-// return array();
-// }
-// $term_lookup = array();
-// foreach ($terms as $term) {
-// $term->children_data = array();
-// $term_lookup[$term->term_id] = $term;
-// }
-// $roots = array();
-// foreach ($terms as $term) {
-// if (!empty($term->parent) && isset($term_lookup[$term->parent])) {
-// $term_lookup[$term->parent]->children_data[] = $term;
-// } else {
-// $roots[] = $term;
-// }
-// }
-
-// Recursive conversion + total_count calculation
-// $to_array = function($term) use (&$to_array, $taxonomy_name) {
-// $direct_count = (int) $term->count;
-
-// $children_arr = array();
-// $children_total = 0;
-// if (!empty($term->children_data)) {
-// foreach ($term->children_data as $child) {
-// $child_arr = $to_array($child);
-// $children_arr[] = $child_arr;
-// $children_total += (int) $child_arr['total_count'];
-// }
-// }
-// $total_count = $direct_count + $children_total;
-
-// return array(
-// 'id'          => (int) $term->term_id,
-// 'name'        => $term->name,
-// 'slug'        => $term->slug,
-// 'count'       => $direct_count,
-// 'total_count' => $total_count,
-// 'children_data'    => $children_arr,
-// );
-// };
-
-// $output = array();
-// foreach ($roots as $root) {
-// $output[] = $to_array($root);
-// }
-// return $output;
-// }
-
-
 /* start api for testing puspose*/
 add_action(
 	'rest_api_init',
@@ -4348,132 +4297,6 @@ function get_posts_with_both_terms() {
 }
 
 add_shortcode( 'custom_tax_query_posts', 'get_posts_with_both_terms' );
-
-// add_action('rest_api_init', function () {
-// register_rest_route('caf-custom-builder/v1', '/get-texo-data-test/', array(
-// 'methods' => 'GET',
-// 'callback' => 'get_texo_data_test',
-// 'permission_callback' => '__return_true',
-// ));
-// });
-
-
-// function get_texo_data_test(){
-// // Get all taxonomies associated with post type 'post'
-// $taxonomies = get_object_taxonomies('post', 'objects');
-
-// // Array to store term data for each taxonomy
-// $taxonomy_tree = [];
-
-// foreach ($taxonomies as $taxonomy) {
-// $terms = get_terms(array(
-// 'taxonomy' => $taxonomy->name,
-// 'hide_empty' => false,  // Show all terms even if not assigned to any posts
-// ));
-
-// Build term tree for each taxonomy
-// $taxonomy_tree[$taxonomy->name] = build_term_tree($terms);  // Using the build_term_tree function from before
-
-// }
-// echo json_encode(array("status" => "success", "taxonomy_tree"=>$taxonomy_tree));
-// }
-
-// function build_term_tree($terms) {
-// $term_tree = [];
-// $term_lookup = [];
-
-// foreach ($terms as $term) {
-// $term->children = [];
-// $term_lookup[$term->term_id] = $term;
-// }
-
-// foreach ($terms as $term) {
-// if ($term->parent && isset($term_lookup[$term->parent])) {
-// $term_lookup[$term->parent]->children[] = $term;
-// } else {
-// $term_tree[] = $term;
-// }
-// }
-
-// return convert_to_array($term_tree);
-// }
-
-// function convert_to_array($terms) {
-// $output = [];
-// foreach ($terms as $term) {
-// $output[] = [
-// 'id' => $term->term_id,
-// 'name' => $term->name,
-// 'slug' => $term->slug,
-// 'children' => convert_to_array($term->children)
-// ];
-// }
-// return $output;
-// }
-
-// add_action('rest_api_init', function () {
-// register_rest_route('caf-custom-builder/v1', '/get-texo-data-test', array(
-// 'methods'  => 'GET',
-// 'callback' => 'get_texo_data_test',
-// 'permission_callback' => '__return_true',
-// ));
-// });
-
-// function get_featured_image_sizes_shortcode($atts) {
-
-// ob_start(); // Start Buffer
-
-// $atts = shortcode_atts(array(
-// 'id' => get_the_ID(), // default: current post ID
-// ), $atts);
-
-// $post_id = $atts['id'];
-
-// Get featured image ID
-// $image_id = get_post_thumbnail_id($post_id);
-// if (!$image_id) {
-// echo "<p>No Featured Image Found.</p>";
-// return ob_get_clean();
-// }
-
-// All sizes you want
-// $sizes = array('thumbnail', 'medium', 'large', 'full');
-
-// echo '<div class="featured-image-sizes">';
-
-// foreach ($sizes as $size) {
-
-// $img = wp_get_attachment_image_src($image_id, $size);
-
-// echo "<pre>";
-// print_r($img);   // <- Yaha aapko pura array milega
-// echo "</pre>";
-
-// if ($img) {
-// $url = $img[0];
-// $width = $img[1];
-// $height = $img[2];
-
-// echo "
-// <div class='img-box'>
-// <strong>$size</strong><br>
-// URL: $url <br>
-// Width: $width px<br>
-// Height: $height px
-// <hr>
-// </div>
-// ";
-// }
-// }
-
-// echo '</div>';
-
-// return ob_get_clean(); // Return buffer content
-// }
-// add_shortcode('featured_image_sizes', 'get_featured_image_sizes_shortcode');
-
-// add_filter('big_image_size_threshold', '__return_false');
-
 
 function get_author_avatar_url( $postid ) {
 

@@ -184,7 +184,7 @@ class CAF_Builder_Post_Renderer {
 	 */
 	protected function resolve_module_settings_for_css( $module, $module_type, $row_key, $column_key, $module_key ) {
 		$module_settings = isset( $module->settings ) ? $module->settings : new stdClass();
-		$module_settings = apply_filters(
+		$module_settings = caf_builder_apply_filters(
 			'caf_builder_module_settings',
 			$module_settings,
 			$this->get_hook_context(
@@ -354,7 +354,7 @@ class CAF_Builder_Post_Renderer {
 		}
 
 		$module_settings = isset( $module->settings ) ? $module->settings : new stdClass();
-		$module_settings = apply_filters(
+		$module_settings = caf_builder_apply_filters(
 			'caf_builder_module_settings',
 			$module_settings,
 			$this->get_hook_context(
@@ -390,7 +390,7 @@ class CAF_Builder_Post_Renderer {
 		}
 
 		$module_content = $this->render_module_content( $module_for_render, $row_key, $column_key, $module_key, $post_id, $image_url, $dummy_image_url );
-		$module_content = apply_filters(
+		$module_content = caf_builder_apply_filters(
 			'caf_builder_module_content_html',
 			$module_content,
 			$module_for_render,
@@ -404,7 +404,7 @@ class CAF_Builder_Post_Renderer {
 				)
 			)
 		);
-		$module_content = apply_filters(
+		$module_content = caf_builder_apply_filters(
 			'caf_builder_module_content_html_' . $module_type,
 			$module_content,
 			$module_for_render,
@@ -437,7 +437,7 @@ class CAF_Builder_Post_Renderer {
 		$html .= $module_content;
 		$html .= '</div>';
 
-		return apply_filters(
+		return caf_builder_apply_filters(
 			'caf_builder_module_html',
 			$html,
 			$module_for_render,

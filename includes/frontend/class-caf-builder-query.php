@@ -50,7 +50,7 @@ class CAF_Builder_Query {
 	 */
 	public function get_page_load_query() {
 		$args = $this->get_page_load_args();
-		$args = apply_filters(
+		$args = caf_builder_apply_filters(
 			'caf_builder_query_args',
 			$args,
 			$this->get_hook_context(
@@ -62,9 +62,9 @@ class CAF_Builder_Query {
 
 		$args             = $this->sanitize_query_args( $args );
 		$this->query_args = $args;
-		do_action( 'caf_builder_before_query', $args, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
+		caf_builder_do_action( 'caf_builder_before_query', $args, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 		$query = new WP_Query( $args );
-		do_action( 'caf_builder_after_query', $query, $args, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
+		caf_builder_do_action( 'caf_builder_after_query', $query, $args, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 		return $query;
 	}
 	/**
@@ -82,8 +82,14 @@ class CAF_Builder_Query {
 	 * @return WP_Query
 	 */
 	public function get_filter_query() {
-		$args = $this->get_filter_query_args();
-		$args = apply_filters(
+		$args                 = $this->get_filter_query_args();
+		$misc_pagination_data = $this->data_handler->get_misc_pagination();
+		$posts_per_page       = self::normalize_posts_per_page_setting(
+			isset( $misc_pagination_data->settings->posts_per_page ) ? $misc_pagination_data->settings->posts_per_page : -1
+		);
+		$args['posts_per_page'] = $posts_per_page;
+		$args['paged']          = 1;
+		$args = caf_builder_apply_filters(
 			'caf_builder_query_args',
 			$args,
 			$this->get_hook_context(
@@ -95,9 +101,9 @@ class CAF_Builder_Query {
 
 		$args             = $this->sanitize_query_args( $args );
 		$this->query_args = $args;
-		do_action( 'caf_builder_before_query', $args, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
+		caf_builder_do_action( 'caf_builder_before_query', $args, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
 		$query = new WP_Query( $args );
-		do_action( 'caf_builder_after_query', $query, $args, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
+		caf_builder_do_action( 'caf_builder_after_query', $query, $args, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
 		return $query;
 	}
 
@@ -130,7 +136,9 @@ class CAF_Builder_Query {
 		$meta_relation     = $this->normalize_meta_query_root_relation(
 			isset( $filter_layout_extra->meta_relation ) ? $filter_layout_extra->meta_relation : 'OR'
 		);
-		$posts_per_page    = isset( $misc_pagination_data->settings->posts_per_page ) ? absint( $misc_pagination_data->settings->posts_per_page ) : 10;
+		$posts_per_page    = self::normalize_posts_per_page_setting(
+			isset( $misc_pagination_data->settings->posts_per_page ) ? $misc_pagination_data->settings->posts_per_page : -1
+		);
 
 		if ( ! empty( $filter_loop_data ) ) {
 			foreach ( $filter_loop_data as $row ) {
@@ -153,7 +161,7 @@ class CAF_Builder_Query {
 						}
 
 						$module_type     = isset( $module->key ) ? sanitize_key( $module->key ) : 'unknown';
-						$module_settings = apply_filters(
+						$module_settings = caf_builder_apply_filters(
 							'caf_builder_module_settings',
 							$module->settings,
 							$this->get_hook_context(
@@ -178,7 +186,7 @@ class CAF_Builder_Query {
 						if ( isset( $module_settings->data_source ) && 'taxonomy' === $module_settings->data_source ) {
 							$module_tax_query = $this->build_tax_query_from_module( $module_settings, $multiple_term, $cat_relation );
 
-							$module_tax_query = apply_filters(
+							$module_tax_query = caf_builder_apply_filters(
 								'caf_builder_module_tax_query',
 								$module_tax_query,
 								$this->get_hook_context(
@@ -202,12 +210,12 @@ class CAF_Builder_Query {
 			}
 		}
 
-		$tax_query = apply_filters( 'caf_builder_page_load_tax_query', $tax_query, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
+		$tax_query = caf_builder_apply_filters( 'caf_builder_page_load_tax_query', $tax_query, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 		if ( count( $tax_query ) > 1 ) {
 			$tax_query['relation'] = $taxonomy_relation;
 		}
 
-		$meta_query = apply_filters( 'caf_builder_page_load_meta_query', $meta_query, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
+		$meta_query = caf_builder_apply_filters( 'caf_builder_page_load_meta_query', $meta_query, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 		if ( count( $meta_query ) > 1 ) {
 			$meta_query['relation'] = $meta_relation;
 		}
@@ -215,7 +223,7 @@ class CAF_Builder_Query {
 		$args = array(
 			'post_type'      => $this->data_handler->get_post_type(),
 			'post_status'    => 'publish',
-			'posts_per_page' => $posts_per_page > 0 ? $posts_per_page : 2,
+			'posts_per_page' => $posts_per_page,
 			'paged'          => 1,
 		);
 
@@ -229,7 +237,7 @@ class CAF_Builder_Query {
 
 		$args = $this->data_handler->apply_default_sort_to_query_args( $args );
 
-		$args = apply_filters( 'caf_builder_page_load_query_args', $args, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
+		$args = caf_builder_apply_filters( 'caf_builder_page_load_query_args', $args, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 
 		if ( $this->should_log_page_load_debug() ) {
 			$this->log_page_load_debug(
@@ -239,7 +247,7 @@ class CAF_Builder_Query {
 					'tax_query'      => isset( $args['tax_query'] ) ? $args['tax_query'] : array(),
 					'meta_query'     => isset( $args['meta_query'] ) ? $args['meta_query'] : array(),
 					'post_type'      => isset( $args['post_type'] ) ? $args['post_type'] : '',
-					'posts_per_page' => isset( $args['posts_per_page'] ) ? $args['posts_per_page'] : '',
+					'posts_per_page' => isset( $args['posts_per_page'] ) ? $args['posts_per_page'] : -1,
 				)
 			);
 		}
@@ -256,7 +264,7 @@ class CAF_Builder_Query {
 		if ( defined( 'CAF_BUILDER_DEBUG_PAGE_LOAD' ) && CAF_BUILDER_DEBUG_PAGE_LOAD ) {
 			return true;
 		}
-		if ( apply_filters( 'caf_pro_debug_page_load_query', false, $this->get_hook_context( array( 'mode' => 'page_load' ) ) ) ) {
+		if ( caf_builder_apply_filters( 'caf_pro_debug_page_load_query', false, $this->get_hook_context( array( 'mode' => 'page_load' ) ) ) ) {
 			return true;
 		}
 		if ( is_admin() ) {
@@ -282,7 +290,7 @@ class CAF_Builder_Query {
 	 * @return void
 	 */
 	protected function log_page_load_debug( array $payload ) {
-		do_action( 'caf_pro_page_load_debug', $payload, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
+		caf_builder_do_action( 'caf_pro_page_load_debug', $payload, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		error_log( '[CAF_PRO page_load] ' . wp_json_encode( $payload, JSON_UNESCAPED_SLASHES | JSON_PARTIAL_OUTPUT_ON_ERROR ) );
 	}
@@ -308,8 +316,8 @@ class CAF_Builder_Query {
 				);
 			}
 		}
-		$tax_query  = apply_filters( 'caf_builder_filter_tax_query', $tax_query, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
-		$meta_query = apply_filters( 'caf_builder_filter_meta_query', $meta_query, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
+		$tax_query  = caf_builder_apply_filters( 'caf_builder_filter_tax_query', $tax_query, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
+		$meta_query = caf_builder_apply_filters( 'caf_builder_filter_meta_query', $meta_query, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
 
 		$args = array(
 			'post_type'      => $this->data_handler->get_post_type(),
@@ -325,7 +333,7 @@ class CAF_Builder_Query {
 			$args['meta_query'] = $meta_query;
 		}
 
-		return apply_filters( 'caf_builder_filter_query_args', $args, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
+		return caf_builder_apply_filters( 'caf_builder_filter_query_args', $args, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
 	}
 
 	/**
@@ -802,6 +810,29 @@ class CAF_Builder_Query {
 		}
 
 		return array( $nested );
+	}
+
+	/**
+	 * Normalize layout posts_per_page for WP_Query.
+	 *
+	 * WordPress treats -1 as "return all posts". Do not use absint() because absint( -1 ) becomes 1.
+	 *
+	 * @param mixed $raw     Raw layout setting value.
+	 * @param int   $default Default when value is missing or invalid.
+	 * @return int
+	 */
+	public static function normalize_posts_per_page_setting( $raw, $default = -1 ) {
+		if ( null === $raw || '' === $raw ) {
+			return (int) $default;
+		}
+
+		$posts_per_page = (int) $raw;
+
+		if ( -1 === $posts_per_page ) {
+			return -1;
+		}
+
+		return $posts_per_page > 0 ? $posts_per_page : (int) $default;
 	}
 
 	/**

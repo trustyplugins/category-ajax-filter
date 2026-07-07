@@ -9,29 +9,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( ! class_exists( 'CAF_Builder_Tier', false ) ) {
+
 class CAF_Builder_Tier {
 
 	const TIER_FREE = 'free';
 	const TIER_PRO  = 'pro';
 
 	/**
-	 * Current builder tier slug.
+	 * Whether the CAF Pro plugin is loaded (not spoofable via CAF_BUILDER_TIER).
+	 *
+	 * @return bool
+	 */
+	public static function is_pro_runtime() {
+		return defined( 'TC_CAF_PRO_PLUGIN_VERSION' ) && class_exists( 'TC_CAF_PRO' );
+	}
+
+	/**
+	 * Current builder tier slug (derived from runtime, not CAF_BUILDER_TIER alone).
 	 *
 	 * @return string
 	 */
 	public static function get_tier() {
-		if ( defined( 'CAF_BUILDER_TIER' ) ) {
-			return (string) CAF_BUILDER_TIER;
-		}
-
-		return self::TIER_PRO;
+		return self::is_pro_runtime() ? self::TIER_PRO : self::TIER_FREE;
 	}
 
 	/**
 	 * @return bool
 	 */
 	public static function is_pro() {
-		return self::TIER_PRO === self::get_tier();
+		return self::is_pro_runtime();
 	}
 
 	/**
@@ -348,4 +355,6 @@ class CAF_Builder_Tier {
 			esc_html__( 'Upgrade to Pro', 'category-ajax-filter' )
 		);
 	}
+}
+
 }

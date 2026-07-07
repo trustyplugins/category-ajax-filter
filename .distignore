@@ -1,0 +1,28 @@
+# Distribution exclude list (WordPress plugin zip / release builds).
+# Paths are relative to this free plugin root.
+
+# VCS / IDE
+.git
+.github
+.cursor
+.vscode
+
+# Release output (do not nest dist inside dist)
+dist
+
+# Logs / OS junk
+*.log
+.DS_Store
+Thumbs.db
+
+# Source maps
+*.map
+
+# React dev (shipped: react-builder/build/ only)
+react-builder/node_modules
+react-builder/src
+react-builder/package.json
+react-builder/package-lock.json
+react-builder/webpack.config.js
+react-builder/scripts
+react-builder/build-free
