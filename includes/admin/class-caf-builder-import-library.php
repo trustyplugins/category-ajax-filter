@@ -37,7 +37,7 @@ class CAF_Builder_Import_Library {
 			return untrailingslashit( (string) CAF_IMPORT_LIBRARY_API_BASE );
 		}
 
-		return untrailingslashit( (string) apply_filters( 'caf_import_library_api_base', self::DEFAULT_API_BASE ) );
+		return untrailingslashit( (string) caf_builder_apply_filters( 'caf_import_library_api_base', self::DEFAULT_API_BASE ) );
 	}
 
 	protected static function get_api_secret() {
@@ -50,23 +50,23 @@ class CAF_Builder_Import_Library {
 			return $stored;
 		}
 
-		return (string) apply_filters( 'caf_import_library_api_secret', '' );
+		return (string) caf_builder_apply_filters( 'caf_import_library_api_secret', '' );
 	}
 
 	protected static function get_list_cache_ttl() {
-		$ttl = (int) apply_filters( 'caf_import_library_cache_ttl', self::DEFAULT_LIST_CACHE_TTL );
+		$ttl = (int) caf_builder_apply_filters( 'caf_import_library_cache_ttl', self::DEFAULT_LIST_CACHE_TTL );
 
 		return max( 300, $ttl );
 	}
 
 	protected static function get_payload_cache_ttl() {
-		$ttl = (int) apply_filters( 'caf_import_library_payload_cache_ttl', self::DEFAULT_PAYLOAD_CACHE_TTL );
+		$ttl = (int) caf_builder_apply_filters( 'caf_import_library_payload_cache_ttl', self::DEFAULT_PAYLOAD_CACHE_TTL );
 
 		return max( 300, $ttl );
 	}
 
 	protected static function is_remote_enabled() {
-		if ( ! apply_filters( 'caf_import_library_use_remote', true ) ) {
+		if ( ! caf_builder_apply_filters( 'caf_import_library_use_remote', true ) ) {
 			return false;
 		}
 
@@ -85,7 +85,7 @@ class CAF_Builder_Import_Library {
 			}
 		}
 
-		if ( defined( 'CAF_BUILDER_TIER' ) && 'free' === CAF_BUILDER_TIER ) {
+		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::is_pro() ) {
 			if ( defined( 'CAF_IMPORT_LIBRARY_FREE_LICENSE_KEY' ) && '' !== CAF_IMPORT_LIBRARY_FREE_LICENSE_KEY ) {
 				return (string) CAF_IMPORT_LIBRARY_FREE_LICENSE_KEY;
 			}
@@ -210,7 +210,7 @@ class CAF_Builder_Import_Library {
 			return true;
 		}
 
-		return (bool) apply_filters( 'caf_import_library_expose_fetch_diagnostics', false );
+		return (bool) caf_builder_apply_filters( 'caf_import_library_expose_fetch_diagnostics', false );
 	}
 
 	/** @var array<string, mixed>|null */

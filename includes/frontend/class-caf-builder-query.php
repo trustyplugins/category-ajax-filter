@@ -50,7 +50,7 @@ class CAF_Builder_Query {
 	 */
 	public function get_page_load_query() {
 		$args = $this->get_page_load_args();
-		$args = apply_filters(
+		$args = caf_builder_apply_filters(
 			'caf_builder_query_args',
 			$args,
 			$this->get_hook_context(
@@ -62,9 +62,9 @@ class CAF_Builder_Query {
 
 		$args             = $this->sanitize_query_args( $args );
 		$this->query_args = $args;
-		do_action( 'caf_builder_before_query', $args, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
+		caf_builder_do_action( 'caf_builder_before_query', $args, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 		$query = new WP_Query( $args );
-		do_action( 'caf_builder_after_query', $query, $args, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
+		caf_builder_do_action( 'caf_builder_after_query', $query, $args, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 		return $query;
 	}
 	/**
@@ -89,7 +89,7 @@ class CAF_Builder_Query {
 		);
 		$args['posts_per_page'] = $posts_per_page;
 		$args['paged']          = 1;
-		$args = apply_filters(
+		$args = caf_builder_apply_filters(
 			'caf_builder_query_args',
 			$args,
 			$this->get_hook_context(
@@ -101,9 +101,9 @@ class CAF_Builder_Query {
 
 		$args             = $this->sanitize_query_args( $args );
 		$this->query_args = $args;
-		do_action( 'caf_builder_before_query', $args, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
+		caf_builder_do_action( 'caf_builder_before_query', $args, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
 		$query = new WP_Query( $args );
-		do_action( 'caf_builder_after_query', $query, $args, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
+		caf_builder_do_action( 'caf_builder_after_query', $query, $args, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
 		return $query;
 	}
 
@@ -161,7 +161,7 @@ class CAF_Builder_Query {
 						}
 
 						$module_type     = isset( $module->key ) ? sanitize_key( $module->key ) : 'unknown';
-						$module_settings = apply_filters(
+						$module_settings = caf_builder_apply_filters(
 							'caf_builder_module_settings',
 							$module->settings,
 							$this->get_hook_context(
@@ -186,7 +186,7 @@ class CAF_Builder_Query {
 						if ( isset( $module_settings->data_source ) && 'taxonomy' === $module_settings->data_source ) {
 							$module_tax_query = $this->build_tax_query_from_module( $module_settings, $multiple_term, $cat_relation );
 
-							$module_tax_query = apply_filters(
+							$module_tax_query = caf_builder_apply_filters(
 								'caf_builder_module_tax_query',
 								$module_tax_query,
 								$this->get_hook_context(
@@ -210,12 +210,12 @@ class CAF_Builder_Query {
 			}
 		}
 
-		$tax_query = apply_filters( 'caf_builder_page_load_tax_query', $tax_query, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
+		$tax_query = caf_builder_apply_filters( 'caf_builder_page_load_tax_query', $tax_query, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 		if ( count( $tax_query ) > 1 ) {
 			$tax_query['relation'] = $taxonomy_relation;
 		}
 
-		$meta_query = apply_filters( 'caf_builder_page_load_meta_query', $meta_query, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
+		$meta_query = caf_builder_apply_filters( 'caf_builder_page_load_meta_query', $meta_query, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 		if ( count( $meta_query ) > 1 ) {
 			$meta_query['relation'] = $meta_relation;
 		}
@@ -237,7 +237,7 @@ class CAF_Builder_Query {
 
 		$args = $this->data_handler->apply_default_sort_to_query_args( $args );
 
-		$args = apply_filters( 'caf_builder_page_load_query_args', $args, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
+		$args = caf_builder_apply_filters( 'caf_builder_page_load_query_args', $args, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 
 		if ( $this->should_log_page_load_debug() ) {
 			$this->log_page_load_debug(
@@ -264,7 +264,7 @@ class CAF_Builder_Query {
 		if ( defined( 'CAF_BUILDER_DEBUG_PAGE_LOAD' ) && CAF_BUILDER_DEBUG_PAGE_LOAD ) {
 			return true;
 		}
-		if ( apply_filters( 'caf_pro_debug_page_load_query', false, $this->get_hook_context( array( 'mode' => 'page_load' ) ) ) ) {
+		if ( caf_builder_apply_filters( 'caf_pro_debug_page_load_query', false, $this->get_hook_context( array( 'mode' => 'page_load' ) ) ) ) {
 			return true;
 		}
 		if ( is_admin() ) {
@@ -290,7 +290,7 @@ class CAF_Builder_Query {
 	 * @return void
 	 */
 	protected function log_page_load_debug( array $payload ) {
-		do_action( 'caf_pro_page_load_debug', $payload, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
+		caf_builder_do_action( 'caf_pro_page_load_debug', $payload, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		error_log( '[CAF_PRO page_load] ' . wp_json_encode( $payload, JSON_UNESCAPED_SLASHES | JSON_PARTIAL_OUTPUT_ON_ERROR ) );
 	}
@@ -316,8 +316,8 @@ class CAF_Builder_Query {
 				);
 			}
 		}
-		$tax_query  = apply_filters( 'caf_builder_filter_tax_query', $tax_query, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
-		$meta_query = apply_filters( 'caf_builder_filter_meta_query', $meta_query, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
+		$tax_query  = caf_builder_apply_filters( 'caf_builder_filter_tax_query', $tax_query, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
+		$meta_query = caf_builder_apply_filters( 'caf_builder_filter_meta_query', $meta_query, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
 
 		$args = array(
 			'post_type'      => $this->data_handler->get_post_type(),
@@ -333,7 +333,7 @@ class CAF_Builder_Query {
 			$args['meta_query'] = $meta_query;
 		}
 
-		return apply_filters( 'caf_builder_filter_query_args', $args, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
+		return caf_builder_apply_filters( 'caf_builder_filter_query_args', $args, $this->get_hook_context( array( 'mode' => 'filter_query' ) ) );
 	}
 
 	/**

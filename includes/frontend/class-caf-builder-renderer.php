@@ -59,7 +59,7 @@ class CAF_Builder_Renderer {
 	 */
 	public function render() {
 		$query = $this->get_initial_query();
-		do_action( 'caf_builder_render_before', $query, $this->get_hook_context() );
+		caf_builder_do_action( 'caf_builder_render_before', $query, $this->get_hook_context() );
 
 		$html  = $this->render_wrapper_open();
 		$html .= $this->render_container_css();
@@ -73,8 +73,8 @@ class CAF_Builder_Renderer {
 		$html .= $this->render_preview_layout_wrapper_close();
 		$html .= $this->render_custom_css_block();
 		$html .= $this->render_wrapper_close();
-		$html  = apply_filters( 'caf_builder_render_html', $html, $this->get_hook_context( array( 'query' => $query ) ) );
-		do_action( 'caf_builder_render_after', $html, $query, $this->get_hook_context() );
+		$html  = caf_builder_apply_filters( 'caf_builder_render_html', $html, $this->get_hook_context( array( 'query' => $query ) ) );
+		caf_builder_do_action( 'caf_builder_render_after', $html, $query, $this->get_hook_context() );
 		return $html;
 	}
 
@@ -99,10 +99,10 @@ class CAF_Builder_Renderer {
 	 */
 	protected function render_wrapper_open() {
 		$attributes = $this->data_handler->get_wrapper_attributes();
-		$attributes = apply_filters( 'caf_builder_wrapper_attributes', $attributes, $this->get_hook_context() );
+		$attributes = caf_builder_apply_filters( 'caf_builder_wrapper_attributes', $attributes, $this->get_hook_context() );
 
 		$html = '<div ' . $this->build_html_attributes( $attributes ) . '>';
-		return apply_filters( 'caf_builder_wrapper_open_html', $html, $attributes, $this->get_hook_context() );
+		return caf_builder_apply_filters( 'caf_builder_wrapper_open_html', $html, $attributes, $this->get_hook_context() );
 	}
 
 	/**
@@ -112,7 +112,7 @@ class CAF_Builder_Renderer {
 	 */
 	protected function render_wrapper_close() {
 		$html = '</div>';
-		return apply_filters( 'caf_builder_wrapper_close_html', $html, $this->get_hook_context() );
+		return caf_builder_apply_filters( 'caf_builder_wrapper_close_html', $html, $this->get_hook_context() );
 	}
 
 	/**
@@ -268,7 +268,7 @@ class CAF_Builder_Renderer {
 
 		$html .= '</div>';
 
-		return apply_filters( 'caf_builder_filter_area_html', $html, $this->get_hook_context( array( 'query' => $query ) ) );
+		return caf_builder_apply_filters( 'caf_builder_filter_area_html', $html, $this->get_hook_context( array( 'query' => $query ) ) );
 	}
 
 	/**
@@ -355,7 +355,7 @@ class CAF_Builder_Renderer {
 
 		$html .= '</div>';
 
-		return apply_filters( 'caf_builder_post_area_html', $html, $this->get_hook_context( array( 'query' => $query ) ) );
+		return caf_builder_apply_filters( 'caf_builder_post_area_html', $html, $this->get_hook_context( array( 'query' => $query ) ) );
 	}
 	/**
 	 * Render misc zone based on builder drag-drop configuration.
