@@ -197,6 +197,13 @@ Yes, since version 2.7.2, Category AJAX Filter supports WooCommerce products wit
 
 No. CAF is built to be lightweight and only loads assets on pages where a filter shortcode is used.
 
+== Source Code ==
+
+This plugin ships minified JavaScript for the admin filter builder. Per [WordPress plugin guideline #4](https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/#4-code-must-be-mostly-human-readable), human-readable source code is publicly maintained here:
+
+* **React builder source (admin UI):** https://github.com/trustyplugins/category-ajax-filter/tree/3.0 — see `react-builder/src/`
+* **PHP plugin source:** https://github.com/trustyplugins/category-ajax-filter/tree/3.0
+
 == Changelog ==
 
 = 3.0.0 = (08/06/2026)
