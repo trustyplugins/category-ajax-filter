@@ -582,10 +582,24 @@ jQuery(function ($) {
             }
             return this.getSearchKeywordForSelectedTags($builder);
         },
+        parsePostsPerPage($builder) {
+            const raw = $builder.attr("post-per-page");
+            if (raw === undefined || raw === null || raw === "") {
+                return -1;
+            }
+            const postsPerPage = parseInt(raw, 10);
+            if (Number.isNaN(postsPerPage)) {
+                return -1;
+            }
+            if (-1 === postsPerPage) {
+                return -1;
+            }
+            return postsPerPage > 0 ? postsPerPage : -1;
+        },
         collectQueryArgs($builder, page = 1) {
             const queryArgs = {
                 post_type: $builder.attr("post-type"),
-                posts_per_page: $builder.attr("post-per-page"),
+                posts_per_page: this.parsePostsPerPage($builder),
                 paged: page,
                 post_status: "publish"
             };

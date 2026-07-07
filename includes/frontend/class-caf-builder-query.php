@@ -84,8 +84,10 @@ class CAF_Builder_Query {
 	public function get_filter_query() {
 		$args                 = $this->get_filter_query_args();
 		$misc_pagination_data = $this->data_handler->get_misc_pagination();
-		$posts_per_page       = isset( $misc_pagination_data->settings->posts_per_page ) ? absint( $misc_pagination_data->settings->posts_per_page ) : 10;
-		$args['posts_per_page'] = $posts_per_page > 0 ? $posts_per_page : 9;
+		$posts_per_page       = self::normalize_posts_per_page_setting(
+			isset( $misc_pagination_data->settings->posts_per_page ) ? $misc_pagination_data->settings->posts_per_page : -1
+		);
+		$args['posts_per_page'] = $posts_per_page;
 		$args['paged']          = 1;
 		$args = apply_filters(
 			'caf_builder_query_args',
@@ -134,7 +136,9 @@ class CAF_Builder_Query {
 		$meta_relation     = $this->normalize_meta_query_root_relation(
 			isset( $filter_layout_extra->meta_relation ) ? $filter_layout_extra->meta_relation : 'OR'
 		);
-		$posts_per_page    = isset( $misc_pagination_data->settings->posts_per_page ) ? absint( $misc_pagination_data->settings->posts_per_page ) : 10;
+		$posts_per_page    = self::normalize_posts_per_page_setting(
+			isset( $misc_pagination_data->settings->posts_per_page ) ? $misc_pagination_data->settings->posts_per_page : -1
+		);
 
 		if ( ! empty( $filter_loop_data ) ) {
 			foreach ( $filter_loop_data as $row ) {
@@ -219,7 +223,7 @@ class CAF_Builder_Query {
 		$args = array(
 			'post_type'      => $this->data_handler->get_post_type(),
 			'post_status'    => 'publish',
-			'posts_per_page' => $posts_per_page > 0 ? $posts_per_page : 2,
+			'posts_per_page' => $posts_per_page,
 			'paged'          => 1,
 		);
 
@@ -243,7 +247,7 @@ class CAF_Builder_Query {
 					'tax_query'      => isset( $args['tax_query'] ) ? $args['tax_query'] : array(),
 					'meta_query'     => isset( $args['meta_query'] ) ? $args['meta_query'] : array(),
 					'post_type'      => isset( $args['post_type'] ) ? $args['post_type'] : '',
-					'posts_per_page' => isset( $args['posts_per_page'] ) ? $args['posts_per_page'] : '',
+					'posts_per_page' => isset( $args['posts_per_page'] ) ? $args['posts_per_page'] : -1,
 				)
 			);
 		}
@@ -806,6 +810,29 @@ class CAF_Builder_Query {
 		}
 
 		return array( $nested );
+	}
+
+	/**
+	 * Normalize layout posts_per_page for WP_Query.
+	 *
+	 * WordPress treats -1 as "return all posts". Do not use absint() because absint( -1 ) becomes 1.
+	 *
+	 * @param mixed $raw     Raw layout setting value.
+	 * @param int   $default Default when value is missing or invalid.
+	 * @return int
+	 */
+	public static function normalize_posts_per_page_setting( $raw, $default = -1 ) {
+		if ( null === $raw || '' === $raw ) {
+			return (int) $default;
+		}
+
+		$posts_per_page = (int) $raw;
+
+		if ( -1 === $posts_per_page ) {
+			return -1;
+		}
+
+		return $posts_per_page > 0 ? $posts_per_page : (int) $default;
 	}
 
 	/**
