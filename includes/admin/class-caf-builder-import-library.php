@@ -13,6 +13,8 @@ class CAF_Builder_Import_Library {
 
 	const DEFAULT_API_BASE = 'https://trustyplugins.com/wp-json/caf/v1';
 
+	const FREE_TIER_LICENSE_KEY = 'caf-free-tier';
+
 	const CACHE_LIST_PREFIX = 'caf_import_library_list_v5_';
 
 	const CACHE_PAYLOAD_PREFIX = 'caf_import_library_payload_v5_';
@@ -37,40 +39,27 @@ class CAF_Builder_Import_Library {
 			return untrailingslashit( (string) CAF_IMPORT_LIBRARY_API_BASE );
 		}
 
-		return untrailingslashit( (string) caf_builder_apply_filters( 'caf_import_library_api_base', self::DEFAULT_API_BASE ) );
-	}
-
-	protected static function get_api_secret() {
-		if ( defined( 'CAF_IMPORT_LIBRARY_API_SECRET' ) && '' !== CAF_IMPORT_LIBRARY_API_SECRET ) {
-			return (string) CAF_IMPORT_LIBRARY_API_SECRET;
-		}
-
-		$stored = get_option( 'caf_import_library_api_secret', '' );
-		if ( is_string( $stored ) && '' !== $stored ) {
-			return $stored;
-		}
-
-		return (string) caf_builder_apply_filters( 'caf_import_library_api_secret', '' );
+		return untrailingslashit( (string) apply_filters( 'caf_import_library_api_base', self::DEFAULT_API_BASE ) );
 	}
 
 	protected static function get_list_cache_ttl() {
-		$ttl = (int) caf_builder_apply_filters( 'caf_import_library_cache_ttl', self::DEFAULT_LIST_CACHE_TTL );
+		$ttl = (int) apply_filters( 'caf_import_library_cache_ttl', self::DEFAULT_LIST_CACHE_TTL );
 
 		return max( 300, $ttl );
 	}
 
 	protected static function get_payload_cache_ttl() {
-		$ttl = (int) caf_builder_apply_filters( 'caf_import_library_payload_cache_ttl', self::DEFAULT_PAYLOAD_CACHE_TTL );
+		$ttl = (int) apply_filters( 'caf_import_library_payload_cache_ttl', self::DEFAULT_PAYLOAD_CACHE_TTL );
 
 		return max( 300, $ttl );
 	}
 
 	protected static function is_remote_enabled() {
-		if ( ! caf_builder_apply_filters( 'caf_import_library_use_remote', true ) ) {
+		if ( ! apply_filters( 'caf_import_library_use_remote', true ) ) {
 			return false;
 		}
 
-		return '' !== self::get_api_base_url() && '' !== self::get_api_secret();
+		return '' !== self::get_api_base_url();
 	}
 
 	protected static function get_client_site_url() {
@@ -90,10 +79,22 @@ class CAF_Builder_Import_Library {
 				return (string) CAF_IMPORT_LIBRARY_FREE_LICENSE_KEY;
 			}
 
-			return 'caf-free-tier';
+			return self::FREE_TIER_LICENSE_KEY;
 		}
 
 		return '';
+	}
+
+	protected static function get_request_user_agent() {
+		if ( class_exists( 'CAF_Builder_Tier' ) && CAF_Builder_Tier::is_pro() ) {
+			$version = defined( 'TC_CAF_PRO_PLUGIN_VERSION' ) ? TC_CAF_PRO_PLUGIN_VERSION : '10.0';
+
+			return 'CAF-Pro/' . $version;
+		}
+
+		$version = defined( 'TC_CAF_PLUGIN_VERSION' ) ? TC_CAF_PLUGIN_VERSION : '3.0';
+
+		return 'CAF-Free/' . $version;
 	}
 
 	protected static function get_cache_scope_hash() {
@@ -210,7 +211,7 @@ class CAF_Builder_Import_Library {
 			return true;
 		}
 
-		return (bool) caf_builder_apply_filters( 'caf_import_library_expose_fetch_diagnostics', false );
+		return (bool) apply_filters( 'caf_import_library_expose_fetch_diagnostics', false );
 	}
 
 	/** @var array<string, mixed>|null */
@@ -243,18 +244,15 @@ class CAF_Builder_Import_Library {
 		$api_base    = self::get_api_base_url();
 		$license_key = self::get_client_license_key();
 		$site_url    = self::get_client_site_url();
-		$secret      = self::get_api_secret();
 
 		if ( '' === $license_key ) {
 			return self::fail_remote_fetch(
-				'License key is missing on this site.',
+				'License key is missing on this site. Please activate your CAF PRO license.',
 				array( 'code' => 'missing_license_key' )
 			);
 		}
 
 		$timestamp = (string) time();
-		$payload   = $timestamp . '|' . $site_url . '|' . $license_key;
-		$signature = hash_hmac( 'sha256', $payload, $secret );
 
 		$query_args = array(
 			'include_payload' => $include_payload ? '1' : '0',
@@ -282,10 +280,9 @@ class CAF_Builder_Import_Library {
 				'timeout' => $include_payload ? 60 : 30,
 				'headers' => array(
 					'X-CAF-Timestamp'   => $timestamp,
-					'X-CAF-Signature'   => $signature,
 					'X-CAF-License-Key' => $license_key,
 					'X-CAF-Site-Url'    => $site_url,
-					'User-Agent'        => 'CAF-Pro/' . ( defined( 'TC_CAF_PRO_PLUGIN_VERSION' ) ? TC_CAF_PRO_PLUGIN_VERSION : '10.0' ),
+					'User-Agent'        => self::get_request_user_agent(),
 				),
 			)
 		);
@@ -437,17 +434,17 @@ class CAF_Builder_Import_Library {
 
 	protected static function describe_http_response( $http_code, $server_code, $raw_body ) {
 		if ( 401 === $http_code ) {
-			if ( 'caf_tl_auth_invalid_signature' === $server_code ) {
-				return 'Authentication failed: API secret mismatch between CAF Pro and the template library server.';
+			if ( 'caf_tl_auth_invalid_license' === $server_code ) {
+				return 'Authentication failed: license is not valid for this site. Please activate your CAF PRO license.';
 			}
 			if ( 'caf_tl_auth_missing' === $server_code ) {
-				return 'Authentication failed: missing license key, site URL, or signature headers.';
+				return 'Authentication failed: missing license key or site URL.';
 			}
 			if ( 'caf_tl_auth_expired' === $server_code ) {
 				return 'Authentication failed: request timestamp expired (check server clock/timezone).';
 			}
 
-			return 'Authentication failed (HTTP 401). Verify the API secret and license key.';
+			return 'Authentication failed (HTTP 401). Please verify your license is active for this domain.';
 		}
 
 		if ( 403 === $http_code && false !== stripos( $raw_body, 'cloudflare' ) ) {
@@ -512,7 +509,12 @@ class CAF_Builder_Import_Library {
 	protected static function verify_library_ajax_request() {
 		check_ajax_referer( 'tc_caf_ajax_nonce', 'nonce' );
 
-		if ( class_exists( 'CAF_Pro_License' ) && ! CAF_Pro_License::can_use_feature( 'import_library' ) ) {
+		if (
+			class_exists( 'CAF_Pro_License' )
+			&& class_exists( 'CAF_Builder_Tier' )
+			&& CAF_Builder_Tier::is_pro()
+			&& ! CAF_Pro_License::can_use_feature( 'import_library' )
+		) {
 			wp_send_json_error( array( 'message' => 'CAF PRO license is not active.' ), 403 );
 		}
 
