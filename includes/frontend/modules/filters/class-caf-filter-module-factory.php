@@ -87,6 +87,58 @@ class CAF_Filter_Module_Factory {
 					$instance_css_prefix
 				);
 
+			case 'woo_price_filter':
+				return class_exists( 'CAF_Woo_Filter_Price_Module' )
+					? new CAF_Woo_Filter_Price_Module(
+						$module,
+						$row_key,
+						$column_key,
+						$module_key,
+						$css_builder,
+						$style_generator,
+						$instance_css_prefix
+					)
+					: null;
+
+			case 'woo_stock_filter':
+				return class_exists( 'CAF_Woo_Filter_Stock_Module' )
+					? new CAF_Woo_Filter_Stock_Module(
+						$module,
+						$row_key,
+						$column_key,
+						$module_key,
+						$css_builder,
+						$style_generator,
+						$instance_css_prefix
+					)
+					: null;
+
+			case 'woo_sale_filter':
+				return class_exists( 'CAF_Woo_Filter_Sale_Module' )
+					? new CAF_Woo_Filter_Sale_Module(
+						$module,
+						$row_key,
+						$column_key,
+						$module_key,
+						$css_builder,
+						$style_generator,
+						$instance_css_prefix
+					)
+					: null;
+
+			case 'woo_rating_filter':
+				return class_exists( 'CAF_Woo_Filter_Rating_Module' )
+					? new CAF_Woo_Filter_Rating_Module(
+						$module,
+						$row_key,
+						$column_key,
+						$module_key,
+						$css_builder,
+						$style_generator,
+						$instance_css_prefix
+					)
+					: null;
+
 			default:
 				return null;
 		}
