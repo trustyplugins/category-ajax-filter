@@ -10,7 +10,7 @@ Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Drag-and-drop AJAX filter builder for WordPress. Filter posts, custom post types, categories, and taxonomies instantly. Works with Elementor, Divi, and more.
+Drag-and-drop AJAX filter plugin for WordPress. Filter posts, custom post types, categories & taxonomies instantly. Works with Elementor and Divi.
 
 == Description ==
 
@@ -44,53 +44,53 @@ https://www.youtube.com/watch?v=XvapZYXcKtA
 
 CAF includes the core features you need to create professional, fully customized post filters. From instant AJAX filtering to pre-built templates, everything is designed for simplicity and power.
 
-- **AJAX-Powered Instant Filtering**: Filters use AJAX to update results instantly without page reload. Visitors see filtered posts in real-time as they select categories, tags, or search anything across your content.
+– **AJAX-Powered Instant Filtering**: Filters use AJAX to update results instantly without page reload. Visitors see filtered posts in real-time as they select categories, tags, or search anything across your content.
 
-- **Drag-and-Drop 3-Step Builder**: The visual CAF Builder simplifies filter creation into three steps: Query & Filters to set filtering logic, Post Item Template to design post cards, Layout Settings to control columns, posts per page, gaps, sort order, filter position, and pagination.
+– **Drag-and-Drop 3-Step Builder**: The visual CAF Builder simplifies filter creation into three steps: Query & Filters to set filtering logic, Post Item Template to design post cards, Layout Settings to control columns, posts per page, gaps, sort order, filter position, and pagination.
 
-- **Design Every Element Your Way**: Every filter module and post item module uses the same Settings, Design, and Advanced tabs. Customize fonts, colors, backgrounds, borders, and spacing. No preset styles limiting you.
+– **Design Every Element Your Way**: Every filter module and post item module uses the same Settings, Design, and Advanced tabs. Customize fonts, colors, backgrounds, borders, and spacing. No preset styles limiting you.
 
-- **Works with Any Post Type**: Filter WordPress posts, custom post types, categories, tags, or any custom taxonomy. Search, Dropdown, Checkbox, Range Slider modules work across all content types.
+– **Works with Any Post Type**: Filter WordPress posts, custom post types, categories, tags, or any custom taxonomy. Search, Dropdown, Checkbox, Range Slider modules work across all content types.
 
-- **Responsive Controls**: Switch between desktop, tablet, and mobile views while designing. Adjust column counts, spacing, filter position, and layout separately for each device in one interface.
+– **Responsive Controls**: Switch between desktop, tablet, and mobile views while designing. Adjust column counts, spacing, filter position, and layout separately for each device in one interface.
 
-- **Pre-Built Template Library**: Start with ready-made filter layouts and post item designs. Export your work as JSON to reuse across sites, or import templates from other filters you've built.
+– **Pre-Built Template Library**: Start with ready-made filter layouts and post item designs. Export your work as JSON to reuse across sites, or import templates from other filters you've built.
 
 ### 🧩 Filter & Post Display Modules
 
 **Filter modules**
 
-- **Search**: A keyword search box that can search post titles, content, or all fields, with a customizable placeholder and search trigger.
+– **Search**: A keyword search box that can search post titles, content, or all fields, with a customizable placeholder and search trigger.
 
-- **Dropdown**: A single-select filter built from any taxonomy, letting you choose exactly which terms to include, with term counts shown next to each one and an optional filter label. Style it fully with independent font, color, background, border, and box shadow controls for the container, the select field, and the dropdown options.
+– **Dropdown**: A single-select filter built from any taxonomy, letting you choose exactly which terms to include, with term counts shown next to each one and an optional filter label. Style it fully with independent font, color, background, border, and box shadow controls for the container, the select field, and the dropdown options.
 
-- **Checkbox**: A term filter built from any taxonomy that adapts to how you want it to work. Toggle multiple selection on or off to switch between single-select and multi-select behavior, choose whether to show the checkbox itself and the term counts, add an optional filter label, and restyle the checkbox's shape, size, and colors so it can look however fits your design, not just like a default checkbox.
+– **Checkbox**: A term filter built from any taxonomy that adapts to how you want it to work. Toggle multiple selection on or off to switch between single-select and multi-select behavior, choose whether to show the checkbox itself and the term counts, add an optional filter label, and restyle the checkbox's shape, size, and colors so it can look however fits your design, not just like a default checkbox.
 
-- **Reset**: Clears all active filters with one click, with editable button text and full control over font, color, and size, including a hover state.
+– **Reset**: Clears all active filters with one click, with editable button text and full control over font, color, and size, including a hover state.
 
-- **Custom Text**: Add your own text or label inside the filter using a simple content field.
+– **Custom Text**: Add your own text or label inside the filter using a simple content field.
 
-- **Range Slider [PRO]**: A range filter for numeric custom field values, with single or double handle types, horizontal or vertical placement, configurable min, max, and step values, and an optional prefix or suffix.
+– **Range Slider [PRO]**: A range filter for numeric custom field values, with single or double handle types, horizontal or vertical placement, configurable min, max, and step values, and an optional prefix or suffix.
 
 **Post item modules**
 
-- **Post Image**: Displays the featured image, with a choice of image size, a fallback placeholder image, and an optional link on the image. Fully customizable for width, height, spacing, border, and box shadow.
+– **Post Image**: Displays the featured image, with a choice of image size, a fallback placeholder image, and an optional link on the image. Fully customizable for width, height, spacing, border, and box shadow.
 
-- **Post Title**: Displays the post title, with an optional link to the full post and full control over font, size, color, and spacing, including a hover state.
+– **Post Title**: Displays the post title, with an optional link to the full post and full control over font, size, color, and spacing, including a hover state.
 
-- **Post Description**: Displays the post excerpt, with a customizable word limit and the option to enable HTML.
+– **Post Description**: Displays the post excerpt, with a customizable word limit and the option to enable HTML.
 
-- **Post Date**: Displays the publish date, with a choice of date format and full control over font, spacing, background, and border.
+– **Post Date**: Displays the publish date, with a choice of date format and full control over font, spacing, background, and border.
 
-- **Post Author**: Displays the author name, with full control over font, color, size, and spacing, including a hover state.
+– **Post Author**: Displays the author name, with full control over font, color, size, and spacing, including a hover state.
 
-- **Comment Count**: Displays the number of comments, with a customizable suffix label and full control over font, color, and size.
+– **Comment Count**: Displays the number of comments, with a customizable suffix label and full control over font, color, and size.
 
-- **Terms**: Displays taxonomy terms, and since each Terms module can be pointed at a different taxonomy, you can add several of them side by side to show categories, tags, or any other taxonomy at once, each with its own term limit, separator, link setting, and independent design.
+– **Terms**: Displays taxonomy terms, and since each Terms module can be pointed at a different taxonomy, you can add several of them side by side to show categories, tags, or any other taxonomy at once, each with its own term limit, separator, link setting, and independent design.
 
-- **Post Button**: A button linking to the full post, with editable text, a choice of how the link opens, and an optional suffix.
+– **Post Button**: A button linking to the full post, with editable text, a choice of how the link opens, and an optional suffix.
 
-- **Custom Field [PRO]**: Displays the value of any custom field on the post, with an optional prefix and suffix, each shown as text or an icon, and full control over font, color, and size so any stored data can be presented in your post cards exactly how you want it.
+– **Custom Field [PRO]**: Displays the value of any custom field on the post, with an optional prefix and suffix, each shown as text or an icon, and full control over font, color, and size so any stored data can be presented in your post cards exactly how you want it.
 
 ### 🔗 Supported Post Types & Compatibility
 
@@ -106,33 +106,33 @@ Works with all major page builders including Elementor, Divi, and WP Bakery. Com
 
 Explore CAF in action with our live demo sites, featuring custom post types with taxonomies and default WordPress posts:
 
-- [Simple Blogs](https://trustyplugins.com/simple-blogs-demo/) 
-- [Boxed Title](https://trustyplugins.com/boxed-title-demo/)
-- [Glossy Look](https://trustyplugins.com/glossy-look-demo/)
-- [Filter in Sidebar](https://trustyplugins.com/sidebar-filter-demo/) 
-- [Dropdown Filter](https://trustyplugins.com/dropdown-filter-demo/)
+– [Simple Blogs](https://trustyplugins.com/simple-blogs-demo/) 
+– [Boxed Title](https://trustyplugins.com/boxed-title-demo/)
+– [Glossy Look](https://trustyplugins.com/glossy-look-demo/)
+– [Filter in Sidebar](https://trustyplugins.com/sidebar-filter-demo/) 
+– [Dropdown Filter](https://trustyplugins.com/dropdown-filter-demo/)
 
 ### 👑 Category AJAX Filter Pro
 
 Take your filters to the next level with [Category AJAX Filter Pro](https://trustyplugins.com/category-ajax-filter-pro). Unlock advanced filtering capabilities, deeper customization, and powerful integrations that transform how visitors interact with your content. From AI-powered search to deep layout controls, Pro gives you the tools to build filtering experiences that match your exact vision.
 
-- **AI Search**: Semantic, intent-based search that understands what visitors are looking for and returns results by matching their intent against post content, taxonomy terms, and labels, not just exact keyword matches.
+– **AI Search**: Semantic, intent-based search that understands what visitors are looking for and returns results by matching their intent against post content, taxonomy terms, and labels, not just exact keyword matches.
 
-- **Analytics**: Get detailed insights into how visitors use your filters, including total filter clicks, which filter combinations return zero results, clicks broken down by device type, and a complete list of search keywords visitors used, all viewable across custom time periods to identify trends and gaps in your content.
+– **Analytics**: Get detailed insights into how visitors use your filters, including total filter clicks, which filter combinations return zero results, clicks broken down by device type, and a complete list of search keywords visitors used, all viewable across custom time periods to identify trends and gaps in your content.
 
-- **SEO Controls**: Keep filtered pages crawlable and indexable with Filter With URL support and schema markup, so search engines understand your filtered content.
+– **SEO Controls**: Keep filtered pages crawlable and indexable with Filter With URL support and schema markup, so search engines understand your filtered content.
 
-- **Sort Filter Terms**: Manually reorder categories, taxonomies, or custom field terms in Checkbox and Dropdown filters using drag-and-drop, instead of relying on alphabetical or count-based ordering.
+– **Sort Filter Terms**: Manually reorder categories, taxonomies, or custom field terms in Checkbox and Dropdown filters using drag-and-drop, instead of relying on alphabetical or count-based ordering.
 
-- **Prefix and Suffix Options**: Add custom text or icons before and after post data throughout your layout across all post item modules like title, author, date, comment count, custom fields, and read more buttons, as well as result counts in your layout controls, so every piece of information displays exactly how you want it with complete customization over presentation.
+– **Prefix and Suffix Options**: Add custom text or icons before and after post data throughout your layout across all post item modules like title, author, date, comment count, custom fields, and read more buttons, as well as result counts in your layout controls, so every piece of information displays exactly how you want it with complete customization over presentation.
 
-- **Voice Search**: Let visitors search hands-free using voice input, with a customizable microphone icon you can position left or right, and control the listening state feedback they see while speaking, making filtering more accessible and convenient.
+– **Voice Search**: Let visitors search hands-free using voice input, with a customizable microphone icon you can position left or right, and control the listening state feedback they see while speaking, making filtering more accessible and convenient.
 
-- **Advanced Layout Controls**: Place advanced pagination options like Load More, sorting dropdowns, selected filters, and result counts exactly where you want them across four flexible positions: above filters, below filters, above the post grid, or below the post grid, with drag-and-drop control that lets you arrange them however you need, even stacking multiple modules in the same position.
+– **Advanced Layout Controls**: Place advanced pagination options like Load More, sorting dropdowns, selected filters, and result counts exactly where you want them across four flexible positions: above filters, below filters, above the post grid, or below the post grid, with drag-and-drop control that lets you arrange them however you need, even stacking multiple modules in the same position.
 
-- **Custom Fields in Filters**: Extend filtering beyond taxonomies by letting visitors filter with custom fields using Checkbox, Dropdown, Range Slider, or Search modules, with the ability to target the search box to specific custom fields for more focused searching.
+– **Custom Fields in Filters**: Extend filtering beyond taxonomies by letting visitors filter with custom fields using Checkbox, Dropdown, Range Slider, or Search modules, with the ability to target the search box to specific custom fields for more focused searching.
 
-- **Float Button**: Display your filter bar as an inline sidebar on desktop, and automatically convert it to a floating button on mobile and tablet devices, with full customization of the button text, icon, panel animation direction, and overlay color, allowing the same filter configuration to adapt perfectly to any screen size.
+– **Float Button**: Display your filter bar as an inline sidebar on desktop, and automatically convert it to a floating button on mobile and tablet devices, with full customization of the button text, icon, panel animation direction, and overlay color, allowing the same filter configuration to adapt perfectly to any screen size.
 
 **More Pro features**:
 
@@ -142,19 +142,19 @@ Extended revision history, Custom fonts upload, Global font settings, Icon libra
 
 Explore CAF Pro in action with our live demo sites, showcasing advanced features, custom fields, and Pro-exclusive functionality:
 
-- [Parent Child Category Filter](https://caf.trustyplugins.com/demos/parent-child-category-filter/) 
-- [Multiple Taxonomy Filter](https://caf.trustyplugins.com/demos/multiple-taxonomy-filter/) 
-- [Horizontal Dropdown Filter (Modern)](https://caf.trustyplugins.com/demos/multiple-taxonomy-horizontal-dropdown-filter/) 
-- [Multiple Taxonomy Dropdown Filter](https://caf.trustyplugins.com/demos/multiple-taxonomy-dropdown-filter/) 
-- [Alphabetical Filter](https://caf.trustyplugins.com/demos/alphabetical-navigation-filter/) 
-- [Tabs Filter](https://caf.trustyplugins.com/demos/tabs-filter/) 
-- [Simple Timeline](https://caf.trustyplugins.com/demos/simple-timeline/) 
-- [Full Width Timeline](https://caf.trustyplugins.com/demos/full-width-timeline/) 
-- [Carousel Slider](https://caf.trustyplugins.com/demos/carousel-slider/) 
-- [Masonry Layout](https://caf.trustyplugins.com/demos/masonry-layout/) 
-- [Masonry With Description](https://caf.trustyplugins.com/demos/masonry-with-description/) 
-- [Gradient Border](https://caf.trustyplugins.com/demos/gradient-border/)
-- [Full Rounded Corner](https://caf.trustyplugins.com/demos/full-rounded-corner/)
+– [Parent Child Category Filter](https://caf.trustyplugins.com/demos/parent-child-category-filter/) 
+– [Multiple Taxonomy Filter](https://caf.trustyplugins.com/demos/multiple-taxonomy-filter/) 
+– [Horizontal Dropdown Filter (Modern)](https://caf.trustyplugins.com/demos/multiple-taxonomy-horizontal-dropdown-filter/) 
+– [Multiple Taxonomy Dropdown Filter](https://caf.trustyplugins.com/demos/multiple-taxonomy-dropdown-filter/) 
+– [Alphabetical Filter](https://caf.trustyplugins.com/demos/alphabetical-navigation-filter/) 
+– [Tabs Filter](https://caf.trustyplugins.com/demos/tabs-filter/) 
+– [Simple Timeline](https://caf.trustyplugins.com/demos/simple-timeline/) 
+– [Full Width Timeline](https://caf.trustyplugins.com/demos/full-width-timeline/) 
+– [Carousel Slider](https://caf.trustyplugins.com/demos/carousel-slider/) 
+– [Masonry Layout](https://caf.trustyplugins.com/demos/masonry-layout/) 
+– [Masonry With Description](https://caf.trustyplugins.com/demos/masonry-with-description/) 
+– [Gradient Border](https://caf.trustyplugins.com/demos/gradient-border/)
+– [Full Rounded Corner](https://caf.trustyplugins.com/demos/full-rounded-corner/)
 
 ### 📚 Quick Import Library
 
@@ -305,7 +305,7 @@ AI Search (Pro) uses semantic, NLP-based matching so results reflect what a visi
 * WordPress dashboard icon changed.
 
 = 2.6.5 = (23/12/2022)
-* Bug fixed [Fixed function conflict - get_image_sizes]
+* Bug fixed [Fixed function conflict – get_image_sizes]
 
 = 2.6.4 = (27/07/2022)
 * Bug fixed [#parse error, #PRO version error]
@@ -314,7 +314,7 @@ AI Search (Pro) uses semantic, NLP-based matching so results reflect what a visi
 * Bug fixed [#parse error, #PRO version error]
 
 = 2.6.2 = (27/07/2022)
-* Bug fixed [Parse Error - Due to template conflict (date.php, author.php)]
+* Bug fixed [Parse Error – Due to template conflict (date.php, author.php)]
 
 = 2.6 = (26/07/2022)
 * Restrict ABSPATH function added to files.
