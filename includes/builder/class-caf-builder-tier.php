@@ -61,7 +61,7 @@ class CAF_Builder_Tier {
 			'max_layouts'           => -1,
 			'revision_max'          => 2,
 			'revision_display_max'  => 10,
-			'filter_modules'        => array( 'checkbox', 'dropdown', 'search', 'reset', 'customtext', 'woo_price_filter', 'woo_stock_filter', 'woo_sale_filter', 'woo_rating_filter' ),
+			'filter_modules'        => array( 'checkbox', 'dropdown', 'search', 'reset', 'customtext' ),
 			'single_instance_filter_modules' => array( 'checkbox_filter', 'dropdown_filter', 'search' ),
 			'post_modules'          => array(
 				'image',
@@ -72,9 +72,6 @@ class CAF_Builder_Tier {
 				'date',
 				'commentcount',
 				'categories',
-				'woo_price',
-				'woo_rating',
-				'woo_add_to_cart',
 			),
 			'features'              => array( 'pagination', 'loader' ),
 			'blocked_features'      => array(
@@ -113,6 +110,7 @@ class CAF_Builder_Tier {
 				'pagination_button',
 				'pagination_number2',
 				'pagination_load_more',
+				'woo_product_post_type',
 				'woo_rating_filter',
 				'multiple_filters_per_page',
 				'gradient_colors',

@@ -493,21 +493,6 @@ class CAF_Builder_Post_Renderer {
 			case 'categories':
 				return $this->render_categories_module( $module, $row_key, $column_key, $module_key, $post_id );
 
-			case 'woo_price':
-				return class_exists( 'CAF_Woo_Post_Renderer' )
-					? CAF_Woo_Post_Renderer::render_price( $module, $post_id )
-					: '';
-
-			case 'woo_rating':
-				return class_exists( 'CAF_Woo_Post_Renderer' )
-					? CAF_Woo_Post_Renderer::render_rating( $module, $post_id )
-					: '';
-
-			case 'woo_add_to_cart':
-				return class_exists( 'CAF_Woo_Post_Renderer' )
-					? CAF_Woo_Post_Renderer::render_add_to_cart( $module, $post_id )
-					: '';
-
 			default:
 				return '<!-- Post module renderer not attached for: ' . esc_html( $module_type ) . ' -->';
 		}
@@ -1165,7 +1150,7 @@ class CAF_Builder_Post_Renderer {
 			return;
 		}
 
-		$link_modules = array( 'title', 'button', 'woo_add_to_cart' );
+		$link_modules = array( 'title', 'button' );
 		$is_link_module = in_array( $module_type, $link_modules, true ) && $this->is_truthy_setting( isset( $settings->link->visibility ) ? $settings->link->visibility : false );
 
 		if ( $is_link_module ) {
