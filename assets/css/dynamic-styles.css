@@ -289,22 +289,87 @@ li.selection-list-default i {
 }
 
 .caf-builder-module-main.caf-module-type-title a,
-.caf-builder-module-main.caf-module-type-button a {
+.caf-builder-module-main.caf-module-type-button a,
+.caf-builder-module-main.caf-module-type-woo_add_to_cart a,
+.caf-builder-module-main.caf-module-type-product_price a {
     display: flex;
     text-decoration: none;
 }
 
 .caf-builder-container .post-layout-container .caf-builder-module-main.caf-module-type-title a,
-.caf-builder-container .post-layout-container .caf-builder-module-main.caf-module-type-button a {
+.caf-builder-container .post-layout-container .caf-builder-module-main.caf-module-type-button a,
+.caf-builder-container .post-layout-container .caf-builder-module-main.caf-module-type-woo_add_to_cart a,
+.caf-builder-container .post-layout-container .caf-builder-module-main.caf-module-type-product_price a {
   text-decoration: none;
   line-height: normal;
 }
+
+/* ATC keeps Woo functional classes but Design styles must win over theme .button skins. */
+.caf-builder-container .caf-builder-module-main.caf-module-type-woo_add_to_cart a.caf-woo-add-to-cart-button,
+.caf-builder-container .caf-builder-module-main.caf-module-type-woo_add_to_cart a.button.add_to_cart_button {
+    box-sizing: border-box;
+    text-decoration: none;
+    box-shadow: none;
+    text-shadow: none;
+    border-style: none;
+    border-width: 0;
+    border-radius: 0;
+}
+
 .caf-builder-module-main.caf-module-type-title .caf-builder-title-value {
     margin: 0;
     padding: 0;
     font: inherit;
     font-weight: inherit;
     line-height: normal;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+}
+
+/* Same cascade as Post Button / Title — Design typography applies to label text. */
+.caf-builder-module-main.caf-module-type-button .caf-builder-button-value,
+.caf-builder-module-main.caf-module-type-badges .caf-builder-badges-value,
+.caf-builder-module-main.caf-module-type-woo_add_to_cart .caf-builder-button-value {
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+}
+
+/* Variation-synced badge shell stays in DOM; hide when empty / not applicable. */
+.caf-builder-module-main.caf-module-type-badges.caf-variation-badge-hidden {
+    display: none !important;
+}
+
+.caf-woo-add-to-cart-button.caf-woo-atc-loading {
+    pointer-events: none;
+    cursor: wait;
+}
+
+.caf-woo-add-to-cart-button .caf-woo-atc-spinner {
+    display: inline-block;
+    line-height: 1;
+    color: inherit;
+}
+
+/* Hide WooCommerce's default "View cart" link after CAF Ajax ATC. */
+.caf-builder-module-main.caf-module-type-woo_add_to_cart a.added_to_cart,
+.caf-woo-add-to-cart-button ~ a.added_to_cart {
+    display: none !important;
+}
+
+/* Let Design-tab typography on the module cascade into the price value. */
+.caf-builder-module-main.caf-module-type-product_price .caf-builder-price-value {
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    font-weight: inherit;
+    line-height: inherit;
     letter-spacing: inherit;
     text-transform: inherit;
     color: inherit;
@@ -427,12 +492,18 @@ li.selection-list-default i {
     list-style-type: none;
     line-height: normal;
 }
-#left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox,
-.entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox,
-.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox {
+#left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox:not(.caf-woo-rating), ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating),
+.entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox:not(.caf-woo-rating), ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating),
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox:not(.caf-woo-rating), ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating),
+#left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-woo-rating,
+.entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-woo-rating,
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-woo-rating {
     overflow: auto;
 }
-ul.caf-terms-list.caf-checkbox {
+ul.caf-terms-list.caf-checkbox:not(.caf-woo-rating), ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating) {
+    overflow: auto;
+}
+ul.caf-terms-list.caf-woo-rating {
     overflow: auto;
 }
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-button .caf-taxo-button-main .caf-taxo-input {
@@ -456,7 +527,9 @@ ul.caf-terms-list.caf-checkbox {
 .filter-layout-container .caf-builder-module-main.caf-module-filter li.caf-terms-list-item .caf-taxo-button-main {
     cursor: pointer;
 }
-
+ul.caf-terms-list.caf-attribute-swatch li {
+    cursor: pointer;
+}
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-builder-custom-label-inner .before-common {
     margin-right: 5px;
 }
@@ -469,11 +542,11 @@ ul.caf-terms-list.caf-checkbox {
 {
     display: none;
 } */
-.filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-checkbox .caf-taxo-input.checkbox_skin1 {
+.filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-checkbox:not(.caf-woo-rating) .caf-taxo-input.checkbox_skin1 {
     margin: 0 10px;
 }
 
-.filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-checkbox .caf-taxo-input {
+.filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-checkbox:not(.caf-woo-rating) .caf-taxo-input {
     width: 15px;
     height: 15px;
     padding: 0;
@@ -489,7 +562,7 @@ ul.caf-terms-list.caf-checkbox {
     cursor: pointer;
 }
 
-.filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-checkbox .caf-taxo-input:focus {
+.filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-checkbox:not(.caf-woo-rating) .caf-taxo-input:focus {
     outline-width: 0;
 }
 
@@ -561,7 +634,13 @@ ul.caf-terms-list.caf-checkbox {
 .caf-builder-module-main.caf-module-filter.caf-module-type-dropdown_filter {
     overflow: visible;
 }
-
+.caf-builder-container.caf-filter-only .filter-layout-container {
+    width: 100%;
+}
+.caf-builder-container p {
+    padding: 0;
+    margin: 0;
+}
 #left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child,
 .entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child,
 .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child {
@@ -597,6 +676,98 @@ ul.caf-terms-list.caf-checkbox {
 
 .filter-layout-container .caf-builder-module-main.caf-module-filter .filter-before-icon {
     padding-right: 4px;
+}
+
+/* Structural only — size/spacing/border/shadow come from Design tab (icon style). */
+.filter-layout-container .caf-builder-module-main.caf-module-filter .caf-term-swatch,
+.caf-builder-module-main.caf-module-filter .caf-term-swatch,
+.caf-builder-module-main.caf-module-woo_attribute_swatch .caf-term-swatch,
+.caf-bl-post .caf-module-woo_attribute_swatch .caf-term-swatch,
+.caf-builder-post-preview .caf-module-woo_attribute_swatch .caf-term-swatch {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    min-width: 1em;
+    box-sizing: border-box;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list-item.caf-hide-term-label .trm-name,
+.caf-builder-module-main.caf-module-filter .caf-terms-list-item.caf-hide-term-label .trm-name,
+.caf-builder-module-main.caf-module-woo_attribute_swatch .caf-terms-list-item.caf-hide-term-label .trm-name,
+.caf-bl-post .caf-module-woo_attribute_swatch .caf-terms-list-item.caf-hide-term-label .trm-name,
+.caf-builder-post-preview .caf-module-woo_attribute_swatch .caf-terms-list-item.caf-hide-term-label .trm-name {
+    display: none;
+}
+
+/* Woo rating filter: dedicated list/input (not checkbox module). */
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-woo-rating .caf-rating-input,
+.caf-builder-module-main.caf-module-filter ul.caf-woo-rating .caf-rating-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+/* Structural only — star color/size/gap come from Design tab (meta2 + icon). */
+.filter-layout-container .caf-builder-module-main.caf-module-filter .caf-rating-stars,
+.caf-builder-module-main.caf-module-filter .caf-rating-stars {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+}
+
+.filter-layout-container .caf-builder-module-main.caf-module-filter .caf-rating-stars .caf-rating-star,
+.caf-builder-module-main.caf-module-filter .caf-rating-stars .caf-rating-star {
+    display: inline-block;
+}
+
+.filter-layout-container .caf-builder-module-main.caf-module-filter .caf-rating-stars .filter-before-icon,
+.caf-builder-module-main.caf-module-filter .caf-rating-stars .filter-before-icon {
+    padding-right: 0;
+}
+
+/* Stars list: rows of stars only. */
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-woo-rating--stars > li.caf-woo-rating-item,
+.caf-builder-module-main.caf-module-filter ul.caf-woo-rating--stars > li.caf-woo-rating-item {
+    cursor: pointer;
+}
+
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-woo-rating--stars > li.caf-woo-rating-item .caf-rating-stars i,
+.caf-builder-module-main.caf-module-filter ul.caf-woo-rating--stars > li.caf-woo-rating-item .caf-rating-stars i {
+    transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+/* Star picker: one star per item, layout from Design tab meta/meta1. */
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-woo-rating--picker > li.caf-rating-picker-item,
+.caf-builder-module-main.caf-module-filter ul.caf-woo-rating--picker > li.caf-rating-picker-item {
+    cursor: pointer;
+}
+
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-woo-rating--picker > li.caf-rating-picker-item .caf-rating-stars i,
+.caf-builder-module-main.caf-module-filter ul.caf-woo-rating--picker > li.caf-rating-picker-item .caf-rating-stars i {
+    transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.filter-layout-container .caf-builder-module-main.caf-module-filter .screen-reader-text,
+.caf-builder-module-main.caf-module-filter .screen-reader-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-builder-custom-label .reset-icon-common {
@@ -735,8 +906,39 @@ span.clear-icon.on-type {
 /* .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-filter-module-search-output.toggle_closed{
 display: none ;
 } */
+.caf-range-slider-output {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
+.caf-range-slider-output .caf-range-slider-ui-wrapper {
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.caf-range-slider-output .ui-slider-vertical {
+    width: 16px;
+    height: 130px;
+    min-height: 130px;
+}
 /* Vertical single (range min/max): jQuery sets height only; anchor like jQuery UI base slider.css */
+.caf-range-slider-output .ui-slider-vertical .ui-slider-range-min {
+    bottom: 0;
+    top: auto;
+}
+.caf-range-slider-output .ui-slider-vertical .ui-slider-range-max {
+    top: 0;
+    bottom: auto;
+}
+.caf-range-slider-ui.ui-slider-horizontal .ui-slider-range.ui-widget-header {
+position: absolute;
+height: 100%;
+}
+.caf-range-slider-ui.ui-slider-vertical .ui-slider-range.ui-widget-header {
+    position: absolute;
+    }
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.toggle_closed {
     display: none;
 }
@@ -748,15 +950,89 @@ display: none ;
     display: none;
 }
 
-.filter-layout-container .caf-builder-module-main.caf-module-filter 
+.filter-layout-container .caf-builder-module-main.caf-module-filter .caf-range-slider-output.toggle_closed {
+    display: none;
+}
 
 .caf-builder-post-area .caf-builder-module-main .caf-builder-custom-filed-suffix-wrapper.caf-layout-flex-start,
 .caf-builder-post-area .caf-builder-module-main .caf-builder-author-wrapper.caf-layout-flex-start,
 .caf-builder-post-area .caf-builder-module-main .caf-builder-comment-suffix-wrapper.caf-layout-flex-start,
 .caf-builder-post-area .caf-builder-module-main .caf-builder-date-suffix-wrapper.caf-layout-flex-start,
 .caf-builder-post-area .caf-builder-module-main .caf-builder-title-suffix-wrapper.caf-layout-flex-start,
-.caf-builder-post-area .caf-builder-module-main .caf-builder-button-suffix-wrapper.caf-layout-flex-start {
+.caf-builder-post-area .caf-builder-module-main .caf-builder-button-suffix-wrapper.caf-layout-flex-start,
+.caf-builder-post-area .caf-builder-module-main .caf-builder-price-suffix-wrapper.caf-layout-flex-start {
     width: 100%;
+}
+
+/* Woo product image gallery (structural; visual styles come from module design settings) */
+.caf-builder-post-area .caf-module-type-woo_product_image .caf-woo-product-image-slider {
+    position: relative;
+    width: 100%;
+}
+
+.caf-builder-post-area .caf-module-type-woo_product_image .caf-woo-product-image-viewport {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+.caf-builder-post-area .caf-module-type-woo_product_image .caf-woo-product-image-sizer {
+    display: block;
+    width: 100%;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.caf-builder-post-area .caf-module-type-woo_product_image .caf-woo-product-image-slides {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 500ms ease;
+}
+
+.caf-builder-post-area .caf-module-type-woo_product_image .caf-woo-product-image-slides.is-resetting {
+    transition: none;
+}
+
+.caf-builder-post-area .caf-module-type-woo_product_image .caf-woo-product-image-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+    object-position: center;
+    pointer-events: none;
+}
+
+.caf-builder-post-area .caf-module-type-woo_product_image .caf-woo-product-image-dots {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    pointer-events: auto;
+}
+
+.caf-builder-post-area .caf-module-type-woo_product_image .caf-woo-product-image-dot {
+    display: block;
+    flex: 0 0 auto;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: rgb(177 170 170 / 50%);
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.35);
+    transition: background 500ms ease;
+    cursor: pointer;
+}
+
+.caf-builder-post-area .caf-module-type-woo_product_image .caf-woo-product-image-dot.is-active {
+    background: #ffffff;
 }
 
 /* Device visibility helpers (matches builder preview behavior) */

@@ -271,11 +271,12 @@ class CAF_Builder_Frontend {
 			wp_register_script(
 				'tc-caf-builder-front-script',
 				TC_CAF_URL . 'assets/js/builder-framework.js',
-				array( 'jquery', 'tc-caf-builder-ajax-config' ),
+				array( 'jquery', 'jquery-ui-slider', 'tc-caf-builder-ajax-config' ),
 				TC_CAF_PLUGIN_VERSION,
 				true
 			);
 		}
+		wp_enqueue_script( 'jquery-ui-slider' );
 		wp_enqueue_script( 'tc-caf-builder-front-script' );
 
 		$this->ensure_dynamic_base_style();
@@ -331,6 +332,9 @@ class CAF_Builder_Frontend {
 		require_once $base . 'modules/filters/class-caf-filter-custom-text-module.php';
 		require_once $base . 'modules/filters/class-caf-filter-checkbox-module.php';
 		require_once $base . 'modules/filters/class-caf-filter-dropdown-module.php';
+		if ( file_exists( $base . 'modules/filters/class-caf-filter-range-slider-module.php' ) ) {
+			require_once $base . 'modules/filters/class-caf-filter-range-slider-module.php';
+		}
 		require_once $base . 'modules/filters/class-caf-filter-module-factory.php';
 		require_once $base . 'renderers/class-caf-builder-filter-renderer.php';
 		require_once $base . 'renderers/class-caf-builder-post-renderer.php';

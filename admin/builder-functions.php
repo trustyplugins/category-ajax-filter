@@ -550,6 +550,9 @@ function load_builder_ajax_dependencies() {
 	require_once $base . 'modules/filters/class-caf-filter-custom-text-module.php';
 	require_once $base . 'modules/filters/class-caf-filter-checkbox-module.php';
 	require_once $base . 'modules/filters/class-caf-filter-dropdown-module.php';
+	if ( file_exists( $base . 'modules/filters/class-caf-filter-range-slider-module.php' ) ) {
+		require_once $base . 'modules/filters/class-caf-filter-range-slider-module.php';
+	}
 	require_once $base . 'modules/filters/class-caf-filter-module-factory.php';
 	require_once $base . 'renderers/class-caf-builder-filter-renderer.php';
 	require_once $base . 'renderers/class-caf-builder-post-renderer.php';
@@ -1303,7 +1306,7 @@ function caf_builder_layout_init_fun() {
 		'caf-custom-builder/v1',
 		'/get-preview-posts/',
 		array(
-			'methods'             => 'GET',
+			'methods'             => array( 'GET', 'POST' ),
 			'callback'            => 'caf_get_preview_posts',
 			'permission_callback' => function () {
 				return current_user_can( 'manage_options' );
@@ -1487,25 +1490,35 @@ function caf_get_builder_custom_field_keys_for_post_type( $post_type ) {
 	$acf_keys = caf_get_acf_field_keys_for_post_type( $post_type );
 
 	if ( ! empty( $acf_keys ) ) {
-		return caf_filter_builder_meta_keys( $acf_keys );
+		$keys = caf_filter_builder_meta_keys( $acf_keys );
+	} else {
+		global $wpdb;
+
+		$meta_keys = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT pm.meta_key
+				FROM {$wpdb->postmeta} pm
+				INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+				WHERE p.post_type = %s
+				AND p.post_status IN ('publish', 'draft', 'pending', 'private')
+				AND pm.meta_key NOT LIKE %s",
+				$post_type,
+				$wpdb->esc_like( '_' ) . '%'
+			)
+		);
+
+		$keys = caf_filter_builder_meta_keys( is_array( $meta_keys ) ? $meta_keys : array() );
 	}
 
-	global $wpdb;
+	if ( 'product' === $post_type && class_exists( 'CAF_Free_Woo' ) ) {
+		$keys = array_values(
+			array_unique(
+				array_merge( $keys, CAF_Free_Woo::get_range_slider_meta_keys() )
+			)
+		);
+	}
 
-	$meta_keys = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT DISTINCT pm.meta_key
-			FROM {$wpdb->postmeta} pm
-			INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
-			WHERE p.post_type = %s
-			AND p.post_status IN ('publish', 'draft', 'pending', 'private')
-			AND pm.meta_key NOT LIKE %s",
-			$post_type,
-			$wpdb->esc_like( '_' ) . '%'
-		)
-	);
-
-	return caf_filter_builder_meta_keys( is_array( $meta_keys ) ? $meta_keys : array() );
+	return $keys;
 }
 
 /**
@@ -1538,6 +1551,11 @@ function caf_is_excluded_builder_meta_key( $meta_key ) {
 	if ( '' === $meta_key ) {
 		return true;
 	}
+
+	if ( class_exists( 'CAF_Free_Woo' ) && CAF_Free_Woo::is_allowed_builder_meta_key( $meta_key ) ) {
+		return false;
+	}
+
 	$meta_key_lc = strtolower( $meta_key );
 	$exact_keys  = caf_builder_apply_filters(
 		'caf_pro_builder_excluded_meta_keys',
@@ -1908,31 +1926,70 @@ function caf_get_content_length( $request ) {
 		);
 	}
 }
-function caf_get_preview_posts( $data ) {
+function caf_resolve_preview_query_data( $request ) {
+	if ( ! $request instanceof WP_REST_Request ) {
+		return is_array( $request ) ? $request : array();
+	}
+
+	$raw = $request->get_param( 'query_data' );
+	if ( is_string( $raw ) ) {
+		$decoded = json_decode( $raw, true );
+		return is_array( $decoded ) ? $decoded : array();
+	}
+	if ( is_array( $raw ) ) {
+		return $raw;
+	}
+
+	$json = $request->get_json_params();
+	if ( is_array( $json ) && isset( $json['query_data'] ) ) {
+		$inner = $json['query_data'];
+		if ( is_string( $inner ) ) {
+			$decoded = json_decode( $inner, true );
+			return is_array( $decoded ) ? $decoded : array();
+		}
+		return is_array( $inner ) ? $inner : array();
+	}
+
+	return array();
+}
+
+/**
+ * @param array<string, mixed> $payload Response payload.
+ * @return WP_REST_Response
+ */
+function caf_preview_posts_rest_response( $payload ) {
+	if ( ob_get_length() ) {
+		ob_end_clean();
+	}
+
+	return new WP_REST_Response( $payload, 200 );
+}
+
+function caf_get_preview_posts( $request ) {
 	ob_start();
-	$queryData = json_decode( $data['query_data'], true );
-	$queryArgs = isset( $queryData['query'] ) && is_array( $queryData['query'] ) ? $queryData['query'] : array();
+	$query_data = caf_resolve_preview_query_data( $request );
+	$query_args = isset( $query_data['query'] ) && is_array( $query_data['query'] ) ? $query_data['query'] : array();
 
-	if ( empty( $queryArgs['orderby'] ) || '0' === (string) $queryArgs['orderby'] ) {
-		unset( $queryArgs['orderby'] );
+	if ( empty( $query_args['orderby'] ) || '0' === (string) $query_args['orderby'] ) {
+		unset( $query_args['orderby'] );
 	}
 
-	if ( empty( $queryArgs['order'] ) || '0' === (string) $queryArgs['order'] ) {
-		unset( $queryArgs['order'] );
+	if ( empty( $query_args['order'] ) || '0' === (string) $query_args['order'] ) {
+		unset( $query_args['order'] );
 	}
 
-	// var_dump($queryArgs);
-	$query      = new WP_Query( $queryArgs );
-	$postsList  = array();
-	$post_type  = isset( $queryArgs['post_type'] ) ? $queryArgs['post_type'] : 'post';
+	$query_args = clean_query_args( $query_args );
+	$query_args = caf_builder_validate_query_args( $query_args );
+
+	$query      = new WP_Query( $query_args );
+	$posts_list = array();
+	$post_type  = isset( $query_args['post_type'] ) ? $query_args['post_type'] : 'post';
 	$taxo       = get_object_taxonomies( $post_type );
-	$imageArray = array();
 	while ( $query->have_posts() ) {
 		global $post;
 		$query->the_post();
 		$post_id     = get_the_ID();
 		$excerpt     = get_the_excerpt();
-		$content     = get_post_type_object( $post_type );
 		$post_url    = get_permalink();
 		$imageurl    = get_the_post_thumbnail_url();
 		$meta_fields = caf_build_post_meta_fields_for_builder( $post_id, $post_type );
@@ -1944,91 +2001,79 @@ function caf_get_preview_posts( $data ) {
 				$trms[ $tax ] = $terms;
 			}
 		}
-		$imageArray   = array( 'sizes' => get_intermediate_image_sizes() );
+		$image_array  = array( 'sizes' => get_intermediate_image_sizes() );
 		$thumbnail_id = get_post_thumbnail_id( $post_id );
-		foreach ( $imageArray['sizes'] as $size ) {
+		foreach ( $image_array['sizes'] as $size ) {
 			$thumbnail_url       = wp_get_attachment_image_src( $thumbnail_id, $size );
-			$imageArray[ $size ] = ( is_array( $thumbnail_url ) && ! empty( $thumbnail_url[0] ) )
+			$image_array[ $size ] = ( is_array( $thumbnail_url ) && ! empty( $thumbnail_url[0] ) )
 				? esc_url( $thumbnail_url[0] )
 				: '';
 		}
 		$post_entry = array(
-			'label'        => get_the_title(),
-			'value'        => $post_id,
-			'id'           => $post_id,
-			'key'          => $post_id,
-			'title'        => get_the_title(),
-			'description'  => get_the_content(),
-			'excerpt'      => $excerpt,
-			'url'          => $post_url,
-			'image'        => $imageurl,
-			'imageArray'   => $imageArray,
-			'taxonomies'   => $taxo,
-			'categories'   => $trms,
-			'author'       => get_the_author(),
-			'date'         => get_the_date( 'd-m-y' ),
-			'post_date'    => get_post() ? get_post()->post_date : '',
-			'meta_fields'  => $meta_fields,
-			'customtext'   => 'Custom text',
-			'commentcount' => get_comments_number(),
+			'label'         => get_the_title(),
+			'value'         => $post_id,
+			'id'            => $post_id,
+			'key'           => $post_id,
+			'title'         => get_the_title(),
+			'description'   => get_the_content(),
+			'excerpt'       => $excerpt,
+			'url'           => $post_url,
+			'image'         => $imageurl,
+			'imageArray'    => $image_array,
+			'taxonomies'    => $taxo,
+			'categories'    => $trms,
+			'author'        => get_the_author(),
+			'date'          => get_the_date( 'd-m-y' ),
+			'post_date'     => get_post() ? get_post()->post_date : '',
+			'meta_fields'   => $meta_fields,
+			'customtext'    => 'Custom text',
+			'commentcount'  => get_comments_number(),
 			'author_avatar' => get_author_avatar_url( $post_id ),
 		);
 
+		$entry_post_type = get_post_type( $post_id );
+		if ( 'product' === $entry_post_type && class_exists( 'CAF_Free_Woo' ) ) {
+			$post_entry['product']    = CAF_Free_Woo::get_preview_data( $post_id );
+			$post_entry['price_data'] = CAF_Free_Woo::get_price_data( $post_id );
+		}
 
-		$postsList[] = $post_entry;
+		$posts_list[] = $post_entry;
 	}
 	wp_reset_postdata();
-	$prev         = false;
-	$current_page = intval( $queryArgs['paged'] );
-	if ( $current_page > 1 ) {
-		$prev = true;
-	}
-	$nextbtn = false;
 
-	if ( $query->max_num_pages > $queryArgs['paged'] ) {
-		$nextbtn = true;
-	}
-	$post_per_page = intval( $queryArgs['posts_per_page'] );
-	$start         = ( $current_page - 1 ) * $post_per_page + 1; // Starting post number
-	$end           = min( $current_page * $post_per_page, $query->found_posts ); // Ending post number
-	if ( $query->found_posts == 0 ) {
+	$current_page  = isset( $query_args['paged'] ) ? absint( $query_args['paged'] ) : 1;
+	$prev          = $current_page > 1;
+	$nextbtn       = (int) $query->max_num_pages > $current_page;
+	$post_per_page = isset( $query_args['posts_per_page'] ) ? absint( $query_args['posts_per_page'] ) : 10;
+	$start         = ( $current_page - 1 ) * $post_per_page + 1;
+	$end           = min( $current_page * $post_per_page, (int) $query->found_posts );
+	if ( 0 === (int) $query->found_posts ) {
 		$start = '0';
 	}
-	$resultsCount = array(
+
+	$results_count = array(
 		'start'         => $start,
 		'end'           => $end,
-		'total_results' => $query->found_posts,
+		'total_results' => (int) $query->found_posts,
 	);
-	if ( $queryData['pagination_type'] == 'number' || $queryData['pagination_type'] == 'number2' || $queryData['pagination_type'] == 'button' ) {
-		echo json_encode(
-			array(
-				'status'        => 'success',
-				'posts_list'    => $postsList,
-				'next'          => $nextbtn,
-				'load_more'     => $nextbtn,
-				'current_page'  => $current_page,
-				'prev'          => $prev,
-				'total_page'    => $query->max_num_pages,
-				'results_count' => $resultsCount,
-				'query'         => $queryArgs,
-			)
-		);
+
+	$payload = array(
+		'status'        => 'success',
+		'posts_list'    => $posts_list,
+		'next'          => $nextbtn,
+		'load_more'     => $nextbtn,
+		'current_page'  => $current_page,
+		'prev'          => $prev,
+		'total_page'    => (int) $query->max_num_pages,
+		'results_count' => $results_count,
+	);
+
+	$pagination_type = isset( $query_data['pagination_type'] ) ? (string) $query_data['pagination_type'] : '';
+	if ( in_array( $pagination_type, array( 'number', 'number2', 'button' ), true ) ) {
+		$payload['query'] = $query_args;
 	}
 
-	if ( $queryData['pagination_type'] == 'load-more' ) {
-		echo json_encode(
-			array(
-				'status'        => 'success',
-				'posts_list'    => $postsList,
-				'load_more'     => $nextbtn,
-				'current_page'  => $current_page,
-				'total_page'    => $query->max_num_pages,
-				'next'          => $nextbtn,
-				'prev'          => $prev,
-				'results_count' => $resultsCount,
-			)
-		);
-	}
+	return caf_preview_posts_rest_response( $payload );
 }
 function caf_update_builder_layout_option( $data ) {
 	ob_start();
@@ -2455,6 +2500,38 @@ function caf_sanitize_free_checkbox_dropdown_module_settings( $settings ) {
 }
 
 /**
+ * Strip Pro-only range slider settings on free tier saves (WooCommerce `_price` only).
+ *
+ * @param object $settings Range slider module settings object.
+ * @return object
+ */
+function caf_sanitize_free_range_slider_module_settings( $settings ) {
+	if ( ! is_object( $settings ) ) {
+		$settings = new stdClass();
+	}
+
+	if ( ! class_exists( 'CAF_Builder_Tier' ) ) {
+		return $settings;
+	}
+
+	$settings->data_source = 'custom_field';
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'range_slider_custom_fields' ) ) {
+		$settings->custom_field_data = array(
+			(object) array(
+				'custom_field_key'        => '_price',
+				'custom_field_value_list' => array(),
+				'compare_operator'        => 'BETWEEN',
+				'meta_type'               => 'NUMERIC',
+			),
+		);
+	}
+
+	$settings = caf_strip_filter_label_icons( $settings );
+	return caf_strip_filter_label_collapse( $settings );
+}
+
+/**
  * Strip Pro-only reset module settings on free tier saves.
  *
  * @param object $settings Module settings object.
@@ -2539,7 +2616,9 @@ function caf_sanitize_free_post_module_settings( $module_key, $settings ) {
 		$settings->link->custom_field = '0';
 	}
 
-	if ( ! CAF_Builder_Tier::can_use_feature( 'post_prefix_suffix' ) ) {
+	// Prefix/suffix is unlocked for product_price on free (icons still stripped by the tier sanitizer below).
+	$normalized_module_key = CAF_Builder_Tier::normalize_post_module_key( $module_key );
+	if ( 'product_price' !== $normalized_module_key && ! CAF_Builder_Tier::can_use_feature( 'post_prefix_suffix' ) ) {
 		$settings->prefix = (object) array(
 			'is_enable' => 'false',
 			'meta_type' => 'text',
@@ -2561,7 +2640,7 @@ function caf_sanitize_free_post_module_settings( $module_key, $settings ) {
 		);
 	}
 
-	return $settings;
+	return CAF_Builder_Tier::sanitize_post_module_settings( $module_key, $settings );
 }
 
 /**
@@ -2873,6 +2952,25 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 				$layout_data->filter_layout_data->filter_query_data->meta_relation = 'IN';
 			}
 		}
+		if ( ! CAF_Builder_Tier::can_use_feature( 'dynamic_term_counts' ) ) {
+			$layout_data->filter_layout_data->extra_data->dynamic_term_counts = 'false';
+		}
+		if ( ! CAF_Builder_Tier::can_use_feature( 'query_restriction' ) ) {
+			$layout_data->filter_layout_data->extra_data->query_restriction = (object) array(
+				'enabled' => 'false',
+				'include' => (object) array(
+					'by'        => '',
+					'taxonomy'  => '',
+					'term_data' => array(),
+				),
+				'exclude' => (object) array(
+					'by'        => '',
+					'taxonomy'  => '',
+					'term_data' => array(),
+					'post_data' => array(),
+				),
+			);
+		}
 		if ( ! CAF_Builder_Tier::can_use_feature( 'filter_custom_field' ) ) {
 			if ( isset( $layout_data->filter_layout_data->filter_query_data ) && is_object( $layout_data->filter_layout_data->filter_query_data ) ) {
 				$layout_data->filter_layout_data->filter_query_data->custom_field_data = array();
@@ -2909,6 +3007,11 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 
 			if ( 'customtext' === $module_key ) {
 				$module->settings = caf_sanitize_free_customtext_module_settings( $module->settings );
+				return;
+			}
+
+			if ( 'range_slider' === $module_key ) {
+				$module->settings = caf_sanitize_free_range_slider_module_settings( $module->settings );
 			}
 		}
 	);
@@ -3863,13 +3966,13 @@ function caf_get_posts_list( $data ) {
 	}
 
 	if ( '' === $post_type ) {
-		echo wp_json_encode(
+		return new WP_REST_Response(
 			array(
 				'status'  => 'error',
 				'message' => 'Post type is required.',
-			)
+			),
+			400
 		);
-		return;
 	}
 
 	$query      = new WP_Query(
@@ -3929,6 +4032,12 @@ function caf_get_posts_list( $data ) {
 			'meta_fields'   => $filterd_custom_fields,
 			'customtext'    => 'Custom text',
 			'commentcount'  => get_comments_number(),
+			'product'       => ( 'product' === $post_type && class_exists( 'CAF_Free_Woo' ) )
+				? CAF_Free_Woo::get_preview_data( $post_id )
+				: null,
+			'price_data'    => ( 'product' === $post_type && class_exists( 'CAF_Free_Woo' ) )
+				? CAF_Free_Woo::get_price_data( $post_id )
+				: array(),
 		);
 	}
 	wp_reset_postdata();
@@ -3937,12 +4046,13 @@ function caf_get_posts_list( $data ) {
 		'end'           => $query->found_posts,
 		'total_results' => $query->found_posts,
 	);
-	echo wp_json_encode(
+	return new WP_REST_Response(
 		array(
 			'status'        => 'success',
 			'posts_list'    => $postsList,
 			'results_count' => $resultsCount,
-		)
+		),
+		200
 	);
 }
 function caf_get_taxo_data_with_recursive_method( $request ) {

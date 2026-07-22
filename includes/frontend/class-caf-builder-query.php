@@ -204,6 +204,11 @@ class CAF_Builder_Query {
 									$tax_query[] = $tax_piece;
 								}
 							}
+						} elseif ( 'range_slider' === $module_type && class_exists( 'CAF_Free_Woo' ) ) {
+							$module_meta_query = CAF_Free_Woo::build_range_slider_meta_query_for_page_load( $module_settings );
+							if ( ! empty( $module_meta_query ) ) {
+								$meta_query[] = $module_meta_query;
+							}
 						}
 					}
 				}

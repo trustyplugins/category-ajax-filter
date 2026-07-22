@@ -21,6 +21,11 @@ function caf_builder_free_hook_names() {
 		'caf_builder_render_after',
 		'caf_builder_before_query',
 		'caf_builder_after_query',
+		// Lets the curated free Woo runtime unhide the product post type.
+		'caf_pro_builder_excluded_post_types',
+		// Range slider (Woo price) clamp + defaults on page load / render.
+		'caf_builder_module_settings',
+		'caf_builder_page_load_meta_query',
 	);
 }
 

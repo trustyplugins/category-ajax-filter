@@ -372,6 +372,9 @@ class CAF_Builder_Post_Renderer {
 		if ( ! is_object( $module_settings ) ) {
 			$module_settings = is_array( $module_settings ) ? (object) $module_settings : new stdClass();
 		}
+		if ( class_exists( 'CAF_Builder_Tier' ) ) {
+			$module_settings = CAF_Builder_Tier::sanitize_post_module_settings( $module_type, $module_settings );
+		}
 		$module_for_render           = clone $module;
 		$module_for_render->settings = $module_settings;
 		$module_style    = isset( $module->style ) ? $module->style : null;
@@ -492,6 +495,26 @@ class CAF_Builder_Post_Renderer {
 
 			case 'categories':
 				return $this->render_categories_module( $module, $row_key, $column_key, $module_key, $post_id );
+
+			case 'woo_product_image':
+				return class_exists( 'CAF_Free_Woo' )
+					? CAF_Free_Woo::render_product_image( $module, $post_id, $dummy_image_url )
+					: '';
+
+			case 'product_price':
+				return class_exists( 'CAF_Free_Woo' )
+					? CAF_Free_Woo::render_product_price( $module, $post_id )
+					: '';
+
+			case 'woo_add_to_cart':
+				return class_exists( 'CAF_Free_Woo' )
+					? CAF_Free_Woo::render_add_to_cart( $module, $post_id )
+					: '';
+
+			case 'badges':
+				return class_exists( 'CAF_Free_Woo' )
+					? CAF_Free_Woo::render_badges( $module, $post_id )
+					: '';
 
 			default:
 				return '<!-- Post module renderer not attached for: ' . esc_html( $module_type ) . ' -->';
@@ -1302,11 +1325,14 @@ class CAF_Builder_Post_Renderer {
 		}
 
 		$wrapper_map = array(
-			'title'        => '.caf-builder-title-suffix-wrapper',
-			'author'       => '.caf-builder-author-wrapper',
-			'date'         => '.caf-builder-date-suffix-wrapper',
-			'commentcount' => '.caf-builder-comment-suffix-wrapper',
-			'button'       => '.caf-builder-button-suffix-wrapper',
+			'title'           => '.caf-builder-title-suffix-wrapper',
+			'author'          => '.caf-builder-author-wrapper',
+			'date'            => '.caf-builder-date-suffix-wrapper',
+			'commentcount'    => '.caf-builder-comment-suffix-wrapper',
+			'button'          => '.caf-builder-button-suffix-wrapper',
+			'product_price'   => '.caf-builder-price-suffix-wrapper',
+			'woo_add_to_cart' => '.caf-builder-button-suffix-wrapper',
+			'badges'          => '.caf-builder-badges-suffix-wrapper',
 		);
 
 		$meta_selectors = array();

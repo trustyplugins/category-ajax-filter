@@ -61,7 +61,7 @@ class CAF_Builder_Tier {
 			'max_layouts'           => -1,
 			'revision_max'          => 2,
 			'revision_display_max'  => 10,
-			'filter_modules'        => array( 'checkbox', 'dropdown', 'search', 'reset', 'customtext' ),
+			'filter_modules'        => array( 'checkbox', 'dropdown', 'search', 'reset', 'customtext', 'range_slider' ),
 			'single_instance_filter_modules' => array( 'checkbox_filter', 'dropdown_filter', 'search' ),
 			'post_modules'          => array(
 				'image',
@@ -72,6 +72,10 @@ class CAF_Builder_Tier {
 				'date',
 				'commentcount',
 				'categories',
+				'woo_product_image',
+				'product_price',
+				'woo_add_to_cart',
+				'badges',
 			),
 			'features'              => array( 'pagination', 'loader' ),
 			'blocked_features'      => array(
@@ -90,6 +94,7 @@ class CAF_Builder_Tier {
 				'search_custom_field',
 				'voice_search',
 				'filter_custom_field',
+				'range_slider_custom_fields',
 				'filter_show_icon',
 				'search_show_icon',
 				'search_clear_input',
@@ -110,7 +115,12 @@ class CAF_Builder_Tier {
 				'pagination_button',
 				'pagination_number2',
 				'pagination_load_more',
-				'woo_product_post_type',
+				'dynamic_term_counts',
+				'query_restriction',
+				'woo_product_image_gallery',
+				'woo_product_price_display_modes',
+				'woo_ajax_add_to_cart',
+				'woo_badge_types',
 				'woo_rating_filter',
 				'multiple_filters_per_page',
 				'gradient_colors',
@@ -217,6 +227,93 @@ class CAF_Builder_Tier {
 		}
 
 		return ! in_array( (string) $feature_key, $blocked, true );
+	}
+
+	/**
+	 * Normalize tier-limited post-module settings for save and render paths.
+	 *
+	 * @param string $module_key Post module key.
+	 * @param mixed  $settings   Module settings.
+	 * @return object
+	 */
+	public static function sanitize_post_module_settings( $module_key, $settings ) {
+		$settings   = is_object( $settings ) ? clone $settings : (object) (array) $settings;
+		$module_key = self::normalize_post_module_key( $module_key );
+
+		if ( self::is_pro() ) {
+			return $settings;
+		}
+
+		if ( 'woo_product_image' === $module_key && ! self::can_use_feature( 'woo_product_image_gallery' ) ) {
+			$settings->image_source        = 'featured_image';
+			$settings->gallery_image_limit = '1';
+			$settings->auto_scroll         = 'false';
+			$settings->auto_scroll_delay   = '1000';
+		}
+
+		if ( 'product_price' === $module_key && ! self::can_use_feature( 'woo_product_price_display_modes' ) ) {
+			$settings->show_price = 'default';
+		}
+
+		if ( 'woo_add_to_cart' === $module_key && ! self::can_use_feature( 'woo_ajax_add_to_cart' ) ) {
+			$settings->atc_behaviour  = 'product_page';
+			$settings->after_atc      = 'none';
+			$settings->after_atc_text = 'Added';
+			// Prefix/suffix stays locked for Add to Cart on free.
+			$settings->prefix = (object) array(
+				'is_enable' => 'false',
+				'meta_type' => 'text',
+				'meta_text' => '',
+			);
+			$settings->suffix = (object) array(
+				'is_enable' => 'false',
+				'meta_type' => 'text',
+				'meta_text' => '',
+			);
+		}
+
+		if (
+			'woo_add_to_cart' === $module_key
+			&& isset( $settings->button_text_mode )
+			&& 'icon_only' === (string) $settings->button_text_mode
+			&& ! self::can_use_feature( 'label_show_icon' )
+		) {
+			$settings->button_text_mode = 'woo_default';
+		}
+
+		if ( 'badges' === $module_key && ! self::can_use_feature( 'woo_badge_types' ) ) {
+			$settings->badge_type = 'new';
+			// Prefix/suffix stays locked for Badges on free.
+			$settings->prefix = (object) array(
+				'is_enable' => 'false',
+				'meta_type' => 'text',
+				'meta_text' => '',
+			);
+			$settings->suffix = (object) array(
+				'is_enable' => 'false',
+				'meta_type' => 'text',
+				'meta_text' => '',
+			);
+		}
+
+		// Free unlocks prefix/suffix for product_price only, but icon affixes stay Pro.
+		if ( 'product_price' === $module_key && ! self::can_use_feature( 'label_show_icon' ) ) {
+			foreach ( array( 'prefix', 'suffix' ) as $affix_key ) {
+				if ( ! isset( $settings->{$affix_key} ) || ! is_object( $settings->{$affix_key} ) ) {
+					continue;
+				}
+				if ( isset( $settings->{$affix_key}->meta_type ) && 'icon' === (string) $settings->{$affix_key}->meta_type ) {
+					$settings->{$affix_key}->meta_type = 'text';
+				}
+				$settings->{$affix_key}->icons = (object) array(
+					'visibility' => false,
+					'icon'       => '',
+					'type'       => 'icon',
+				);
+			}
+		}
+
+		return $settings;
 	}
 
 	/**
