@@ -6,23 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-custom-fonts.php';
 require_once TC_CAF_PATH . 'includes/builder/class-caf-builder-tier.php';
 require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-import-library.php';
-// add_action('admin_menu', 'caf_builder_admin_page');
 add_action( 'wp_ajax_get_caf_builder_posts', 'get_caf_builder_posts' );
 add_action( 'wp_ajax_nopriv_get_caf_builder_posts', 'get_caf_builder_posts' );
 add_filter( 'posts_search', 'caf_builder_apply_keyword_source_search', 10, 2 );
-function caf_builder_admin_page() {
-	add_submenu_page(
-		'edit.php?post_type=caf_posts',
-		__( 'Addons', 'category-ajax-filter' ),
-		__( 'Addons', 'category-ajax-filter' ),
-		'manage_options',
-		'caf_addons',
-		'caf_builder_addons_page_display'
-	);
-}
-function caf_builder_addons_page_display() {
-	require_once TC_CAF_PATH . 'admin/addons.php';
-}
 function clean_query_args( $args ) {
 	if ( isset( $args['meta_query'] ) && is_array( $args['meta_query'] ) ) {
 		$meta_clause_count = 0;
