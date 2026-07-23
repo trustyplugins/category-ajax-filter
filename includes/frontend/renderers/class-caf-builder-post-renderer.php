@@ -1173,15 +1173,26 @@ class CAF_Builder_Post_Renderer {
 			return;
 		}
 
-		$link_modules = array( 'title', 'button' );
-		$is_link_module = in_array( $module_type, $link_modules, true ) && $this->is_truthy_setting( isset( $settings->link->visibility ) ? $settings->link->visibility : false );
+		$link_modules = array( 'title', 'button', 'woo_add_to_cart' );
+		$is_link_module = in_array( $module_type, $link_modules, true ) && (
+			'woo_add_to_cart' === $module_type
+			|| $this->is_truthy_setting( isset( $settings->link->visibility ) ? $settings->link->visibility : false )
+		);
+
+		// ATC always renders an <a>; prefer caf-woo class so Design CSS beats Woo .button skins.
+		$link_selector       = $selector . ' a';
+		$link_hover_selector = $selector . ' a:hover';
+		if ( 'woo_add_to_cart' === $module_type ) {
+			$link_selector       = $selector . ' a.caf-woo-add-to-cart-button';
+			$link_hover_selector = $selector . ' a.caf-woo-add-to-cart-button:hover';
+		}
 
 		if ( $is_link_module ) {
 			$this->css_builder->add(
 				$this->style_generator->generate_responsive_css(
 					$style,
 					'default',
-					$selector . ' a',
+					$link_selector,
 					array(
 						'background_image_mode' => 'conditional',
 						'settings'              => $settings,
@@ -1193,7 +1204,7 @@ class CAF_Builder_Post_Renderer {
 				$this->style_generator->generate_responsive_css(
 					$style,
 					'hover',
-					$selector . ' a:hover',
+					$link_hover_selector,
 					array(
 						'background_image_mode' => 'conditional',
 						'settings'              => $settings,
