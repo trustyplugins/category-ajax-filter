@@ -92,11 +92,13 @@ class CAF_Filter_Range_Slider_Module extends CAF_Filter_Base_Module {
 
 		$html  = $this->render_label();
 		$toggle_closed_class = $this->get_toggle_closed_class();
+		$toggle_closed_style = '' !== $toggle_closed_class ? 'display:none;' : 'display:flex;';
 		$output_class        = 'caf-range-slider-output';
 		if ( '' !== $toggle_closed_class ) {
 			$output_class .= ' ' . $toggle_closed_class;
 		}
-		$html .= '<div class="' . esc_attr( $output_class ) . '">';
+		// Inline style mirrors checkbox modules so design CSS (display:flex) cannot override collapse.
+		$html .= '<div class="' . esc_attr( $output_class ) . '" style="' . esc_attr( $toggle_closed_style ) . '">';
 		if ( 'single' === $type ) {
 			$html .= '<div class="caf-range-slider-values caf-range-slider-values--single">';
 			$html .= '<span class="caf-range-slider-min">' . esc_html( $prefix_text . $start_max . $suffix_text ) . '</span>';

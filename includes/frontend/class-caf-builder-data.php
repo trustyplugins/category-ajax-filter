@@ -268,6 +268,44 @@ class CAF_Builder_Data {
 	}
 
 	/**
+	 * Listing target derived from post layout_source (caf_builder | main_query).
+	 *
+	 * @return string
+	 */
+	public function get_listing_target() {
+		$extra  = $this->get_post_layout_extra_data();
+		$source = isset( $extra->layout_source ) ? sanitize_key( (string) $extra->layout_source ) : 'caf_builder';
+		return 'main_query' === $source ? 'main_query' : 'caf';
+	}
+
+	/**
+	 * Whether filters drive the page main query instead of CAF posts.
+	 *
+	 * @return bool
+	 */
+	public function is_main_query_listing() {
+		$extra  = $this->get_post_layout_extra_data();
+		$source = isset( $extra->layout_source ) ? sanitize_key( (string) $extra->layout_source ) : 'caf_builder';
+		return 'main_query' === $source;
+	}
+
+	/**
+	 * Optional CSS selector for external results container.
+	 *
+	 * @return string
+	 */
+	public function get_results_selector() {
+		$extra    = $this->get_post_layout_extra_data();
+		$selector = isset( $extra->results_selector )
+			? sanitize_text_field( (string) $extra->results_selector )
+			: '';
+		if ( '' === trim( $selector ) && $this->is_main_query_listing() ) {
+			return 'ul.products';
+		}
+		return $selector;
+	}
+
+	/**
 	 * Get post layout initial loop data.
 	 *
 	 * @return array
@@ -437,6 +475,15 @@ class CAF_Builder_Data {
 			$classes[] = $filter_position_class;
 		}
 
+		$post_extra    = $this->get_post_layout_extra_data();
+		$layout_source = isset( $post_extra->layout_source )
+			? sanitize_key( (string) $post_extra->layout_source )
+			: 'caf_builder';
+		if ( 'caf_builder' !== $layout_source ) {
+			$classes[] = 'caf-filter-only';
+			$classes[] = 'caf-layout-source-' . sanitize_html_class( $layout_source );
+		}
+
 		$container_data = $this->get_misc_container_data();
 		if ( ! empty( $container_data->custom_class ) ) {
 			$classes[] = sanitize_html_class( $container_data->custom_class );
@@ -519,6 +566,8 @@ class CAF_Builder_Data {
 			'pagination-type'               => isset( $misc_pagination->settings->pagination_type ) ? $misc_pagination->settings->pagination_type : '',
 			'data-caf-filter-urls'          => $this->is_filter_urls_enabled() ? '1' : '0',
 			'data-caf-schema-enabled'       => $this->is_schema_enabled() ? '1' : '0',
+			'data-caf-listing-target'       => $this->get_listing_target(),
+			'data-caf-results-selector'     => $this->get_results_selector(),
 		);
 
 		if ( ! $this->has_filters() ) {

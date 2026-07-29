@@ -496,6 +496,188 @@ abstract class CAF_Filter_Base_Module {
 	}
 
 	/**
+	 * Color swatch features are limited to WooCommerce product layouts
+	 * (or persisted term_visual=color from the builder).
+	 *
+	 * @param object $settings Module settings.
+	 * @return bool
+	 */
+	protected function can_use_color_swatch_features( $settings ) {
+		$post_type = '';
+		if ( is_object( $settings ) && isset( $settings->post_type ) ) {
+			$post_type = sanitize_key( (string) $settings->post_type );
+		}
+		if ( 'product' === $post_type ) {
+			return true;
+		}
+		return is_object( $settings )
+			&& isset( $settings->term_visual )
+			&& 'color' === (string) $settings->term_visual;
+	}
+
+	/**
+	 * Whether the module uses color swatches for term visuals.
+	 *
+	 * @param object $settings Module settings.
+	 * @return bool
+	 */
+	protected function is_term_visual_color( $settings ) {
+		return $this->can_use_color_swatch_features( $settings )
+			&& isset( $settings->term_visual )
+			&& 'color' === (string) $settings->term_visual;
+	}
+
+	/**
+	 * Resolve term label display mode for color swatches.
+	 *
+	 * @param object $settings Module settings.
+	 * @return string show|hide|tooltip
+	 */
+	protected function resolve_term_label_display( $settings ) {
+		if ( isset( $settings->term_label_display ) ) {
+			$value = strtolower( trim( (string) $settings->term_label_display ) );
+			if ( in_array( $value, array( 'show', 'hide', 'tooltip' ), true ) ) {
+				return $value;
+			}
+		}
+		if ( isset( $settings->hide_term_label ) && 'true' === (string) $settings->hide_term_label ) {
+			return 'tooltip';
+		}
+		return 'show';
+	}
+
+	/**
+	 * Whether the visible term label should be hidden (Hide or Tooltip).
+	 *
+	 * @param object $settings Module settings.
+	 * @return bool
+	 */
+	protected function should_hide_term_label( $settings ) {
+		return $this->is_term_visual_color( $settings )
+			&& 'show' !== $this->resolve_term_label_display( $settings );
+	}
+
+	/**
+	 * Whether the term label should appear as a fancy hover tooltip.
+	 *
+	 * @param object $settings Module settings.
+	 * @return bool
+	 */
+	protected function should_show_term_label_as_tooltip( $settings ) {
+		return $this->is_term_visual_color( $settings )
+			&& 'tooltip' === $this->resolve_term_label_display( $settings );
+	}
+
+	/**
+	 * Fancy hover tooltip markup for term label.
+	 *
+	 * @param object $settings Module settings.
+	 * @param string $label    Term label text.
+	 * @return string
+	 */
+	protected function render_term_label_tooltip( $settings, $label ) {
+		if ( ! $this->should_show_term_label_as_tooltip( $settings ) ) {
+			return '';
+		}
+		$text = trim( (string) $label );
+		if ( '' === $text ) {
+			return '';
+		}
+		return '<span class="caf-term-tooltip" aria-hidden="true">' . esc_html( $text ) . '</span>';
+	}
+
+	/**
+	 * Extra li class when fancy term tooltip is enabled.
+	 *
+	 * @param object $settings Module settings.
+	 * @return string
+	 */
+	protected function get_term_tooltip_li_class( $settings ) {
+		return $this->should_show_term_label_as_tooltip( $settings ) ? ' caf-has-term-tooltip' : '';
+	}
+
+	/**
+	 * data-caf-tooltip attribute for body-ported term label tooltips.
+	 *
+	 * @param object $settings Module settings.
+	 * @param string $label    Term label text.
+	 * @return string
+	 */
+	protected function get_term_tooltip_data_attr( $settings, $label ) {
+		if ( ! $this->should_show_term_label_as_tooltip( $settings ) ) {
+			return '';
+		}
+		$text = trim( (string) $label );
+		if ( '' === $text ) {
+			return '';
+		}
+		return ' data-caf-tooltip="' . esc_attr( $text ) . '"';
+	}
+
+	/**
+	 * Resolve swatch color from term icons object.
+	 *
+	 * @param mixed $icons Icons object.
+	 * @return string
+	 */
+	protected function get_term_swatch_color( $icons ) {
+		if ( empty( $icons ) || ! is_object( $icons ) ) {
+			return '';
+		}
+		if ( ! empty( $icons->color ) && is_string( $icons->color ) ) {
+			return trim( (string) $icons->color );
+		}
+		if ( isset( $icons->type ) && 'color' === (string) $icons->type && ! empty( $icons->icon ) && is_string( $icons->icon ) ) {
+			return trim( (string) $icons->icon );
+		}
+		return '';
+	}
+
+	/**
+	 * Render term visual (icon/svg or color swatch). Color swatch works on free;
+	 * FA/SVG icons remain Pro-gated via filter_show_icon.
+	 *
+	 * @param object $settings    Module settings.
+	 * @param mixed  $icons       Term icons object.
+	 * @param string $extra_class Extra css class.
+	 * @return string
+	 */
+	protected function render_term_visual_markup( $settings, $icons, $extra_class = '' ) {
+		if ( empty( $settings->show_icon ) || 'true' !== (string) $settings->show_icon ) {
+			return '';
+		}
+
+		$is_color = $this->is_term_visual_color( $settings );
+		if (
+			! $is_color
+			&& class_exists( 'CAF_Builder_Tier' )
+			&& ! CAF_Builder_Tier::can_use_feature( 'filter_show_icon' )
+		) {
+			return '';
+		}
+
+		if ( empty( $icons ) || ! is_object( $icons ) ) {
+			return '';
+		}
+
+		if ( $is_color ) {
+			$color = $this->get_term_swatch_color( $icons );
+			if ( '' === $color ) {
+				return '';
+			}
+			$cls = '' !== $extra_class ? ' ' . $extra_class : '';
+			return '<span class="caf-term-swatch' . esc_attr( $cls ) . '" style="background-color:' . esc_attr( $color ) . '" aria-hidden="true"></span>';
+		}
+
+		$type = isset( $icons->type ) ? (string) $icons->type : 'icon';
+		if ( 'color' === $type ) {
+			return '';
+		}
+
+		return $this->render_icon_markup( $icons, $extra_class );
+	}
+
+	/**
 	 * Format count value according to settings separator rules.
 	 *
 	 * @param mixed  $count    Count value.

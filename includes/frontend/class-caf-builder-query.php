@@ -289,15 +289,13 @@ class CAF_Builder_Query {
 	}
 
 	/**
-	 * Log page-load tax/meta for debugging (PHP error_log or caf_pro_page_load_debug action).
+	 * Fire page-load query debug action (opt-in via should_log_page_load_debug).
 	 *
 	 * @param array $payload Debug payload.
 	 * @return void
 	 */
 	protected function log_page_load_debug( array $payload ) {
-		caf_builder_do_action( 'caf_pro_page_load_debug', $payload, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
-		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-		error_log( '[CAF_PRO page_load] ' . wp_json_encode( $payload, JSON_UNESCAPED_SLASHES | JSON_PARTIAL_OUTPUT_ON_ERROR ) );
+		caf_builder_do_action( 'caf_builder_page_load_debug', $payload, $this->get_hook_context( array( 'mode' => 'page_load' ) ) );
 	}
 
 	/**

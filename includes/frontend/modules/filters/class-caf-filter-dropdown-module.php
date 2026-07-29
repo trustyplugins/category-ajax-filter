@@ -47,40 +47,48 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 		$meta1_selector               = $module_selector . ' li.caf-terms-list-item';
 		$icon_selector                = $module_selector . ' ul.caf-terms-list.caf-dropdown li.caf-terms-list-item i';
 		$icon_selector_svg            = $module_selector . ' ul.caf-terms-list.caf-dropdown li.caf-terms-list-item svg';
+		$icon_selector_swatch         = $module_selector . ' ul.caf-terms-list.caf-dropdown li.caf-terms-list-item .caf-term-swatch';
 		$count_selector               = $module_selector . ' ul.caf-terms-list.caf-dropdown li.caf-terms-list-item .manage-text-lbl span.count-span';
 		$meta3_selector               = $module_selector . ' ul.caf-terms-list.caf-dropdown li.caf-terms-list-item .manage-text-lbl';
 		$select_meta_selector         = $module_selector . ' li .caf-selected-term-main.caf-all-selected';
 		$meta4_selector               = $module_selector . ' li .caf-selected-term-main .result ';
 		$selecticon_selector          = $module_selector . ' li .caf-selected-term-main.caf-all-selected .result i ';
 		$selecticon_selector_svg      = $module_selector . ' li .caf-selected-term-main.caf-all-selected .result svg ';
+		$selecticon_selector_swatch   = $module_selector . ' li .caf-selected-term-main.caf-all-selected .result .caf-term-swatch';
 		$meta1_selector_selected      = $module_selector . ' li.caf-terms-list-item.active';
 		$icon_selector_selected       = $module_selector . ' ul.caf-terms-list.caf-dropdown li.caf-terms-list-item.active i';
 		$icon2_selector_selected      = $module_selector . ' ul.caf-terms-list.caf-dropdown li.caf-terms-list-item.active svg';
+		$icon3_selector_selected      = $module_selector . ' ul.caf-terms-list.caf-dropdown li.caf-terms-list-item.active .caf-term-swatch';
 		$count_selector_selected      = $module_selector . ' ul.caf-terms-list.caf-dropdown li.caf-terms-list-item.active .manage-text-lbl span.count-span';
 		$meta3_selector_selected      = $module_selector . ' ul.caf-terms-list.caf-dropdown li.caf-terms-list-item.active .manage-text-lbl';
 		$selectmeta_selector_selected = $module_selector . ' li .caf-selected-term-main';
 		$selecticon_selector_selected = $module_selector . ' li .caf-selected-term-main .result i';
 		$selecticon2_selector_selected = $module_selector . ' li .caf-selected-term-main .result svg';
+		$selecticon3_selector_selected = $module_selector . ' li .caf-selected-term-main .result .caf-term-swatch';
 
 		$this->collect_default_and_hover_css( $meta_style, $meta_selector );
 		$this->collect_default_and_hover_css( $mainmeta_style, $mainmeta_selector );
 		$this->collect_default_and_hover_css( $meta1_style, $meta1_selector );
 		$this->collect_default_and_hover_css( $icon_style, $icon_selector );
 		$this->collect_default_and_hover_css( $icon_style, $icon_selector_svg );
+		$this->collect_default_and_hover_css( $icon_style, $icon_selector_swatch );
 		$this->collect_default_and_hover_css( $count_style, $count_selector );
 		$this->collect_default_and_hover_css( $meta3_style, $meta3_selector );
 		$this->collect_default_and_hover_css( $selectmeta_style, $select_meta_selector );
 		$this->collect_default_and_hover_css( $meta4_style, $meta4_selector );
 		$this->collect_default_and_hover_css( $selecticon_style, $selecticon_selector );
 		$this->collect_default_and_hover_css( $selecticon_style, $selecticon_selector_svg );
+		$this->collect_default_and_hover_css( $selecticon_style, $selecticon_selector_swatch );
 		$this->collect_default_and_hover_css( $meta1_style, $meta1_selector_selected, 'selected' );
 		$this->collect_default_and_hover_css( $icon_style, $icon_selector_selected, 'selected' );
 		$this->collect_default_and_hover_css( $icon_style, $icon2_selector_selected, 'selected' );
+		$this->collect_default_and_hover_css( $icon_style, $icon3_selector_selected, 'selected' );
 		$this->collect_default_and_hover_css( $count_style, $count_selector_selected, 'selected' );
 		$this->collect_default_and_hover_css( $meta3_style, $meta3_selector_selected, 'selected' );
 		$this->collect_default_and_hover_css( $selectmeta_style, $selectmeta_selector_selected, 'selected' );
 		$this->collect_default_and_hover_css( $selecticon_style, $selecticon_selector_selected, 'selected' );
 		$this->collect_default_and_hover_css( $selecticon_style, $selecticon2_selector_selected, 'selected' );
+		$this->collect_default_and_hover_css( $selecticon_style, $selecticon3_selector_selected, 'selected' );
 	}
 
 	/**
@@ -210,17 +218,28 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 					$term_active_class = 'active';
 				}
 
-				$html .= '<li class="caf-terms-list-item ' . esc_attr( $term_active_class ) . ' caf-layout-' . esc_attr( $layout_classes['list_item'] ) . '" taxonomy="' . esc_attr( $taxonomy->key ) . '" data-key="' . esc_attr( $taxonomy->key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy->key, $term->key ) ) . '" predefine="' . esc_attr( $term_predefine ) . '">';
+				$html .= '<li class="caf-terms-list-item ' . esc_attr( $term_active_class ) . ' caf-layout-' . esc_attr( $layout_classes['list_item'] ) . ( $this->should_hide_term_label( $settings ) ? ' caf-hide-term-label' : '' ) . $this->get_term_tooltip_li_class( $settings ) . '" taxonomy="' . esc_attr( $taxonomy->key ) . '" data-key="' . esc_attr( $taxonomy->key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy->key, $term->key ) ) . '" predefine="' . esc_attr( $term_predefine ) . '"' . $this->get_term_tooltip_data_attr( $settings, isset( $term->value ) ? $term->value : '' ) . '>';
+				$html .= $this->render_term_label_tooltip( $settings, isset( $term->value ) ? $term->value : '' );
 
-				if ( ! empty( $term->icons->icon ) && ! empty( $term->icons->position ) && $settings->show_icon == 'true' ) {
-					$html .= '<i class="fa-solid ' . esc_attr( $term->icons->icon ) . ' filter-before-icon"></i>';
+				$position = ! empty( $term->icons->position ) ? (string) $term->icons->position : 'before';
+				if ( ! empty( $settings->show_icon ) && 'true' === (string) $settings->show_icon && 'before' === $position ) {
+					$html .= $this->render_term_visual_markup( $settings, isset( $term->icons ) ? $term->icons : null, 'filter-before-icon' );
 				}
-				$html .= '<div class="manage-text-lbl caf-layout-' . esc_attr( $layout_classes['text'] ) . '">';
-				$html .= '<span class="trm-name">' . esc_html( $term->value ) . '</span>';
-				if ( $settings->show_count == 'true' ) {
-					$html .= '<span class="count-span">' . $this->format_count_text( $term->count, $settings ) . '</span>';
+				$hide_label = $this->should_hide_term_label( $settings );
+				$show_count = $this->is_truthy( isset( $settings->show_count ) ? $settings->show_count : '' );
+				if ( ! $hide_label || $show_count ) {
+					$html .= '<div class="manage-text-lbl caf-layout-' . esc_attr( $layout_classes['text'] ) . '">';
+					if ( ! $hide_label ) {
+						$html .= '<span class="trm-name">' . esc_html( $term->value ) . '</span>';
+					}
+					if ( $show_count ) {
+						$html .= '<span class="count-span">' . $this->format_count_text( $term->count, $settings ) . '</span>';
+					}
+					$html .= '</div>';
 				}
-				$html .= '</div>';
+				if ( ! empty( $settings->show_icon ) && 'true' === (string) $settings->show_icon && 'after' === $position ) {
+					$html .= $this->render_term_visual_markup( $settings, isset( $term->icons ) ? $term->icons : null, 'filter-after-icon' );
+				}
 				$html .= '</li>';
 			}
 		}
@@ -255,14 +274,17 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 					if ( $this->is_taxonomy_term_predefined_single( $settings, $taxonomy->key, $term->key ) ) {
 						$html = '';
 
-						if ( ! empty( $term->icons->icon ) && ! empty( $term->icons->position ) && 'before' === $term->icons->position ) {
-							$html .= '<i class="fa-solid ' . esc_attr( $term->icons->icon ) . ' filter-before-icon"></i>';
+						$position = ! empty( $term->icons->position ) ? (string) $term->icons->position : 'before';
+						if ( ! empty( $settings->show_icon ) && 'true' === (string) $settings->show_icon && 'before' === $position ) {
+							$html .= $this->render_term_visual_markup( $settings, isset( $term->icons ) ? $term->icons : null, 'filter-before-icon' );
 						}
 
-						$html .= esc_html( $term->value );
+						if ( ! $this->should_hide_term_label( $settings ) ) {
+							$html .= esc_html( $term->value );
+						}
 
-						if ( ! empty( $term->icons->icon ) && ! empty( $term->icons->position ) && 'after' === $term->icons->position ) {
-							$html .= '<i class="fa-solid ' . esc_attr( $term->icons->icon ) . ' filter-after-icon"></i>';
+						if ( ! empty( $settings->show_icon ) && 'true' === (string) $settings->show_icon && 'after' === $position ) {
+							$html .= $this->render_term_visual_markup( $settings, isset( $term->icons ) ? $term->icons : null, 'filter-after-icon' );
 						}
 
 						return $html;

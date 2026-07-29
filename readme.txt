@@ -249,7 +249,13 @@ AI Search (Pro) uses semantic, NLP-based matching so results reflect what a visi
 * WordPress Plugin Check and coding standards improvements.
 * Security and escaping fixes for export and template output.
 
+
+= 2.8.5.2 = (24/07/2026)
+* Nonce/sanitization functions updated.
+* Readme updated.
+
 = 2.8.5.1 = (08/06/2026)
+* Admin CSS fixed.
 * readme Updated
 
 = 2.8.5 = (25/05/2026)

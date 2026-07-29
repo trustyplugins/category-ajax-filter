@@ -325,6 +325,7 @@ li.selection-list-default i {
     letter-spacing: inherit;
     text-transform: inherit;
     color: inherit;
+    font-family: inherit !important;
 }
 
 /* Same cascade as Post Button / Title — Design typography applies to label text. */
@@ -637,6 +638,18 @@ ul.caf-terms-list.caf-attribute-swatch li {
 .caf-builder-container.caf-filter-only .filter-layout-container {
     width: 100%;
 }
+/* Keep Elementor Products CSS-grid columns after CAF AJAX (Woo float widths otherwise win). */
+.elementor-products-grid ul.products.elementor-grid li.product,
+.elementor-wc-products ul.products.elementor-grid li.product,
+.elementor-widget-woocommerce-products ul.products.elementor-grid li.product,
+.elementor-widget-wc-archive-products ul.products.elementor-grid li.product {
+    width: auto;
+    max-width: none;
+    float: none;
+    margin: 0;
+    padding: 0;
+    clear: none;
+}
 .caf-builder-container p {
     padding: 0;
     margin: 0;
@@ -912,7 +925,9 @@ display: none ;
     flex-direction: column;
     gap: 10px;
 }
-
+.caf-range-slider-values {
+    width: 100%;
+}
 .caf-range-slider-output .caf-range-slider-ui-wrapper {
     width: 100%;
     box-sizing: border-box;
@@ -940,18 +955,22 @@ height: 100%;
     position: absolute;
     }
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.toggle_closed {
-    display: none;
+    display: none !important;
 }
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-filter-module-search-output.toggle_closed {
-    display: none;
+    display: none !important;
 }
 
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-filter-module-reset-output.toggle_closed {
-    display: none;
+    display: none !important;
+}
+.caf-filter-module-reset-output {
+    cursor: pointer;
 }
 
+/* !important: module design CSS sets display:flex on .caf-range-slider-output with higher specificity */
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-range-slider-output.toggle_closed {
-    display: none;
+    display: none !important;
 }
 
 .caf-builder-post-area .caf-builder-module-main .caf-builder-custom-filed-suffix-wrapper.caf-layout-flex-start,

@@ -47,6 +47,7 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 		$ul_li_icon_style              = $this->get_style_section( 'icon' );
 		$ul_li_icon_selector_0         = $module_selector . ' ul.caf-checkbox li .manage-ic-lbl i';
 		$ul_li_icon_selector_1         = $module_selector . ' ul.caf-checkbox li .manage-ic-lbl svg';
+		$ul_li_icon_selector_2         = $module_selector . ' ul.caf-checkbox li .manage-ic-lbl .caf-term-swatch';
 		$ul_li_count_style             = $this->get_style_section( 'count' );
 		$ul_li_count_selector          = $module_selector . ' ul.caf-checkbox li .manage-text-lbl span.count-span';
 		$ul_li_meta1_style             = $this->get_style_section( 'meta1' );
@@ -60,12 +61,14 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 		$ul_li_meta3_selector_selected = $module_selector . ' ul.caf-checkbox li.caf-selected .manage-text-lbl';
 		$ul_li_icon_selector_selected = $module_selector . ' ul.caf-checkbox li.caf-selected .manage-ic-lbl i';
 		$ul_li_icon2_selector_selected = $module_selector . ' ul.caf-checkbox li.caf-selected .manage-ic-lbl svg';
+		$ul_li_icon3_selector_selected = $module_selector . ' ul.caf-checkbox li.caf-selected .manage-ic-lbl .caf-term-swatch';
 		$ul_li_count_selector_selected = $module_selector . ' ul.caf-checkbox li.caf-selected .manage-text-lbl span.count-span';
 		$this->collect_default_and_hover_css( $ul_style, $ul_selector );
 		$this->collect_default_and_hover_css( $ul_li_style, $ul_li_selector );
 		$this->collect_default_and_hover_css( $ul_li_input_style, $ul_li_input_selector );
 		$this->collect_default_and_hover_css( $ul_li_icon_style, $ul_li_icon_selector_0 );
 		$this->collect_default_and_hover_css( $ul_li_icon_style, $ul_li_icon_selector_1 );
+		$this->collect_default_and_hover_css( $ul_li_icon_style, $ul_li_icon_selector_2 );
 		$this->collect_default_and_hover_css( $ul_li_count_style, $ul_li_count_selector );
 		$this->collect_default_and_hover_css( $ul_li_meta2_style, $ul_li_meta2_selector );
 		$this->collect_default_and_hover_css( $ul_li_meta3_style, $ul_li_meta3_selector );
@@ -75,6 +78,7 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 		$this->collect_default_and_hover_css( $ul_li_meta3_style, $ul_li_meta3_selector_selected, 'selected' );
 		$this->collect_default_and_hover_css( $ul_li_icon_style, $ul_li_icon_selector_selected, 'selected' );
 		$this->collect_default_and_hover_css( $ul_li_icon_style, $ul_li_icon2_selector_selected, 'selected' );
+		$this->collect_default_and_hover_css( $ul_li_icon_style, $ul_li_icon3_selector_selected, 'selected' );
 		$this->collect_default_and_hover_css( $ul_li_count_style, $ul_li_count_selector_selected, 'selected' );
 
 		/*
@@ -231,7 +235,8 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 			$predefine      = 'true';
 		}
 
-		$html = '<li class="caf-terms-list-item ' . esc_attr( $active_class ) . ' caf-layout-' . esc_attr( $layout_classes['row'] ) . '" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy_key, $term->key ) ) . '" predefine="' . esc_attr( $predefine ) . '">';
+		$html = '<li class="caf-terms-list-item ' . esc_attr( $active_class ) . ' caf-layout-' . esc_attr( $layout_classes['row'] ) . ( $this->should_hide_term_label( $settings ) ? ' caf-hide-term-label' : '' ) . $this->get_term_tooltip_li_class( $settings ) . '" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy_key, $term->key ) ) . '" predefine="' . esc_attr( $predefine ) . '"' . $this->get_term_tooltip_data_attr( $settings, isset( $term->value ) ? ucfirst( $term->value ) : '' ) . '>';
+		$html .= $this->render_term_label_tooltip( $settings, isset( $term->value ) ? ucfirst( $term->value ) : '' );
 		// $html .= '<label class="caf-taxo-checkbox-main" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" predefine="' . esc_attr( $predefine ) . '" style="display:flex;align-items:center;">';
 		$html .= '<input type="checkbox" style="display:none" class="caf-taxo-input ' . esc_attr( $skin ) . '" ' . $checked . ' value="' . esc_attr( $term->key ) . '" />';
 		if ( $settings->show_checkbox === 'true' ) {
@@ -239,23 +244,28 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 		}
 		$html .= '<div class="manage-ic-lbl caf-layout-' . esc_attr( $layout_classes['icon'] ) . '">';
 		if ( ! empty( $settings->show_icon ) && 'true' === (string) $settings->show_icon ) {
-			if ( ! empty( $term->icons->icon ) && ! empty( $term->icons->position ) && 'before' === $term->icons->position ) {
-				$html .= '<i class="fa-solid ' . esc_attr( $term->icons->icon ) . ' filter-before-icon"></i>';
+			$position = ! empty( $term->icons->position ) ? (string) $term->icons->position : 'before';
+			if ( 'before' === $position ) {
+				$html .= $this->render_term_visual_markup( $settings, isset( $term->icons ) ? $term->icons : null, 'filter-before-icon' );
 			}
 		}
-		$html .= '<div class="manage-text-lbl caf-layout-' . esc_attr( $layout_classes['text'] ) . '">';
-
-		$html .= '<span class="trm-name caf-term-label">' . esc_html( ucfirst( $term->value ) ) . '</span>';
-
-		if ( ! empty( $term->count ) && $settings->show_count === 'true' ) {
-			$html .= '<span class="count-span">' . $this->format_count_text( $term->count, $settings ) . '</span>';
+		$hide_label = $this->should_hide_term_label( $settings );
+		$show_count = $this->is_truthy( isset( $settings->show_count ) ? $settings->show_count : '' );
+		if ( ! $hide_label || $show_count ) {
+			$html .= '<div class="manage-text-lbl caf-layout-' . esc_attr( $layout_classes['text'] ) . '">';
+			if ( ! $hide_label ) {
+				$html .= '<span class="trm-name caf-term-label">' . esc_html( ucfirst( $term->value ) ) . '</span>';
+			}
+			if ( $show_count && ! empty( $term->count ) ) {
+				$html .= '<span class="count-span">' . $this->format_count_text( $term->count, $settings ) . '</span>';
+			}
+			$html .= '</div>';
+		}
+		// Keep after-swatch inside .manage-ic-lbl so Design (icon) CSS selectors apply.
+		if ( ! empty( $settings->show_icon ) && 'true' === (string) $settings->show_icon && ! empty( $term->icons->position ) && 'after' === $term->icons->position ) {
+			$html .= $this->render_term_visual_markup( $settings, isset( $term->icons ) ? $term->icons : null, 'filter-after-icon' );
 		}
 		$html .= '</div>';
-		$html .= '</div>';
-
-		if ( ! empty( $settings->show_icon ) && 'true' === (string) $settings->show_icon && ! empty( $term->icons->icon ) && ! empty( $term->icons->position ) && 'after' === $term->icons->position ) {
-			$html .= '<i class="fa-solid ' . esc_attr( $term->icons->icon ) . ' filter-after-icon"></i>';
-		}
 
 		// $html .= '</label>';
 
@@ -310,18 +320,24 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 			$predefine      = 'true';
 		}
 
-		$html  = '<li class="caf-terms-list-item child ' . esc_attr( $active_class ) . '" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy_key, $term->key ) ) . '" predefine="' . esc_attr( $predefine ) . '" parent-id="' . esc_attr( isset( $term->parent_id ) ? $term->parent_id : '' ) . '">';
+		$html  = '<li class="caf-terms-list-item child ' . esc_attr( $active_class ) . ( $this->should_hide_term_label( $settings ) ? ' caf-hide-term-label' : '' ) . $this->get_term_tooltip_li_class( $settings ) . '" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy_key, $term->key ) ) . '" predefine="' . esc_attr( $predefine ) . '" parent-id="' . esc_attr( isset( $term->parent_id ) ? $term->parent_id : '' ) . '"' . $this->get_term_tooltip_data_attr( $settings, isset( $term->value ) ? ucfirst( $term->value ) : '' ) . '>';
+		$html .= $this->render_term_label_tooltip( $settings, isset( $term->value ) ? ucfirst( $term->value ) : '' );
 		$html .= '<label class="caf-taxo-checkbox-main" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" predefine="' . esc_attr( $predefine ) . '" style="display:flex;align-items:center;">';
 		$html .= '<input type="checkbox" class="caf-taxo-input ' . esc_attr( $skin ) . '" ' . $checked . ' value="' . esc_attr( $term->key ) . '" />';
 
-		if ( ! empty( $settings->show_icon ) && 'true' === $settings->show_icon && ! empty( $term->icons->icon ) && ! empty( $term->icons->position ) && 'before' === $term->icons->position ) {
-			$html .= '<i class="fa-solid ' . esc_attr( $term->icons->icon ) . ' filter-before-icon"></i>';
+		if ( ! empty( $settings->show_icon ) && 'true' === $settings->show_icon ) {
+			$position = ! empty( $term->icons->position ) ? (string) $term->icons->position : 'before';
+			if ( 'before' === $position ) {
+				$html .= $this->render_term_visual_markup( $settings, isset( $term->icons ) ? $term->icons : null, 'filter-before-icon' );
+			}
 		}
 
-		$html .= esc_html( ucfirst( $term->value ) );
+		if ( ! $this->should_hide_term_label( $settings ) ) {
+			$html .= esc_html( ucfirst( $term->value ) );
+		}
 
-		if ( ! empty( $settings->show_icon ) && 'true' === $settings->show_icon && ! empty( $term->icons->icon ) && ! empty( $term->icons->position ) && 'after' === $term->icons->position ) {
-			$html .= '<i class="fa-solid ' . esc_attr( $term->icons->icon ) . ' filter-after-icon"></i>';
+		if ( ! empty( $settings->show_icon ) && 'true' === $settings->show_icon && ! empty( $term->icons->position ) && 'after' === $term->icons->position ) {
+			$html .= $this->render_term_visual_markup( $settings, isset( $term->icons ) ? $term->icons : null, 'filter-after-icon' );
 		}
 
 		$html .= '</label>';

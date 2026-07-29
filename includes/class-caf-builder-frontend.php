@@ -45,6 +45,75 @@ class CAF_Builder_Frontend {
 	 */
 	private function __construct() {
 		add_filter( 'the_posts', array( $this, 'maybe_prerender_on_the_posts' ), 20, 1 );
+
+		// Boot Main Query bridge early (before Woo/Elementor product queries).
+		if ( did_action( 'init' ) ) {
+			$this->boot_builder_main_query_bridge();
+		} else {
+			add_action( 'init', array( $this, 'boot_builder_main_query_bridge' ), 5 );
+		}
+		add_action( 'wp', array( $this, 'maybe_prerender_main_query_builders_for_head' ), 5 );
+	}
+
+	/**
+	 * Boot main-query listing bridge (Woo archives + Elementor/Divi custom pages).
+	 *
+	 * @return void
+	 */
+	public function boot_builder_main_query_bridge() {
+		if ( is_admin() && ! wp_doing_ajax() ) {
+			return;
+		}
+
+		$base = TC_CAF_PATH . 'includes/frontend/';
+		$deps = array(
+			'class-caf-builder-ajax-performance.php',
+			'class-caf-builder-data.php',
+			'class-caf-builder-query.php',
+			'class-caf-builder-main-query.php',
+		);
+		foreach ( $deps as $file ) {
+			$path = $base . $file;
+			if ( file_exists( $path ) ) {
+				require_once $path;
+			}
+		}
+
+		if ( class_exists( 'CAF_Builder_Main_Query' ) ) {
+			CAF_Builder_Main_Query::init();
+		}
+	}
+
+	/**
+	 * Pre-render filter-only layouts on matching archives so CSS is in wp_head.
+	 *
+	 * @return void
+	 */
+	public function maybe_prerender_main_query_builders_for_head() {
+		if ( is_admin() || wp_doing_ajax() || is_feed() ) {
+			return;
+		}
+
+		if ( ! class_exists( 'CAF_Builder_Main_Query' ) ) {
+			return;
+		}
+
+		$indexes = CAF_Builder_Main_Query::get_main_query_indexes();
+		if ( empty( $indexes ) ) {
+			return;
+		}
+
+		$active = CAF_Builder_Main_Query::resolve_active_builder_index();
+		if ( null === $active ) {
+			return;
+		}
+
+		$index = absint( $active );
+		if ( array_key_exists( $index, self::$builder_render_cache ) ) {
+			return;
+		}
+
+		$this->prerender_builder_shortcode_for_head( 'caf_' . $index );
 	}
 
 	/**
@@ -57,6 +126,13 @@ class CAF_Builder_Frontend {
 		$shortindex = $this->parse_builder_shortindex( $id );
 		if ( null === $shortindex ) {
 			return esc_html( $id . " does not have a numeric index after 'caf_'" );
+		}
+
+		// Custom page: bind Main Query when shortcode renders (Elementor/Divi/widgets).
+		if ( class_exists( 'CAF_Builder_Main_Query' )
+			&& CAF_Builder_Main_Query::is_main_query_layout( $shortindex )
+		) {
+			CAF_Builder_Main_Query::bind_layout_to_request( $shortindex );
 		}
 
 		if ( array_key_exists( $shortindex, self::$builder_render_cache ) ) {
@@ -226,13 +302,23 @@ class CAF_Builder_Frontend {
 
 		$custom_font_css_map = array();
 
+		$main_query_per_page = 10;
+		if ( class_exists( 'CAF_Builder_Main_Query' ) && method_exists( 'CAF_Builder_Main_Query', 'get_default_catalog_per_page' ) ) {
+			$main_query_per_page = (int) CAF_Builder_Main_Query::get_default_catalog_per_page();
+		} elseif ( function_exists( 'wc_get_default_products_per_row' ) && function_exists( 'wc_get_default_product_rows_per_page' ) ) {
+			$main_query_per_page = max( 1, (int) wc_get_default_products_per_row() * (int) wc_get_default_product_rows_per_page() );
+		} else {
+			$main_query_per_page = max( 1, (int) get_option( 'posts_per_page', 10 ) );
+		}
+
 		wp_localize_script(
 			'tc-caf-builder-ajax-config',
 			'tc_caf_ajax',
 			array(
-				'ajax_url'    => admin_url( 'admin-ajax.php' ),
-				'nonce'       => wp_create_nonce( 'tc_caf_ajax_nonce' ),
-				'plugin_path' => TC_CAF_URL,
+				'ajax_url'            => admin_url( 'admin-ajax.php' ),
+				'nonce'               => wp_create_nonce( 'tc_caf_ajax_nonce' ),
+				'plugin_path'         => TC_CAF_URL,
+				'main_query_per_page' => $main_query_per_page,
 			)
 		);
 
@@ -268,11 +354,12 @@ class CAF_Builder_Frontend {
 		$this->register_frontend_asset_handles();
 
 		if ( ! wp_script_is( 'tc-caf-builder-front-script', 'registered' ) ) {
+			$builder_js = TC_CAF_PATH . 'assets/js/builder-framework.js';
 			wp_register_script(
 				'tc-caf-builder-front-script',
 				TC_CAF_URL . 'assets/js/builder-framework.js',
 				array( 'jquery', 'jquery-ui-slider', 'tc-caf-builder-ajax-config' ),
-				TC_CAF_PLUGIN_VERSION,
+				file_exists( $builder_js ) ? (string) filemtime( $builder_js ) : TC_CAF_PLUGIN_VERSION,
 				true
 			);
 		}
@@ -297,8 +384,10 @@ class CAF_Builder_Frontend {
 	protected function ensure_dynamic_base_style() {
 		$handle = 'caf-builder-style';
 		$src    = TC_CAF_URL . 'assets/css/dynamic-styles.css';
+		$path   = TC_CAF_PATH . 'assets/css/dynamic-styles.css';
+		$ver    = file_exists( $path ) ? (string) filemtime( $path ) : TC_CAF_PLUGIN_VERSION;
 		if ( ! wp_style_is( $handle, 'registered' ) ) {
-			wp_register_style( $handle, $src, array(), TC_CAF_PLUGIN_VERSION, 'all' );
+			wp_register_style( $handle, $src, array(), $ver, 'all' );
 		}
 		wp_enqueue_style( $handle );
 	}

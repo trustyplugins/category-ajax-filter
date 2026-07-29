@@ -62,7 +62,7 @@ class CAF_Builder_Tier {
 			'revision_max'          => 2,
 			'revision_display_max'  => 10,
 			'filter_modules'        => array( 'checkbox', 'dropdown', 'search', 'reset', 'customtext', 'range_slider' ),
-			'single_instance_filter_modules' => array( 'checkbox_filter', 'dropdown_filter', 'search' ),
+			'single_instance_filter_modules' => array( 'search' ),
 			'post_modules'          => array(
 				'image',
 				'title',
@@ -96,6 +96,7 @@ class CAF_Builder_Tier {
 				'filter_custom_field',
 				'range_slider_custom_fields',
 				'filter_show_icon',
+				'filter_term_show_more',
 				'search_show_icon',
 				'search_clear_input',
 				'label_show_icon',
@@ -122,6 +123,7 @@ class CAF_Builder_Tier {
 				'woo_ajax_add_to_cart',
 				'woo_badge_types',
 				'woo_rating_filter',
+				'woo_product_filters',
 				'multiple_filters_per_page',
 				'gradient_colors',
 			),
@@ -282,7 +284,10 @@ class CAF_Builder_Tier {
 		}
 
 		if ( 'badges' === $module_key && ! self::can_use_feature( 'woo_badge_types' ) ) {
-			$settings->badge_type = 'new';
+			$badge_type = isset( $settings->badge_type ) ? sanitize_key( (string) $settings->badge_type ) : '';
+			if ( 'new' !== $badge_type && 'sale' !== $badge_type ) {
+				$settings->badge_type = 'new';
+			}
 			// Prefix/suffix stays locked for Badges on free.
 			$settings->prefix = (object) array(
 				'is_enable' => 'false',

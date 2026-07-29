@@ -18,7 +18,7 @@ jQuery(function ($) {
         return $root.find(CAF_RANGE_SLIDER_MODULE_SELECTOR);
     }
 
-    /** Min / max (or sole) jQuery UI slider handles — stable hooks for CSS. */
+    /** Min / max (or sole) jQuery UI slider handles â€” stable hooks for CSS. */
     function cafTagRangeSliderHandleClasses($slider, rangeType) {
         if (!$slider || !$slider.length) {
             return;
@@ -302,7 +302,7 @@ jQuery(function ($) {
                 }
             });
 
-            const rangeRegex = /(\d+(?:\.\d+)?)\s*(?:-|–|—|to)\s*(\d+(?:\.\d+)?)/g;
+            const rangeRegex = /(\d+(?:\.\d+)?)\s*(?:-|â€“|â€”|to)\s*(\d+(?:\.\d+)?)/g;
             let rangeMatch = rangeRegex.exec(raw);
             while (rangeMatch !== null) {
                 const start = parseFloat(rangeMatch[1]);
@@ -1484,6 +1484,15 @@ jQuery(function ($) {
             const url = new URL(window.location.href);
 
             this.clearBuilderParams(url, $builder);
+
+            // Filter changes should return to page 1 (theme pretty pagination / ?paged=).
+            if (typeof CAFBuilder !== "undefined" && CAFBuilder.isMainQueryListing($builder)) {
+                url.pathname = url.pathname.replace(/\/page\/\d+\/?(?=$|\?|#)/i, "/");
+                url.pathname = url.pathname.replace(/\/{2,}/g, "/");
+                url.searchParams.delete("paged");
+                url.searchParams.delete("product-page");
+                url.searchParams.delete("product_page");
+            }
 
             if (state && Object.keys(state).length) {
                 this.buildReadableParams($builder, state).forEach(([key, value]) => {
@@ -2676,6 +2685,11 @@ jQuery(function ($) {
                 CAFBuilder.handleSearchInput($(this));
             });
 
+            if (this.isMainQueryListing($builder)) {
+                this.resolveMainQueryPostsPerPage($builder);
+                this.resolveMainQueryProductsClass($builder);
+            }
+
             if (CAFUrlState.isEnabled($builder)) {
                 CAFUrlState.bindPopState();
                 const urlState = CAFUrlState.read($builder);
@@ -3311,6 +3325,46 @@ jQuery(function ($) {
                 self.trackAnalyticsEvent($builder, "post_click", interaction, { useBeacon: true });
             });
 
+            $(document).on(
+                "click.cafMainQueryPagination",
+                [
+                    "nav.woocommerce-pagination a",
+                    ".woocommerce-pagination a",
+                    ".woocommerce nav.woocommerce-pagination a",
+                    ".ast-woocommerce-pagination a",
+                    ".ast-pagination a.page-numbers",
+                    "nav.elementor-pagination a",
+                    ".elementor-pagination a",
+                    ".elementor-widget-loop-grid .elementor-pagination a",
+                    ".wp-block-query-pagination a",
+                    ".wp-block-query-pagination-numbers a",
+                    ".wp-block-query-pagination-next",
+                    ".wp-block-query-pagination-previous",
+                    ".wc-block-pagination a",
+                    ".wc-block-components-pagination a",
+                    "ul.page-numbers a.page-numbers",
+                    "a.page-numbers"
+                ].join(", "),
+                function (e) {
+                    self.handleMainQueryPaginationClick(e, $(this));
+                }
+            );
+
+            $(document).on(
+                "change.cafMainQueryOrdering",
+                "form.woocommerce-ordering select.orderby, form.woocommerce-ordering select[name='orderby']",
+                function (e) {
+                    self.handleMainQueryOrderingChange(e, $(this));
+                }
+            );
+            $(document).on(
+                "submit.cafMainQueryOrdering",
+                "form.woocommerce-ordering",
+                function (e) {
+                    self.handleMainQueryOrderingSubmit(e, $(this));
+                }
+            );
+
             $(window).on("resize.cafMasonry", () => {
                 self.debounce(() => {
                     $(self.selectors.builder).each(function () {
@@ -3943,6 +3997,11 @@ jQuery(function ($) {
         },
 
         buildQuery($builder, page = 1, options = {}) {
+            if (this.isMainQueryListing($builder)) {
+                this.buildMainQueryFragment($builder, page, options);
+                return;
+            }
+
             const sortIndex = $builder.attr("caf-index");
             const loaderStatus = $builder.attr("loader-status");
             const paginationType = $builder.attr("pagination-type");
@@ -4046,6 +4105,1364 @@ jQuery(function ($) {
             });
 
             this._buildQueryXhrs[queryKey] = jqXHR;
+        },
+
+        isMainQueryListing($builder) {
+            return String($builder.attr("data-caf-listing-target") || "caf") === "main_query";
+        },
+
+        getMainQueryBuilder() {
+            return $(this.selectors.builder)
+                .filter((_, el) => this.isMainQueryListing($(el)))
+                .first();
+        },
+
+        /**
+         * Page number from current location (/page/N/ or ?paged=N).
+         */
+        getMainQueryPageFromLocation(loc = window.location) {
+            try {
+                const href = typeof loc === "string" ? loc : String(loc.href || "");
+                const url = new URL(href, window.location.href);
+                const pretty = url.pathname.match(/\/page\/(\d+)\/?/i);
+                if (pretty && pretty[1]) {
+                    return Math.max(1, parseInt(pretty[1], 10) || 1);
+                }
+                const q =
+                    url.searchParams.get("paged") ||
+                    url.searchParams.get("product-page") ||
+                    url.searchParams.get("product_page");
+                if (q) {
+                    return Math.max(1, parseInt(q, 10) || 1);
+                }
+            } catch (err) {
+                // no-op
+            }
+            return 1;
+        },
+
+        /**
+         * Intercept theme pagination so filters stay mounted (no full reload).
+         */
+        handleMainQueryPaginationClick(e, $link) {
+            const $builder = this.getMainQueryBuilder();
+            if (!$builder.length) {
+                return;
+            }
+
+            if (!$link || !$link.length) {
+                return;
+            }
+
+            // Ignore CAF's own pager / links inside the filter UI.
+            if ($link.closest(".caf-builder-container").length) {
+                return;
+            }
+
+            // Current page indicator (Woo/Astra use .current / aria-current).
+            if (
+                $link.hasClass("current") ||
+                $link.attr("aria-current") === "page" ||
+                $link.parent().hasClass("current")
+            ) {
+                e.preventDefault();
+                return;
+            }
+
+            const href = String($link.attr("href") || "").trim();
+            if (!href || href === "#" || href.toLowerCase().indexOf("javascript:") === 0) {
+                return;
+            }
+
+            let targetUrl;
+            try {
+                targetUrl = new URL(href, window.location.href);
+            } catch (err) {
+                return;
+            }
+
+            if (targetUrl.origin !== window.location.origin) {
+                return;
+            }
+
+            // Only treat shop / product-archive style paths (or same path family).
+            const isPagedPath = /\/page\/\d+\/?/i.test(targetUrl.pathname);
+            const hasPagedQuery =
+                targetUrl.searchParams.has("paged") ||
+                targetUrl.searchParams.has("product-page") ||
+                targetUrl.searchParams.has("product_page");
+            if (!isPagedPath && !hasPagedQuery && !$link.hasClass("page-numbers") && !$link.closest(".woocommerce-pagination, .elementor-pagination, .wp-block-query-pagination, .ast-pagination, .ast-woocommerce-pagination").length) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Keep active CAF filter query params on the paged URL only when Filter URLs are on.
+            const preserveOrderby = targetUrl.searchParams.get("orderby") || "";
+            const preserveOrder = targetUrl.searchParams.get("order") || "";
+            CAFUrlState.clearBuilderParams(targetUrl, $builder);
+            if (CAFUrlState.isEnabled($builder)) {
+                const state = CAFUrlState.serializeFromBuilder($builder);
+                if (state && Object.keys(state).length) {
+                    CAFUrlState.buildReadableParams($builder, state).forEach(([key, value]) => {
+                        targetUrl.searchParams.set(key, value);
+                    });
+                }
+            }
+            if (preserveOrderby) {
+                targetUrl.searchParams.set("orderby", preserveOrderby);
+            }
+            if (preserveOrder) {
+                targetUrl.searchParams.set("order", preserveOrder);
+            }
+
+            const next = `${targetUrl.pathname}${CAFUrlState.toSeoSearchString(targetUrl)}${targetUrl.hash}`;
+            window.history.pushState(
+                { cafBuilderFilter: true, cafMainQueryPagination: true },
+                "",
+                next
+            );
+
+            this.buildMainQueryFragment($builder, this.getMainQueryPageFromLocation(targetUrl), {
+                skipUrlUpdate: true,
+                skipScroll: false
+            });
+        },
+
+        /**
+         * Intercept WooCommerce catalog sorting so filters stay mounted (no full reload).
+         */
+        handleMainQueryOrderingChange(e, $select) {
+            const $builder = this.getMainQueryBuilder();
+            if (!$builder.length || !$select || !$select.length) {
+                return;
+            }
+            if ($select.closest(".caf-builder-container").length) {
+                return;
+            }
+
+            if (e && typeof e.preventDefault === "function") {
+                e.preventDefault();
+            }
+            if (e && typeof e.stopImmediatePropagation === "function") {
+                e.stopImmediatePropagation();
+            } else if (e && typeof e.stopPropagation === "function") {
+                e.stopPropagation();
+            }
+
+            this.applyMainQueryOrderingValue($builder, String($select.val() || "").trim());
+        },
+
+        handleMainQueryOrderingSubmit(e, $form) {
+            const $builder = this.getMainQueryBuilder();
+            if (!$builder.length || !$form || !$form.length) {
+                return;
+            }
+            if ($form.closest(".caf-builder-container").length) {
+                return;
+            }
+
+            if (e && typeof e.preventDefault === "function") {
+                e.preventDefault();
+            }
+            if (e && typeof e.stopImmediatePropagation === "function") {
+                e.stopImmediatePropagation();
+            } else if (e && typeof e.stopPropagation === "function") {
+                e.stopPropagation();
+            }
+
+            const value = String(
+                $form.find("select.orderby, select[name='orderby']").first().val() || ""
+            ).trim();
+            this.applyMainQueryOrderingValue($builder, value);
+        },
+
+        applyMainQueryOrderingValue($builder, value) {
+            let url;
+            try {
+                url = new URL(window.location.href);
+            } catch (err) {
+                return;
+            }
+
+            // Sort change returns to page 1.
+            url.pathname = url.pathname.replace(/\/page\/\d+\/?(?=$|\?|#)/i, "/");
+            url.pathname = url.pathname.replace(/\/{2,}/g, "/");
+            url.searchParams.delete("paged");
+            url.searchParams.delete("product-page");
+            url.searchParams.delete("product_page");
+
+            if (value) {
+                url.searchParams.set("orderby", value);
+            } else {
+                url.searchParams.delete("orderby");
+            }
+
+            const next = `${url.pathname}${CAFUrlState.toSeoSearchString(url)}${url.hash}`;
+            window.history.pushState(
+                { cafBuilderFilter: true, cafMainQuerySort: true },
+                "",
+                next
+            );
+
+            this.buildMainQueryFragment($builder, 1, {
+                skipUrlUpdate: true,
+                skipScroll: false
+            });
+        },
+
+        /**
+         * Re-init Elementor frontend handlers after Main Query DOM swaps.
+         * Avoid runReadyTrigger on Products/Archive widget roots â€” some Elementor
+         * versions re-render from cached widget settings and undo the filtered HTML.
+         */
+        refreshElementorFrontend($builder) {
+            try {
+                const frontend = window.elementorFrontend;
+                if (!frontend || typeof frontend.elementsHandler !== "object") {
+                    return;
+                }
+
+                // Nested / loop scopes only â€” not the Products widget root.
+                const scopes = [
+                    ".elementor-widget-loop-grid",
+                    ".elementor-loop-container"
+                ];
+
+                scopes.forEach((selector) => {
+                    $(selector).each((_, el) => {
+                        if ($builder && $builder.length && $.contains($builder[0], el)) {
+                            return;
+                        }
+                        try {
+                            if (typeof frontend.elementsHandler.runReadyTrigger === "function") {
+                                frontend.elementsHandler.runReadyTrigger(el);
+                            }
+                        } catch (err) {
+                            // no-op â€” Elementor versions differ.
+                        }
+                    });
+                });
+
+                // Re-bind Woo add-to-cart on swapped product cards.
+                if (typeof $(document.body).trigger === "function") {
+                    $(document.body).trigger("wc_fragments_loaded");
+                }
+            } catch (err) {
+                // no-op
+            }
+        },
+
+        getMainQueryResultsSelectors($builder) {
+            const custom = String($builder.attr("data-caf-results-selector") || "").trim();
+            // Classic Woo + Divi Shop + Elementor Archive/Loop + block themes.
+            // Prefer .woocommerce wrappers so count/order/grid swap together.
+            const defaults = [
+                ".elementor-widget-woocommerce-products .woocommerce",
+                ".elementor-widget-wc-archive-products .woocommerce",
+                ".elementor-wc-products .woocommerce",
+                ".et_pb_shop .woocommerce",
+                ".et_pb_shop ul.products",
+                ".elementor-wc-products ul.products",
+                ".elementor-widget-wc-archive-products ul.products",
+                ".elementor-widget-woocommerce-products ul.products",
+                ".elementor-widget-loop-grid .elementor-loop-container",
+                ".elementor-loop-container",
+                "ul.products",
+                ".woocommerce ul.products",
+                ".wp-block-woocommerce-product-collection",
+                "ul.wc-block-product-template",
+                ".wc-block-product-template",
+                ".caf-results"
+            ];
+            if (custom) {
+                // Keep custom first, but still try Elementor wrappers before generic ul.
+                const rest = defaults.filter((item) => item !== custom);
+                return [custom].concat(rest);
+            }
+            return defaults;
+        },
+
+        /**
+         * Empty-state nodes that replace the product grid when zero results.
+         */
+        getMainQueryEmptySelectors() {
+            return [
+                ".woocommerce-no-products-found",
+                ".elementor-products-nothing-found",
+                ".elementor-nothing-found.elementor-products-nothing-found",
+                ".wc-block-product-collection-no-results",
+                ".woocommerce-info"
+            ];
+        },
+
+        /**
+         * Shop chrome outside the product grid (count / sort / pagination).
+         * Swapped separately because TT5 / block themes keep these as sibling blocks.
+         */
+        getMainQueryCompanionSelectors() {
+            return [
+                // Leaf companions only ? avoid broad :has() parents that can wrap CAF too.
+                ".wp-block-woocommerce-product-results-count",
+                ".wc-block-product-results-count",
+                "p.woocommerce-result-count",
+                ".woocommerce-result-count",
+                ".wp-block-woocommerce-catalog-sorting",
+                ".wc-block-catalog-sorting",
+                "form.woocommerce-ordering",
+                ".woocommerce-ordering",
+                "nav.woocommerce-pagination",
+                ".woocommerce-pagination",
+                ".ast-woocommerce-pagination",
+                ".ast-pagination",
+                "nav.elementor-pagination",
+                ".elementor-pagination",
+                ".wp-block-query-pagination",
+                ".wc-block-pagination",
+                ".wc-block-components-pagination"
+            ];
+        },
+
+        findExternalResultsNode($root, selectors) {
+            // Prefer a real Element root â€” $(document).find() is unreliable in some jQuery builds.
+            let $scope;
+            if ($root && $root.length) {
+                const node = $root[0];
+                if (node && node.nodeType === 9 && node.documentElement) {
+                    $scope = $($root[0].documentElement);
+                } else {
+                    $scope = $root;
+                }
+            } else if (typeof document !== "undefined" && document.documentElement) {
+                $scope = $(document.documentElement);
+            } else {
+                $scope = $(document);
+            }
+            const list = Array.isArray(selectors) ? selectors : [selectors];
+
+            for (let i = 0; i < list.length; i += 1) {
+                const selector = String(list[i] || "").trim();
+                if (!selector) {
+                    continue;
+                }
+                try {
+                    const $match = $scope.find(selector).filter(function () {
+                        const $el = $(this);
+                        // Never touch CAF itself, or a wrapper that contains CAF.
+                        if ($el.closest(".caf-builder-container").length) {
+                            return false;
+                        }
+                        if ($el.find(".caf-builder-container").length) {
+                            return false;
+                        }
+                        // Generic .woocommerce-info must not wipe checkout/cart notices.
+                        if (selector === ".woocommerce-info") {
+                            if ($el.closest(".woocommerce-notices-wrapper, .woocommerce-checkout, .woocommerce-cart").length) {
+                                return false;
+                            }
+                            // Prefer only empty-state infos near a products region / Elementor shop widget.
+                            if (
+                                !$el.closest(
+                                    ".et_pb_shop, .elementor-wc-products, .elementor-widget-wc-archive-products, .elementor-widget-woocommerce-products, .woocommerce"
+                                ).length
+                            ) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }).first();
+                    if ($match.length) {
+                        return { $node: $match, selector };
+                    }
+                } catch (err) {
+                    // Invalid user selector ? skip.
+                }
+            }
+            return { $node: $(), selector: "" };
+        },
+
+        /**
+         * Swap product grid ? empty-state when one side has no matching node.
+         */
+        syncMainQueryListingZone($builder, $remoteDoc) {
+            const productSelectors = this.getMainQueryResultsSelectors($builder);
+            const emptySelectors = this.getMainQueryEmptySelectors();
+
+            const liveProducts = this.findExternalResultsNode($(document), productSelectors);
+            const remoteProducts = this.findExternalResultsNode($remoteDoc, productSelectors);
+            const liveEmpty = this.findExternalResultsNode($(document), emptySelectors);
+            const remoteEmpty = this.findExternalResultsNode($remoteDoc, emptySelectors);
+
+            const canReplace = ($node) =>
+                $node && $node.length && !$node.find(".caf-builder-container").length;
+
+            // Normal: products â†’ products.
+            if (liveProducts.$node.length && remoteProducts.$node.length) {
+                if (canReplace(liveProducts.$node)) {
+                    const html = remoteProducts.$node[0] && remoteProducts.$node[0].outerHTML
+                        ? remoteProducts.$node[0].outerHTML
+                        : "";
+                    if (html) {
+                        const $new = this.replaceListingNode(liveProducts.$node, html);
+                        return { $node: $new, selector: remoteProducts.selector || liveProducts.selector };
+                    }
+                    const $clone = remoteProducts.$node.clone(true, true);
+                    liveProducts.$node.replaceWith($clone);
+                    return { $node: $clone, selector: remoteProducts.selector || liveProducts.selector };
+                }
+                return liveProducts;
+            }
+
+            // Products â†’ empty.
+            if (liveProducts.$node.length && remoteEmpty.$node.length && !remoteProducts.$node.length) {
+                if (canReplace(liveProducts.$node)) {
+                    const html = remoteEmpty.$node[0] && remoteEmpty.$node[0].outerHTML
+                        ? remoteEmpty.$node[0].outerHTML
+                        : "";
+                    if (html) {
+                        const $new = this.replaceListingNode(liveProducts.$node, html);
+                        return { $node: $new, selector: remoteEmpty.selector || liveProducts.selector };
+                    }
+                    const $clone = remoteEmpty.$node.clone(true, true);
+                    liveProducts.$node.replaceWith($clone);
+                    return { $node: $clone, selector: remoteEmpty.selector || liveProducts.selector };
+                }
+                return { $node: $(), selector: liveProducts.selector };
+            }
+
+            // Empty â†’ products.
+            if (liveEmpty.$node.length && remoteProducts.$node.length && !liveProducts.$node.length) {
+                if (canReplace(liveEmpty.$node)) {
+                    const html = remoteProducts.$node[0] && remoteProducts.$node[0].outerHTML
+                        ? remoteProducts.$node[0].outerHTML
+                        : "";
+                    if (html) {
+                        const $new = this.replaceListingNode(liveEmpty.$node, html);
+                        return { $node: $new, selector: remoteProducts.selector || liveEmpty.selector };
+                    }
+                    const $clone = remoteProducts.$node.clone(true, true);
+                    liveEmpty.$node.replaceWith($clone);
+                    return { $node: $clone, selector: remoteProducts.selector || liveEmpty.selector };
+                }
+                return remoteProducts;
+            }
+
+            // Empty â†’ empty (refresh message).
+            if (liveEmpty.$node.length && remoteEmpty.$node.length) {
+                if (canReplace(liveEmpty.$node)) {
+                    const html = remoteEmpty.$node[0] && remoteEmpty.$node[0].outerHTML
+                        ? remoteEmpty.$node[0].outerHTML
+                        : "";
+                    if (html) {
+                        const $new = this.replaceListingNode(liveEmpty.$node, html);
+                        return { $node: $new, selector: remoteEmpty.selector || liveEmpty.selector };
+                    }
+                    const $clone = remoteEmpty.$node.clone(true, true);
+                    liveEmpty.$node.replaceWith($clone);
+                    return { $node: $clone, selector: remoteEmpty.selector || liveEmpty.selector };
+                }
+                return remoteEmpty;
+            }
+
+            return { $node: $(), selector: "" };
+        },
+
+        /**
+         * Replace results count / sorting / pagination companions from fetched HTML.
+         */
+        syncMainQueryCompanions($remoteDoc) {
+            const selectors = this.getMainQueryCompanionSelectors();
+            const skippedInside = [];
+
+            selectors.forEach((selector) => {
+                const live = this.findExternalResultsNode($(document), [selector]);
+                if (!live.$node.length) {
+                    return;
+                }
+
+                // Skip nodes already replaced via a parent companion.
+                if (
+                    skippedInside.some(($ancestor) =>
+                        $ancestor.length &&
+                        ($.contains($ancestor[0], live.$node[0]) || $ancestor[0] === live.$node[0])
+                    )
+                ) {
+                    return;
+                }
+
+                const remote = this.findExternalResultsNode($remoteDoc, [selector]);
+                if (!remote.$node.length) {
+                    // Remove orphan companions when remote has zero results (no pager/count).
+                    if (
+                        live.$node.is(
+                            "nav.woocommerce-pagination, .woocommerce-pagination, .ast-woocommerce-pagination, .ast-pagination, nav.elementor-pagination, .elementor-pagination, .wp-block-query-pagination, .wc-block-pagination, .wc-block-components-pagination, p.woocommerce-result-count, .woocommerce-result-count, .wp-block-woocommerce-product-results-count, .wc-block-product-results-count"
+                        )
+                    ) {
+                        live.$node.remove();
+                        return;
+                    }
+                    return;
+                }
+
+                const $replacement = remote.$node.clone(true, true);
+                live.$node.replaceWith($replacement);
+                skippedInside.push($replacement);
+            });
+        },
+
+        /**
+         * Build the Main Query fragment request URL from live filter state.
+         * Keeps theme page path + catalog orderby; injects filter params for the AJAX GET only
+         * (when Filter URLs are off, the address bar stays clean via updateHistory noop).
+         */
+        getMainQueryRequestUrl($builder) {
+            let url;
+            try {
+                url = new URL(window.location.href);
+            } catch (err) {
+                return window.location.href;
+            }
+
+            const preserveOrderby = url.searchParams.get("orderby") || "";
+            const preserveOrder = url.searchParams.get("order") || "";
+
+            CAFUrlState.clearBuilderParams(url, $builder);
+
+            const state = CAFUrlState.serializeFromBuilder($builder);
+            if (state && Object.keys(state).length) {
+                CAFUrlState.buildReadableParams($builder, state).forEach(([key, value]) => {
+                    url.searchParams.set(key, value);
+                });
+            }
+
+            if (preserveOrderby) {
+                url.searchParams.set("orderby", preserveOrderby);
+            } else {
+                url.searchParams.delete("orderby");
+            }
+            if (preserveOrder) {
+                url.searchParams.set("order", preserveOrder);
+            } else {
+                url.searchParams.delete("order");
+            }
+
+            // Fragment flag as query arg (header may be stripped) + cache bust.
+            url.searchParams.set("_caf_fragment", "1");
+            url.searchParams.set("_caf_t", String(Date.now()));
+
+            return url.toString();
+        },
+
+        /**
+         * Parse a listing HTML chunk into a DOM element (avoids jQuery HTML-vs-selector pitfalls).
+         */
+        parseListingHtml(html) {
+            const raw = String(html || "").trim();
+            if (!raw) {
+                return $();
+            }
+            try {
+                if (typeof document !== "undefined" && "content" in document.createElement("template")) {
+                    const tpl = document.createElement("template");
+                    tpl.innerHTML = raw;
+                    const el = tpl.content.firstElementChild;
+                    return el ? $(el) : $();
+                }
+            } catch (err) {
+                // fall through
+            }
+            return $(raw);
+        },
+
+        /**
+         * Replace a live listing node with incoming HTML; returns the new jQuery node.
+         */
+        replaceListingNode($live, html) {
+            if (!$live || !$live.length) {
+                return $();
+            }
+            const $incoming = this.parseListingHtml(html);
+            if (!$incoming.length) {
+                return $();
+            }
+            $live.replaceWith($incoming);
+            return $incoming;
+        },
+
+        buildMainQueryFragment($builder, page = 1, options = {}) {
+            const loaderStatus = $builder.attr("loader-status");
+            const showLoader = options.skipLoader !== true && loaderStatus === "true";
+            const queryKey = `caf-mq-${$builder.attr("caf-index") || "0"}`;
+
+            if (!this._buildQueryXhrs) {
+                this._buildQueryXhrs = {};
+            }
+            const prevXhr = this._buildQueryXhrs[queryKey];
+            if (prevXhr && typeof prevXhr.abort === "function") {
+                prevXhr.abort();
+            }
+
+            const prevRid = $builder.data("cafBuildQueryRid") || 0;
+            const requestId = prevRid + 1;
+            $builder.data("cafBuildQueryRid", requestId);
+
+            if (!options.skipUrlUpdate && CAFUrlState.isEnabled($builder)) {
+                CAFUrlState.updateHistory($builder, true);
+            }
+
+            if (showLoader) {
+                $builder.find(this.selectors.loader).addClass("active");
+            }
+
+            // Prefer admin-ajax listing (reliable on Elementor/Divi custom pages).
+            if (typeof tc_caf_ajax !== "undefined" && tc_caf_ajax.ajax_url) {
+                const jqXHR = this.fetchMainQueryListingAjax($builder, page, requestId, options);
+                this._buildQueryXhrs[queryKey] = jqXHR;
+                if (jqXHR && typeof jqXHR.always === "function") {
+                    jqXHR.always(() => {
+                        if (this._buildQueryXhrs[queryKey] === jqXHR) {
+                            delete this._buildQueryXhrs[queryKey];
+                        }
+                        if (showLoader && $builder.data("cafBuildQueryRid") === requestId) {
+                            $builder.find(this.selectors.loader).removeClass("active");
+                        }
+                    });
+                }
+                return;
+            }
+
+            // Fallback: full-page JSON fragment GET.
+            this.fetchMainQueryPageFragment($builder, page, requestId, options, queryKey, showLoader);
+        },
+
+        /**
+         * Resolve and lock Main Query posts-per-page (Elementor/Divi/Woo/WP).
+         * Never reuse the currently visible product count after filtering.
+         */
+        resolveMainQueryPostsPerPage($builder) {
+            const locked = parseInt(
+                $builder.data("cafMqPerPage") || $builder.attr("data-caf-mq-per-page") || "0",
+                10
+            );
+            if (locked > 0) {
+                return locked;
+            }
+
+            const $doc = $(document);
+            const $ul = this.findExternalResultsNode(
+                $doc,
+                this.getMainQueryResultsSelectors($builder).concat(["ul.products"])
+            ).$node;
+            const $grid = $ul.filter("ul.products").length
+                ? $ul.filter("ul.products")
+                : $ul.find("ul.products").first();
+            const $target = $grid.length ? $grid : $ul;
+            const $woo = $target.closest(".woocommerce, .elementor-wc-products, .et_pb_shop").length
+                ? $target.closest(".woocommerce, .elementor-wc-products, .et_pb_shop")
+                : $doc;
+
+            let perPage = 0;
+
+            // 1) Woo result count range: "Showing 1-16 of 27 results"
+            const resultText = String($woo.find(".woocommerce-result-count").first().text() || "")
+                .replace(/\u00a0/g, " ")
+                .replace(/&ndash;|&mdash;/gi, "-")
+                .trim();
+            const rangeMatch = resultText.match(/showing\s+(\d+)\s*[–\-\u2013\u2014]\s*(\d+)\s+of\s+(\d+)/i);
+            if (rangeMatch) {
+                const from = parseInt(rangeMatch[1], 10);
+                const to = parseInt(rangeMatch[2], 10);
+                if (to >= from && from > 0) {
+                    perPage = to - from + 1;
+                }
+            }
+
+            // 2) Elementor Products widget: columns * rows from data-settings
+            if (perPage <= 0) {
+                const $widget = $target
+                    .closest(".elementor-widget-woocommerce-products, .elementor-wc-products")
+                    .add($doc.find(".elementor-widget-woocommerce-products").first())
+                    .first();
+                if ($widget.length) {
+                    let settings = {};
+                    try {
+                        settings = $widget.data("settings") || JSON.parse($widget.attr("data-settings") || "{}") || {};
+                    } catch (err) {
+                        settings = {};
+                    }
+                    const widgetClass = String($widget.attr("class") || "");
+                    const gridMatch = widgetClass.match(/elementor-grid-(\d+)/);
+                    const columns = gridMatch
+                        ? parseInt(gridMatch[1], 10)
+                        : parseInt(settings.columns || "0", 10) || 0;
+                    const rows = parseInt(settings.rows || settings.paginate_rows || "0", 10) || 0;
+                    if (columns > 0 && rows > 0) {
+                        perPage = columns * rows;
+                    }
+                }
+            }
+
+            // 3) Full first page only: product LI count when pagination has a next page
+            if (perPage <= 0 && $target.length && $target.is("ul.products")) {
+                const count = $target.children("li.product").length;
+                const $pager = $woo.find(".woocommerce-pagination, nav.woocommerce-pagination").first();
+                const hasNext = $pager.find("a.next, .next.page-numbers").length > 0;
+                if (count > 0 && hasNext) {
+                    perPage = count;
+                }
+            }
+
+            // 4) Localized Woo/WP catalog default from PHP
+            if (perPage <= 0 && typeof tc_caf_ajax !== "undefined") {
+                perPage = parseInt(tc_caf_ajax.main_query_per_page || "0", 10) || 0;
+            }
+
+            // 5) Last resort
+            if (perPage <= 0) {
+                perPage = 16;
+            }
+
+            $builder.data("cafMqPerPage", perPage);
+            $builder.attr("data-caf-mq-per-page", String(perPage));
+            return perPage;
+        },
+
+        /**
+         * Prefer the real product UL (never the .woocommerce wrapper).
+         * Replacing .woocommerce with a bare UL destroys Elementor column layout.
+         */
+        findMainQueryProductsUl($builder) {
+            const prefer = [
+                ".elementor-widget-woocommerce-products ul.products",
+                ".elementor-widget-wc-archive-products ul.products",
+                ".elementor-wc-products ul.products",
+                ".et_pb_shop ul.products",
+                ".woocommerce ul.products",
+                "ul.products"
+            ];
+            const custom = String($builder.attr("data-caf-results-selector") || "").trim();
+            const selectors = custom ? [custom].concat(prefer) : prefer;
+            const found = this.findExternalResultsNode($(document), selectors);
+            let $node = found.$node;
+            if ($node.length && !$node.is("ul.products")) {
+                const $inner = $node.find("ul.products").first();
+                if ($inner.length) {
+                    $node = $inner;
+                }
+            }
+            if ($node.length && $node.is("ul.products")) {
+                return $node;
+            }
+            return $();
+        },
+
+        /**
+         * Shop / Elementor products scope (wrapper that holds count + UL + pager).
+         */
+        findMainQueryProductsScope($builder) {
+            const $ul = this.findMainQueryProductsUl($builder);
+            if ($ul.length) {
+                const $scope = $ul.closest(
+                    ".elementor-widget-woocommerce-products, .elementor-widget-wc-archive-products, .elementor-wc-products, .et_pb_shop, .woocommerce"
+                );
+                if ($scope.length) {
+                    return $scope;
+                }
+            }
+            const scopeFound = this.findExternalResultsNode($(document), [
+                ".elementor-widget-woocommerce-products .woocommerce",
+                ".elementor-widget-wc-archive-products .woocommerce",
+                ".elementor-wc-products .woocommerce",
+                ".et_pb_shop .woocommerce",
+                ".elementor-widget-woocommerce-products",
+                ".et_pb_shop"
+            ]);
+            return scopeFound.$node;
+        },
+
+        /**
+         * Lock Elementor/Woo UL classes once (elementor-grid + columns-N).
+         */
+        resolveMainQueryProductsClass($builder) {
+            const locked = String(
+                $builder.data("cafMqProductsClass") || $builder.attr("data-caf-mq-products-class") || ""
+            ).trim();
+            if (locked) {
+                return locked;
+            }
+
+            const $ul = this.findMainQueryProductsUl($builder);
+            let className = $ul.length ? String($ul.attr("class") || "").trim() : "";
+            if (!className || className.indexOf("products") === -1) {
+                className = "products elementor-grid columns-4";
+            }
+            if (className.indexOf("elementor-grid") === -1) {
+                const $widget = $ul.closest(
+                    ".elementor-widget-woocommerce-products, .elementor-wc-products, .elementor-products-grid"
+                );
+                if ($widget.length) {
+                    className = (className + " elementor-grid").replace(/\s+/g, " ").trim();
+                }
+            }
+
+            $builder.data("cafMqProductsClass", className);
+            $builder.attr("data-caf-mq-products-class", className);
+            return className;
+        },
+
+        /**
+         * Snapshot Elementor/Divi product grid meta for AJAX re-render.
+         */
+        getMainQueryListingMeta($builder) {
+            const $target = this.findMainQueryProductsUl($builder);
+            const limit = this.resolveMainQueryPostsPerPage($builder);
+            const className = this.resolveMainQueryProductsClass($builder);
+
+            let columns = 4;
+            const colMatch = className.match(/columns-(\d+)/);
+            if (colMatch && colMatch[1]) {
+                columns = parseInt(colMatch[1], 10) || 4;
+            } else {
+                const parentClass = ($target.closest(
+                    ".elementor-widget-woocommerce-products, .elementor-wc-products"
+                ).attr("class") || "");
+                const pg = parentClass.match(/elementor-grid-(\d+)/);
+                if (pg && pg[1]) {
+                    columns = parseInt(pg[1], 10) || 4;
+                }
+            }
+
+            return {
+                limit,
+                columns,
+                products_class: className
+            };
+        },
+
+        /**
+         * Admin-ajax Main Query listing (primary path).
+         */
+        fetchMainQueryListingAjax($builder, page, requestId, options = {}) {
+            const meta = this.getMainQueryListingMeta($builder);
+            const sortIndex = $builder.attr("caf-index") || "0";
+            const queryArgs = CAFQueryBuilder.collectQueryArgs($builder, page || 1);
+            const selectedFilters = this.collectSelectedTagsData($builder);
+
+            // Base URL for pagination links (current filters, no product-page).
+            let baseUrl = window.location.href;
+            try {
+                const u = new URL(window.location.href);
+                u.searchParams.delete("product-page");
+                u.searchParams.delete("product_page");
+                u.searchParams.delete("paged");
+                u.hash = "";
+                baseUrl = u.toString();
+            } catch (err) {
+                // keep href
+            }
+
+            return $.ajax({
+                url: tc_caf_ajax.ajax_url,
+                type: "POST",
+                dataType: "json",
+                data: {
+                    action: "get_caf_main_query_listing",
+                    nonce: tc_caf_ajax.nonce,
+                    caf_index: sortIndex,
+                    params: queryArgs,
+                    selected_filters: selectedFilters,
+                    page: page || 1,
+                    limit: meta.limit,
+                    columns: meta.columns,
+                    products_class: meta.products_class,
+                    base_url: baseUrl
+                },
+                success: (response) => {
+                    if ($builder.data("cafBuildQueryRid") !== requestId) {
+                        return;
+                    }
+                    if (!response || !response.success || !response.data) {
+                        this.fetchMainQueryPageFragment($builder, page, requestId, options);
+                        return;
+                    }
+                    const listing = this.applyMainQueryAjaxListing($builder, response.data);
+                    if (!listing.$node || !listing.$node.length) {
+                        this.fetchMainQueryPageFragment($builder, page, requestId, options);
+                        return;
+                    }
+                    this.afterMainQueryFragmentSwap($builder, listing, options);
+                },
+                error: () => {
+                    if ($builder.data("cafBuildQueryRid") !== requestId) {
+                        return;
+                    }
+                    this.fetchMainQueryPageFragment($builder, page, requestId, options);
+                }
+            });
+        },
+
+        /**
+         * Apply admin-ajax listing payload.
+         * Only touch ul.products — never replace the .woocommerce / Elementor wrapper.
+         */
+        applyMainQueryAjaxListing($builder, data) {
+            const productsInner = String((data && data.products_inner) || "");
+            const productsHtml = String((data && data.products) || "");
+            const emptyHtml = String((data && data.empty) || "");
+            const resultCountHtml = String((data && data.result_count_html) || "");
+            const productsClass = this.resolveMainQueryProductsClass($builder);
+
+            const canReplace = ($node) =>
+                $node && $node.length && !$node.find(".caf-builder-container").length;
+
+            const removeNearbyEmptyNotices = ($scope) => {
+                if (!$scope || !$scope.length) {
+                    return;
+                }
+                $scope.find(
+                    ".woocommerce-no-products-found, .elementor-products-nothing-found, p.woocommerce-info.woocommerce-no-products-found"
+                ).each(function () {
+                    const $el = $(this);
+                    if (canReplace($el)) {
+                        $el.remove();
+                    }
+                });
+            };
+
+            let listing = { $node: $(), selector: "" };
+            let $ul = this.findMainQueryProductsUl($builder);
+            const $scope = this.findMainQueryProductsScope($builder);
+
+            if (productsInner || productsHtml) {
+                removeNearbyEmptyNotices($scope);
+
+                // Empty-state may have replaced the UL — restore a UL shell in-scope.
+                if (!$ul.length && $scope.length && canReplace($scope)) {
+                    const $placeholder = $scope
+                        .find(".woocommerce-no-products-found, .elementor-products-nothing-found, p.woocommerce-info")
+                        .filter(function () {
+                            return canReplace($(this));
+                        })
+                        .first();
+                    const shell = `<ul class="${productsClass.replace(/"/g, "")}"></ul>`;
+                    if ($placeholder.length) {
+                        $ul = this.replaceListingNode($placeholder, shell);
+                    } else {
+                        const $woo = $scope.is(".woocommerce") ? $scope : $scope.find(".woocommerce").first();
+                        const $anchor = $woo.length ? $woo : $scope;
+                        $anchor.append(shell);
+                        $ul = $anchor.children("ul.products").last();
+                    }
+                }
+
+                if ($ul.length && canReplace($ul)) {
+                    // Re-apply locked Elementor/Woo classes every time (columns stay intact).
+                    $ul.attr("class", productsClass);
+                    if (productsInner) {
+                        $ul.html(productsInner);
+                    } else if (productsHtml) {
+                        const $parsed = this.parseListingHtml(productsHtml);
+                        if ($parsed.is("ul")) {
+                            $ul.html($parsed.html());
+                            const parsedClass = String($parsed.attr("class") || "").trim();
+                            if (parsedClass.indexOf("products") !== -1) {
+                                $ul.attr("class", parsedClass);
+                                $builder.data("cafMqProductsClass", parsedClass);
+                            }
+                        } else {
+                            $ul.html(productsHtml);
+                        }
+                    }
+                    $ul.show();
+                    listing = { $node: $ul, selector: "ul.products" };
+                }
+            } else if (emptyHtml) {
+                // Replace only the UL (keep .woocommerce / Elementor column wrappers).
+                if ($ul.length && canReplace($ul)) {
+                    listing = {
+                        $node: this.replaceListingNode($ul, emptyHtml),
+                        selector: data.empty_selector || "ul.products"
+                    };
+                } else if ($scope.length && canReplace($scope)) {
+                    const $woo = $scope.is(".woocommerce") ? $scope : $scope.find(".woocommerce").first();
+                    const $anchor = $woo.length ? $woo : $scope;
+                    $anchor.find("ul.products").remove();
+                    $anchor.append(emptyHtml);
+                    listing = {
+                        $node: $anchor.find(".woocommerce-no-products-found, p.woocommerce-info").first(),
+                        selector: data.empty_selector || ".woocommerce-no-products-found"
+                    };
+                }
+            }
+
+            // Update result count companions (scoped when possible).
+            const countRoot = $scope.length ? $scope : $(document);
+            if (resultCountHtml) {
+                ["p.woocommerce-result-count", ".woocommerce-result-count"].forEach((sel) => {
+                    const $count = countRoot.find(sel).filter(function () {
+                        return canReplace($(this));
+                    }).first();
+                    if ($count.length) {
+                        this.replaceListingNode($count, resultCountHtml);
+                    } else if ($scope.length) {
+                        const $woo = $scope.is(".woocommerce") ? $scope : $scope.find(".woocommerce").first();
+                        const $target = $woo.length ? $woo : $scope;
+                        const $order = $target.find("form.woocommerce-ordering").first();
+                        if ($order.length) {
+                            $order.before(resultCountHtml);
+                        } else {
+                            $target.prepend(resultCountHtml);
+                        }
+                    }
+                });
+            } else if (emptyHtml) {
+                countRoot.find("p.woocommerce-result-count, .woocommerce-result-count").each(function () {
+                    if (canReplace($(this))) {
+                        $(this).remove();
+                    }
+                });
+            }
+
+            // Sync Woo/Elementor pagination (product-page links).
+            this.syncMainQueryAjaxPagination($builder, data, canReplace);
+
+            return listing;
+        },
+
+        /**
+         * Replace / insert / remove .woocommerce-pagination after Main Query AJAX.
+         */
+        syncMainQueryAjaxPagination($builder, data, canReplace) {
+            const paginationHtml = String((data && data.pagination_html) || "");
+            const pagerSelectors = [
+                "nav.woocommerce-pagination",
+                ".woocommerce-pagination",
+                "nav.elementor-pagination",
+                ".elementor-pagination"
+            ];
+            const livePager = this.findExternalResultsNode($(document), pagerSelectors);
+
+            if (paginationHtml) {
+                if (livePager.$node.length && canReplace(livePager.$node)) {
+                    this.replaceListingNode(livePager.$node, paginationHtml);
+                    return;
+                }
+                // Insert after products / result area when pager was missing (e.g. first filter).
+                const $ul = this.findExternalResultsNode(
+                    $(document),
+                    this.getMainQueryResultsSelectors($builder).concat(["ul.products"])
+                ).$node;
+                let $anchor = $ul;
+                if ($ul.length && !$ul.is("ul.products")) {
+                    const inner = $ul.find("ul.products").first();
+                    if (inner.length) {
+                        $anchor = inner;
+                    }
+                }
+                const $woo = $anchor.closest(".woocommerce");
+                if ($woo.length) {
+                    $woo.append($(paginationHtml));
+                } else if ($anchor.length) {
+                    $anchor.after($(paginationHtml));
+                }
+                return;
+            }
+
+            // No pages left â€” drop stale pager from previous unfiltered state.
+            if (livePager.$node.length && canReplace(livePager.$node)) {
+                livePager.$node.remove();
+            }
+        },
+
+        /**
+         * Legacy full-page fragment GET (fallback).
+         */
+        fetchMainQueryPageFragment($builder, page = 1, requestId, options = {}, queryKey = "", showLoader = false) {
+            const fetchUrl = this.getMainQueryRequestUrl($builder);
+
+            const controllers = typeof AbortController !== "undefined" ? new AbortController() : null;
+            const abortProxy = {
+                abort: () => {
+                    if (controllers) {
+                        controllers.abort();
+                    }
+                }
+            };
+            if (queryKey) {
+                this._buildQueryXhrs[queryKey] = abortProxy;
+            }
+
+            const fetchOptions = {
+                method: "GET",
+                credentials: "same-origin",
+                cache: "no-store",
+                headers: {
+                    "X-CAF-Fragment": "1",
+                    "X-CAF-Apply-Filters": "1",
+                    Accept: "application/json, text/html"
+                }
+            };
+            if (controllers) {
+                fetchOptions.signal = controllers.signal;
+            }
+
+            fetch(fetchUrl, fetchOptions)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Fragment fetch failed: ${response.status}`);
+                    }
+                    return response.text().then((text) => {
+                        const ct = String(response.headers.get("content-type") || "").toLowerCase();
+                        const trimmed = String(text || "").trim();
+                        const looksJson =
+                            ct.indexOf("application/json") !== -1 ||
+                            trimmed.charAt(0) === "{";
+                        if (looksJson) {
+                            try {
+                                const start = trimmed.indexOf("{");
+                                const end = trimmed.lastIndexOf("}");
+                                const slice =
+                                    start >= 0 && end > start
+                                        ? trimmed.slice(start, end + 1)
+                                        : trimmed;
+                                return { kind: "json", json: JSON.parse(slice) };
+                            } catch (err) {
+                                return { kind: "html", html: text };
+                            }
+                        }
+                        return { kind: "html", html: text };
+                    });
+                })
+                .then((payload) => {
+                    if ($builder.data("cafBuildQueryRid") !== requestId) {
+                        return;
+                    }
+
+                    let listing = { $node: $(), selector: "" };
+
+                    if (
+                        payload.kind === "json" &&
+                        payload.json &&
+                        payload.json.success &&
+                        payload.json.data
+                    ) {
+                        const chunkData = payload.json.data;
+                        if (!chunkData.products && !chunkData.empty) {
+                            return this.fetchMainQueryFullHtmlFallback($builder, requestId, options);
+                        }
+                        listing = this.applyMainQueryFragmentChunks($builder, chunkData);
+                        if (!listing.$node || !listing.$node.length) {
+                            return this.fetchMainQueryFullHtmlFallback($builder, requestId, options);
+                        }
+                    } else if (payload.kind === "html") {
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(payload.html, "text/html");
+                        const $remote = $(doc);
+                        listing = this.syncMainQueryListingZone($builder, $remote);
+                        this.syncMainQueryCompanions($remote);
+                    } else {
+                        return this.fetchMainQueryFullHtmlFallback($builder, requestId, options);
+                    }
+
+                    this.afterMainQueryFragmentSwap($builder, listing, options);
+                })
+                .catch((err) => {
+                    if (err && err.name === "AbortError") {
+                        return;
+                    }
+                    if (typeof console !== "undefined" && typeof console.warn === "function") {
+                        console.warn("[CAF] Main Query fragment failed", err);
+                    }
+                    this.clearInteractionState($builder);
+                })
+                .finally(() => {
+                    if (queryKey && this._buildQueryXhrs[queryKey] === abortProxy) {
+                        delete this._buildQueryXhrs[queryKey];
+                    }
+                    if (showLoader && $builder.data("cafBuildQueryRid") === requestId) {
+                        $builder.find(this.selectors.loader).removeClass("active");
+                    }
+                });
+        },
+
+        /**
+         * Apply server JSON chunks (products / empty / companions) to the live DOM.
+         */
+        applyMainQueryFragmentChunks($builder, data) {
+            const productsHtml = String((data && data.products) || "");
+            const emptyHtml = String((data && data.empty) || "");
+            const companions = data && data.companions && typeof data.companions === "object"
+                ? data.companions
+                : {};
+
+            // Prefer the selector the server used for extraction so wrapper vs ul stays in sync.
+            const productSelectors = [];
+            if (data && data.products_selector) {
+                productSelectors.push(String(data.products_selector));
+            }
+            productSelectors.push(...this.getMainQueryResultsSelectors($builder));
+
+            const emptySelectors = [];
+            if (data && data.empty_selector) {
+                emptySelectors.push(String(data.empty_selector));
+            }
+            emptySelectors.push(...this.getMainQueryEmptySelectors());
+
+            const liveProducts = this.findExternalResultsNode($(document), productSelectors);
+            const liveEmpty = this.findExternalResultsNode($(document), emptySelectors);
+
+            const canReplace = ($node) =>
+                $node && $node.length && !$node.find(".caf-builder-container").length;
+
+            let listing = { $node: $(), selector: "" };
+            let swappedWrapper = false;
+
+            if (productsHtml) {
+                if (liveProducts.$node.length && canReplace(liveProducts.$node)) {
+                    const $new = this.replaceListingNode(liveProducts.$node, productsHtml);
+                    listing = {
+                        $node: $new,
+                        selector: data.products_selector || liveProducts.selector
+                    };
+                    swappedWrapper = /\.woocommerce\s*$/.test(String(listing.selector || ""))
+                        || ($new.length && $new.is(".woocommerce"));
+                } else if (liveEmpty.$node.length && canReplace(liveEmpty.$node)) {
+                    const $new = this.replaceListingNode(liveEmpty.$node, productsHtml);
+                    listing = {
+                        $node: $new,
+                        selector: data.products_selector || ""
+                    };
+                    swappedWrapper = $new.length && $new.is(".woocommerce");
+                }
+            } else if (emptyHtml) {
+                if (liveProducts.$node.length && canReplace(liveProducts.$node)) {
+                    const $new = this.replaceListingNode(liveProducts.$node, emptyHtml);
+                    listing = {
+                        $node: $new,
+                        selector: data.empty_selector || liveProducts.selector
+                    };
+                } else if (liveEmpty.$node.length && canReplace(liveEmpty.$node)) {
+                    const $new = this.replaceListingNode(liveEmpty.$node, emptyHtml);
+                    listing = {
+                        $node: $new,
+                        selector: data.empty_selector || liveEmpty.selector
+                    };
+                }
+            }
+
+            // Companions from JSON (skip when already inside a swapped .woocommerce wrapper).
+            if (!swappedWrapper) {
+                Object.keys(companions).forEach((selector) => {
+                    const html = companions[selector];
+                    if (!html) {
+                        return;
+                    }
+                    const live = this.findExternalResultsNode($(document), [selector]);
+                    if (!live.$node.length || !canReplace(live.$node)) {
+                        return;
+                    }
+                    this.replaceListingNode(live.$node, html);
+                });
+            }
+
+            // Drop orphan pager/count when remote sent none.
+            const pagerKeys = [
+                "nav.woocommerce-pagination",
+                ".woocommerce-pagination",
+                ".ast-woocommerce-pagination",
+                ".ast-pagination",
+                "nav.elementor-pagination",
+                ".elementor-pagination",
+                ".wp-block-query-pagination",
+                ".wc-block-pagination",
+                ".wc-block-components-pagination"
+            ];
+            const hasRemotePager = pagerKeys.some((key) => !!companions[key]);
+            if (!hasRemotePager && emptyHtml && !productsHtml) {
+                const livePager = this.findExternalResultsNode($(document), pagerKeys);
+                if (livePager.$node.length && canReplace(livePager.$node)) {
+                    livePager.$node.remove();
+                }
+            }
+
+            return listing;
+        },
+
+        /**
+         * Fallback: GET current shop URL as full HTML (no fragment header) and swap via DOM parse.
+         */
+        fetchMainQueryFullHtmlFallback($builder, requestId, options = {}) {
+            let fallbackUrl;
+            try {
+                const url = new URL(this.getMainQueryRequestUrl($builder));
+                url.searchParams.delete("_caf_fragment");
+                fallbackUrl = url.toString();
+            } catch (err) {
+                fallbackUrl = this.getMainQueryRequestUrl($builder);
+            }
+
+            return fetch(fallbackUrl, {
+                method: "GET",
+                credentials: "same-origin",
+                cache: "no-store",
+                headers: {
+                    "X-CAF-Apply-Filters": "1",
+                    Accept: "text/html"
+                }
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error(`Full HTML fallback failed: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then((html) => {
+                    if ($builder.data("cafBuildQueryRid") !== requestId) {
+                        return;
+                    }
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, "text/html");
+                    const $remote = $(doc);
+                    const listing = this.syncMainQueryListingZone($builder, $remote);
+                    this.syncMainQueryCompanions($remote);
+                    this.afterMainQueryFragmentSwap($builder, listing, options);
+                });
+        },
+
+        afterMainQueryFragmentSwap($builder, listing, options = {}) {
+            this.refreshElementorFrontend($builder);
+
+            if ($builder.length && $.contains(document.documentElement, $builder[0])) {
+                $builder.addClass("caf-is-ready");
+            }
+
+            if (typeof this.isDynamicTermCountsEnabled === "function" && this.isDynamicTermCountsEnabled($builder) && typeof this.fetchFacetCounts === "function") {
+                this.fetchFacetCounts($builder, { skipLoader: true });
+            }
+
+            const interaction = this.getInteractionState($builder);
+            if (interaction) {
+                interaction.meta = interaction.meta || {};
+                this.trackAnalyticsEvent($builder, interaction.event_type || "click", interaction);
+            }
+            this.clearInteractionState($builder);
+
+            if (!options.skipScroll) {
+                const afterSelectors = listing && listing.selector
+                    ? [listing.selector].concat(this.getMainQueryEmptySelectors())
+                    : this.getMainQueryResultsSelectors($builder).concat(
+                          this.getMainQueryEmptySelectors()
+                      );
+                const after = this.findExternalResultsNode($(document), afterSelectors);
+                if (after.$node.length && typeof after.$node[0].scrollIntoView === "function") {
+                    try {
+                        after.$node[0].scrollIntoView({ behavior: "smooth", block: "start" });
+                    } catch (err) {
+                        // no-op
+                    }
+                }
+            }
         },
 
         updatePosts($builder, data, appendPosts = false) {
@@ -4312,4 +5729,87 @@ jQuery(function ($) {
     };
 
     CAFBuilder.init();
+
+    /* Body-ported term label tooltips (immune to Design CSS overflow). */
+    (function initCafTermLabelTooltips() {
+        const PORTAL_ID = "caf-term-tooltip-portal";
+        const SELECTOR = ".caf-has-term-tooltip";
+
+        function ensurePortal() {
+            let el = document.getElementById(PORTAL_ID);
+            if (!el) {
+                el = document.createElement("div");
+                el.id = PORTAL_ID;
+                el.className = "caf-term-tooltip-portal";
+                el.setAttribute("role", "tooltip");
+                document.body.appendChild(el);
+            }
+            return el;
+        }
+
+        function readLabel(trigger) {
+            if (!trigger) {
+                return "";
+            }
+            const fromData = trigger.getAttribute("data-caf-tooltip");
+            if (fromData && String(fromData).trim()) {
+                return String(fromData).trim();
+            }
+            const nested = trigger.querySelector(".caf-term-tooltip");
+            return nested ? String(nested.textContent || "").trim() : "";
+        }
+
+        function hidePortal() {
+            const el = document.getElementById(PORTAL_ID);
+            if (!el) {
+                return;
+            }
+            el.classList.remove("is-visible", "is-flipped");
+            el.textContent = "";
+        }
+
+        function showPortal(trigger) {
+            const label = readLabel(trigger);
+            if (!label) {
+                hidePortal();
+                return;
+            }
+            const tip = ensurePortal();
+            tip.textContent = label;
+            tip.classList.remove("is-flipped");
+            tip.classList.add("is-visible");
+
+            const rect = trigger.getBoundingClientRect();
+            const tipWidth = tip.offsetWidth || 0;
+            const tipHeight = tip.offsetHeight || 0;
+            let left = rect.left + rect.width / 2;
+            let top = rect.top;
+            const pad = 8;
+
+            left = Math.max(
+                pad + tipWidth / 2,
+                Math.min(left, window.innerWidth - pad - tipWidth / 2)
+            );
+
+            if (top - tipHeight - 12 < pad) {
+                tip.classList.add("is-flipped");
+                top = rect.bottom;
+            }
+
+            tip.style.left = left + "px";
+            tip.style.top = top + "px";
+        }
+
+        $(document)
+            .on("mouseenter.cafTermTip focusin.cafTermTip", SELECTOR, function () {
+                showPortal(this);
+            })
+            .on("mouseleave.cafTermTip focusout.cafTermTip", SELECTOR, function () {
+                hidePortal();
+            });
+
+        $(window).on("scroll.cafTermTip resize.cafTermTip", function () {
+            hidePortal();
+        });
+    })();
 });

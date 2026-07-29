@@ -124,83 +124,101 @@ class CAF_get_filter_posts
     }
     public function get_filter_posts()
     {
-        if ( ! isset( $_POST['params'] ) || ! is_array( $_POST['params'] ) ) {
-            die(
-                wp_json_encode(
-                    array(
-                        'status'  => 500,
-                        'message' => 'Invalid request.',
-                        'content' => false,
-                        'found'   => 0,
-                    )
-                )
-            );
-        }
+        check_ajax_referer('tc_caf_ajax_nonce', 'nonce');
 
-        $params    = wp_unslash( $_POST['params'] );
-        $filter_id = isset( $params['filter-id'] ) ? sanitize_text_field( $params['filter-id'] ) : '';
-        $caf_security = 'disable';
-        if (get_post_meta($filter_id, "caf_special_security", true)) {
-            $caf_security = get_post_meta($filter_id, "caf_special_security", true);
-        }
-        if ($caf_security == 'enable') {
-            if (!isset($_POST['nonce']) || !wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'tc_caf_ajax_nonce')) {
-                die('Permission denied');
-            }
-
-        }
-/*** Default response ***/
         $response = [
             'status' => 500,
             'message' => 'Something is wrong, please try again later ...',
             'content' => false,
             'found' => 0,
         ];
-        $tax = isset( $params['tax'] ) ? sanitize_text_field( $params['tax'] ) : '';
-        $post_type = isset( $params['post-type'] ) ? sanitize_text_field( $params['post-type'] ) : '';
 
-        $term = isset( $params['term'] ) ? sanitize_text_field( $params['term'] ) : '';
-        $page = isset( $params['page'] ) ? intval( $params['page'] ) : 1;
-        $per_page = isset( $params['per-page'] ) ? intval( $params['per-page'] ) : 10;
-        $caf_post_layout = isset( $params['caf-post-layout'] ) ? sanitize_text_field( $params['caf-post-layout'] ) : '';
-        $target_div = isset( $params['data-target-div'] ) ? sanitize_text_field( $params['data-target-div'] ) : '';
-        if ($per_page == '-1') {$per_page = '5';}
-        /*** Check if term exists ***/
-        $terms = explode(',', $term);
-        if (!is_array($terms)):
-            $response = [
-                'status' => 501,
-                'message' => 'Term doesn\'t exist',
-                'content' => 0,
-            ];
+        $params = (isset($_POST['params']) && is_array($_POST['params'])) ? wp_unslash($_POST['params']) : array();
+        $filter_id = isset($params['filter-id']) ? absint($params['filter-id']) : 0;
+
+        if (!$filter_id || get_post_type($filter_id) !== 'caf_posts') {
+            $response['status'] = 403;
+            $response['message'] = 'Invalid filter';
             die(wp_json_encode($response));
-        else:
-            if ($terms == 'all'):
-                $tax_qry[] = [
-                    'taxonomy' => $tax,
-                    'field' => 'term_id',
-                    'terms' => $terms,
-                    'operator' => 'IN',
+        }
+
+        // Trusted settings from filter meta (do not trust client CPT/tax/per-page/layout).
+        $post_type = sanitize_key((string) get_post_meta($filter_id, 'caf_cpt_value', true));
+        $tax = sanitize_key((string) get_post_meta($filter_id, 'caf_taxonomy', true));
+        $allowed_terms = get_post_meta($filter_id, 'caf_terms', true);
+        if (!is_array($allowed_terms)) {
+            $allowed_terms = array();
+        }
+        $allowed_terms = array_values(array_filter(array_map('absint', $allowed_terms)));
+
+        if (empty($post_type) || empty($tax) || empty($allowed_terms)) {
+            $response['status'] = 501;
+            $response['message'] = 'Filter is not configured';
+            die(wp_json_encode($response));
+        }
+
+        $per_page = (int) get_post_meta($filter_id, 'caf_per_page', true);
+        if ($per_page === -1 || $per_page < 1) {
+            $per_page = 5;
+        }
+        if ($per_page > 100) {
+            $per_page = 100;
+        }
+
+        $caf_post_layout = sanitize_file_name((string) get_post_meta($filter_id, 'caf_post_layout', true));
+        $allowed_layouts = array('post-layout1', 'post-layout2', 'post-layout3', 'post-layout4');
+        /**
+         * Filter allowed post layout slugs for AJAX includes.
+         *
+         * @param string[] $allowed_layouts Layout slugs.
+         * @param int      $filter_id       Filter post ID.
+         */
+        $allowed_layouts = apply_filters('tc_caf_allowed_post_layouts', $allowed_layouts, $filter_id);
+        if (!in_array($caf_post_layout, $allowed_layouts, true)) {
+            $caf_post_layout = 'post-layout1';
+        }
+
+        // Soft-trusted client inputs: page + selected terms only.
+        $page = isset($params['page']) ? max(1, absint($params['page'])) : 1;
+        $term_raw = isset($params['term']) ? sanitize_text_field($params['term']) : '';
+        $target_div = isset($params['data-target-div']) ? sanitize_text_field($params['data-target-div']) : '';
+
+        if ($term_raw === '' || strtolower($term_raw) === 'all') {
+            $terms = $allowed_terms;
+        } else {
+            $requested = array_filter(array_map('absint', explode(',', $term_raw)));
+            $terms = array_values(array_intersect($requested, $allowed_terms));
+            if (empty($terms)) {
+                $response = [
+                    'status' => 501,
+                    'message' => 'Term doesn\'t exist',
+                    'content' => 0,
                 ];
-            else:
-                $tax_qry[] = [
-                    'taxonomy' => $tax,
-                    'field' => 'term_id',
-                    'terms' => $terms,
-                ];
-            endif;
-        endif;
+                die(wp_json_encode($response));
+            }
+        }
+
+        $tax_qry = [
+            [
+                'taxonomy' => $tax,
+                'field' => 'term_id',
+                'terms' => $terms,
+                'operator' => 'IN',
+            ],
+        ];
+
         $default_order_by = 'title';
-        if (get_post_meta($filter_id, "caf_post_orders_by", true)) {
-            $default_order_by = get_post_meta($filter_id, "caf_post_orders_by", true);
+        if (get_post_meta($filter_id, 'caf_post_orders_by', true)) {
+            $default_order_by = get_post_meta($filter_id, 'caf_post_orders_by', true);
         }
         $default_order_by = apply_filters('tc_caf_filter_posts_order_by', $default_order_by);
-        $default_order = "asc";
-        if (get_post_meta($filter_id, "caf_post_order_type", true)) {
-            $default_order = get_post_meta($filter_id, "caf_post_order_type", true);
+
+        $default_order = 'asc';
+        if (get_post_meta($filter_id, 'caf_post_order_type', true)) {
+            $default_order = get_post_meta($filter_id, 'caf_post_order_type', true);
         }
         $default_order = apply_filters('tc_caf_filter_posts_order', $default_order);
-        /*** Setup query ***/
+
         $args = [
             'paged' => $page,
             'post_type' => $post_type,
@@ -212,26 +230,22 @@ class CAF_get_filter_posts
             'order' => $default_order,
         ];
         $qry = new WP_Query($args);
+
         ob_start();
         echo '<div class="status"></div>';
-        $caf_post_layout=sanitize_file_name($caf_post_layout);
-        if ($caf_post_layout && strlen($caf_post_layout) > 11) {
-            $filepath = TC_CAF_PATH . "includes/layouts/post/" . $caf_post_layout . ".php";
-            if (file_exists($filepath)) {
-                include_once $filepath;
-            } else {
-                echo "<div class='error-of-post-layout error-caf'>" . esc_html('Post Layout is not Available.', 'category-ajax-filter') . "</div>";
-                $response = [
-                    'status' => 404,
-                    'message' => 'No posts found',
-                    //'content' =>'ok',
-                ];
-            }
+        $filepath = TC_CAF_PATH . 'includes/layouts/post/' . $caf_post_layout . '.php';
+        if (file_exists($filepath)) {
+            include $filepath;
+        } else {
+            echo "<div class='error-of-post-layout error-caf'>" . esc_html__('Post Layout is not Available.', 'category-ajax-filter') . '</div>';
+            $response = [
+                'status' => 404,
+                'message' => 'No posts found',
+            ];
         }
-//include_once TC_CAF_PATH.'includes/layouts/post/post-layout1.php';
+
         $response['content'] = ob_get_clean();
         die(wp_json_encode($response));
-        //die();
     }
 }
 

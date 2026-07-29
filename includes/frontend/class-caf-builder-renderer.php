@@ -69,7 +69,9 @@ class CAF_Builder_Renderer {
 			$html .= $this->render_filter_area( $query );
 		}
 
-		$html .= $this->render_post_area( $query );
+		if ( ! $this->data_handler->is_main_query_listing() ) {
+			$html .= $this->render_post_area( $query );
+		}
 		$html .= $this->render_preview_layout_wrapper_close();
 		$html .= $this->render_custom_css_block();
 		$html .= $this->render_wrapper_close();

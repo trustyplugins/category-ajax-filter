@@ -80,17 +80,25 @@ class CAF_Meta_Boxes
     {
         /* Verify the nonce before proceeding. */
 
-        if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-            return;
-        }
-        if (!current_user_can('edit_posts', $post_id)) {
-            return $post_id;
-        }
+               /* Only save CAF meta for the CAF filter CPT. */
+               if (!$post || $post->post_type !== 'caf_posts') {
+                return;
+            }
+    
+            if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+                return;
+            }
+    
+            /* Match CPT UI (manage_options) and correct post meta-cap (edit_post). */
+            if (!current_user_can('manage_options') || !current_user_can('edit_post', $post_id)) {
+                return $post_id;
+            }
+    
+            if (!isset($_POST['caf_post_meta_option']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['caf_post_meta_option'])), basename(__FILE__))) {
+                return $post_id;
+            }
 
-        if ( ! isset( $_POST['caf_post_meta_option'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['caf_post_meta_option'] ) ), basename( __FILE__ ) ) ) {
-            return $post_id;
-        }
-
+            
         /* Get the posted data and sanitize it for use on frontend. */
         if (isset($_POST['custom-post-type-select'])) {
             $cpt_val = sanitize_text_field( wp_unslash( $_POST['custom-post-type-select'] ) );

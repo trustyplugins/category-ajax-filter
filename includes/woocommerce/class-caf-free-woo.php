@@ -53,14 +53,12 @@ class CAF_Free_Woo {
 	 * @return void
 	 */
 	public static function rest_get_product_price_range() {
-		$bounds = self::get_product_price_bounds();
-		wp_send_json(
-			array(
-				'status'   => 'success',
-				'min'      => $bounds['min'],
-				'max'      => $bounds['max'],
-				'currency' => self::get_product_price_currency_symbol(),
-			)
+		// Catalog auto-detect removed — static defaults only.
+		return array(
+			'status'   => 'success',
+			'min'      => 0,
+			'max'      => 100,
+			'currency' => self::get_product_price_currency_symbol(),
 		);
 	}
 
@@ -297,7 +295,80 @@ class CAF_Free_Woo {
 	}
 
 	/**
-	 * Apply WooCommerce price slider defaults (bounds, currency prefix, _price meta).
+	 * Whether a builder flag is enabled (supports "true"/true/1).
+	 *
+	 * @param mixed $value Raw flag.
+	 * @return bool
+	 */
+	public static function is_setting_flag_enabled( $value ) {
+		if ( true === $value || 1 === $value || '1' === $value ) {
+			return true;
+		}
+		if ( is_string( $value ) && 'true' === strtolower( trim( $value ) ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Whether a builder flag was explicitly disabled.
+	 *
+	 * @param mixed $value Raw flag.
+	 * @return bool
+	 */
+	public static function is_setting_flag_disabled( $value ) {
+		if ( false === $value || 0 === $value || '0' === $value ) {
+			return true;
+		}
+		if ( is_string( $value ) && 'false' === strtolower( trim( $value ) ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Seed currency/unit prefix only when unset — never override user toggle/value.
+	 *
+	 * @param object $slider        range_slider settings object.
+	 * @param string $default_value Default prefix text (currency/unit).
+	 * @return void
+	 */
+	public static function seed_range_slider_prefix_default( $slider, $default_value ) {
+		if ( ! is_object( $slider ) ) {
+			return;
+		}
+		if ( ! isset( $slider->prefix ) || ! is_object( $slider->prefix ) ) {
+			$slider->prefix = new stdClass();
+		}
+
+		$default_value = self::decode_html_entities( (string) $default_value );
+		$has_enable    = isset( $slider->prefix->is_enable );
+
+		if ( ! $has_enable ) {
+			$slider->prefix->is_enable = 'true';
+			$slider->prefix->value     = $default_value;
+			return;
+		}
+
+		if ( self::is_setting_flag_disabled( $slider->prefix->is_enable ) ) {
+			$slider->prefix->is_enable = 'false';
+			return;
+		}
+
+		if ( self::is_setting_flag_enabled( $slider->prefix->is_enable ) ) {
+			$slider->prefix->is_enable = 'true';
+			$prefix_value               = self::decode_html_entities(
+				isset( $slider->prefix->value ) ? (string) $slider->prefix->value : ''
+			);
+			if ( '' === trim( $prefix_value ) || 'Prefix' === $prefix_value ) {
+				$slider->prefix->value = $default_value;
+			}
+		}
+	}
+
+	/**
+	 * Apply WooCommerce price slider defaults (_price meta + currency prefix).
+	 * Min/max stay as saved settings; missing values default to 0–100 (no catalog scan).
 	 *
 	 * @param object $settings Module settings.
 	 * @return object
@@ -311,7 +382,6 @@ class CAF_Free_Woo {
 			return $settings;
 		}
 
-		$bounds   = self::get_product_price_bounds();
 		$currency = self::get_product_price_currency_symbol();
 
 		if ( ! isset( $settings->custom_field_data ) || ! is_array( $settings->custom_field_data ) || empty( $settings->custom_field_data ) ) {
@@ -346,32 +416,21 @@ class CAF_Free_Woo {
 
 		$slider = $settings->range_slider;
 
-		$slider->min = $bounds['min'];
-		$slider->max = $bounds['max'];
-		if ( (float) $slider->max <= 0 ) {
-			$slider->max = 1000.0;
+		if ( ! isset( $slider->min ) || ! is_numeric( $slider->min ) ) {
+			$slider->min = 0;
+		}
+		if ( ! isset( $slider->max ) || ! is_numeric( $slider->max ) || (float) $slider->max <= 0 ) {
+			$slider->max = 100;
+		}
+		if ( (float) $slider->max < (float) $slider->min ) {
+			$slider->max = $slider->min;
 		}
 
 		if ( ! isset( $slider->step ) || ! is_numeric( $slider->step ) || (float) $slider->step <= 0 ) {
 			$slider->step = 1;
 		}
 
-		if ( ! isset( $slider->prefix ) || ! is_object( $slider->prefix ) ) {
-			$slider->prefix = new stdClass();
-		}
-
-		$prefix_value = self::decode_html_entities(
-			isset( $slider->prefix->value ) ? (string) $slider->prefix->value : ''
-		);
-		if (
-			! isset( $slider->prefix->is_enable ) ||
-			'true' !== (string) $slider->prefix->is_enable ||
-			'' === trim( $prefix_value ) ||
-			'Prefix' === $prefix_value
-		) {
-			$slider->prefix->is_enable = 'true';
-			$slider->prefix->value     = $currency;
-		}
+		self::seed_range_slider_prefix_default( $slider, $currency );
 
 		$settings->range_slider = $slider;
 
@@ -1131,7 +1190,7 @@ class CAF_Free_Woo {
 	}
 
 	/**
-	 * Render the free Badges module (New badge only; no prefix/suffix).
+	 * Render the free Badges module (New and Sale; no prefix/suffix).
 	 *
 	 * @param object $module  Module definition.
 	 * @param int    $post_id Product ID.
@@ -1145,16 +1204,23 @@ class CAF_Free_Woo {
 
 		$settings   = isset( $module->settings ) && is_object( $module->settings ) ? $module->settings : new stdClass();
 		$badge_type = isset( $settings->badge_type ) ? sanitize_key( (string) $settings->badge_type ) : 'new';
-		// Free only supports the New badge; other types are Pro-only.
-		if ( 'new' !== $badge_type ) {
+		// Free supports New and Sale; other types are Pro-only.
+		if ( 'new' !== $badge_type && 'sale' !== $badge_type ) {
 			return '';
 		}
 
-		if ( ! self::is_new_product( $product, $settings ) ) {
-			return '';
+		if ( 'sale' === $badge_type ) {
+			if ( ! $product->is_on_sale() ) {
+				return '';
+			}
+			$badge_text = self::resolve_sale_badge_text( $settings );
+		} else {
+			if ( ! self::is_new_product( $product, $settings ) ) {
+				return '';
+			}
+			$badge_text = self::resolve_new_badge_text( $settings );
 		}
 
-		$badge_text = self::resolve_new_badge_text( $settings );
 		if ( '' === trim( (string) $badge_text ) ) {
 			return '';
 		}
@@ -1213,6 +1279,26 @@ class CAF_Free_Woo {
 		}
 
 		return __( 'New', 'category-ajax-filter' );
+	}
+
+	/**
+	 * Resolve sale badge label from module settings.
+	 *
+	 * @param object $settings Module settings.
+	 * @return string
+	 */
+	protected static function resolve_sale_badge_text( $settings ) {
+		$sale_settings = self::get_badge_type_settings( $settings, 'sale' );
+		$text_source   = isset( $sale_settings->text_source ) && 'custom_text' === (string) $sale_settings->text_source
+			? 'custom_text'
+			: 'default';
+
+		if ( 'custom_text' === $text_source ) {
+			$custom_text = isset( $sale_settings->custom_text ) ? trim( (string) $sale_settings->custom_text ) : '';
+			return '' !== $custom_text ? $custom_text : __( 'Sale', 'category-ajax-filter' );
+		}
+
+		return __( 'Sale', 'category-ajax-filter' );
 	}
 
 	/**

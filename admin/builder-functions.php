@@ -596,17 +596,6 @@ function caf_post_filter_init_fun() {
 	);
 	register_rest_route(
 		'caf-custom-builder/v1',
-		'/get-terms/',
-		array(
-			'methods'             => 'POST',
-			'callback'            => 'caf_get_terms',
-			'permission_callback' => function () {
-				return current_user_can( 'manage_options' );
-			},
-		)
-	);
-	register_rest_route(
-		'caf-custom-builder/v1',
 		'/save-filter-layout/',
 		array(
 			'methods'             => 'POST',
@@ -664,13 +653,10 @@ function caf_post_filter_init_fun() {
 
 function caf_get_custom_fields( $data ) {
 	if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'filter_custom_field' ) ) {
-		echo wp_json_encode(
-			array(
+		return array(
 				'status'        => 'success',
 				'custom_fields' => array(),
-			)
-		);
-		return;
+			);
 	}
 
 	$post_type = $data['post-type'];
@@ -701,12 +687,10 @@ function caf_get_custom_fields( $data ) {
 		break;
 	}
 	wp_reset_postdata();
-	echo json_encode(
-		array(
+	return array(
 			'status'        => 'success',
 			'custom_fields' => $results,
-		)
-	);
+		);
 }
 
 function caf_verify_taxonomy_terms( $data ) {
@@ -729,15 +713,12 @@ function caf_verify_taxonomy_terms( $data ) {
 			$taxonomyData[ $value ] = array();
 		}
 	}
-	echo json_encode(
-		array(
+	return array(
 			'status'        => 'success',
 			'taxonomy_data' => $taxonomyData,
-		)
-	);
+		);
 }
 function caf_rename_rest_filter_layout( $data ) {
-	ob_start();
 	$index     = $data['index'];
 	$new_label = $data['title'];
 	$options   = get_option( 'caf_custom_post_filter_layout' );
@@ -745,38 +726,30 @@ function caf_rename_rest_filter_layout( $data ) {
 		$options[ $index ]['label'] = $new_label;
 		update_option( 'caf_custom_post_filter_layout', $options );
 		$updated_option = get_option( 'caf_custom_post_filter_layout' );
-		echo json_encode(
-			array(
+		return array(
 				'status' => 'success',
 				'title'  => $updated_option[ $index ],
-			)
-		);
+			);
 	}
 }
 function caf_get_filter_option( $data ) {
-	ob_start();
 	$filter_layouts = get_option( 'caf_custom_post_filter_layout' );
 	$index          = $data['builder_index'];
 	$title          = $filter_layouts[ $index ]['key'];
 	$filter_opt     = 'caf_fl_' . $title . '_' . $index;
 	if ( get_option( $filter_opt ) ) {
-		echo json_encode(
-			array(
+		return array(
 				'status'      => 'success',
 				'filter_data' => get_option( $filter_opt ),
-			)
-		);
+			);
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status'      => 'success',
 				'filter_data' => null,
-			)
-		);
+			);
 	}
 }
 function caf_save_filter_rest_option( $data ) {
-	ob_start();
 	$data_layouts = json_decode( $data['json_data'] );
 	$extra_data   = json_decode( $data['extraData'] );
 	$alldata      = array(
@@ -793,12 +766,10 @@ function caf_save_filter_rest_option( $data ) {
 	} else {
 		update_option( $filter_opt, $alldata );
 	}
-	echo json_encode(
-		array(
+	return array(
 			'status'      => 'success',
 			'filter_data' => get_option( $filter_opt ),
-		)
-	);
+		);
 }
 
 function StyledTermData( $out, $taxo ) {
@@ -880,7 +851,6 @@ function StyledTermData( $out, $taxo ) {
 	return $stripped_html;
 }
 function caf_get_taxonomy( $data ) {
-	ob_start();
 	$post_type      = $data['post-type'];
 	$taxonomy_names = get_object_taxonomies( $post_type );
 	$taxoData       = array();
@@ -930,13 +900,11 @@ function caf_get_taxonomy( $data ) {
 		'status'        => 'success',
 		'taxonomy_list' => $taxoData,
 	);
-	header( 'Content-Type: application/json' );
-	echo json_encode( $response );
+	return $response;
 }
 
 
 function caf_add_rest_option_filter( $data ) {
-	ob_start();
 	$opt   = 'caf_custom_post_filter_layout';
 	$title = $data['title'];
 	$key   = $data['title'];
@@ -955,15 +923,12 @@ function caf_add_rest_option_filter( $data ) {
 		);
 		update_option( $opt, $custom_layouts );
 	}
-	echo json_encode(
-		array(
+	return array(
 			'status'         => 'success',
 			'filter_layouts' => get_option( $opt ),
-		)
-	);
+		);
 }
 function caf_get_filter_layouts( $data ) {
-	ob_start();
 	$layouts = array();
 	if ( get_option( 'caf_custom_post_filter_layout' ) ) {
 		$layouts      = get_option( 'caf_custom_post_filter_layout' );
@@ -978,17 +943,14 @@ function caf_get_filter_layouts( $data ) {
 			}
 		}
 	}
-	echo json_encode(
-		array(
+	return array(
 			'status'         => 'success',
 			'filter_layouts' => $layouts,
 			'filter_saved'   => $filter_saved,
-		)
-	);
+		);
 }
 
 function caf_delete_filter_rest_option( $data ) {
-	ob_start();
 	$index   = $data['index'];
 	$options = get_option( 'caf_custom_post_filter_layout' );
 	if ( $options[ $index ] ) {
@@ -997,12 +959,10 @@ function caf_delete_filter_rest_option( $data ) {
 		unset( $options[ $index ] );
 		delete_option( $title );
 		update_option( 'caf_custom_post_filter_layout', $options );
-		echo json_encode(
-			array(
+		return array(
 				'status'         => 'success',
 				'filter_layouts' => get_option( 'caf_custom_post_filter_layout' ),
-			)
-		);
+			);
 	}
 }
 
@@ -1370,16 +1330,14 @@ function caf_get_cf_field_list( $request ) {
 	$post_type = sanitize_key( (string) $request->get_param( 'post_type' ) );
 
 	if ( '' === $post_type ) {
-		wp_send_json_error( 'post_type is required' );
+		return array( 'success' => false, 'data' => 'post_type is required' );
 	}
 
 	$meta_keys = caf_get_builder_custom_field_keys_for_post_type( $post_type );
 
-	wp_send_json_success(
-		array(
+	return array( 'success' => true, 'data' => array(
 			'meta_keys' => array_values( $meta_keys ),
-		)
-	);
+		) );
 }
 
 /**
@@ -1685,7 +1643,7 @@ function caf_get_cf_field_value( $request ) {
 			}
 
 			if ( ! $image_id ) {
-				wp_send_json_error( 'Image ID not found' );
+				return array( 'success' => false, 'data' => 'Image ID not found' );
 			}
 
 				// Get main image URL
@@ -1694,13 +1652,11 @@ function caf_get_cf_field_value( $request ) {
 				// CALL YOUR FUNCTION here 👍
 				$sizes = get_custom_image_sizes( $image_id );
 
-				wp_send_json_success(
-					array(
+				return array( 'success' => true, 'data' => array(
 						'source' => 'acf',
 						'value'  => $image_url,
 						'sizes'  => $sizes,
-					)
-				);
+					) );
 		}
 
 		// FILE FIELD (ACF)
@@ -1715,27 +1671,23 @@ function caf_get_cf_field_value( $request ) {
 				$url = wp_get_attachment_url( $value );
 			}
 
-			wp_send_json_success(
-				array(
+			return array( 'success' => true, 'data' => array(
 					'source' => 'acf',
 					'type'   => 'file',
 					'value'  => $url,
 					'sizes'  => array(), // file has no sizes
-				)
-			);
+				) );
 		}
 
 		// TEXT / TEXTAREA (ACF)
 		if ( $type === 'text' || $type === 'textarea' ) {
 
-			wp_send_json_success(
-				array(
+			return array( 'success' => true, 'data' => array(
 					'source' => 'acf',
 					'type'   => $type,
 					'value'  => (string) $value,
 					'sizes'  => array(),
-				)
-			);
+				) );
 		}
 	} else {
 		// -------------------------
@@ -1746,36 +1698,32 @@ function caf_get_cf_field_value( $request ) {
 		// If normal meta contains numeric attachment ID
 		if ( is_numeric( $raw ) && get_post_mime_type( $raw ) ) {
 
-			wp_send_json_success(
-				array(
+			return array( 'success' => true, 'data' => array(
 					'source' => 'meta',
 					'type'   => 'image_or_file',
 					'value'  => wp_get_attachment_url( $raw ),
 					'sizes'  => get_all_image_sizes_list( $raw ),
-				)
-			);
+				) );
 		}
 
 		// Normal text meta
-		wp_send_json_success(
-			array(
+		return array( 'success' => true, 'data' => array(
 				'source' => 'meta',
 				'type'   => 'meta_text',
 				'value'  => $raw,
 				'sizes'  => array(),
-			)
-		);
+			) );
 	}
 
 	// if (!$post_id) {
-	// echo json_encode(array("status" => "error", "excerpt" => "", "message" => "Required Parameters are Missing"));
+	// return array("status" => "error", "excerpt" => "", "message" => "Required Parameters are Missing");
 	// }
 	// if ($status === true) {
 	// $desc = get_html_excerpt_without_divi_shortcodes($post_id, $length);
-	// echo json_encode(array("status" => "success", "excerpt" => $desc));
+	// return array("status" => "success", "excerpt" => $desc);
 	// } else {
 	// $text = get_excerpt_by_words($post_id, $length);
-	// echo json_encode(array("status" => "success", "excerpt" => $text));
+	// return array("status" => "success", "excerpt" => $text);
 	// }
 }
 
@@ -1786,12 +1734,10 @@ function caf_get_date( $data ) {
 	$results = array();
 	$dt      = get_the_date( $format, $id );
 	$results = array( 'date' => $dt );
-	echo json_encode(
-		array(
+	return array(
 			'status'  => 'success',
 			'results' => $results,
-		)
-	);
+		);
 }
 
 function get_excerpt_by_words( $post_id = null, $word_count = 20 ) {
@@ -1881,35 +1827,28 @@ function get_html_excerpt_without_divi_shortcodes( $post_id = null, $word_limit 
 
 
 function caf_get_content_length( $request ) {
-	ob_start();
 	$post_id = $request->get_param( 'post_id' );
 	$length  = $request->get_param( 'length' );
 	$status  = $request->get_param( 'status' );
 	if ( ! $post_id ) {
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'error',
 				'excerpt' => '',
 				'message' => 'Required Parameters are Missing',
-			)
-		);
+			);
 	}
 	if ( $status === true ) {
 		$desc = get_html_excerpt_without_divi_shortcodes( $post_id, $length );
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'success',
 				'excerpt' => $desc,
-			)
-		);
+			);
 	} else {
 		$text = get_excerpt_by_words( $post_id, $length );
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'success',
 				'excerpt' => $text,
-			)
-		);
+			);
 	}
 }
 function caf_resolve_preview_query_data( $request ) {
@@ -2062,7 +2001,6 @@ function caf_get_preview_posts( $request ) {
 	return caf_preview_posts_rest_response( $payload );
 }
 function caf_update_builder_layout_option( $data ) {
-	ob_start();
 	$layout_data  = caf_normalize_builder_layout_data( json_decode( $data['layout_data'] ) );
 	$title        = $data['layout_key'];
 	$layout_index = $data['layout_index'];
@@ -2083,12 +2021,10 @@ function caf_update_builder_layout_option( $data ) {
 	if ( isset( $data['layout_index'] ) && is_numeric( $data['layout_index'] ) ) {
 		caf_builder_invalidate_layout_cache( (int) $data['layout_index'] );
 	}
-	echo json_encode(
-		array(
+	return array(
 			'status'      => 'success',
 			'layout_data' => get_option( $title ),
-		)
-	);
+		);
 }
 /**
  * Normalize builder layout data for backward compatibility.
@@ -2214,7 +2150,7 @@ function caf_filter_filter_layout_modules_by_tier( $initial_data ) {
 }
 
 /**
- * Free tier: keep only the first checkbox, dropdown, and search module per layout.
+ * Keep only the first occurrence of tier-limited filter modules (search only).
  *
  * @param array<int, mixed> $initial_data Filter layout initial_data tree.
  * @return array<int, mixed>
@@ -2225,9 +2161,6 @@ function caf_enforce_single_instance_filter_modules( $initial_data ) {
 	}
 
 	$limited_keys = array( 'search' );
-	if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::is_pro() ) {
-		$limited_keys = array( 'checkbox_filter', 'dropdown_filter', 'search' );
-	}
 
 	$seen         = array();
 
@@ -2383,10 +2316,11 @@ function caf_sanitize_free_search_module_settings( $settings ) {
 
 /**
  * Strip Pro-only term defaults/icons from taxonomy term trees on free tier.
+ * When stripping icons, color swatch values are preserved (FA/SVG only cleared).
  *
  * @param array<int, mixed> $term_data Term tree.
  * @param bool              $strip_default Remove default/predefine flags.
- * @param bool              $strip_icons   Remove term icons.
+ * @param bool              $strip_icons   Remove term FA/SVG icons (keep color).
  * @return array<int, mixed>
  */
 function caf_strip_locked_filter_term_features( $term_data, $strip_default, $strip_icons ) {
@@ -2401,11 +2335,33 @@ function caf_strip_locked_filter_term_features( $term_data, $strip_default, $str
 			$term->predefine = 'false';
 		}
 		if ( $strip_icons ) {
-			$term->icons = (object) array(
-				'icon'     => '',
-				'type'     => 'icon',
-				'position' => 'before',
-			);
+			$icons    = ( isset( $term->icons ) && is_object( $term->icons ) ) ? $term->icons : new stdClass();
+			$color    = '';
+			$position = isset( $icons->position ) ? (string) $icons->position : 'before';
+
+			if ( isset( $icons->color ) && is_string( $icons->color ) && '' !== trim( $icons->color ) ) {
+				$color = trim( $icons->color );
+			} elseif (
+				isset( $icons->type ) && 'color' === (string) $icons->type
+				&& isset( $icons->icon ) && is_string( $icons->icon ) && '' !== trim( $icons->icon )
+			) {
+				$color = trim( $icons->icon );
+			}
+
+			if ( '' !== $color ) {
+				$term->icons = (object) array(
+					'type'     => 'color',
+					'icon'     => $color,
+					'color'    => $color,
+					'position' => $position ? $position : 'before',
+				);
+			} else {
+				$term->icons = (object) array(
+					'icon'     => '',
+					'type'     => 'icon',
+					'position' => 'before',
+				);
+			}
 		}
 		if ( isset( $term->children_data ) && is_array( $term->children_data ) ) {
 			$term->children_data = caf_strip_locked_filter_term_features(
@@ -2443,7 +2399,16 @@ function caf_sanitize_free_checkbox_dropdown_module_settings( $settings ) {
 	}
 
 	if ( ! CAF_Builder_Tier::can_use_feature( 'filter_show_icon' ) ) {
-		$settings->show_icon = 'false';
+		// Free: keep show_icon when term_visual is color (color swatch unlocked on product layouts).
+		$is_color_swatch = (
+			isset( $settings->show_icon ) && 'true' === (string) $settings->show_icon
+			&& isset( $settings->term_visual ) && 'color' === (string) $settings->term_visual
+		);
+		if ( ! $is_color_swatch ) {
+			$settings->show_icon = 'false';
+		} else {
+			$settings->term_visual = 'color';
+		}
 		if ( isset( $settings->dropdown_data ) && is_object( $settings->dropdown_data ) ) {
 			if ( ! isset( $settings->dropdown_data->all_option ) || ! is_object( $settings->dropdown_data->all_option ) ) {
 				$settings->dropdown_data->all_option = new stdClass();
@@ -2454,6 +2419,10 @@ function caf_sanitize_free_checkbox_dropdown_module_settings( $settings ) {
 				'type'       => 'icon',
 			);
 		}
+	}
+
+	if ( ! CAF_Builder_Tier::can_use_feature( 'filter_term_show_more' ) ) {
+		$settings->term_show_more = 'false';
 	}
 
 	$strip_default = ! CAF_Builder_Tier::can_use_feature( 'filter_term_default' );
@@ -3030,7 +2999,6 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 }
 
 function caf_rename_builder_layout_label( $data ) {
-	ob_start();
 	$index     = $data['index'];
 	$new_label = $data['label'];
 	$options   = get_option( 'caf_builder_layouts_list' );
@@ -3044,19 +3012,15 @@ function caf_rename_builder_layout_label( $data ) {
 			$newlayoutData                           = get_option( $title );
 			$newlayoutData->common_data->layout_name = $updated_option[ $index ]['label'];
 			update_option( $title, $newlayoutData );
-			echo json_encode(
-				array(
+			return array(
 					'status' => 'success',
 					'label'  => $updated_option[ $index ]['label'],
-				)
-			);
+				);
 		} else {
-			echo json_encode(
-				array(
+			return array(
 					'status' => 'error',
 					'msg'    => 'Data Not Updated',
-				)
-			);
+				);
 		}
 	}
 }
@@ -3065,20 +3029,16 @@ function caf_get_layout_data( $data ) {
 	$layout_key = $data['layout_key'];
 	if ( get_option( $layout_key ) ) {
 		$normalized_layout = caf_normalize_builder_layout_data( get_option( $layout_key ) );
-		echo json_encode(
-			array(
+		return array(
 				'status'      => 'success',
 				'layout_data' => $normalized_layout,
-			)
-		);
+			);
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status'      => 'error',
 				'layout_data' => array(),
 				'message'     => 'No Result Found',
-			)
-		);
+			);
 	}
 }
 function caf_move_to_trash( $data ) {
@@ -3110,19 +3070,15 @@ function caf_move_to_trash( $data ) {
 				update_option( $opt, $savedLayouts );
 			}
 		}
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'success',
 				'message' => 'Filters Trash Successfully',
-			)
-		);
+			);
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'error',
 				'message' => "Something went's Wrong",
-			)
-		);
+			);
 	}
 }
 function caf_bulk_layouts_restore( $data ) {
@@ -3154,19 +3110,15 @@ function caf_bulk_layouts_restore( $data ) {
 				update_option( $opt, $savedLayouts );
 			}
 		}
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'success',
 				'message' => 'Filters Restored Successfully',
-			)
-		);
+			);
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'error',
 				'message' => "Something went's Wrong",
-			)
-		);
+			);
 	}
 }
 function caf_bulk_layouts_delete_permanent( $data ) {
@@ -3202,19 +3154,15 @@ function caf_bulk_layouts_delete_permanent( $data ) {
 			}
 			update_option( 'caf_builder_layouts_list', $options );
 		}
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'success',
 				'message' => 'Filters Deleted Successfully',
-			)
-		);
+			);
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'error',
 				'message' => "Something went's Wrong",
-			)
-		);
+			);
 	}
 }
 
@@ -3222,19 +3170,15 @@ function caf_delete_layout_permissions( $request ) {
 	$post_id = intval( $request['post_id'] );
 	if ( get_post_status( $post_id ) ) {
 		wp_trash_post( $post_id );
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'success',
 				'message' => 'Post deleted successfully.',
-			)
-		);
+			);
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'error',
 				'message' => 'Failed to delete post.',
-			)
-		);
+			);
 	}
 }
 
@@ -3326,26 +3270,22 @@ function caf_clone_layout( $request ) {
 	$post_id     = intval( $request['post_id'] );
 	$new_post_id = duplicate_post( $post_id );
 	if ( $new_post_id ) {
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'success',
 				'message' => 'Filter Clone successfully.',
-			)
-		);
+			);
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'error',
 				'message' => 'Failed to clone filter.',
-			)
-		);
+			);
 	}
 }
 // phpcs:disable
 function caf_export_default_layout($request)
 {
     $post_id = intval($request['post_id']);
-    $result['result'] = '';
+    $result = array( 'result' => '' );
     if ($post_id) {
         $meta = get_post_meta($post_id);
         $meta['result'] = 'success';
@@ -3359,12 +3299,12 @@ function caf_export_default_layout($request)
             $result['result'] = 'success';
             $result['file'] = $file_url;
             $result['filename'] = "caf-{$post_id}.json";
-            echo json_encode($result);
+            return $result;
         } else {
-            echo json_encode(array('result' => 'error', 'message' => 'Cannot write to file.'));
+            return array('result' => 'error', 'message' => 'Cannot write to file.');
         }
     } else {
-        echo json_encode(array('result' => 'error', 'message' => 'Invalid post ID.'));
+        return array('result' => 'error', 'message' => 'Invalid post ID.');
     }
 }
 // phpcs:enable
@@ -3387,20 +3327,21 @@ function caf_export_builder_layout( $request ) {
 			echo $json_data; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			exit;
 		} else {
-			wp_send_json_error(
-				array(
+			return array(
+				'success' => false,
+				'data'    => array(
 					'message' => __( 'Failed to export filter.', 'category-ajax-filter' ),
-				)
+				),
 			);
 		}
 	} else {
-		wp_send_json_error(
-			array(
+		return array(
+			'success' => false,
+			'data'    => array(
 				'message' => __( 'Index id not found.', 'category-ajax-filter' ),
-			)
+			),
 		);
 	}
-	exit;
 }
 function caf_generate_unique_layout_name( $base_name ) {
 
@@ -3455,46 +3396,36 @@ function caf_clone_builder_layout( $request ) {
 			if ( isset( $layout_key['index'] ) && is_numeric( $layout_key['index'] ) ) {
 				caf_builder_invalidate_layout_cache( (int) $layout_key['index'] );
 			}
-			echo json_encode(
-				array(
+			return array(
 					'status'  => 'success',
 					'message' => 'Filter Clone successfully.',
-				)
-			);
+				);
 		} else {
-			echo json_encode(
-				array(
+			return array(
 					'status'  => 'error',
 					'message' => 'Failed to clone filter.',
-				)
-			);
+				);
 		}
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'error',
 				'message' => 'Index id Not Found.',
-			)
-		);
+			);
 	}
 }
 
 function caf_delete_layout_permanent( $request ) {
 	$post_id = intval( $request['post_id'] );
 	if ( wp_delete_post( $post_id, true ) ) {
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'success',
 				'message' => 'Post deleted successfully.',
-			)
-		);
+			);
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'error',
 				'message' => 'Failed to delete post.',
-			)
-		);
+			);
 	}
 }
 
@@ -3502,19 +3433,15 @@ function caf_restore_layout( $request ) {
 	$post_id = intval( $request['post_id'] );
 	if ( get_post_status( $post_id ) ) {
 		wp_untrash_post( $post_id );
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'success',
 				'message' => 'Post Restore successfully.',
-			)
-		);
+			);
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'error',
 				'message' => 'Failed to Restore Post.',
-			)
-		);
+			);
 	}
 }
 
@@ -3540,12 +3467,10 @@ function caf_get_post_types_list() {
 		);
 	}
 
-	echo json_encode(
-		array(
+	return array(
 			'status'     => 'success',
 			'post_types' => $results,
-		)
-	);
+		);
 }
 /**
  * Get unserialized option data
@@ -3645,27 +3570,24 @@ function caf_get_layouts_list( $data ) {
 		$paginatedResults = array_slice( $results, $startIndex, $perPage );
 		$totalItems       = count( $results );
 		$totalPages       = ceil( $totalItems / $perPage );
-		echo json_encode(
-			array(
-				'status'        => 'success',
-				'layouts_list'  => $paginatedResults,
-				'current_page'  => $currentPage,
-				'total_page'    => $totalPages,
-				'total_filters' => $totalItems,
-			)
-		);
-	} else {
-		$currentPage = isset( $data['page'] ) ? (int) $data['page'] : 1;
-		echo json_encode(
-			array(
-				'status'        => 'success',
-				'layouts_list'  => $results,
-				'current_page'  => $currentPage,
-				'total_page'    => 1,
-				'total_filters' => 0,
-			)
+		// REST callbacks must return data (not echo) so WP can send headers cleanly.
+		return array(
+			'status'        => 'success',
+			'layouts_list'  => $paginatedResults,
+			'current_page'  => $currentPage,
+			'total_page'    => $totalPages,
+			'total_filters' => $totalItems,
 		);
 	}
+
+	$currentPage = isset( $data['page'] ) ? (int) $data['page'] : 1;
+	return array(
+		'status'        => 'success',
+		'layouts_list'  => $results,
+		'current_page'  => $currentPage,
+		'total_page'    => 1,
+		'total_filters' => 0,
+	);
 }
 function caf_get_trash_layouts_list( $data ) {
 	$args           = array(
@@ -3748,41 +3670,34 @@ function caf_get_trash_layouts_list( $data ) {
 		$paginatedResults = array_slice( $results, $startIndex, $perPage );
 		$totalItems       = count( $results );
 		$totalPages       = ceil( $totalItems / $perPage );
-		echo json_encode(
-			array(
-				'status'              => 'success',
-				'layouts_list'        => $paginatedResults,
-				'current_page'        => $currentPage,
-				'total_page'          => $totalPages,
-				'total_trash_filters' => $totalItems,
-			)
-		);
-	} else {
-		$currentPage = isset( $data['page'] ) ? (int) $data['page'] : 1;
-		echo json_encode(
-			array(
-				'status'              => 'success',
-				'layouts_list'        => $results,
-				'current_page'        => $currentPage,
-				'total_page'          => 1,
-				'total_trash_filters' => 0,
-			)
+		// REST callbacks must return data (not echo) so WP can send headers cleanly.
+		return array(
+			'status'              => 'success',
+			'layouts_list'        => $paginatedResults,
+			'current_page'        => $currentPage,
+			'total_page'          => $totalPages,
+			'total_trash_filters' => $totalItems,
 		);
 	}
+
+	$currentPage = isset( $data['page'] ) ? (int) $data['page'] : 1;
+	return array(
+		'status'              => 'success',
+		'layouts_list'        => $results,
+		'current_page'        => $currentPage,
+		'total_page'          => 1,
+		'total_trash_filters' => 0,
+	);
 }
 function caf_save_builder_layout_option( $data ) {
-	ob_start();
 	$layout_data                            = caf_normalize_builder_layout_data( json_decode( $data['layout_data'] ) );
 	$layout_name                            = $layout_data->common_data->layout_name;
 	$layout_key                             = save_new_layout_list( $layout_name );
 	if ( is_wp_error( $layout_key ) ) {
-		echo wp_json_encode(
-			array(
+		return array(
 				'status'  => 'error',
 				'message' => $layout_key->get_error_message(),
-			)
-		);
-		return;
+			);
 	}
 	$prifix                                 = 'caf_';
 	$title                                  = $prifix . $layout_key['key'];
@@ -3792,14 +3707,12 @@ function caf_save_builder_layout_option( $data ) {
 	if ( isset( $layout_key['index'] ) && is_numeric( $layout_key['index'] ) ) {
 		caf_builder_invalidate_layout_cache( (int) $layout_key['index'] );
 	}
-	echo json_encode(
-		array(
+	return array(
 			'status'       => 'success',
 			'layout_data'  => get_option( $title ),
 			'layout_key'   => $title,
 			'layout_index' => $layout_key['index'],
-		)
-	);
+		);
 }
 /**
  * Clear cached layout bundle/CSS after builder save or delete.
@@ -3855,29 +3768,23 @@ function save_new_layout_list( $layout_name ) {
 	// return $lastIndex;
 }
 function caf_delete_builder_layout( $data ) {
-	ob_start();
 	$index   = $data['index'];
 	$options = get_option( 'caf_builder_layouts_list' );
 	if ( $options[ $index ] ) {
 		$options[ $index ]['post_status'] = 'trash';
 		update_option( 'caf_builder_layouts_list', $options );
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'success',
 				'message' => 'Layout Trashed Successfully',
-			)
-		);
+			);
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status' => 'success',
 				'error'  => 'Layout Not Found',
-			)
-		);
+			);
 	}
 }
 function caf_delete_builder_layout_permanent( $data ) {
-	ob_start();
 	$index   = $data['index'];
 	$options = get_option( 'caf_builder_layouts_list' );
 	if ( $options[ $index ] ) {
@@ -3887,41 +3794,32 @@ function caf_delete_builder_layout_permanent( $data ) {
 		delete_option( $title );
 		update_option( 'caf_builder_layouts_list', $options );
 		caf_builder_invalidate_layout_cache( (int) $index );
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'success',
 				'message' => 'Layout Deleted Successfully',
-			)
-		);
+			);
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status' => 'success',
 				'error'  => 'Layout Not Found',
-			)
-		);
+			);
 	}
 }
 function caf_restore_builder_layout( $data ) {
-	ob_start();
 	$index   = $data['index'];
 	$options = get_option( 'caf_builder_layouts_list' );
 	if ( $options[ $index ] ) {
 		$options[ $index ]['post_status'] = 'draft';
 		update_option( 'caf_builder_layouts_list', $options );
-		echo json_encode(
-			array(
+		return array(
 				'status'  => 'success',
 				'message' => 'Layout Restored Successfully',
-			)
-		);
+			);
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status' => 'success',
 				'error'  => 'Layout Not Found',
-			)
-		);
+			);
 	}
 }
 function caf_add_term_links( $terms ) {
@@ -4041,6 +3939,31 @@ function caf_get_posts_list( $data ) {
 		200
 	);
 }
+/**
+ * Builder taxonomy picker label (Woo attributes use the admin label, not "Product …").
+ *
+ * @param WP_Taxonomy|string $taxonomy Taxonomy object or registered name.
+ * @return string
+ */
+function caf_get_builder_taxonomy_label( $taxonomy ) {
+	if ( is_string( $taxonomy ) ) {
+		$taxonomy = get_taxonomy( $taxonomy );
+	}
+
+	if ( ! $taxonomy || empty( $taxonomy->name ) ) {
+		return '';
+	}
+
+	if ( 0 === strpos( $taxonomy->name, 'pa_' ) && function_exists( 'wc_attribute_label' ) ) {
+		$attribute_label = wc_attribute_label( $taxonomy->name );
+		if ( is_string( $attribute_label ) && '' !== $attribute_label ) {
+			return $attribute_label;
+		}
+	}
+
+	return isset( $taxonomy->label ) ? (string) $taxonomy->label : '';
+}
+
 function caf_get_taxo_data_with_recursive_method( $request ) {
 	$post_type = $request['post-type'];
 	if ( ! empty( $post_type ) ) {
@@ -4060,34 +3983,28 @@ function caf_get_taxo_data_with_recursive_method( $request ) {
 
 					$taxonomy_tree[] = array(
 						'key'       => $taxonomy->name,
-						'label'     => $taxonomy->label,
+						'label'     => caf_get_builder_taxonomy_label( $taxonomy ),
 						'term_data' => $term_data,
 					);
 				}
 			}
-			echo json_encode(
-				array(
+			return array(
 					'status'        => 'success',
 					'taxonomy_list' => $taxonomy_tree,
-				)
-			);
+				);
 		} else {
-			echo json_encode(
-				array(
+			return array(
 					'status'        => 'success',
 					'taxonomy_list' => null,
 					'message'       => 'taxonomies are not exist',
-				)
-			);
+				);
 		}
 	} else {
-		echo json_encode(
-			array(
+		return array(
 				'status'        => 'success',
 				'taxonomy_list' => null,
 				'message'       => 'post type not exist',
-			)
-		);
+			);
 	}
 }
 
