@@ -615,6 +615,20 @@ abstract class CAF_Filter_Base_Module {
 	}
 
 	/**
+	 * data-caf-term-label attribute for selected-filter chips (keeps counts out of labels).
+	 *
+	 * @param string $label Term label.
+	 * @return string
+	 */
+	protected function get_term_label_data_attr( $label ) {
+		$text = trim( (string) $label );
+		if ( '' === $text ) {
+			return '';
+		}
+		return ' data-caf-term-label="' . esc_attr( $text ) . '"';
+	}
+
+	/**
 	 * Resolve swatch color from term icons object.
 	 *
 	 * @param mixed $icons Icons object.
@@ -675,6 +689,64 @@ abstract class CAF_Filter_Base_Module {
 		}
 
 		return $this->render_icon_markup( $icons, $extra_class );
+	}
+
+	/**
+	 * Resolve display count for a taxonomy term.
+	 * Product layouts prefer Woo catalog-visible counts over stale layout-baked values.
+	 *
+	 * @param string     $taxonomy_key Taxonomy slug.
+	 * @param object|int $term         Term object (with key/count) or term ID.
+	 * @param mixed      $fallback     Optional explicit fallback.
+	 * @return int
+	 */
+	protected function resolve_term_display_count( $taxonomy_key, $term, $fallback = null ) {
+		$term_id = 0;
+		$baked   = null !== $fallback ? (int) $fallback : 0;
+		$missing = true;
+
+		if ( is_object( $term ) ) {
+			if ( isset( $term->key ) ) {
+				$term_id = absint( $term->key );
+			}
+			if ( null === $fallback && isset( $term->count ) && '' !== $term->count && null !== $term->count ) {
+				$baked   = (int) $term->count;
+				$missing = false;
+			}
+		} else {
+			$term_id = absint( $term );
+			$missing = null === $fallback;
+		}
+
+		$settings  = $this->get_settings();
+		$post_type = ( is_object( $settings ) && isset( $settings->post_type ) )
+			? sanitize_key( (string) $settings->post_type )
+			: '';
+
+		$taxonomy_key = sanitize_key( (string) $taxonomy_key );
+
+		if (
+			$term_id
+			&& class_exists( 'CAF_Free_Woo' )
+			&& method_exists( 'CAF_Free_Woo', 'get_catalog_term_count' )
+			&& (
+				'product' === $post_type
+				|| 0 === strpos( $taxonomy_key, 'product_' )
+				|| 0 === strpos( $taxonomy_key, 'pa_' )
+			)
+		) {
+			return CAF_Free_Woo::get_catalog_term_count( $term_id, $taxonomy_key, $baked );
+		}
+
+		// Dropdown first-term bug: count was omitted when the taxonomy group was created.
+		if ( $missing && $term_id && $taxonomy_key && taxonomy_exists( $taxonomy_key ) ) {
+			$wp_term = get_term( $term_id, $taxonomy_key );
+			if ( $wp_term && ! is_wp_error( $wp_term ) ) {
+				return (int) $wp_term->count;
+			}
+		}
+
+		return $baked;
 	}
 
 	/**

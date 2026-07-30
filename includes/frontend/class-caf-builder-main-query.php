@@ -1475,6 +1475,21 @@ class CAF_Builder_Main_Query {
 		$query_args = apply_filters( 'woocommerce_shortcode_products_query', $query_args, array(), 'products' );
 		$query_args = apply_filters( 'caf_builder_main_query_ajax_query_args', $query_args, $shortindex );
 
+		// Public listing: never allow client to override status (or related attack keys).
+		unset(
+			$query_args['author'],
+			$query_args['author_name'],
+			$query_args['author__in'],
+			$query_args['author__not_in'],
+			$query_args['perm'],
+			$query_args['has_password'],
+			$query_args['post_password']
+		);
+		$query_args['post_status']    = 'publish';
+		$query_args['post_type']      = 'product';
+		$query_args['posts_per_page'] = $limit;
+		$query_args['paged']          = $page;
+
 		$loop = new WP_Query( $query_args );
 		$found = (int) $loop->found_posts;
 

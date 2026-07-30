@@ -3951,18 +3951,19 @@ jQuery(function ($) {
             const $list = $item.closest(".caf-terms-list");
 
             let value = "";
-            let termName = "";
 
             if (mode === "dropdown") {
                 value = $item.attr("term-id");
-                const $termNameNode = $item.find(".trm-name").first();
-                termName = $.trim($termNameNode.length ? $termNameNode.text() : $item.text());
             } else {
                 const $input = $item.find(".caf-taxo-input");
-                value = $input.val();
-                const $termLabel = $item.find(".trm-name, .caf-term-label").first();
-                termName = $.trim($termLabel.length ? $termLabel.text() : $item.text());
+                value =
+                    $input.val() ||
+                    $item.attr("term-value") ||
+                    $item.attr("term-id") ||
+                    "";
             }
+
+            const termName = this.resolveSelectedTagTermLabel($item);
 
             const rowId = $list.attr("row-id");
             const columnId = $list.attr("column-id");
@@ -3978,6 +3979,38 @@ jQuery(function ($) {
                 termName,
                 uniqueId: `${rowId}-${columnId}-${moduleId}-${value}`
             };
+        },
+
+        /**
+         * Label for selected-filter chips — never include facet counts
+         * (color swatches often hide .trm-name, so $item.text() used to pick up .count-span).
+         */
+        resolveSelectedTagTermLabel($item) {
+            const $name = $item.find(".trm-name, .caf-term-label").first();
+            if ($name.length) {
+                return $.trim($name.text());
+            }
+
+            const $tooltip = $item.find(".caf-term-tooltip").first();
+            if ($tooltip.length) {
+                return $.trim($tooltip.text());
+            }
+
+            const attrLabel = String(
+                $item.attr("data-caf-term-label")
+                || $item.attr("data-caf-tooltip")
+                || $item.attr("title")
+                || ""
+            ).trim();
+            if (attrLabel) {
+                return attrLabel;
+            }
+
+            const $clone = $item.clone();
+            $clone.find(
+                ".count-span, .caf-term-tooltip, input, .caf-checkbox-box, .caf-term-swatch, svg, img, i"
+            ).remove();
+            return $.trim($clone.text());
         },
 
         getDynamicCssHash($builder) {

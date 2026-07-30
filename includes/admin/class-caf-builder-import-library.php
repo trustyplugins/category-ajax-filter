@@ -518,7 +518,7 @@ class CAF_Builder_Import_Library {
 			wp_send_json_error( array( 'message' => 'CAF PRO license is not active.' ), 403 );
 		}
 
-		if ( ! current_user_can( 'edit_posts' ) ) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => 'Permission denied.' ), 403 );
 		}
 

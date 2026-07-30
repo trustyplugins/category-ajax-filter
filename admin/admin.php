@@ -17,3 +17,12 @@ new CAF_load_scripts();
 new CAF_shortcode();
 require TC_CAF_PATH . 'admin/ajax-actions.php';
 new CAF_admin_ajax();
+
+// Elementor: simple CAF Filter picker widget.
+$caf_elementor_bootstrap = TC_CAF_PATH . 'includes/elementor/class-caf-elementor.php';
+if ( file_exists( $caf_elementor_bootstrap ) ) {
+	require_once $caf_elementor_bootstrap;
+	if ( class_exists( 'CAF_Elementor' ) ) {
+		CAF_Elementor::instance();
+	}
+}

@@ -105,7 +105,31 @@ class CAF_Builder_Framework {
 		$dynamic_css = $this->css_builder->get_unique_css();
 
 		if ( ! empty( $dynamic_css ) ) {
-			wp_add_inline_style( 'caf-builder-style', $dynamic_css );
+			$handle = 'caf-builder-style';
+			if ( ! wp_style_is( $handle, 'registered' ) ) {
+				wp_register_style(
+					$handle,
+					TC_CAF_URL . 'assets/css/dynamic-styles.css',
+					array(),
+					defined( 'TC_CAF_PLUGIN_VERSION' ) ? TC_CAF_PLUGIN_VERSION : null,
+					'all'
+				);
+			}
+			wp_enqueue_style( $handle );
+
+			// After <head>, or Elementor AJAX canvas (no style queue printed): keep CSS with markup.
+			$force_inline = did_action( 'wp_print_styles' )
+				|| did_action( 'wp_head' )
+				|| ( class_exists( 'CAF_Elementor' ) && CAF_Elementor::is_editor_or_preview_render() );
+
+			if ( ! $force_inline ) {
+				wp_add_inline_style( $handle, $dynamic_css );
+			} else {
+				$html = '<style id="caf-builder-dynamic-' . absint( $this->short_index ) . '">'
+					. wp_strip_all_tags( $dynamic_css )
+					. '</style>'
+					. $html;
+			}
 		}
 
 		if ( class_exists( 'CAF_Builder_Ajax_Performance' ) ) {

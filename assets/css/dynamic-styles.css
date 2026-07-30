@@ -964,7 +964,7 @@ height: 100%;
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-filter-module-reset-output.toggle_closed {
     display: none !important;
 }
-.caf-filter-module-reset-output {
+.caf-builder-module-main.caf-module-type-reset,.caf-filter-module-reset-output {
     cursor: pointer;
 }
 

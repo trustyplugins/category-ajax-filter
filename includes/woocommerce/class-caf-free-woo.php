@@ -24,6 +24,143 @@ class CAF_Free_Woo {
 		add_filter( 'caf_pro_builder_excluded_post_types', array( __CLASS__, 'filter_excluded_post_types' ) );
 		add_action( 'rest_api_init', array( __CLASS__, 'register_rest_routes' ) );
 		add_filter( 'caf_builder_module_settings', array( __CLASS__, 'filter_module_settings' ), 10, 2 );
+		// Keep product listings + term counts aligned with Woo catalog visibility.
+		add_filter( 'caf_builder_ajax_query_args', array( __CLASS__, 'filter_builder_query_args' ), 20, 2 );
+		add_filter( 'caf_builder_page_load_query_args', array( __CLASS__, 'filter_builder_query_args' ), 20, 2 );
+	}
+
+	/**
+	 * Apply catalog visibility rules to CAF builder product queries.
+	 *
+	 * @param array<string, mixed> $args    Query args.
+	 * @param array<string, mixed> $context Hook context.
+	 * @return array<string, mixed>
+	 */
+	public static function filter_builder_query_args( $args, $context = array() ) {
+		unset( $context );
+		return self::append_product_visibility_to_query_args( is_array( $args ) ? $args : array() );
+	}
+
+	/**
+	 * Exclude hidden / out-of-stock products from catalog-style product queries.
+	 *
+	 * Mirrors WooCommerce shop rules so CAF counts and listings match the storefront.
+	 *
+	 * @param array<string, mixed> $args Query args.
+	 * @return array<string, mixed>
+	 */
+	public static function append_product_visibility_to_query_args( $args ) {
+		if ( ! class_exists( 'WooCommerce' ) || ! is_array( $args ) ) {
+			return $args;
+		}
+
+		$post_type = isset( $args['post_type'] ) ? $args['post_type'] : '';
+		if ( is_array( $post_type ) ) {
+			if ( ! in_array( 'product', $post_type, true ) ) {
+				return $args;
+			}
+		} elseif ( 'product' !== $post_type ) {
+			return $args;
+		}
+
+		if ( ! taxonomy_exists( 'product_visibility' ) ) {
+			return $args;
+		}
+
+		$visibility_terms = function_exists( 'wc_get_product_visibility_term_ids' )
+			? wc_get_product_visibility_term_ids()
+			: array();
+
+		if ( empty( $visibility_terms ) || ! is_array( $visibility_terms ) ) {
+			return $args;
+		}
+
+		$exclude_term_ids = array();
+		$is_search        = ! empty( $args['s'] ) || ! empty( $args['caf_search_keyword'] );
+
+		if ( $is_search ) {
+			if ( ! empty( $visibility_terms['exclude-from-search'] ) ) {
+				$exclude_term_ids[] = (int) $visibility_terms['exclude-from-search'];
+			}
+		} elseif ( ! empty( $visibility_terms['exclude-from-catalog'] ) ) {
+			$exclude_term_ids[] = (int) $visibility_terms['exclude-from-catalog'];
+		}
+
+		if ( 'yes' === get_option( 'woocommerce_hide_out_of_stock_items' ) && ! empty( $visibility_terms['outofstock'] ) ) {
+			$exclude_term_ids[] = (int) $visibility_terms['outofstock'];
+		}
+
+		$exclude_term_ids = array_values( array_unique( array_filter( $exclude_term_ids ) ) );
+		if ( empty( $exclude_term_ids ) ) {
+			return $args;
+		}
+
+		if ( empty( $args['tax_query'] ) || ! is_array( $args['tax_query'] ) ) {
+			$args['tax_query'] = array();
+		}
+
+		foreach ( $args['tax_query'] as $clause ) {
+			if ( is_array( $clause ) && isset( $clause['taxonomy'] ) && 'product_visibility' === $clause['taxonomy'] ) {
+				return $args;
+			}
+		}
+
+		$args['tax_query'][] = array(
+			'taxonomy' => 'product_visibility',
+			'field'    => 'term_taxonomy_id',
+			'terms'    => $exclude_term_ids,
+			'operator' => 'NOT IN',
+		);
+
+		return $args;
+	}
+
+	/**
+	 * Catalog-visible product count for a taxonomy term (matches Woo frontend counts).
+	 *
+	 * Prefers Woo's stored visibility-aware term meta when present; otherwise runs a
+	 * visibility-aware WP_Query (including child terms).
+	 *
+	 * @param int         $term_id  Term ID.
+	 * @param string      $taxonomy Taxonomy slug.
+	 * @param int|null    $fallback Optional baked fallback when Woo is unavailable.
+	 * @return int
+	 */
+	public static function get_catalog_term_count( $term_id, $taxonomy, $fallback = null ) {
+		$term_id  = absint( $term_id );
+		$taxonomy = sanitize_key( (string) $taxonomy );
+		$baked    = null !== $fallback ? (int) $fallback : 0;
+
+		if ( ! $term_id || '' === $taxonomy || ! self::is_woocommerce_available() ) {
+			return $baked;
+		}
+
+		$meta_count = get_term_meta( $term_id, 'product_count_' . $taxonomy, true );
+		if ( '' !== $meta_count && is_numeric( $meta_count ) ) {
+			return (int) $meta_count;
+		}
+
+		$args = array(
+			'post_type'              => 'product',
+			'post_status'            => 'publish',
+			'fields'                 => 'ids',
+			'posts_per_page'         => 1,
+			'no_found_rows'          => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'tax_query'              => array(
+				array(
+					'taxonomy'         => $taxonomy,
+					'field'            => 'term_id',
+					'terms'            => $term_id,
+					'include_children' => true,
+				),
+			),
+		);
+		$args  = self::append_product_visibility_to_query_args( $args );
+		$query = new WP_Query( $args );
+
+		return (int) $query->found_posts;
 	}
 
 	/**

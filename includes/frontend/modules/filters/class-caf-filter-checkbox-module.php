@@ -235,7 +235,7 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 			$predefine      = 'true';
 		}
 
-		$html = '<li class="caf-terms-list-item ' . esc_attr( $active_class ) . ' caf-layout-' . esc_attr( $layout_classes['row'] ) . ( $this->should_hide_term_label( $settings ) ? ' caf-hide-term-label' : '' ) . $this->get_term_tooltip_li_class( $settings ) . '" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy_key, $term->key ) ) . '" predefine="' . esc_attr( $predefine ) . '"' . $this->get_term_tooltip_data_attr( $settings, isset( $term->value ) ? ucfirst( $term->value ) : '' ) . '>';
+		$html = '<li class="caf-terms-list-item ' . esc_attr( $active_class ) . ' caf-layout-' . esc_attr( $layout_classes['row'] ) . ( $this->should_hide_term_label( $settings ) ? ' caf-hide-term-label' : '' ) . $this->get_term_tooltip_li_class( $settings ) . '" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy_key, $term->key ) ) . '" predefine="' . esc_attr( $predefine ) . '"' . $this->get_term_tooltip_data_attr( $settings, isset( $term->value ) ? ucfirst( $term->value ) : '' ) . $this->get_term_label_data_attr( isset( $term->value ) ? ucfirst( $term->value ) : '' ) . '>';
 		$html .= $this->render_term_label_tooltip( $settings, isset( $term->value ) ? ucfirst( $term->value ) : '' );
 		// $html .= '<label class="caf-taxo-checkbox-main" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" predefine="' . esc_attr( $predefine ) . '" style="display:flex;align-items:center;">';
 		$html .= '<input type="checkbox" style="display:none" class="caf-taxo-input ' . esc_attr( $skin ) . '" ' . $checked . ' value="' . esc_attr( $term->key ) . '" />';
@@ -256,8 +256,11 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 			if ( ! $hide_label ) {
 				$html .= '<span class="trm-name caf-term-label">' . esc_html( ucfirst( $term->value ) ) . '</span>';
 			}
-			if ( $show_count && ! empty( $term->count ) ) {
-				$html .= '<span class="count-span">' . $this->format_count_text( $term->count, $settings ) . '</span>';
+			if ( $show_count ) {
+				$display_count = $this->resolve_term_display_count( $taxonomy_key, $term );
+				if ( $display_count > 0 ) {
+					$html .= '<span class="count-span">' . $this->format_count_text( $display_count, $settings ) . '</span>';
+				}
 			}
 			$html .= '</div>';
 		}
@@ -320,7 +323,7 @@ class CAF_Filter_Checkbox_Module extends CAF_Filter_Base_Module {
 			$predefine      = 'true';
 		}
 
-		$html  = '<li class="caf-terms-list-item child ' . esc_attr( $active_class ) . ( $this->should_hide_term_label( $settings ) ? ' caf-hide-term-label' : '' ) . $this->get_term_tooltip_li_class( $settings ) . '" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy_key, $term->key ) ) . '" predefine="' . esc_attr( $predefine ) . '" parent-id="' . esc_attr( isset( $term->parent_id ) ? $term->parent_id : '' ) . '"' . $this->get_term_tooltip_data_attr( $settings, isset( $term->value ) ? ucfirst( $term->value ) : '' ) . '>';
+		$html  = '<li class="caf-terms-list-item child ' . esc_attr( $active_class ) . ( $this->should_hide_term_label( $settings ) ? ' caf-hide-term-label' : '' ) . $this->get_term_tooltip_li_class( $settings ) . '" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" term-id="' . esc_attr( $term->key ) . '" term-slug="' . esc_attr( $this->get_term_slug_attr( $taxonomy_key, $term->key ) ) . '" predefine="' . esc_attr( $predefine ) . '" parent-id="' . esc_attr( isset( $term->parent_id ) ? $term->parent_id : '' ) . '"' . $this->get_term_tooltip_data_attr( $settings, isset( $term->value ) ? ucfirst( $term->value ) : '' ) . $this->get_term_label_data_attr( isset( $term->value ) ? ucfirst( $term->value ) : '' ) . '>';
 		$html .= $this->render_term_label_tooltip( $settings, isset( $term->value ) ? ucfirst( $term->value ) : '' );
 		$html .= '<label class="caf-taxo-checkbox-main" taxonomy="' . esc_attr( $taxonomy_key ) . '" data-key="' . esc_attr( $taxonomy_key ) . '" predefine="' . esc_attr( $predefine ) . '" style="display:flex;align-items:center;">';
 		$html .= '<input type="checkbox" class="caf-taxo-input ' . esc_attr( $skin ) . '" ' . $checked . ' value="' . esc_attr( $term->key ) . '" />';

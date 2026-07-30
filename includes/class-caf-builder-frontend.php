@@ -139,7 +139,7 @@ class CAF_Builder_Frontend {
 			return self::$builder_render_cache[ $shortindex ];
 		}
 
-		if ( ! is_admin() ) {
+		if ( $this->allows_builder_frontend_render() ) {
 			$this->enqueue_builder_frontend_bootstrap();
 		}
 
@@ -332,12 +332,37 @@ class CAF_Builder_Frontend {
 	}
 
 	/**
+	 * Whether builder frontend render/assets may run.
+	 *
+	 * Elementor editor re-renders widgets via admin-ajax (is_admin() === true).
+	 * Without this exception, shortcode/widget preview returns a false "not published" error.
+	 *
+	 * @return bool
+	 */
+	protected function allows_builder_frontend_render() {
+		if ( ! is_admin() ) {
+			return true;
+		}
+
+		// Elementor re-renders widgets via admin-ajax only.
+		if ( wp_doing_ajax() ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only request routing.
+			$action = isset( $_REQUEST['action'] ) ? sanitize_key( wp_unslash( $_REQUEST['action'] ) ) : '';
+			if ( 'elementor_ajax' === $action ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
 	 * Enqueue minimal shared assets for builder shortcodes.
 	 *
 	 * @return void
 	 */
 	public function enqueue_builder_frontend_bootstrap() {
-		if ( is_admin() ) {
+		if ( ! $this->allows_builder_frontend_render() ) {
 			return;
 		}
 		$this->register_frontend_asset_handles();
@@ -353,18 +378,23 @@ class CAF_Builder_Frontend {
 	protected function enqueue_builder_assets() {
 		$this->register_frontend_asset_handles();
 
-		if ( ! wp_script_is( 'tc-caf-builder-front-script', 'registered' ) ) {
-			$builder_js = TC_CAF_PATH . 'assets/js/builder-framework.js';
-			wp_register_script(
-				'tc-caf-builder-front-script',
-				TC_CAF_URL . 'assets/js/builder-framework.js',
-				array( 'jquery', 'jquery-ui-slider', 'tc-caf-builder-ajax-config' ),
-				file_exists( $builder_js ) ? (string) filemtime( $builder_js ) : TC_CAF_PLUGIN_VERSION,
-				true
-			);
+		$is_elementor_canvas = class_exists( 'CAF_Elementor' ) && CAF_Elementor::is_editor_or_preview_render();
+
+		// Never load builder-framework.js inside Elementor editor/AJAX — it blanks the canvas.
+		if ( ! $is_elementor_canvas ) {
+			if ( ! wp_script_is( 'tc-caf-builder-front-script', 'registered' ) ) {
+				$builder_js = TC_CAF_PATH . 'assets/js/builder-framework.js';
+				wp_register_script(
+					'tc-caf-builder-front-script',
+					TC_CAF_URL . 'assets/js/builder-framework.js',
+					array( 'jquery', 'jquery-ui-slider', 'tc-caf-builder-ajax-config' ),
+					file_exists( $builder_js ) ? (string) filemtime( $builder_js ) : TC_CAF_PLUGIN_VERSION,
+					true
+				);
+			}
+			wp_enqueue_script( 'jquery-ui-slider' );
+			wp_enqueue_script( 'tc-caf-builder-front-script' );
 		}
-		wp_enqueue_script( 'jquery-ui-slider' );
-		wp_enqueue_script( 'tc-caf-builder-front-script' );
 
 		$this->ensure_dynamic_base_style();
 
@@ -398,7 +428,7 @@ class CAF_Builder_Frontend {
 	 * @return void
 	 */
 	public function load_builder_dependencies() {
-		if ( is_admin() ) {
+		if ( ! $this->allows_builder_frontend_render() ) {
 			return;
 		}
 

@@ -85,6 +85,70 @@ function caf_builder_validate_query_args( $args ) {
 }
 
 /**
+ * Lock security-sensitive WP_Query keys for public builder AJAX.
+ *
+ * Keeps tax_query / meta_query / search / sort / paged intact so filtering still works.
+ * Forces publish + layout post_type + layout posts_per_page (including -1 "show all").
+ *
+ * @param array       $args         Query args.
+ * @param object|null $data_handler Layout data handler (CAF_Builder_Data or compatible).
+ * @return array
+ */
+function caf_builder_harden_public_ajax_query_args( $args, $data_handler = null ) {
+	if ( ! is_array( $args ) ) {
+		$args = array();
+	}
+
+	$strip_keys = array(
+		'author',
+		'author_name',
+		'author__in',
+		'author__not_in',
+		'perm',
+		'has_password',
+		'post_password',
+	);
+	foreach ( $strip_keys as $key ) {
+		unset( $args[ $key ] );
+	}
+
+	$args['post_status'] = 'publish';
+
+	if ( is_object( $data_handler ) && method_exists( $data_handler, 'get_post_type' ) ) {
+		$layout_post_type = sanitize_key( (string) $data_handler->get_post_type() );
+		if ( '' !== $layout_post_type ) {
+			$args['post_type'] = $layout_post_type;
+		}
+	}
+
+	$layout_ppp = null;
+	if ( is_object( $data_handler ) && method_exists( $data_handler, 'get_misc_pagination' ) ) {
+		$misc = $data_handler->get_misc_pagination();
+		$raw  = ( is_object( $misc ) && isset( $misc->settings->posts_per_page ) )
+			? $misc->settings->posts_per_page
+			: -1;
+
+		if ( class_exists( 'CAF_Builder_Query' ) && method_exists( 'CAF_Builder_Query', 'normalize_posts_per_page_setting' ) ) {
+			$layout_ppp = CAF_Builder_Query::normalize_posts_per_page_setting( $raw );
+		} else {
+			$layout_ppp = (int) $raw;
+			if ( -1 !== $layout_ppp && $layout_ppp < 1 ) {
+				$layout_ppp = -1;
+			}
+		}
+	}
+
+	if ( null !== $layout_ppp ) {
+		$args['posts_per_page'] = $layout_ppp;
+	} elseif ( isset( $args['posts_per_page'] ) ) {
+		$ppp                    = (int) $args['posts_per_page'];
+		$args['posts_per_page'] = ( -1 === $ppp ) ? -1 : max( 1, absint( $ppp ) );
+	}
+
+	return $args;
+}
+
+/**
  * Restrict keyword search to selected source fields.
  *
  * @param string $keyword Raw keyword.
@@ -435,6 +499,7 @@ function get_caf_builder_posts() {
 		)
 	);
 	$args = caf_builder_validate_query_args( $args );
+	$args = caf_builder_harden_public_ajax_query_args( $args, $data_handler );
 	if ( ! CAF_Builder_Ajax_Performance::query_needs_found_rows( $data_handler ) ) {
 		$args['no_found_rows'] = true;
 	}
@@ -3056,7 +3121,8 @@ function caf_move_to_trash( $data ) {
 
 		if ( ! empty( $oldPanel ) ) {
 			foreach ( $oldPanel as $post_id ) {
-				if ( get_post_status( $post_id ) ) {
+				$post_id = absint( $post_id );
+				if ( $post_id && 'caf_posts' === get_post_type( $post_id ) && get_post_status( $post_id ) ) {
 					wp_trash_post( $post_id );
 				}
 			}
@@ -3096,7 +3162,8 @@ function caf_bulk_layouts_restore( $data ) {
 
 		if ( ! empty( $oldPanel ) ) {
 			foreach ( $oldPanel as $post_id ) {
-				if ( get_post_status( $post_id ) ) {
+				$post_id = absint( $post_id );
+				if ( $post_id && 'caf_posts' === get_post_type( $post_id ) && get_post_status( $post_id ) ) {
 					wp_untrash_post( $post_id );
 				}
 			}
@@ -3136,7 +3203,8 @@ function caf_bulk_layouts_delete_permanent( $data ) {
 
 		if ( ! empty( $oldPanel ) ) {
 			foreach ( $oldPanel as $post_id ) {
-				if ( get_post_status( $post_id ) ) {
+				$post_id = absint( $post_id );
+				if ( $post_id && 'caf_posts' === get_post_type( $post_id ) && get_post_status( $post_id ) ) {
 					wp_delete_post( $post_id, true );
 				}
 			}
@@ -3167,8 +3235,8 @@ function caf_bulk_layouts_delete_permanent( $data ) {
 }
 
 function caf_delete_layout_permissions( $request ) {
-	$post_id = intval( $request['post_id'] );
-	if ( get_post_status( $post_id ) ) {
+	$post_id = absint( $request['post_id'] );
+	if ( $post_id && 'caf_posts' === get_post_type( $post_id ) && get_post_status( $post_id ) ) {
 		wp_trash_post( $post_id );
 		return array(
 				'status'  => 'success',
@@ -3415,8 +3483,8 @@ function caf_clone_builder_layout( $request ) {
 }
 
 function caf_delete_layout_permanent( $request ) {
-	$post_id = intval( $request['post_id'] );
-	if ( wp_delete_post( $post_id, true ) ) {
+	$post_id = absint( $request['post_id'] );
+	if ( $post_id && 'caf_posts' === get_post_type( $post_id ) && wp_delete_post( $post_id, true ) ) {
 		return array(
 				'status'  => 'success',
 				'message' => 'Post deleted successfully.',
@@ -3430,8 +3498,8 @@ function caf_delete_layout_permanent( $request ) {
 }
 
 function caf_restore_layout( $request ) {
-	$post_id = intval( $request['post_id'] );
-	if ( get_post_status( $post_id ) ) {
+	$post_id = absint( $request['post_id'] );
+	if ( $post_id && 'caf_posts' === get_post_type( $post_id ) && get_post_status( $post_id ) ) {
 		wp_untrash_post( $post_id );
 		return array(
 				'status'  => 'success',
@@ -4032,11 +4100,14 @@ function build_term_tree_with_counts( $terms, $taxonomy_name ,$post_type) {
 	// Helper to get unique post IDs under a term (including descendants)
 	$get_post_ids = function ( $term_id, $taxonomy_name ) use ( &$get_post_ids, $term_lookup, $post_type) {
 		$args = array(
-			'post_type'      => $post_type ,
-			'post_status'    => 'publish',
-			'fields'         => 'ids',
-			'posts_per_page' => -1,
-			'tax_query'      => array(
+			'post_type'              => $post_type,
+			'post_status'            => 'publish',
+			'fields'                 => 'ids',
+			'posts_per_page'         => -1,
+			'no_found_rows'          => true,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'tax_query'              => array(
 				array(
 					'taxonomy'         => $taxonomy_name,
 					'terms'            => $term_id,
@@ -4045,8 +4116,13 @@ function build_term_tree_with_counts( $terms, $taxonomy_name ,$post_type) {
 			),
 		);
 
-		$posts    = get_posts( $args );
-		$post_ids = $posts ? $posts : array();
+		// Match Woo catalog rules so baked counts match shop / filter results.
+		if ( class_exists( 'CAF_Free_Woo' ) ) {
+			$args = CAF_Free_Woo::append_product_visibility_to_query_args( $args );
+		}
+
+		$query    = new WP_Query( $args );
+		$post_ids = ! empty( $query->posts ) ? $query->posts : array();
 
 		// Include child terms (recursively)
 		if ( ! empty( $term_lookup[ $term_id ]->children_data ) ) {
