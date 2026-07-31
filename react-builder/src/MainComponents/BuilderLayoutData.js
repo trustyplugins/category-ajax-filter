@@ -1,0 +1,3756 @@
+import { Collapse } from "antd";
+import {
+  columnStyle,
+  moduleStyle,
+  rowStyle,
+} from "./PostComponents/components/styleData";
+import {
+  fColumnStyle,
+  fModuleStyle,
+  fRowStyle,
+} from "./FilterComponents/styleData";
+import { FILTER_RESET_DEFAULT_ICONS } from "./FilterComponents/filterModuleDefaults";
+import { prefix } from "@fortawesome/free-solid-svg-icons";
+import { icon } from "@fortawesome/fontawesome-svg-core";
+
+export const builderLayoutData = {
+  common_data: {
+    layout_name: "",
+    layout_key: "",
+    layout_index: "",
+    post_type: "",
+    layout_publish: "draft",
+    global_font_family: "DM Sans",
+    /** Bumped when layout JSON shape changes; see src/layoutSchema/migrateLayoutDocument.js */
+    layout_schema_version: 3,
+    preview_template_data: {
+      misc_preview_data: {
+        container: {
+          scroll:{
+          desktop: {
+            is_enable: "false",
+            position: "-100",
+          },
+          tablet: {},
+          mobile: {},
+        },
+          custom_class: "",
+          custom_css: "",
+          nonce: "false",
+          style: {
+            desktop: {
+              default: {
+                paddingTop: "20px",
+                paddingRight: "20px",
+                paddingBottom: "20px",
+                paddingLeft: "20px",
+                fontSize: "14px",
+                display: "flex",
+                backgroundColor: "rgba(255,255,255,0)",
+                flexFlow: "row",
+                gap: "30px",
+                width: "100%",
+                height: "auto",
+                boxShadow: "0px 0px 0px 0px  #333333",
+                float: "none",
+              },
+              hover: {}
+            },
+            tablet: {
+              default: {
+                flexFlow: "column",
+                gap: "20px"
+              },
+              hover: {}
+            },
+            mobile: {
+              default: {
+                flexFlow: "column",
+                gap: "20px",
+                paddingTop: "0px",
+                paddingBottom: "0px",
+                paddingLeft: "0px",
+                paddingRight: "0px"
+              },
+              hover: {}
+            }
+          }
+        },
+        meta: {
+          style: {
+            desktop: {
+              default: {
+                paddingTop: "20px",
+                paddingRight: "0px",
+                paddingBottom: "20px",
+                paddingLeft: "0px",
+                fontSize: "18px",
+                display: "flex",
+                top: "auto",
+                right: "auto",
+                bottom: "auto",
+                left: "auto",
+                height: "auto",
+                width: "140px",
+                flexFlow: "row",
+                justifyContent: "center",
+                boxShadow: "0px 0px 0px 0px  #333333",
+                borderTopLeftRadius: "8px",
+                borderTopRightRadius: "8px",
+                borderBottomLeftRadius: "8px",
+                borderBottomRightRadius: "8px",
+                borderTopWidth: "2px",
+                borderRightWidth: "2px",
+                borderBottomWidth: "2px",
+                borderLeftWidth: "2px",
+                borderTopColor: "rgb(235,230,231)",
+                borderRightColor: "rgb(235,230,231)",
+                borderBottomColor: "rgb(235,230,231)",
+                borderLeftColor: "rgb(235,230,231)",
+                borderTopStyle: "solid",
+                borderRightStyle: "solid",
+                borderBottomStyle: "solid",
+                borderLeftStyle: "solid",
+                backgroundColor: "rgb(96,96,96)",
+                gap: "5px",
+                alignItems: "center",
+                float: "none",
+                fontFamily: "DM Sans",
+                color: "rgb(255,255,255)"
+              },
+              hover: {}
+            },
+            tablet: {
+              default: {},
+              hover: {}
+            },
+            mobile: {
+              default: {
+                paddingTop: "13px",
+                paddingBottom: "13px",
+                width: "120px",
+                fontSize: "16px",
+                top: "auto",
+                position: "inherit",
+                zIndex: "9999"
+              },
+              hover: {}
+            }
+          }
+        },
+        extra: {
+          masonary: false,
+          order: "ASC",
+          orderby: "title",
+          noresult: "No Result.",
+          desktop: {
+            filterPosition: "inline",
+            floatButtonValue: "Filter",
+            floatButton: true,
+            floatIcon: true,
+            animationType: "slide-right-left",
+            animationPosition: "right",
+            overlay: "rgba(32, 31, 31, 0.624)",
+            floatIconValue: "fas fa-list-ul"
+          },
+          tablet: {},
+          mobile: {
+            floatIconValue: "fas fa-list-ul",
+            filterPosition: "floating"
+          }
+        },
+        loader: {
+          is_enable: "true",
+          loader_type: "true",
+          loader_text: "Loading...",
+          overlay: "true",
+          custom_class: "",
+          icon_data: {
+            source: "list",
+            icon: "fa fa-spinner fa-pulse",
+            url: "",
+            upload: "",
+            style: {
+              desktop: {
+                default: {
+                  fontSize: "14px",
+                  overlay: "rgba(255,255,255,0)"
+                },
+                hover: {}
+              },
+              tablet: {
+                default: {},
+                hover: {}
+              },
+              mobile: {
+                default: {},
+                hover: {}
+              }
+            }
+          }
+        },
+        dnd_column_data: [
+          {
+            key: "filter_top",
+            label: "Filter Top",
+            settings: {
+              custom_class: "",
+              visibility: {
+                mobile: "false",
+                tablet: "false",
+                desktop: "false"
+              }
+            },
+            style: {
+              desktop: {
+                default: {
+                  boxShadow: "0px 0px 0px 0px  #333333",
+                  top: "auto",
+                  right: "auto",
+                  left: "auto",
+                  bottom: "auto",
+                  width: "100%",
+                  height: "auto",
+                  paddingTop: "0px",
+                  paddingBottom: "0px",
+                  paddingRight: "0px",
+                  paddingLeft: "0px",
+                  display: "flex",
+                  flexFlow: "row",
+                  float: "none",
+                },
+                hover: {}
+              },
+              tablet: {
+                default: {},
+                hover: {}
+              },
+              mobile: {
+                default: {},
+                hover: {}
+              }
+            },
+            data: []
+          },
+          {
+            key: "filter_bottom",
+            label: "Filter Bottom",
+            settings: {
+              custom_class: "",
+              visibility: {
+                mobile: "false",
+                tablet: "false",
+                desktop: "false"
+              }
+            },
+            style: {
+              desktop: {
+                default: {
+                  display: "flex",
+                  flexFlow: "row",
+                  float: "none",
+                },
+                hover: {}
+              },
+              tablet: {
+                default: {},
+                hover: {}
+              },
+              mobile: {
+                default: {},
+                hover: {}
+              }
+            },
+            data: []
+          },
+          {
+            key: "post_top",
+            label: "Post Layout Top",
+            settings: {
+              custom_class: "",
+              visibility: {
+                mobile: "false",
+                tablet: "false",
+                desktop: "false"
+              }
+            },
+            style: {
+              desktop: {
+                default: {
+                  boxShadow: "0px 0px 0px 0px  #333333",
+                  top: "auto",
+                  right: "auto",
+                  bottom: "auto",
+                  left: "auto",
+                  width: "100%",
+                  height: "auto",
+                  paddingTop: "0px",
+                  paddingBottom: "0px",
+                  paddingLeft: "0px",
+                  paddingRight: "0px",
+                  display: "flex",
+                  flexFlow: "row",
+                  float: "none",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  marginBottom: "15px"
+                },
+                hover: {}
+              },
+              tablet: {
+                default: {
+                  flexFlow: "column",
+                  gap: "6px"
+                },
+                hover: {}
+              },
+              mobile: {
+                default: {
+                  flexFlow: "column",
+                  gap: "10px"
+                },
+                hover: {}
+              }
+            },
+            data: [
+              {
+                key: "selected",
+                label: "Selected",
+                style: {
+                  container: {
+                    desktop: {
+                      default: {
+                        display: "flex",
+                        width: "auto",
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        top: "auto",
+                        right: "auto",
+                        bottom: "auto",
+                        left: "auto",
+                        height: "auto",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        paddingRight: "0px",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        float: "none",
+                        gap: "6px",
+                        marginTop: "0px",
+                        marginBottom: "0px",
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                  meta: {
+                    desktop: {
+                      default: {
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        width: "auto",
+                        height: "auto",
+                        paddingTop: "8px",
+                        paddingBottom: "8px",
+                        paddingLeft: "10px",
+                        paddingRight: "10px",
+                        display: "flex",
+                        flexFlow: "row-reverse",
+                        float: "none",
+                        alignItems: "center",
+                        gap: "3px",
+                        borderTopWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "1px",
+                        borderTopColor: "rgb(221,221,221)",
+                        borderRightColor: "rgb(221,221,221)",
+                        borderBottomColor: "rgb(221,221,221)",
+                        borderLeftColor: "rgb(221,221,221)",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid",
+                        borderTopLeftRadius: "5px",
+                        borderTopRightRadius: "5px",
+                        borderBottomLeftRadius: "5px",
+                        borderBottomRightRadius: "5px",
+                        backgroundColor: "rgb(255,255,255)",
+                        fontFamily: "DM Sans"
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                  meta1: {
+                    desktop: {
+                      default: {
+                        color: "rgb(163,163,163)",
+                        fontFamily: "DM Sans"
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  }
+                },
+                settings: {
+                  is_enable: "true",
+                  close_button: "true",
+                  custom_class: "",
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  }
+                },
+                data: []
+              },
+              {
+                key: "result_count",
+                label: "Result Count",
+                settings: {
+                  is_enable: "true",
+                  custom_class: "",
+                  prefix: {
+                    is_enable: "true",
+                    value: "Showing"
+                  },
+                  suffix: {
+                    is_enable: "true",
+                    value: "Results"
+                  },
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  }
+                },
+                style: {
+                  container: {
+                    desktop: {
+                      default: {
+                        display: "flex",
+                        width: "auto",
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        top: "auto",
+                        right: "auto",
+                        bottom: "auto",
+                        left: "auto",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        paddingRight: "0px",
+                        height: "auto",
+                        flexFlow: "row",
+                        gap: "5px",
+                        alignItems: "center",
+                        float: "none",
+                        fontFamily: "DM Sans",
+                        fontWeight: "800",
+                        fontSize: "18px",
+                        color: "rgb(0,0,0)",
+                        fontStyle: "normal",
+                        textTransform: "inherit",
+                        textDecoration: "inherit"
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                  meta: {
+                    desktop: {
+                      default: {
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        paddingRight: "0px",
+                        width: "auto",
+                        height: "auto",
+                        fontFamily: "DM Sans",
+                        fontSize: "15px",
+                        fontWeight: "300",
+                        color: "rgb(96,96,96)"
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                  meta1: {
+                    desktop: {
+                      default: {
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        paddingRight: "0px",
+                        width: "auto",
+                        height: "auto",
+                        fontFamily: "DM Sans",
+                        fontWeight: "300",
+                        fontSize: "15px",
+                        color: "rgb(96,96,96)"
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  }
+                },
+                data: []
+              },
+              {
+                key: "sorting",
+                label: "Sorting",
+                style: {
+                  container: {
+                    desktop: {
+                      default: {
+                        display: "flex",
+                        width: "auto",
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        top: "auto",
+                        right: "auto",
+                        bottom: "auto",
+                        left: "auto",
+                        height: "auto",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        paddingRight: "0px",
+                        flexFlow: "row",
+                        float: "none",
+                        gap: "10px",
+                        marginBottom: "0px"
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                  meta: {
+                    desktop: {
+                      default: {
+                        width: "130px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                        flexFlow: "row",
+                        float: "none",
+                        height: "35px",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "10px",
+                        paddingRight: "10px",
+                        borderTopWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "1px",
+                        borderTopColor: "rgb(221,221,221)",
+                        borderRightColor: "rgb(221,221,221)",
+                        borderBottomColor: "rgb(221,221,221)",
+                        borderLeftColor: "rgb(221,221,221)",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid",
+                        borderTopLeftRadius: "5px",
+                        borderTopRightRadius: "5px",
+                        borderBottomLeftRadius: "5px",
+                        borderBottomRightRadius: "5px",
+                        alignItems: "center",
+                        backgroundColor: "rgb(255,255,255)",
+                        fontFamily: "DM Sans"
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                  meta1: {
+                    desktop: {
+                      default: {
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        width: "100%",
+                        height: "auto",
+                        backgroundColor: "rgb(255,255,255)",
+                        paddingLeft: "10px",
+                        paddingRight: "10px",
+                        paddingTop: "8px",
+                        paddingBottom: "8px",
+                        borderTopWidth: "0px",
+                        borderRightWidth: "0px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "0px",
+                        borderTopColor: "rgb(221,221,221)",
+                        borderRightColor: "rgb(221,221,221)",
+                        borderBottomColor: "rgb(245,245,245)",
+                        borderLeftColor: "rgb(221,221,221)",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid",
+                        fontFamily: "DM Sans"
+                      },
+                      hover: {
+                        backgroundColor: "rgb(246,247,251)"
+                      },
+                      selected: {
+                        backgroundColor: "rgb(246,247,251)"
+                      },
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                  meta2: {
+                    desktop: {
+                      default: {
+                        width: "100%",
+                        height: "auto"
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                  meta3: {
+                    desktop: {
+                      default: {
+                        width: "100%",
+                        height: "auto"
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                  meta4: {
+                    desktop: {
+                      default: {
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        paddingRight: "0px",
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        width: "100%",
+                        height: "auto",
+                        borderTopWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "1px",
+                        borderTopColor: "rgb(235,230,231)",
+                        borderRightColor: "rgb(235,230,231)",
+                        borderBottomColor: "rgb(235,230,231)",
+                        borderLeftColor: "rgb(235,230,231)",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid",
+                        marginTop: "5px",
+                        borderTopLeftRadius: "6px",
+                        borderTopRightRadius: "6px",
+                        borderBottomLeftRadius: "6px",
+                        borderBottomRightRadius: "6px"
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                  meta5: {
+                    desktop: {
+                      default: {
+                        width: "130px",
+                        display: "flex",
+                        height: "35px",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "10px",
+                        paddingRight: "10px"
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                },
+                settings:{
+                  is_enable: "true",
+                  order: {
+                    is_enable: "true",
+                    values: [
+                      "DESC",
+                      "ASC"
+                    ],
+                    placeholder: "Order",
+                    icon_position: "right"
+                  },
+                  order_by: {
+                    is_enable: "true",
+                    values: [
+                      "ID",
+                      "date",
+                      "rand",
+                      "title"
+                    ],
+                    placeholder: "Order By",
+                    icon_position: "right"
+                  },
+                  custom_class: "",
+                  label: {
+                    is_label: "false",
+                    label_text: "Sorting",
+                    style: {
+                      desktop: {
+                        default: {
+                          fontSize: "14px",
+                          
+                        },
+                        hover: {}
+                      },
+                      tablet: {
+                        default: {},
+                        hover: {}
+                      },
+                      mobile: {
+                        default: {},
+                        hover: {}
+                      }
+                    }
+                  },
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  }
+                }
+              },
+            ]
+          },
+          {
+            key: "post_bottom",
+            label: "Post Layout Bottom",
+            settings: {
+              custom_class: "",
+              visibility: {
+                mobile: "false",
+                tablet: "false",
+                desktop: "false"
+              }
+            },
+            style: {
+              desktop: {
+                default: {
+                  boxShadow: "0px 0px 0px 0px  #333333",
+                  top: "auto",
+                  right: "auto",
+                  bottom: "auto",
+                  left: "auto",
+                  width: "100%",
+                  height: "auto",
+                  paddingTop: "0px",
+                  paddingBottom: "0px",
+                  paddingRight: "0px",
+                  paddingLeft: "0px",
+                  display: "flex",
+                  flexFlow: "row",
+                  float: "none",
+                },
+                hover: {}
+              },
+              tablet: {
+                default: {},
+                hover: {}
+              },
+              mobile: {
+                default: {},
+                hover: {}
+              }
+            },
+            data: [
+              {
+                key: "pagination",
+                label: "Pagination",
+                settings: {
+                  is_enable: "true",
+                  custom_class: "",
+                  posts_per_page: "9",
+                  pagination_type: "number2",
+                  ellipsis: {
+                    is_enable: "true",
+                    value: "..."
+                  },
+                  load_more: {
+                    text: "Load More",
+                    icon_enable: "true",
+                    icons: {
+                      visibility: true,
+                      icon: "fas fa-arrow-right",
+                      type: "icon"
+                    }
+                  },
+                  prev: {
+                    text: "Previous",
+                    type: "icon",
+                    icons: {
+                      visibility: true,
+                      icon: "fas fa-long-arrow-alt-left",
+                      type: "icon"
+                    }
+                  },
+                  next: {
+                    text: "Next",
+                    type: "icon",
+                    icons: {
+                      visibility: true,
+                      icon: "fas fa-long-arrow-alt-right",
+                      type: "icon"
+                    }
+                  },
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  }
+                },
+                style: {
+                  container: {
+                    desktop: {
+                      default: {
+                        display: "flex",
+                        width: "100%",
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        top: "auto",
+                        right: "auto",
+                        bottom: "auto",
+                        left: "auto",
+                        flexFlow: "row",
+                        justifyContent: "center",
+                        gap: "10px",
+                        height: "auto",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        paddingRight: "0px",
+                        marginTop: "30px",
+                        float: "none",
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                  meta: {
+                    desktop: {
+                      default: {
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        fontFamily: "DM Sans",
+                        height: "auto",
+                        width: "auto",
+                        paddingTop: "12px",
+                        paddingBottom: "12px",
+                        paddingLeft: "25px",
+                        paddingRight: "25px",
+                        borderTopWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "1px",
+                        borderTopColor: "rgb(221,221,221)",
+                        borderRightColor: "rgb(221,221,221)",
+                        borderBottomColor: "rgb(221,221,221)",
+                        borderLeftColor: "rgb(221,221,221)",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid",
+                        fontSize: "16px",
+                        borderTopLeftRadius: "5px",
+                        borderTopRightRadius: "5px",
+                        borderBottomLeftRadius: "5px",
+                        borderBottomRightRadius: "5px",
+                        backgroundColor: "rgb(255,255,255)",
+                        display: "flex",
+                        flexFlow: "row",
+                        gap: "8px"
+                      },
+                      hover: {
+                        backgroundColor: "rgb(246,247,251)"
+                      },
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                  meta1: {
+                    desktop: {
+                      default: {
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        fontFamily: "DM Sans",
+                        width: "48px",
+                        height: "48px",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        paddingRight: "0px",
+                        borderTopWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "1px",
+                        borderTopColor: "rgb(221,221,221)",
+                        borderRightColor: "rgb(221,221,221)",
+                        borderBottomColor: "rgb(221,221,221)",
+                        borderLeftColor: "rgb(221,221,221)",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid",
+                        fontSize: "16px",
+                        borderTopLeftRadius: "5px",
+                        borderTopRightRadius: "5px",
+                        borderBottomLeftRadius: "5px",
+                        borderBottomRightRadius: "5px",
+                        backgroundColor: "rgb(255,255,255)"
+                      },
+                      hover: {
+                        backgroundColor: "rgb(246,247,251)"
+                      },
+                      selected: {
+                        backgroundColor: "rgb(96,96,96)",
+                        color: "rgb(255,255,255)"
+                      },
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  },
+                  meta2: {
+                    desktop: {
+                      default: {
+                        display: "flex",
+                        flexFlow: "row",
+                        float: "none",
+                        gap: "10px",
+                        justifyContent: "center",
+                        alignItems: "center"
+                      },
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    tablet: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    },
+                    mobile: {
+                      default: {},
+                      hover: {},
+                      selected: {},
+                      placeholder: {}
+                    }
+                  }
+                },
+                data: []
+              }
+            ]
+          }
+        ],
+      },
+      post_preview_data: {
+        layout_type: "grid",
+        custom_class: "",
+        grid: {
+          device_columns: {
+            desktop: "3",
+            tablet: "1",
+            mobile: "1"
+          },
+          style: {
+            desktop: {
+              default: {
+                width: "75%",
+                paddingLeft: "0px",
+                height: "auto",
+                paddingTop: "0px",
+                paddingBottom: "0px",
+                paddingRight: "0px",
+                boxShadow: "0px 0px 0px 0px  #333333"
+              },
+              hover: {}
+            },
+            tablet: {
+              default: {
+                width: "100%"
+              },
+              hover: {}
+            },
+            mobile: {
+              default: {
+                width: "100%",
+                paddingLeft: "10px",
+                paddingRight: "10px"
+              },
+              hover: {}
+            }
+          }
+        },
+        inner: {
+          style: {
+            desktop: {
+              default: {
+                columnGap: "15px",
+                rowGap: "15px"
+              },
+              hover: {}
+            },
+            tablet: {
+              default: {
+                columnGap: "10px",
+                rowGap: "10px"
+              },
+              hover: {}
+            },
+            mobile: {
+              default: {
+                columnGap: "10px",
+                rowGap: "10px"
+              },
+              hover: {}
+            }
+          }
+        }
+      },
+      filter_preview_data: {
+        custom_class: "",
+        style: {
+          desktop: {
+            default: {
+              width: "25%",
+              paddingTop: "0px",
+              paddingRight: "0px",
+              paddingBottom: "0px",
+              paddingLeft: "0px",
+              height: "auto",
+              boxShadow: "0px 0px 0px 0px  #333333"
+            },
+            hover: {}
+          },
+          tablet: {
+            default: {
+              width: "100%"
+            },
+            hover: {}
+          },
+          mobile: {
+            default: {
+              width: "100%"
+            },
+            hover: {}
+          }
+        }
+      }
+    },
+  },
+  filter_layout_data: {
+    initial_data: [
+      {
+        type: "row",
+        style: { ...fRowStyle },
+        settings: {
+          collapse_status: "false",
+          custom_class: "",
+          admin_label: "",
+          visibility: {
+            mobile: "false",
+            tablet: "false",
+            desktop: "false"
+          }
+        },
+        //Start Column
+        data: [
+          {
+            type: "column",
+            settings: {
+              collapse_status: "false",
+              custom_class: "",
+              admin_label: "",
+              visibility: {
+                mobile: "false",
+                tablet: "false",
+                desktop: "false"
+              }
+          },
+            style: { ...fColumnStyle },
+            data: [
+              {
+                type: "module",
+                title: "Search",
+                style: {
+                  ...fModuleStyle,
+                  container: {
+                    ...fModuleStyle.container,
+                    desktop: {
+                      ...fModuleStyle.container.desktop,
+                      default: {
+                        ...fModuleStyle.container.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "10px",
+                        paddingRight: "0",
+                        paddingBottom: "0px",
+                        paddingLeft: "0",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "rgb(255,255,255)",
+                        color: "#4c5866",
+                        fontFamily: "Open Sans",
+                        fontSize: "14px",
+                        
+                        display: "flex",
+                        flexFlow: "column",
+                        alignItems: "flex-start",
+                        justifyContent: "flex-start",
+                        gap: "0px",
+                        float: "none"
+                      },
+                    },
+                  },
+                  header: {
+                    ...fModuleStyle.header,
+                    desktop: {
+                      ...fModuleStyle.header.desktop,
+                      default: {
+                        ...fModuleStyle.header.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        top: "0",
+                        bottom: "0",
+                        left: "0",
+                        right: "0",
+                        paddingTop: "0px",
+                        paddingRight: "0",
+                        paddingBottom: "10px",
+                        paddingLeft: "0",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "rgba(255,255,255,0)",
+                        color: "#000",
+                        fontFamily: "DM Sans",
+                        fontWeight: "400",
+                        fontSize: "20px",
+                        
+                        display: "flex",
+                        flexFlow: "row"
+                      },
+                    },
+                  },
+                  input: {
+                    ...fModuleStyle.input,
+                    desktop: {
+                      ...fModuleStyle.input.desktop,
+                      default: {
+                        ...fModuleStyle.input.desktop.default,
+                        width: "100%",
+                        height: "50px",
+                        position: "relative",
+                        paddingTop: "0px",
+                        paddingRight: "10px",
+                        paddingBottom: "0px",
+                        paddingLeft: "10px",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "rgb(255,255,255)",
+                        color: "#000",
+                        fontFamily: "DM Sans",
+                        fontWeight: "400",
+                        fontSize: "16px",
+                        
+                        borderTopLeftRadius: "8px",
+                        borderBottomLeftRadius: "8px",
+                        borderTopRightRadius: "8px",
+                        borderBottomRightRadius: "8px",
+                        borderTopWidth: "2px",
+                        borderRightWidth: "2px",
+                        borderBottomWidth: "2px",
+                        borderLeftWidth: "2px",
+                        borderTopColor: "rgb(235,230,231)",
+                        borderRightColor: "rgb(235,230,231)",
+                        borderBottomColor: "rgb(235,230,231)",
+                        borderLeftColor: "rgb(235,230,231)",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid",
+                        gap: "5px"
+                      },
+                      selected: {
+                          ...fModuleStyle.input.desktop.selected,
+                          backgroundColor: "rgb(246,247,251)",
+                          borderTopWidth: "2px",
+                          borderRightWidth: "2px",
+                          borderBottomWidth: "2px",
+                          borderLeftWidth: "2px",
+                          borderTopColor: "rgb(149,149,149)",
+                          borderRightColor: "rgb(149,149,149)",
+                          borderBottomColor: "rgb(149,149,149)",
+                          borderLeftColor: "rgb(149,149,149)",
+                          borderTopStyle: "solid",
+                          borderRightStyle: "solid",
+                          borderBottomStyle: "solid",
+                          borderLeftStyle: "solid"
+                      },
+                      placeholder: {
+                      color: "rgb(191,191,191)"
+                      },
+                    },
+                  },
+                  meta: {
+                    ...fModuleStyle.meta,
+                    desktop: {
+                      ...fModuleStyle.meta.desktop,
+                      default: {
+                        ...fModuleStyle.meta.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "0px",
+                        paddingRight: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "rgba(0,0,0,0)",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                        color: "#000000",
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        gap: "10px",
+                        float: "none",
+                        flexWrap: "wrap",
+                        borderTopLeftRadius: "10px",
+                        borderTopRightRadius: "10px",
+                        borderBottomLeftRadius: "10px",
+                        borderBottomRightRadius: "10px",
+                        borderTopWidth: "0px",
+                        borderRightWidth: "0px",
+                        borderBottomWidth: "0px",
+                        borderLeftWidth: "0px",
+                        borderTopColor: "#E91D63",
+                        borderRightColor: "#E91D63",
+                        borderBottomColor: "#E91D63",
+                        borderLeftColor: "#E91D63",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid"
+                      },
+                    },
+                  },
+                  mainmeta: {
+                    ...fModuleStyle.mainmeta,
+                    desktop: {
+                      ...fModuleStyle.mainmeta.desktop,
+                      default: {
+                        ...fModuleStyle.mainmeta.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "10px",
+                        paddingRight: "0",
+                        paddingBottom: "0",
+                        paddingLeft: "0",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                        color: "#dd3333",
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        gap: "15px",
+                        float: "none",
+                        flexWrap: "wrap"
+                      },
+                    },
+                  },
+                  selectmeta: {
+                    ...fModuleStyle.selectmeta,
+                    desktop: {
+                      ...fModuleStyle.selectmeta.desktop,
+                      default: {
+                        ...fModuleStyle.selectmeta.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "10px",
+                        paddingRight: "10px",
+                        paddingBottom: "10px",
+                        paddingLeft: "10px",
+                        marginTop: "0px",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                        color: "#dd3333",
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "0px",
+                        float: "none",
+                        borderTopLeftRadius: "6px",
+                        borderTopRightRadius: "6px",
+                        borderBottomLeftRadius: "6px",
+                        borderBottomRightRadius: "6px",
+                        borderTopColor: "#c6bdbd",
+                        borderRightColor: "#c6bdbd",
+                        borderBottomColor: "#c6bdbd",
+                        borderLeftColor: "#c6bdbd",
+                        borderTopWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "1px",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid"
+                      },
+                    },
+                  },
+                  meta1: {
+                    ...fModuleStyle.meta1,
+                    desktop: {
+                      ...fModuleStyle.meta1.desktop,
+                      default: {
+                        ...fModuleStyle.meta1.desktop.default,
+                        width: "auto",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "0px",
+                        paddingRight: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        marginTop: "0px",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "unset",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                        color: "#dd3333",
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        gap: "0px",
+                        float: "none",
+                        borderTopLeftRadius: "0px",
+                        borderTopRightRadius: "0px",
+                        borderBottomLeftRadius: "0px",
+                        borderBottomRightRadius: "0px",
+                        borderTopColor: "#c6bdbd",
+                        borderRightColor: "#c6bdbd",
+                        borderBottomColor: "#c6bdbd",
+                        borderLeftColor: "#c6bdbd",
+                        borderTopWidth: "0px",
+                        borderRightWidth: "0px",
+                        borderBottomWidth: "0px",
+                        borderLeftWidth: "0px",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid"
+                      },
+                    },
+                  },
+                  meta2: {
+                    ...fModuleStyle.meta2,
+                    desktop: {
+                      ...fModuleStyle.meta2.desktop,
+                      default: {
+                        ...fModuleStyle.meta2.desktop.default,
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        gap: "5px",
+                        float: "none",
+                        width: "auto",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "0px",
+                        paddingRight: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        marginTop: "0px",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "unset",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        color: "#dd3333",
+                        borderTopLeftRadius: "0px",
+                        borderTopRightRadius: "0px",
+                        borderBottomLeftRadius: "0px",
+                        borderBottomRightRadius: "0px",
+                        borderTopColor: "#c6bdbd",
+                        borderRightColor: "#c6bdbd",
+                        borderBottomColor: "#c6bdbd",
+                        borderLeftColor: "#c6bdbd",
+                        borderTopWidth: "0px",
+                        borderRightWidth: "0px",
+                        borderBottomWidth: "0px",
+                        borderLeftWidth: "0px",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid"
+                      },
+                    },
+                  },
+                  meta3: {
+                    ...fModuleStyle.meta3,
+                    desktop: {
+                      ...fModuleStyle.meta3.desktop,
+                      default: {
+                        ...fModuleStyle.meta3.desktop.default,
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "flex-start",
+                        justifyContent: "flex-start",
+                        gap: "3px",
+                        float: "none"
+                      },
+                    },
+                  },
+                  meta4: {
+                    ...fModuleStyle.meta4,
+                    desktop: {
+                      ...fModuleStyle.meta4.desktop,
+                      default: {
+                        ...fModuleStyle.meta4.desktop.default,
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "flex-start",
+                        justifyContent: "flex-start",
+                        gap: "3px",
+                        float: "none"
+                      },
+                    },
+                  },
+                  icon: {
+                    ...fModuleStyle.icon,
+                    desktop: {
+                      ...fModuleStyle.icon.desktop,
+                      default: {
+                        ...fModuleStyle.icon.desktop.default,
+                        fontSize: "18px",
+                        
+                        color: "rgb(96,96,96)",
+                        paddingBottom: "0px",
+                        paddingTop: "0px",
+                        paddingRight: "0px",
+                        paddingLeft: "0px",
+                        display: "flex",
+                        gap: "0px",
+                        marginRight: "0px"
+                      },
+                    },
+                  },
+                  icon2: {
+                    ...fModuleStyle.icon2,
+                    desktop: {
+                      ...fModuleStyle.icon2.desktop,
+                      default: {
+                        ...fModuleStyle.icon2.desktop.default,
+                        fontSize: "18px",
+                        
+                        color: "rgb(20,134,0)",
+                        paddingBottom: "0px",
+                        paddingTop: "0px",
+                        paddingRight: "0px",
+                        paddingLeft: "0px"
+                      },
+                    },
+                  },
+                  icon3: {
+                    ...fModuleStyle.icon3,
+                    desktop: {
+                      ...fModuleStyle.icon3.desktop,
+                      default: {
+                        ...fModuleStyle.icon3.desktop.default,
+                        fontSize: "18px",
+                        
+                        color: "rgb(96,96,96)",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        paddingRight: "0px"
+                      },
+                    },
+                  },
+                  selecticon: {
+                    ...fModuleStyle.selecticon,
+                    desktop: {
+                      ...fModuleStyle.selecticon.desktop,
+                      default: {
+                        ...fModuleStyle.selecticon.desktop.default,
+                        fontSize: "16px",
+                        
+                        color: "#dd3333"
+                      },
+                    },
+                  },
+                  count: {
+                    ...fModuleStyle.count,
+                    desktop: {
+                      ...fModuleStyle.count.desktop,
+                      default: {
+                        ...fModuleStyle.count.desktop.default,
+                        width: "auto",
+                        height: "auto",
+                        paddingTop: "0px",
+                        paddingRight: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        marginTop: "0px",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff00",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                      },
+                    },
+                  },
+                },
+                key: "search",
+                settings: {
+                  search_label: "Search",
+                  search_placeholder: "Search...",
+                  search_trigger: "enter_icon",
+                  smart_ai_search: {
+                    is_enable: "false"
+                  },
+                  keyword_search: {
+                    is_enable: "true"
+                  },
+                  custom_field: "0",
+                  char_limit: {
+                    is_enable: "false",
+                    limit: "3"
+                  },
+                  source: {
+                    everything: false,
+                    title: true,
+                    descriptions: false,
+                    custom_field: false
+                  },
+                  search_icon: {
+                    is_enable: "true",
+                    position: "left",
+                    icon: "",
+                    type: "icon"
+                  },
+                  voice_icon: {
+                    is_enable: "true",
+                    position: "right",
+                    icon: "",
+                    type: "icon",
+                    placeholder: "Listening Now..."
+                  },
+                  clear_icon: {
+                    is_enable: "true",
+                    position: "right",
+                    icon: "",
+                    type: "icon",
+                    visibility: "type"
+                  },
+                  custom_class: "",
+                  admin_label: "",
+                  label: {
+                    is_label: "true",
+                    value: "Label",
+                    icons: {
+                      visibility: false,
+                      icon: "",
+                      position: "before-label",
+                      type: "icon"
+                    }
+                  },
+                  enable_toggle: "false",
+                  toggle_position: "right",
+                  close_toggle: "false",
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  },
+                  taxonomy_data: [],
+                  predefined_terms: [],
+                  cf_predefined_terms: []
+                },
+              },
+              {
+                type: "module",
+                title: "Checkbox Filter",
+                style: {
+                  ...fModuleStyle,
+                  container: {
+                    ...fModuleStyle.container,
+                    desktop: {
+                      ...fModuleStyle.container.desktop,
+                      default: {
+                        ...fModuleStyle.container.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "10px",
+                        paddingRight: "0",
+                        paddingBottom: "0",
+                        paddingLeft: "0",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "rgb(255,255,255)",
+                        color: "#4c5866",
+                        fontFamily: "Open Sans",
+                        fontSize: "14px",
+                        
+                        display: "flex",
+                        flexFlow: "column",
+                        alignItems: "flex-start",
+                        justifyContent: "flex-start",
+                        gap: "0px",
+                        float: "none",
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        top: "auto",
+                        right: "auto",
+                        bottom: "auto",
+                        left: "auto",
+                      },
+                    },
+                  },
+                  header: {
+                    ...fModuleStyle.header,
+                    desktop: {
+                      ...fModuleStyle.header.desktop,
+                      default: {
+                        ...fModuleStyle.header.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        top: "0",
+                        bottom: "0",
+                        left: "0",
+                        right: "0",
+                        paddingTop: "0px",
+                        paddingRight: "0",
+                        paddingBottom: "10px",
+                        paddingLeft: "0",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "rgba(255,255,255,0)",
+                        color: "#000",
+                        fontFamily: "DM Sans",
+                        fontWeight: "400",
+                        fontSize: "20px",
+                        
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        display: "flex",
+                      },
+                    },
+                  },
+                  input: {
+                    ...fModuleStyle.input,
+                    desktop: {
+                      ...fModuleStyle.input.desktop,
+                      default: {
+                        ...fModuleStyle.input.desktop.default,
+                        width: "18px",
+                        height: "18px",
+                        position: "relative",
+                        paddingTop: "0px",
+                        paddingRight: "0",
+                        paddingBottom: "0px",
+                        paddingLeft: "0",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff",
+                        color: "rgb(255,255,255)",
+                        fontFamily: "Montserrat",
+                        fontWeight: "700",
+                        fontSize: "22px",
+                        
+                        borderTopWidth: "2px",
+                        borderRightWidth: "2px",
+                        borderBottomWidth: "2px",
+                        borderLeftWidth: "2px",
+                        borderTopColor: "rgb(209,213,220)",
+                        borderRightColor: "rgb(209,213,220)",
+                        borderBottomColor: "rgb(209,213,220)",
+                        borderLeftColor: "rgb(209,213,220)",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid",
+                        borderTopLeftRadius: "4px",
+                        borderTopRightRadius: "4px",
+                        borderBottomLeftRadius: "4px",
+                        borderBottomRightRadius: "4px",
+                      },
+                      selected: {
+                        ...fModuleStyle.input.desktop.selected,
+                        backgroundColor: "rgb(0,0,0)",
+                        borderTopWidth: "2px",
+                        borderRightWidth: "2px",
+                        borderBottomWidth: "2px",
+                        borderLeftWidth: "2px",
+                        borderTopColor: "rgb(3,3,3)",
+                        borderRightColor: "rgb(3,3,3)",
+                        borderBottomColor: "rgb(3,3,3)",
+                        borderLeftColor: "rgb(3,3,3)",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid"
+                      }
+                    },
+                  },
+                  meta: {
+                    ...fModuleStyle.meta,
+                    desktop: {
+                      ...fModuleStyle.meta.desktop,
+                      default: {
+                        ...fModuleStyle.meta.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "0px",
+                        paddingRight: "0",
+                        paddingBottom: "0",
+                        paddingLeft: "0",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "rgba(255,255,255,0)",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                        color: "#dd3333",
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        gap: "10px",
+                        float: "none",
+                        flexWrap: "wrap",
+                        boxShadow: "0px 0px 0px 0px  #333333"
+                      },
+                    },
+                  },
+                  mainmeta: {
+                    ...fModuleStyle.mainmeta,
+                    desktop: {
+                      ...fModuleStyle.mainmeta.desktop,
+                      default: {
+                        ...fModuleStyle.mainmeta.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "10px",
+                        paddingRight: "0",
+                        paddingBottom: "0",
+                        paddingLeft: "0",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                        color: "#dd3333",
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        gap: "15px",
+                        float: "none",
+                        flexWrap: "wrap"
+                      },
+                    },
+                  },
+                  selectmeta: {
+                    ...fModuleStyle.selectmeta,
+                    desktop: {
+                      ...fModuleStyle.selectmeta.desktop,
+                      default: {
+                        ...fModuleStyle.selectmeta.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "10px",
+                        paddingRight: "10px",
+                        paddingBottom: "10px",
+                        paddingLeft: "10px",
+                        marginTop: "0px",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                        color: "#dd3333",
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "0px",
+                        float: "none",
+                        borderTopLeftRadius: "6px",
+                        borderTopRightRadius: "6px",
+                        borderBottomLeftRadius: "6px",
+                        borderBottomRightRadius: "6px",
+                        borderTopColor: "#c6bdbd",
+                        borderRightColor: "#c6bdbd",
+                        borderBottomColor: "#c6bdbd",
+                        borderLeftColor: "#c6bdbd",
+                        borderTopWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "1px",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid"
+                      },
+                    },
+                  },
+                  meta1: {
+                    ...fModuleStyle.meta1,
+                    desktop: {
+                      ...fModuleStyle.meta1.desktop,
+                      default: {
+                        ...fModuleStyle.meta1.desktop.default,
+                        width: "auto",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "12px",
+                        paddingRight: "20px",
+                        paddingBottom: "12px",
+                        paddingLeft: "20px",
+                        marginTop: "0px",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff",
+                        fontFamily: "DM Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                        color: "rgb(3,3,3)",
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        gap: "5px",
+                        float: "none",
+                        borderTopLeftRadius: "8px",
+                        borderTopRightRadius: "8px",
+                        borderBottomLeftRadius: "8px",
+                        borderBottomRightRadius: "8px",
+                        borderTopColor: "rgb(235,230,231)",
+                        borderRightColor: "rgb(235,230,231)",
+                        borderBottomColor: "rgb(235,230,231)",
+                        borderLeftColor: "rgb(235,230,231)",
+                        borderTopWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "1px",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid",
+                        fontStyle: "normal",
+                        textDecoration: "inherit",
+                        boxShadow: "0px 0px 0px 0px  #333333"
+                      },
+                      hover: {
+                        ...fModuleStyle.meta1.desktop.hover,
+                        backgroundColor : "rgb(246,247,251)"
+                      },
+                      selected: {
+                        ...fModuleStyle.meta1.desktop.selected,
+                        backgroundColor : "rgb(246,247,251)"
+                      },
+                    },
+                  },
+                  meta2: {
+                    ...fModuleStyle.meta2,
+                    desktop: {
+                      ...fModuleStyle.meta2.desktop,
+                      default: {
+                        ...fModuleStyle.meta2.desktop.default,
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "0px",
+                        float: "none"
+                      },
+                    },
+                  },
+                  meta3: {
+                    ...fModuleStyle.meta3,
+                    desktop: {
+                      ...fModuleStyle.meta3.desktop,
+                      default: {
+                        ...fModuleStyle.meta3.desktop.default,
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        gap: "5px",
+                        float: "none"
+                      },
+                    },
+                  },
+                  meta4: {
+                    ...fModuleStyle.meta4,
+                    desktop: {
+                      ...fModuleStyle.meta4.desktop,
+                      default: {
+                        ...fModuleStyle.meta4.desktop.default,
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "flex-start",
+                        justifyContent: "flex-start",
+                        gap: "3px",
+                        float: "none"
+                      },
+                    },
+                  },
+                  icon: {
+                    ...fModuleStyle.icon,
+                    desktop: {
+                      ...fModuleStyle.icon.desktop,
+                      default: {
+                        ...fModuleStyle.icon.desktop.default,
+                        fontSize: "18px",
+                        
+                        color: "rgb(0,0,0)"
+                      },
+                    },
+                  },
+                  icon2: {
+                    ...fModuleStyle.icon2,
+                    desktop: {
+                      ...fModuleStyle.icon2.desktop,
+                      default: {
+                        ...fModuleStyle.icon2.desktop.default,
+                        fontSize: "16px",
+                        
+                        color: "#dd3333"
+                      },
+                    },
+                  },
+                  icon3: {
+                    ...fModuleStyle.icon3,
+                    desktop: {
+                      ...fModuleStyle.icon3.desktop,
+                      default: {
+                        ...fModuleStyle.icon3.desktop.default,
+                        fontSize: "16px",
+                        
+                        color: "#dd3333"
+                      },
+                    },
+                  },
+                  selecticon: {
+                    ...fModuleStyle.selecticon,
+                    desktop: {
+                      ...fModuleStyle.selecticon.desktop,
+                      default: {
+                        ...fModuleStyle.selecticon.desktop.default,
+                        fontSize: "16px",
+                        
+                        color: "#dd3333"
+                      },
+                    },
+                  },
+                  count: {
+                    ...fModuleStyle.count,
+                    desktop: {
+                      ...fModuleStyle.count.desktop,
+                      default: {
+                        ...fModuleStyle.count.desktop.default,
+                        width: "auto",
+                        height: "auto",
+                        paddingTop: "0px",
+                        paddingRight: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        marginTop: "0px",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff00",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                        color: "rgb(96,96,96)",
+                        fontWeight: "300"
+                      },
+                    },
+                  },
+                },
+                key: "checkbox_filter",
+                settings: {
+                  taxonomy_data: [],
+                  taxonomy_relation: "OR",
+                  category_relation: "OR",
+                  meta_relation: "IN",
+                  custom_class: "",
+                  admin_label: "",
+                  predefined_terms: [],
+                  cf_predefined_terms: [],
+                  label: {
+                    is_label: "true",
+                    value: "Label",
+                    icons: {
+                      visibility: false,
+                      icon: "",
+                      position: "before-label",
+                      type: "icon"
+                    }
+                  },
+                  multiple_term: "false",
+                  show_checkbox: "true",
+                  show_icon: "false",
+                  show_count: "false",
+                  count_separator: "brackets",
+                  enable_toggle: "false",
+                  toggle_position: "right",
+                  close_toggle: "false",
+                  data_source: "taxonomy",
+                  custom_field_data: [],
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  }
+                },
+              },
+              {
+                type: "module",
+                title: "Reset",
+                style: {
+                  ...fModuleStyle,
+                  container: {
+                    ...fModuleStyle.container,
+                    desktop: {
+                      ...fModuleStyle.container.desktop,
+                      default: {
+                        ...fModuleStyle.container.desktop.default,
+                        width: "auto",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "10px",
+                        paddingRight: "0",
+                        paddingBottom: "10px",
+                        paddingLeft: "0",
+                        marginTop: "10px",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "rgba(231,26,26,0)",
+                        color: "rgb(0,0,0)",
+                        fontFamily: "Open Sans",
+                        fontSize: "16px",
+                        
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        gap: "5px",
+                        float: "none",
+                        fontStyle: "normal",
+                        textTransform: "inherit",
+                        textDecoration: "inherit",
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                        top: "auto",
+                        right: "auto",
+                        bottom: "auto",
+                        left: "auto",
+                      },
+                      hover: {
+                        ...fModuleStyle.container.desktop.hover,
+                        backgroundColor: "rgba(3,3,3,0)"
+                      }
+                    },
+                  },
+                  header: {
+                    ...fModuleStyle.header,
+                    desktop: {
+                      ...fModuleStyle.header.desktop,
+                      default: {
+                        ...fModuleStyle.header.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        top: "0",
+                        bottom: "0",
+                        left: "0",
+                        right: "0",
+                        paddingTop: "10px",
+                        paddingRight: "0",
+                        paddingBottom: "10px",
+                        paddingLeft: "0",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff",
+                        color: "#000",
+                        fontFamily: "Montserrat",
+                        fontWeight: "700",
+                        fontSize: "22px",
+                        
+                      },
+                    },
+                  },
+                  input: {
+                    ...fModuleStyle.input,
+                    desktop: {
+                      ...fModuleStyle.input.desktop,
+                      default: {
+                        ...fModuleStyle.input.desktop.default,
+                        width: "18px",
+                        height: "18px",
+                        position: "relative",
+                        paddingTop: "0px",
+                        paddingRight: "0",
+                        paddingBottom: "0px",
+                        paddingLeft: "0",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff",
+                        color: "#000",
+                        fontFamily: "Montserrat",
+                        fontWeight: "700",
+                        fontSize: "22px",
+                        
+                      },
+                    },
+                  },
+                  meta: {
+                    ...fModuleStyle.meta,
+                    desktop: {
+                      ...fModuleStyle.meta.desktop,
+                      default: {
+                        ...fModuleStyle.meta.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "10px",
+                        paddingRight: "0",
+                        paddingBottom: "0",
+                        paddingLeft: "0",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                        color: "#dd3333",
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        gap: "15px",
+                        float: "none",
+                        flexWrap: "wrap"
+                      },
+                    },
+                  },
+                  mainmeta: {
+                    ...fModuleStyle.mainmeta,
+                    desktop: {
+                      ...fModuleStyle.mainmeta.desktop,
+                      default: {
+                        ...fModuleStyle.mainmeta.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "10px",
+                        paddingRight: "0",
+                        paddingBottom: "0",
+                        paddingLeft: "0",
+                        marginTop: "0",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                        color: "#dd3333",
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "flex-start",
+                        gap: "15px",
+                        float: "none",
+                        flexWrap: "wrap"
+                      },
+                    },
+                  },
+                  selectmeta: {
+                    ...fModuleStyle.selectmeta,
+                    desktop: {
+                      ...fModuleStyle.selectmeta.desktop,
+                      default: {
+                        ...fModuleStyle.selectmeta.desktop.default,
+                        width: "100%",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "10px",
+                        paddingRight: "10px",
+                        paddingBottom: "10px",
+                        paddingLeft: "10px",
+                        marginTop: "0px",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                        color: "#dd3333",
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "0px",
+                        float: "none",
+                        borderTopLeftRadius: "6px",
+                        borderTopRightRadius: "6px",
+                        borderBottomLeftRadius: "6px",
+                        borderBottomRightRadius: "6px",
+                        borderTopColor: "#c6bdbd",
+                        borderRightColor: "#c6bdbd",
+                        borderBottomColor: "#c6bdbd",
+                        borderLeftColor: "#c6bdbd",
+                        borderTopWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "1px",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid"
+                      },
+                    },
+                  },
+                  meta1: {
+                    ...fModuleStyle.meta1,
+                    desktop: {
+                      ...fModuleStyle.meta1.desktop,
+                      default: {
+                        ...fModuleStyle.meta1.desktop.default,
+                        width: "auto",
+                        height: "auto",
+                        position: "relative",
+                        paddingTop: "10px",
+                        paddingRight: "10px",
+                        paddingBottom: "10px",
+                        paddingLeft: "10px",
+                        marginTop: "0px",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                        color: "#dd3333",
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "flex-start",
+                        justifyContent: "flex-start",
+                        gap: "0px",
+                        float: "none",
+                        borderTopLeftRadius: "6px",
+                        borderTopRightRadius: "6px",
+                        borderBottomLeftRadius: "6px",
+                        borderBottomRightRadius: "6px",
+                        borderTopColor: "#c6bdbd",
+                        borderRightColor: "#c6bdbd",
+                        borderBottomColor: "#c6bdbd",
+                        borderLeftColor: "#c6bdbd",
+                        borderTopWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "1px",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid"
+                      },
+                    },
+                  },
+                  meta2: {
+                    ...fModuleStyle.meta2,
+                    desktop: {
+                      ...fModuleStyle.meta2.desktop,
+                      default: {
+                        ...fModuleStyle.meta2.desktop.default,
+                        display: "flex",
+                        flexFlow: "column",
+                        alignItems: "flex-start",
+                        justifyContent: "flex-start",
+                        gap: "0px",
+                        float: "none"
+                      },
+                    },
+                  },
+                  meta3: {
+                    ...fModuleStyle.meta3,
+                    desktop: {
+                      ...fModuleStyle.meta3.desktop,
+                      default: {
+                        ...fModuleStyle.meta3.desktop.default,
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "flex-start",
+                        justifyContent: "flex-start",
+                        gap: "3px",
+                        float: "none"
+                      },
+                    },
+                  },
+                  meta4: {
+                    ...fModuleStyle.meta4,
+                    desktop: {
+                      ...fModuleStyle.meta4.desktop,
+                      default: {
+                        ...fModuleStyle.meta4.desktop.default,
+                        display: "flex",
+                        flexFlow: "row",
+                        alignItems: "flex-start",
+                        justifyContent: "flex-start",
+                        gap: "3px",
+                        float: "none"
+                      },
+                    },
+                  },
+                  icon: {
+                    ...fModuleStyle.icon,
+                    desktop: {
+                      ...fModuleStyle.icon.desktop,
+                      default: {
+                        ...fModuleStyle.icon.desktop.default,
+                        fontSize: "15px",
+                        color: "rgb(96,96,96)",
+                        width: "auto",
+                        height: "auto",
+                        boxShadow: "0px 0px 0px 0px  #333333",
+                      },
+                    },
+                  },
+                  icon2: {
+                    ...fModuleStyle.icon2,
+                    desktop: {
+                      ...fModuleStyle.icon2.desktop,
+                      default: {
+                        ...fModuleStyle.icon2.desktop.default,
+                        fontSize: "16px",
+                        
+                        color: "#dd3333"
+                      },
+                    },
+                  },
+                  icon3: {
+                    ...fModuleStyle.icon3,
+                    desktop: {
+                      ...fModuleStyle.icon3.desktop,
+                      default: {
+                        ...fModuleStyle.icon3.desktop.default,
+                        fontSize: "16px",
+                        
+                        color: "#dd3333"
+                      },
+                    },
+                  },
+                  selecticon: {
+                    ...fModuleStyle.selecticon,
+                    desktop: {
+                      ...fModuleStyle.selecticon.desktop,
+                      default: {
+                        ...fModuleStyle.selecticon.desktop.default,
+                        fontSize: "16px",
+                        
+                        color: "#dd3333"
+                      },
+                    },
+                  },
+                  count: {
+                    ...fModuleStyle.count,
+                    desktop: {
+                      ...fModuleStyle.count.desktop,
+                      default: {
+                        ...fModuleStyle.count.desktop.default,
+                        width: "auto",
+                        height: "auto",
+                        paddingTop: "0px",
+                        paddingRight: "0px",
+                        paddingBottom: "0px",
+                        paddingLeft: "0px",
+                        marginTop: "0px",
+                        marginRight: "0",
+                        marginBottom: "0",
+                        marginLeft: "0",
+                        backgroundColor: "#ffffff00",
+                        fontFamily: "Open Sans",
+                        textTransform: "capitalize",
+                        fontSize: "16px",
+                        
+                      },
+                    },
+                  },
+                },
+                key: "reset",
+                settings: {
+                  label: {
+                    is_label: "false",
+                    value: "Label"
+                  },
+                  reset_label: "Reset Filters",
+                  custom_class: "",
+                  admin_label: "",
+                  icons: { ...FILTER_RESET_DEFAULT_ICONS },
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  },
+                  taxonomy_data: [],
+                  predefined_terms: [],
+                  cf_predefined_terms: []
+                },
+              },
+            ],
+          },
+          //End Column
+        ],
+      },
+    ],
+    extra_data: {
+      bg_color: "#00000000",
+      custom_css: "",
+      footerSlider: { value: "30", suffix: "%" },
+      filter_type: "true",
+      taxonomy_relation: "AND",
+      meta_relation: "OR",
+      dynamic_term_counts: "false",
+    },
+    filter_query_data: {
+      data_source: {
+        taxonomy: "true",
+        custom_field: "false",
+      },
+      taxonomy_relation: "AND",
+      category_relation: "IN",
+      order_by_meta: "false",
+      meta_key: "",
+      meta_value: "",
+      meta_relation: "IN",
+      custom_field_data: [
+        [
+          {
+            custom_field_key: "0",
+            custom_field_value: "",
+            custom_field_value_list: [],
+            compare_operator: "=",
+            meta_type: "CHAR",
+            // group_relation:"OR",
+          },
+        ],
+      ],
+      taxonomy_data: [],
+    },
+    breadcrumb_data: {
+      select_builder: "false",
+      select_layout: "false",
+    },
+  },
+  post_layout_data: {
+    initial_data: [
+      {
+        type: "row",
+        style: { ...rowStyle },
+        settings:{
+          background_image: "",
+          bg_type: "color",
+          collapse_status: "false",
+          custom_class: "",
+          admin_label: "",
+          visibility: {
+            mobile: "false",
+            tablet: "false",
+            desktop: "false"
+          }
+        },
+        // Start Column
+        data: [
+          {
+            type: "column",
+            settings: {
+              background_image: "",
+              bg_type: "color",
+              collapse_status: "false",
+              admin_label: "",
+              custom_class: "",
+              visibility: {
+                mobile: "false",
+                tablet: "false",
+                desktop: "false"
+              }
+            },
+            style: {  ...columnStyle,
+              desktop: {
+                ...columnStyle.desktop,
+                default: {
+                  ...columnStyle.desktop.default,
+                  height: "auto",
+                  position: "relative",
+                  paddingTop: "0",
+                  paddingRight: "0",
+                  paddingBottom: "0",
+                  paddingLeft: "0",
+                  marginTop: "0",
+                  marginRight: "0",
+                  marginBottom: "0",
+                  marginLeft: "0",
+                  backgroundColor: "",
+                  color: "#333333",
+                  fontSize: "14px",
+                  
+                  fontFamily: "Open Sans",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  flexBasis: "auto",
+                  boxShadow: "0px 0px 0px 0px #333333",
+                  width: "100%",
+                  borderTopLeftRadius: "0px",
+                  borderTopRightRadius: "0px"
+                }
+              } },
+            data: [
+              {
+                type: "module",
+                title: "Post Image",
+                style: {
+                  ...moduleStyle,
+                  desktop: {
+                    ...moduleStyle.desktop,
+                    default: {
+                      ...moduleStyle.desktop.default,
+                      height: "auto",
+                      position: "relative",
+                      paddingTop: "0px",
+                      paddingRight: "0",
+                      paddingBottom: "0px",
+                      paddingLeft: "0",
+                      marginTop: "0",
+                      marginRight: "0",
+                      marginBottom: "0",
+                      marginLeft: "0",
+                      backgroundColor: "#00000000",
+                      color: "#4c5866",
+                      fontFamily: "Open Sans",
+                      fontSize: "14px",
+                      
+                      flexBasis: "auto",
+                      justifyContent: "flex-start",
+                      boxShadow: "0px 0px 0px 0px #333333",
+                      top: "auto",
+                      right: "auto",
+                      bottom: "auto",
+                      left: "auto",
+                      width: "100%",
+                      borderTopLeftRadius: "20px",
+                      borderTopRightRadius: "20px"
+                    },
+                  },
+                },
+                key: "image",
+                settings: {
+                  background_image: "",
+                  image_size: "medium_large",
+                  custom_class: "",
+                  admin_label: "",
+                  placeholder_image: "",
+                  image_source: "featured_image",
+                  custom_field: "0",
+                  link: {
+                    condition: false,
+                    customlink: "",
+                    target: "same-tab",
+                    type: "post-url",
+                    visibility: false,
+                    custom_field: "0"
+                  },
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  }
+                },
+              },
+            ],
+          },
+          {
+            type: "column",
+            settings: {
+              background_image: "",
+              bg_type: "color",
+              collapse_status: "false",
+              admin_label: "",
+              custom_class: "",
+              visibility: {
+                mobile: "false",
+                tablet: "false",
+                desktop: "false"
+              }
+            },
+            style: { ...columnStyle,
+              desktop: {
+                ...columnStyle.desktop,
+                default: {
+                  ...columnStyle.desktop.default,
+                  height: "auto",
+                  position: "relative",
+                  paddingTop: "15px",
+                  paddingRight: "15px",
+                  paddingBottom: "15px",
+                  paddingLeft: "15px",
+                  marginTop: "0",
+                  marginRight: "0",
+                  marginBottom: "0",
+                  marginLeft: "0",
+                  backgroundColor: "",
+                  color: "#333333",
+                  fontSize: "14px",
+                  
+                  fontFamily: "Open Sans",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  flexBasis: "auto",
+                  boxShadow: "0px 0px 0px 0px #333333",
+                  top: "auto",
+                  right: "auto",
+                  bottom: "auto",
+                  left: "auto",
+                  display: "flex",
+                  width: "100%",
+                  flexFlow: "row"
+                }
+              }
+             },
+            data: [
+              {
+                type: "module",
+                title: "Post Author",
+                style: {
+                  ...moduleStyle,
+                  desktop: {
+                    ...moduleStyle.desktop,
+                    default: {
+                      ...moduleStyle.desktop.default,
+                      height: "auto",
+                      position: "relative",
+                      paddingTop: "0px",
+                      paddingRight: "0",
+                      paddingBottom: "0px",
+                      paddingLeft: "0",
+                      marginTop: "0",
+                      marginRight: "0",
+                      marginBottom: "0",
+                      marginLeft: "0",
+                      backgroundColor: "#ffffff",
+                      color: "rgb(144,144,144)",
+                      fontFamily: "DM Sans",
+                      fontSize: "14px",
+                      
+                      flexBasis: "auto",
+                      justifyContent: "flex-start",
+                      boxShadow: "0px 0px 0px 0px #333333",
+                      top: "auto",
+                      right: "auto",
+                      bottom: "auto",
+                      left: "auto",
+                      display: "flex",
+                      gap: "5px",
+                      fontStyle: "normal",
+                      textTransform: "capitalize",
+                      textDecoration: "inherit",
+                      width: "auto"
+                    },
+                  },
+                  mobile: {
+                    ...moduleStyle.mobile,
+                    default: {
+                      ...moduleStyle.mobile.default,
+                      fontSize: "12px",
+                    },
+                  },
+                  meta:{
+                    ...moduleStyle?.meta,
+                    desktop:{
+                      ...moduleStyle?.meta?.desktop,
+                      default:{
+                        ...moduleStyle?.meta?.desktop?.default,
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        gap: "5px",
+                        flexFlow: "row"
+                      }
+                    }
+                  },
+                  prefix:{
+                    ...moduleStyle?.prefix,
+                    desktop:{
+                      ...moduleStyle?.prefix?.desktop,
+                      default:{
+                        ...moduleStyle?.prefix?.desktop?.default,
+                        boxShadow: "0px 0px 0px 0px #333333",
+                        width: "auto",
+                        height: "auto",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingRight: "0px",
+                        paddingLeft: "0px"
+                      }
+                    }
+                  },
+                  suffix:{
+                    ...moduleStyle?.suffix,
+                    desktop:{
+                      ...moduleStyle?.suffix?.desktop,
+                      default:{
+                        ...moduleStyle?.suffix?.desktop?.default,
+                        boxShadow: "0px 0px 0px 0px #333333",
+                        width: "auto",
+                        height: "auto",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingRight: "0px",
+                        paddingLeft: "0px"
+                      }
+                    }
+                  },
+                },
+                key: "author",
+                settings: {
+                  background_image: "",
+                  icons: {
+                    visibility: true,
+                    icon: "far fa-user",
+                    position: "before-author",
+                    type: "icon"
+                  },
+                  avatar_status: "true",
+                  avatar_type: "default",
+                  custom_class: "",
+                  admin_label: "",
+                  prefix: {
+                    is_enable: "true",
+                    meta_type: "text",
+                    meta_text: "By",
+                    icons: {
+                      visibility: true,
+                      icon: "fas fa-tag",
+                      type: "icon"
+                    }
+                  },
+                  suffix: {
+                    is_enable: "false",
+                    meta_type: "icon",
+                    meta_text: "Suffix",
+                    icons: {
+                      visibility: true,
+                      icon: "fas fa-tag",
+                      type: "icon"
+                    }
+                  },
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  }
+                },
+              },
+              {
+                type: "module",
+                title: "Post Date",
+                style: {
+                  ...moduleStyle,
+                  desktop: {
+                    ...moduleStyle.desktop,
+                    default: {
+                      ...moduleStyle.desktop.default,
+                      height: "auto",
+                      position: "relative",
+                      paddingTop: "0px",
+                      paddingRight: "0",
+                      paddingBottom: "0px",
+                      paddingLeft: "0",
+                      marginTop: "0",
+                      marginRight: "0",
+                      marginBottom: "0",
+                      marginLeft: "0",
+                      backgroundColor: "#ffffff",
+                      color: "rgb(144,144,144)",
+                      fontFamily: "DM Sans",
+                      fontSize: "14px",
+                      
+                      flexBasis: "auto",
+                      justifyContent: "flex-start",
+                      boxShadow: "0px 0px 0px 0px #333333",
+                      top: "auto",
+                      right: "auto",
+                      bottom: "auto",
+                      left: "auto",
+                      width: "auto",
+                      display: "flex",
+                      gap: "5px"
+                    },
+                  },
+                  mobile: {
+                    ...moduleStyle.mobile,
+                    default: {
+                      ...moduleStyle.mobile.default,
+                      fontSize: "12px",
+                    },
+                  },
+                  meta:{
+                    ...moduleStyle?.meta,
+                    desktop:{
+                      ...moduleStyle?.meta?.desktop,
+                      default:{
+                        ...moduleStyle?.meta?.desktop?.default,
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        gap: "5px",
+                        flexFlow: "row"
+                      }
+                    }
+                  },
+                  prefix:{
+                    ...moduleStyle?.prefix,
+                    desktop:{
+                      ...moduleStyle?.prefix?.desktop,
+                      default:{
+                        ...moduleStyle?.prefix?.desktop?.default,
+                        boxShadow: "0px 0px 0px 0px #333333",
+                        width: "auto",
+                        height: "auto",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingRight: "0px",
+                        paddingLeft: "0px"
+                      }
+                    }
+                  },
+                  suffix:{
+                    ...moduleStyle?.suffix,
+                    desktop:{
+                      ...moduleStyle?.suffix?.desktop,
+                      default:{
+                        ...moduleStyle?.suffix?.desktop?.default,
+                        boxShadow: "0px 0px 0px 0px #333333",
+                        width: "auto",
+                        height: "auto",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingRight: "0px",
+                        paddingLeft: "0px"
+                      }
+                    }
+                  },
+                },
+                key: "date",
+                settings: {
+                  background_image: "",
+                  custom_class: "",
+                  admin_label: "",
+                  date_format: "F j, Y",
+                  prefix: {
+                    is_enable: "false",
+                    meta_type: "text",
+                    meta_text: "Prefix",
+                    icons: {
+                      visibility: false,
+                      icon: "",
+                      type: "icon"
+                    }
+                  },
+                  suffix: {
+                    is_enable: "false",
+                    meta_type: "text",
+                    meta_text: "Suffix",
+                    icons: {
+                      visibility: false,
+                      icon: "",
+                      type: "icon"
+                    }
+                  },
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  }
+                },
+              },
+              {
+                type: "module",
+                title: "Comment Count",
+                style: {
+                  ...moduleStyle,
+                  desktop: {
+                    ...moduleStyle.desktop,
+                    default: {
+                      ...moduleStyle.desktop.default,
+                      height: "auto",
+                      position: "relative",
+                      paddingTop: "0px",
+                      paddingRight: "0",
+                      paddingBottom: "0px",
+                      paddingLeft: "0",
+                      marginTop: "0",
+                      marginRight: "0",
+                      marginBottom: "0",
+                      marginLeft: "0",
+                      backgroundColor: "#ffffff",
+                      color: "rgb(144,144,144)",
+                      fontFamily: "DM Sans",
+                      fontSize: "14px",
+                      textTransform: "capitalize",
+                      flexBasis: "auto",
+                      justifyContent: "flex-start",
+                      boxShadow: "0px 0px 0px 0px #333333",
+                      top: "auto",
+                      right: "auto",
+                      bottom: "auto",
+                      left: "auto",
+                      display: "flex",
+                      gap: "5px",
+                      width: "auto"
+                    },
+                  },
+                  mobile: {
+                    ...moduleStyle.mobile,
+                    default: {
+                      ...moduleStyle.mobile.default,
+                      fontSize: "12px",
+                    },
+                  },
+                  meta:{
+                    ...moduleStyle?.meta,
+                    desktop:{
+                      ...moduleStyle?.meta?.desktop,
+                      default:{
+                        ...moduleStyle?.meta?.desktop?.default,
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        gap: "5px",
+                        flexFlow: "row"
+                      }
+                    }
+                  },
+                  prefix:{
+                    ...moduleStyle?.prefix,
+                    desktop:{
+                      ...moduleStyle?.prefix?.desktop,
+                      default:{
+                        ...moduleStyle?.prefix?.desktop?.default,
+                        boxShadow: "0px 0px 0px 0px #333333",
+                        width: "auto",
+                        height: "auto",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingRight: "0px",
+                        paddingLeft: "0px"
+                      }
+                    }
+                  },
+                  suffix:{
+                    ...moduleStyle?.suffix,
+                    desktop:{
+                      ...moduleStyle?.suffix?.desktop,
+                      default:{
+                        ...moduleStyle?.suffix?.desktop?.default,
+                        boxShadow: "0px 0px 0px 0px #333333",
+                        width: "auto",
+                        height: "auto",
+                        paddingTop: "0px",
+                        paddingBottom: "0px",
+                        paddingRight: "0px",
+                        paddingLeft: "0px"
+                      }
+                    }
+                  },
+                },
+                key: "commentcount",
+                settings: {
+                  background_image: "",
+                  custom_class: "",
+                  admin_label: "",
+                  prefix: {
+                    is_enable: "false",
+                    meta_type: "text",
+                    meta_text: "Prefix",
+                    icons: {
+                      visibility: false,
+                      icon: "",
+                      type: "icon"
+                    }
+                  },
+                  suffix: {
+                    is_enable: "true",
+                    meta_type: "text",
+                    meta_text: "Comments",
+                    icons: {
+                      visibility: false,
+                      icon: "",
+                      type: "icon"
+                    }
+                  },
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  }
+                },
+              },
+
+            ],
+          },
+          {
+            type: "column",
+            settings: {
+              background_image: "",
+              bg_type: "color",
+              collapse_status: "false",
+              admin_label: "",
+              custom_class: "",
+              visibility: {
+                mobile: "false",
+                tablet: "false",
+                desktop: "false"
+              }
+            },
+            style: {  ...columnStyle,
+              desktop: {
+                ...columnStyle.desktop,
+                default: {
+                  ...columnStyle.desktop.default,
+                  height: "auto",
+                  position: "relative",
+                  paddingTop: "0",
+                  paddingRight: "15px",
+                  paddingBottom: "0",
+                  paddingLeft: "15px",
+                  marginTop: "0",
+                  marginRight: "0",
+                  marginBottom: "0",
+                  marginLeft: "0",
+                  backgroundColor: "",
+                  color: "#333333",
+                  fontSize: "14px",
+                  
+                  fontFamily: "Open Sans",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  flexBasis: "auto",
+                  display: "flex",
+                  flexFlow: "column",
+                  boxShadow: "0px 0px 0px 0px #333333",
+                  top: "auto",
+                  right: "auto",
+                  bottom: "auto",
+                  left: "auto",
+                  width: "100%",
+                  gap: "10px"
+                }
+              } },
+            data: [
+              {
+                type: "module",
+                title: "Post Title",
+                style: {
+                  ...moduleStyle,
+                  desktop: {
+                    ...moduleStyle.desktop,
+                    default: {
+                      ...moduleStyle.desktop.default,
+                      height: "auto",
+                      position: "relative",
+                      paddingTop: "0px",
+                      paddingRight: "0",
+                      paddingBottom: "0px",
+                      paddingLeft: "0",
+                      marginTop: "0",
+                      marginRight: "0",
+                      marginBottom: "0",
+                      marginLeft: "0",
+                      backgroundColor: "#ffffff",
+                      color: "rgb(0,0,0)",
+                      fontFamily: "DM Sans",
+                      fontSize: "24px",
+                      
+                      flexBasis: "auto",
+                      justifyContent: "flex-start",
+                      boxShadow: "0px 0px 0px 0px #333333",
+                      top: "auto",
+                      right: "auto",
+                      bottom: "auto",
+                      left: "auto",
+                      fontWeight: "700",
+                      width: "100%"
+                    },
+                  },
+                  mobile: {
+                    ...moduleStyle.mobile,
+                    default: {
+                      ...moduleStyle.mobile.default,
+                      fontSize: "18px",
+                    },
+                  },
+                  meta:{
+                    ...moduleStyle?.meta,
+                    desktop:{
+                      ...moduleStyle?.meta?.desktop,
+                      default:{
+                        ...moduleStyle?.meta?.desktop?.default,
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        gap: "0px",
+                        flexFlow: "row"
+                      }
+                    }
+                  },
+                  prefix:{
+                    ...moduleStyle?.prefix,
+                    desktop:{
+                      ...moduleStyle?.prefix?.desktop,
+                      default:{
+                        ...moduleStyle?.prefix?.desktop?.default,
+                        boxShadow: "0px 0px 0px 0px #333333",
+                        width: "auto",
+                        height: "auto",
+                      }
+                    }
+                  },
+                  suffix:{
+                    ...moduleStyle?.suffix,
+                    desktop:{
+                      ...moduleStyle?.suffix?.desktop,
+                      default:{
+                        ...moduleStyle?.suffix?.desktop?.default,
+                        boxShadow: "0px 0px 0px 0px #333333",
+                        width: "auto",
+                        height: "auto",
+                      }
+                    }
+                  },
+                },
+                key: "title",
+                settings: {
+                  background_image: "",
+                  custom_class: "",
+                  admin_label: "",
+                  link: {
+                    visibility: false,
+                    type: "",
+                    customlink: "",
+                    target: "",
+                    condition: "",
+                    custom_field: "0"
+                  },
+                  prefix: {
+                    is_enable: "false",
+                    meta_type: "text",
+                    meta_text: "Prefix",
+                    icons: {
+                      visibility: false,
+                      icon: "",
+                      type: "icon"
+                    }
+                  },
+                  suffix: {
+                    is_enable: "false",
+                    meta_type: "text",
+                    meta_text: "Suffix",
+                    icons: {
+                      visibility: false,
+                      icon: "",
+                      type: "icon"
+                    }
+                  },
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  }
+                },
+              },
+              {
+                type: "module",
+                title: "Terms",
+                style: {
+                  ...moduleStyle,
+                  desktop: {
+                    ...moduleStyle.desktop,
+                    default: {
+                      ...moduleStyle.desktop.default,
+                      height: "auto",
+                      position: "relative",
+                      paddingTop: "0px",
+                      paddingRight: "0",
+                      paddingBottom: "0px",
+                      paddingLeft: "0",
+                      marginTop: "0",
+                      marginRight: "0",
+                      marginBottom: "0",
+                      marginLeft: "0",
+                      backgroundColor: "#ffffff",
+                      color: "rgb(96,96,96)",
+                      fontFamily: "DM Sans",
+                      fontSize: "15px",
+                      
+                      flexBasis: "auto",
+                      justifyContent: "flex-start",
+                      boxShadow: "0px 0px 0px 0px #333333",
+                      top: "auto",
+                      right: "auto",
+                      bottom: "auto",
+                      left: "auto",
+                      display: "flex",
+                      gap: "8px",
+                      width: "auto"
+                    },
+                  },
+                  mobile: {
+                    ...moduleStyle.mobile,
+                    default: {
+                      ...moduleStyle.mobile.default,
+                      fontSize: "12px",
+                    },
+                  },
+                  meta:{
+                    ...moduleStyle?.meta,
+                    desktop:{
+                      ...moduleStyle?.meta?.desktop,
+                      default:{
+                        ...moduleStyle?.meta?.desktop?.default,
+                        boxShadow: "0px 0px 0px 0px #333333",
+                        borderTopWidth: "1px",
+                        borderRightWidth: "1px",
+                        borderBottomWidth: "1px",
+                        borderLeftWidth: "1px",
+                        borderTopColor: "rgb(235,230,231)",
+                        borderRightColor: "rgb(235,230,231)",
+                        borderBottomColor: "rgb(235,230,231)",
+                        borderLeftColor: "rgb(235,230,231)",
+                        borderTopStyle: "solid",
+                        borderRightStyle: "solid",
+                        borderBottomStyle: "solid",
+                        borderLeftStyle: "solid",
+                        backgroundColor: "rgb(246,247,251)",
+                        paddingTop: "6px",
+                        paddingBottom: "6px",
+                        paddingLeft: "15px",
+                        paddingRight: "15px",
+                        borderTopLeftRadius: "10px",
+                        borderTopRightRadius: "10px",
+                        borderBottomLeftRadius: "10px",
+                        borderBottomRightRadius: "10px"
+                      }
+                    }
+                  },
+                },
+                key: "categories",
+                settings: {
+                  background_image: "",
+                  custom_class: "",
+                  admin_label: "",
+                  limit: 2,
+                  separator: "none",
+                  last_separator: false,
+                  link: {
+                    visibility: false,
+                    target: "same-tab"
+                  },
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  },
+                  categories: "0"
+                },
+              },
+              {
+                type: "module",
+                title: "Post Description",
+                style: {
+                  ...moduleStyle,
+                  desktop: {
+                    ...moduleStyle.desktop,
+                    default: {
+                      ...moduleStyle.desktop.default,
+                      height: "auto",
+                      position: "relative",
+                      paddingTop: "10px",
+                      paddingRight: "0",
+                      paddingBottom: "10px",
+                      paddingLeft: "0",
+                      marginTop: "0",
+                      marginRight: "0",
+                      marginBottom: "0",
+                      marginLeft: "0",
+                      backgroundColor: "#ffffff",
+                      color: "rgb(96,96,96)",
+                      fontFamily: "DM Sans",
+                      fontSize: "16px",
+                      flexBasis: "auto",
+                      justifyContent: "flex-start",
+                      boxShadow: "0px 0px 0px 0px #333333",
+                      top: "auto",
+                      right: "auto",
+                      bottom: "auto",
+                      left: "auto",
+                      fontStyle: "normal",
+                      textTransform: "inherit",
+                      textDecoration: "inherit",
+                      width: "100%",
+                      fontWeight: "400"
+                    },
+                  },
+                  mobile: {
+                    ...moduleStyle.mobile,
+                    default: {
+                      ...moduleStyle.mobile.default,
+                      fontSize: "14px",
+                    },
+                  },
+                  
+                },
+                key: "excerpt",
+                settings: {
+                  background_image: "",
+                  custom_class: "",
+                  admin_label: "",
+                  excerptLength: "18",
+                  htmlRender: false,
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  }
+                },
+              },
+              {
+                type: "module",
+                title: "Post Button",
+                style: {
+                  ...moduleStyle,
+                  desktop: {
+                    ...moduleStyle.desktop,
+                    default: {
+                      ...moduleStyle.desktop.default,
+                      boxShadow: "0px 0px 0px 0px  #333333",
+                      top: "auto",
+                      right: "auto",
+                      bottom: "auto",
+                      left: "auto",
+                      fontFamily: "DM Sans",
+                      color: "rgb(247,247,247)",
+                      fontSize: "16px",
+                      display: "flex",
+                      gap: "8px",
+                      backgroundColor: "rgb(96,96,96)",
+                      width: "auto",
+                      height: "auto",
+                      paddingTop: "15px",
+                      paddingBottom: "15px",
+                      paddingLeft: "25px",
+                      paddingRight: "25px",
+                      borderTopLeftRadius: "8px",
+                      borderTopRightRadius: "8px",
+                      borderBottomLeftRadius: "8px",
+                      borderBottomRightRadius: "8px",
+                      marginTop: "10px"
+                    },
+                    hover:{
+                      ...moduleStyle.desktop.hover,
+                      backgroundColor: "rgb(0,0,0)",
+                    }
+                  },
+                  mobile: {
+                    ...moduleStyle.mobile,
+                    default: {
+                      ...moduleStyle.mobile.default,
+                      paddingTop: "10px",
+                      paddingBottom: "10px",
+                      paddingLeft: "20px",
+                      paddingRight: "20px",
+                      fontSize: "14px"
+                    },
+                  },
+                  meta:{
+                    ...moduleStyle?.meta,
+                    desktop:{
+                      ...moduleStyle?.meta?.desktop,
+                      default:{
+                        ...moduleStyle?.meta?.desktop?.default,
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        gap: "0px",
+                        flexFlow: "row"
+                      }
+                    }
+                  },
+                  prefix:{
+                    ...moduleStyle?.prefix,
+                    desktop:{
+                      ...moduleStyle?.prefix?.desktop,
+                      default:{
+                        ...moduleStyle?.prefix?.desktop?.default,
+                        boxShadow: "0px 0px 0px 0px #333333",
+                        width: "auto",
+                        height: "auto",
+                      }
+                    }
+                  },
+                  suffix:{
+                    ...moduleStyle?.suffix,
+                    desktop:{
+                      ...moduleStyle?.suffix?.desktop,
+                      default:{
+                        ...moduleStyle?.suffix?.desktop?.default,
+                        boxShadow: "0px 0px 0px 0px #333333",
+                        width: "auto",
+                        height: "auto",
+                      }
+                    }
+                  },
+                },
+                key: "button",
+                settings: {
+                  background_image: "",
+                  custom_class: "",
+                  admin_label: "",
+                  changeButtonValue: "Read More",
+                  link: {
+                    visibility: true,
+                    type: "post-url",
+                    customlink: "",
+                    target: "same-tab",
+                    custom_field: "0"
+                  },
+                  prefix: {
+                    is_enable: "false",
+                    meta_type: "text",
+                    meta_text: "Prefix",
+                    icons: {
+                      visibility: false,
+                      icon: "",
+                      type: "icon"
+                    }
+                  },
+                  suffix: {
+                    is_enable: "true",
+                    meta_type: "icon",
+                    meta_text: "Suffix",
+                    icons: {
+                      visibility: true,
+                      icon: "fas fa-arrow-right",
+                      // position: "before-label",
+                      type: "icon"
+                    }
+                  },
+                  visibility: {
+                    mobile: "false",
+                    tablet: "false",
+                    desktop: "false"
+                  }
+                },
+              },
+            ],
+          },
+        ],
+      },
+      //END Row
+    ],
+
+    extra_data: {
+      slider_data: {
+        value: "30",
+        suffix: "%",
+      },
+      bg_color: "#00000000",
+      single_post_data: {},
+      layout_source: "caf_builder",
+      results_selector: "ul.products",
+    },
+    breadcrumb_data: {
+      select_builder: "false",
+      select_layout: "false",
+    },
+  },
+};

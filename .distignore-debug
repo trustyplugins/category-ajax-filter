@@ -1,0 +1,25 @@
+# Debug / support builds — keeps source maps + react-builder/src for stack traces.
+# Do NOT ship this package to customers or WP.org.
+
+# VCS / IDE
+.git
+.github
+.cursor
+.vscode
+
+# Release output
+dist
+dist-debug
+
+# Logs / OS junk
+*.log
+.DS_Store
+Thumbs.db
+
+# React tooling (keep src + maps; still exclude node_modules)
+react-builder/node_modules
+react-builder/package.json
+react-builder/package-lock.json
+react-builder/webpack.config.js
+react-builder/scripts
+react-builder/build-free

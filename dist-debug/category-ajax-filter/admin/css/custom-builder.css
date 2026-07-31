@@ -1,0 +1,38 @@
+body.post-new-php.post-type-caf_posts #wpbody-content #screen-meta-links,
+body.post-new-php.post-type-caf_posts #wpbody-content .wrap,
+body.post-php.post-type-caf_posts #wpbody-content #screen-meta-links,
+body.post-php.post-type-caf_posts #wpbody-content .wrap{
+    display: block;
+}
+body.caf_posts_page_caf_custom_filter_layouts #wpbody-content,
+body.caf_posts_page_caf_custom_post_layouts #wpbody-content,
+body.caf_posts_page_category-ajax-filter-pro #wpbody-content,
+body.caf-builder-license-page #wpbody-content,
+body.caf_posts_page_category-ajax-filter-pro-analytics #wpbody-content,
+body.caf_posts_page_category-ajax-filter-pro-builder-analytics #wpbody-content,
+body.caf_posts_page_caf_support_diagnostics #wpbody-content,
+body.caf-builder-support-diagnostics-page #wpbody-content{
+    display: block;
+}
+body.caf_posts_page_category-ajax-filter-pro-analytics #wpbody-content #screen-meta-links,
+body.caf_posts_page_category-ajax-filter-pro-analytics #wpbody-content .wrap,
+body.caf-builder-license-page #wpbody-content #screen-meta-links,
+body.caf-builder-license-page #wpbody-content .wrap,
+body.caf_posts_page_category-ajax-filter-pro-builder-analytics #wpbody-content #screen-meta-links,
+body.caf_posts_page_category-ajax-filter-pro-builder-analytics #wpbody-content .wrap,
+body.caf_posts_page_caf_support_diagnostics #wpbody-content #screen-meta-links,
+body.caf_posts_page_caf_support_diagnostics #wpbody-content .wrap,
+body.caf-builder-support-diagnostics-page #wpbody-content #screen-meta-links,
+body.caf-builder-support-diagnostics-page #wpbody-content .wrap{
+    display: block !important;
+}
+body.post-type-caf_posts #wpbody-content #screen-meta-links,body.post-type-caf_posts #wpbody-content .wrap{
+    display: none;
+}
+body.post-type-caf_posts #wpcontent{
+background-color:#fff8eb;
+padding-left: 0;
+} 
+body.post-type-caf_posts div#wpwrap{
+    background-color:#fff8eb;
+}

@@ -1,0 +1,31 @@
+---
+description: CAF Free PHP builder sanitize and Woo boundaries; post-release patches
+globs: admin/builder-functions.php,includes/builder/**/*,includes/woocommerce/**/*,includes/admin/class-caf-builder-import-library.php,readme.txt,.distignore,.distignore-debug,category-ajax-filter.php
+alwaysApply: false
+---
+
+# CAF Free PHP / Woo / Release
+
+## Normalize / sanitize (Free-owned)
+
+- MUST keep Free normalize → tier filters, single-instance, all `caf_sanitize_free_*`, preview sanitize, gradient flatten.
+- NEVER replace this file with Pro’s thinner normalize.
+- WHEN porting a Pro normalize improvement: merge into Free; keep Free enforcement.
+- Public AJAX (`caf_builder_harden_public_ajax_query_args` / `caf_builder_clamp_public_ajax_args_for_tier`): Free must allowlist meta keys (`_price`) and ignore client Pro sorting — do not rely on JS gates alone.
+
+## Woo
+
+- MUST extend only `CAF_Free_Woo` for Free Woo needs.
+- Allowlisted sync source lives in Pro `scripts/free-plugin/` — Free WP.org patches to that file must be ported back there before next sync.
+
+## Dist
+
+- Release `.distignore`: build only (no src/maps/node_modules).
+- Debug `.distignore-debug`: may keep src + maps; still no node_modules.
+- Keep readme Source Code links when shipping minified JS.
+
+## Post–WP.org patch checklist
+
+1. Is this file Free-owned or sync-allowlisted?
+2. Free-owned → edit Free only.
+3. Allowlisted → edit Free for urgency **and** Pro `free-plugin/` for durability.

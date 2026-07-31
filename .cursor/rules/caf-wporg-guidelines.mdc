@@ -1,0 +1,71 @@
+---
+description: WordPress.org Plugin Directory guidelines for CAF Free (trialware, upsells, security)
+alwaysApply: true
+---
+
+# CAF Free — WordPress.org Directory Guidelines
+
+Official source (keep current):  
+https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/
+
+Closures happen to established plugins too (e.g. [woo-product-filter](https://wordpress.org/plugins/woo-product-filter/) closed Apr 2026 — Guideline Violation). Treat compliance as ongoing, not one-time.
+
+## Highest risk for CAF Free: Guideline 5 (Trialware)
+
+**Forbidden:** ship functionality in the Free ZIP that is **restricted / locked / disabled** until the user pays or upgrades.
+
+**Allowed:**
+- Fully working Free features (all code for those features usable)
+- Marketing / upsell links to a **separate** Pro plugin (within Guideline 11)
+- Pro code living **only** in the external Pro plugin (recommended by WP.org)
+
+**NOT a compliance strategy:** keep Pro implementations in Free and gate with `canUseFeature` / `TierLocked` / license checks. That is classic trialware.
+
+### MUST (Free directory builds)
+
+- Fully Pro-only features: **absent** from Free ZIP (`NullModule` / not shipped) — not merely locked.
+- Free-with-limits: ship only the Free-capable path; do not ship full Pro body “disabled.”
+- Upsells: CTA / “See Pro features” OK; do not imply Free ZIP contains unlockable Pro code.
+- `readme.txt`: describe what Free actually does; put Pro-only items under a clear Pro section — do not sell locked features as Free capabilities in the intro.
+- **Design parity:** Free locked/upsell UI must look like Pro’s locked UI (same tabs/badges/overlays). Never swap for a different upsell layout. See Pro `caf-free-code-policy.mdc`.
+
+### NEVER (directory Free)
+
+- License/key checks whose only job is unlocking code already inside Free.
+- “Upgrade to enable” panels that wrap real Pro feature implementations still bundled in Free.
+- Trial timers / quotas that **disable** shipped functionality after a limit (Guideline 5). Soft caps that do not disable core shipped features are greyer — prefer documenting with plugins team if unsure.
+- Installing Pro / paid add-ons from non–WordPress.org servers from inside Free (Guideline 8).
+
+## Other guidelines CAF must respect
+
+| # | Topic | CAF note |
+|---|---|---|
+| 1 | GPL-compatible | Keep GPLv2+; third-party assets compatible |
+| 4 | Human-readable / source | Minified JS OK if readme links to source / build tools |
+| 7 | Tracking / remote calls | Opt-in only; document in readme |
+| 8 | Remote executable code | No remote Pro installers from Free |
+| 10 | Front-end credit links | No forced public footer ads without consent |
+| 11 | Admin hijack | Upsells OK; avoid dashboard takeover / nag spam |
+| 12 | readme spam | No keyword stuffing / misleading claims |
+| 17 | Trademarks | Careful with “WooCommerce” / brand naming |
+
+Security issues can also close a plugin until fixed — keep Free AJAX/query hardening and capability checks.
+
+## When adding a Pro feature
+
+Follow Pro checklist `caf-new-pro-feature.mdc` (in the Pro plugin `.cursor/rules`). Summary:
+
+1. Implement in **Pro** only.  
+2. Free: lock chrome / CTA — **no Pro implementation in Free build** (`NullModule` or `.free.js` at birth).  
+3. Register in Pro `free-build-replacements.js`.  
+4. Free PHP `blocked_features` + sanitize.  
+5. Update Free `readme.txt` **Pro section only**.  
+6. `build:free` + smoke Free bundle before release.
+
+## Soft caps
+
+Revision / filters-per-page style limits that do not ship unlockable Pro code are greyer — keep disclosed in `readme.txt`. Do not turn them into locked Pro editors inside Free.
+
+## Uncertainty
+
+Email `plugins@wordpress.org` before shipping borderline freemium patterns. Do not assume “everyone else does locked Pro UI” is safe.

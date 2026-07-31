@@ -1,0 +1,41 @@
+---
+description: CAF Free plugin — Free-owned PHP; hub-and-spoke; no Pro overwrite
+alwaysApply: true
+---
+
+# CAF Free Plugin (always)
+
+Free is **v3.0.0**, entry `category-ajax-filter.php`, `CAF_BUILDER_TIER=free`.  
+Free ≠ Pro clone. Sync is one-way allowlisted from Pro (see Pro `caf-hub-spoke.mdc`).
+
+**WP.org:** always apply `caf-wporg-guidelines.mdc` (Guideline 5 trialware).
+
+## Ownership
+
+| Owns | Examples |
+|---|---|
+| **Pro → sync** | `react-builder/build/`, allowlisted Free Woo / Elementor / range-slider from `free-plugin/` |
+| **Free (this tree)** | Free `admin/builder-functions.php` sanitizers, entry, readme, Free tier PHP, most admin |
+
+## Source of truth for React
+
+- Edit React in **Pro** `react-builder/src`, then `build:free` / `release:free`.
+- NEVER treat Free `react-builder/src` or `build/` as durable source of truth.
+- Pro-only features: stub/NullModule at birth in Pro (`caf-new-pro-feature.mdc` / `caf-free-code-policy.mdc`). Do not mass-strip without approval.
+
+## NEVER (wrong-direction)
+
+- Replace Free normalize/sanitizers with Pro’s thinner `builder-functions.php`.
+- Delete `caf_sanitize_free_*` when “syncing from Pro.”
+- Copy Pro Woo stack; Free uses `class-caf-free-woo.php` only.
+- Hand-edit Free React for a permanent Free-only feature (use tier / Free PHP / Pro free-replacements).
+
+## WHEN Free-only fix after WP.org release
+
+1. Edit Free-owned files here.
+2. If the file is on the Pro sync allowlist, also port into Pro `scripts/free-plugin/` before the next `release:free`.
+3. If not on allowlist, Free-only edit is enough (do not copy to Pro wholesale).
+
+## WHEN shared UI bug
+
+Fix in Pro React → `build:free` / `release:free` — do not fork Free JS.
