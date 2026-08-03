@@ -43,7 +43,7 @@ var createClass = __webpack_require__("./node_modules/@babel/runtime/helpers/esm
 var assertThisInitialized = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/inherits.js
 var inherits = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/inherits.js");
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/createSuper.js + 1 modules
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/createSuper.js
 var createSuper = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/createSuper.js");
 ;// ./node_modules/@ant-design/cssinjs-utils/es/util/calc/calculator.js
 
@@ -8823,7 +8823,7 @@ var messages_messages = newMessages();
 var assertThisInitialized = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/inherits.js
 var inherits = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/inherits.js");
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/createSuper.js + 1 modules
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/createSuper.js
 var createSuper = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/createSuper.js");
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js
 var getPrototypeOf = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
@@ -81107,6 +81107,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 const apiEndpoints = Object.freeze({
   getPostTypes: "get-post-types",
+  getPostTypesForLayout: currentPostType => currentPostType && currentPostType !== "0" ? `get-post-types/?current_post_type=${encodeURIComponent(currentPostType)}` : "get-post-types",
   getPostsList: postType => `get-posts-list?post_type=${encodeURIComponent(postType)}`,
   getPostsListSearch: (postType, search = "", perPage = 40) => {
     const params = new URLSearchParams({
@@ -93963,51 +93964,32 @@ function _createClass(e, r, t) {
 /***/ },
 
 /***/ "./node_modules/@babel/runtime/helpers/esm/createSuper.js"
-/*!****************************************************************************!*\
-  !*** ./node_modules/@babel/runtime/helpers/esm/createSuper.js + 1 modules ***!
-  \****************************************************************************/
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/createSuper.js ***!
+  \****************************************************************/
 (__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  "default": () => (/* binding */ _createSuper)
-});
-
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js
-var getPrototypeOf = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/isNativeReflectConstruct.js
-var isNativeReflectConstruct = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/isNativeReflectConstruct.js");
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/typeof.js
-var esm_typeof = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/typeof.js");
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js
-var assertThisInitialized = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
-;// ./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js
-
-
-function _possibleConstructorReturn(t, e) {
-  if (e && ("object" == (0,esm_typeof["default"])(e) || "function" == typeof e)) return e;
-  if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined");
-  return (0,assertThisInitialized["default"])(t);
-}
-
-;// ./node_modules/@babel/runtime/helpers/esm/createSuper.js
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _createSuper)
+/* harmony export */ });
+/* harmony import */ var _getPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getPrototypeOf.js */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var _isNativeReflectConstruct_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./isNativeReflectConstruct.js */ "./node_modules/@babel/runtime/helpers/esm/isNativeReflectConstruct.js");
+/* harmony import */ var _possibleConstructorReturn_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./possibleConstructorReturn.js */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
 
 
 
 function _createSuper(t) {
-  var r = (0,isNativeReflectConstruct["default"])();
+  var r = (0,_isNativeReflectConstruct_js__WEBPACK_IMPORTED_MODULE_1__["default"])();
   return function () {
     var e,
-      o = (0,getPrototypeOf["default"])(t);
+      o = (0,_getPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(t);
     if (r) {
-      var s = (0,getPrototypeOf["default"])(this).constructor;
+      var s = (0,_getPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(this).constructor;
       e = Reflect.construct(o, arguments, s);
     } else e = o.apply(this, arguments);
-    return _possibleConstructorReturn(this, e);
+    return (0,_possibleConstructorReturn_js__WEBPACK_IMPORTED_MODULE_2__["default"])(this, e);
   };
 }
 
@@ -94192,6 +94174,30 @@ function _objectWithoutPropertiesLoose(r, e) {
     t[n] = r[n];
   }
   return t;
+}
+
+
+/***/ },
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js"
+/*!******************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js ***!
+  \******************************************************************************/
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _possibleConstructorReturn)
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+/* harmony import */ var _assertThisInitialized_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assertThisInitialized.js */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
+
+
+function _possibleConstructorReturn(t, e) {
+  if (e && ("object" == (0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(e) || "function" == typeof e)) return e;
+  if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined");
+  return (0,_assertThisInitialized_js__WEBPACK_IMPORTED_MODULE_1__["default"])(t);
 }
 
 
@@ -115286,7 +115292,7 @@ var batch = defaultNoopBatch;
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".js?ver=" + {"src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js":"f5e364b1977064996e48","src_MainComponents_FilterComponents_components_settingTabContent_AdvancedTab_js":"047abe5b54d1da17be4b"}[chunkId] + "";
+/******/ 			return "" + chunkId + ".js?ver=" + {"src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js":"dba42ad8e8f807a8f2cd","src_MainComponents_FilterComponents_components_settingTabContent_AdvancedTab_js":"b4b9b5fa557c0e4f483a"}[chunkId] + "";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -115503,7 +115509,7 @@ var __webpack_exports__ = {};
 (() => {
 "use strict";
 /*!************************************!*\
-  !*** ./src/index.js + 438 modules ***!
+  !*** ./src/index.js + 443 modules ***!
   \************************************/
 
 ;// ./src/index.css
@@ -118872,6 +118878,543 @@ function BuilderCafLogoIcon({
 var es_tooltip = __webpack_require__("./node_modules/antd/es/tooltip/index.js");
 // EXTERNAL MODULE: ./node_modules/antd/es/switch/index.js + 2 modules
 var es_switch = __webpack_require__("./node_modules/antd/es/switch/index.js");
+// EXTERNAL MODULE: ./node_modules/@rc-component/motion/es/index.js + 12 modules
+var motion_es = __webpack_require__("./node_modules/@rc-component/motion/es/index.js");
+// EXTERNAL MODULE: ./node_modules/@rc-component/util/es/pickAttrs.js
+var pickAttrs = __webpack_require__("./node_modules/@rc-component/util/es/pickAttrs.js");
+// EXTERNAL MODULE: ./node_modules/@rc-component/util/es/ref.js
+var es_ref = __webpack_require__("./node_modules/@rc-component/util/es/ref.js");
+// EXTERNAL MODULE: ./node_modules/antd/es/_util/isNonNullable.js
+var isNonNullable = __webpack_require__("./node_modules/antd/es/_util/isNonNullable.js");
+;// ./node_modules/antd/es/alert/style/index.js
+
+
+
+const genAlertTypeStyle = (bgColor, borderColor, iconColor, token, alertCls) => ({
+  background: bgColor,
+  border: `${(0,cssinjs_es.unit)(token.lineWidth)} ${token.lineType} ${borderColor}`,
+  [`${alertCls}-icon`]: {
+    color: iconColor
+  }
+});
+const genBaseStyle = token => {
+  const {
+    componentCls,
+    motionDurationSlow: duration,
+    marginXS,
+    marginSM,
+    fontSize,
+    fontSizeLG,
+    lineHeight,
+    borderRadiusLG: borderRadius,
+    motionEaseInOutCirc,
+    withDescriptionIconSize,
+    colorText,
+    colorTextHeading,
+    withDescriptionPadding,
+    defaultPadding
+  } = token;
+  return {
+    [componentCls]: {
+      ...(0,style.resetComponent)(token),
+      position: 'relative',
+      display: 'flex',
+      alignItems: 'center',
+      padding: defaultPadding,
+      wordWrap: 'break-word',
+      borderRadius,
+      [`&${componentCls}-rtl`]: {
+        direction: 'rtl'
+      },
+      [`${componentCls}-section`]: {
+        flex: 1,
+        minWidth: 0
+      },
+      [`${componentCls}-icon`]: {
+        marginInlineEnd: marginXS,
+        lineHeight: 0
+      },
+      '&-description': {
+        display: 'none',
+        fontSize,
+        lineHeight
+      },
+      '&-title': {
+        color: colorTextHeading
+      },
+      [`&${componentCls}-motion-leave`]: {
+        overflow: 'hidden',
+        opacity: 1,
+        transition: [`max-height`, `opacity`, `padding-top`, `padding-bottom`, `margin-bottom`].map(prop => `${prop} ${duration} ${motionEaseInOutCirc}`).join(', ')
+      },
+      [`&${componentCls}-motion-leave-active`]: {
+        maxHeight: 0,
+        marginBottom: '0 !important',
+        paddingTop: 0,
+        paddingBottom: 0,
+        opacity: 0
+      }
+    },
+    [`${componentCls}-with-description`]: {
+      alignItems: 'flex-start',
+      padding: withDescriptionPadding,
+      [`${componentCls}-icon`]: {
+        marginInlineEnd: marginSM,
+        fontSize: withDescriptionIconSize,
+        lineHeight: 0
+      },
+      [`${componentCls}-title`]: {
+        display: 'block',
+        marginBottom: marginXS,
+        color: colorTextHeading,
+        fontSize: fontSizeLG
+      },
+      [`${componentCls}-description`]: {
+        display: 'block',
+        color: colorText
+      }
+    },
+    [`${componentCls}-banner`]: {
+      marginBottom: 0,
+      border: '0 !important',
+      borderRadius: 0
+    }
+  };
+};
+const genTypeStyle = token => {
+  const {
+    componentCls,
+    colorSuccess,
+    colorSuccessBorder,
+    colorSuccessBg,
+    colorWarning,
+    colorWarningBorder,
+    colorWarningBg,
+    colorError,
+    colorErrorBorder,
+    colorErrorBg,
+    colorInfo,
+    colorInfoBorder,
+    colorInfoBg
+  } = token;
+  return {
+    [componentCls]: {
+      '&-success': genAlertTypeStyle(colorSuccessBg, colorSuccessBorder, colorSuccess, token, componentCls),
+      '&-info': genAlertTypeStyle(colorInfoBg, colorInfoBorder, colorInfo, token, componentCls),
+      '&-warning': genAlertTypeStyle(colorWarningBg, colorWarningBorder, colorWarning, token, componentCls),
+      '&-error': {
+        ...genAlertTypeStyle(colorErrorBg, colorErrorBorder, colorError, token, componentCls),
+        [`${componentCls}-description > pre`]: {
+          margin: 0,
+          padding: 0
+        }
+      }
+    }
+  };
+};
+const genActionStyle = token => {
+  const {
+    componentCls,
+    iconCls,
+    motionDurationMid,
+    marginXS,
+    fontSizeIcon,
+    colorIcon,
+    colorIconHover
+  } = token;
+  return {
+    [componentCls]: {
+      '&-actions': {
+        marginInlineStart: marginXS
+      },
+      [`${componentCls}-close-icon`]: {
+        marginInlineStart: marginXS,
+        padding: 0,
+        overflow: 'hidden',
+        fontSize: fontSizeIcon,
+        lineHeight: (0,cssinjs_es.unit)(fontSizeIcon),
+        backgroundColor: 'transparent',
+        border: 'none',
+        outline: 'none',
+        cursor: 'pointer',
+        [`${iconCls}-close`]: {
+          color: colorIcon,
+          transition: `color ${motionDurationMid}`,
+          '&:hover': {
+            color: colorIconHover
+          }
+        }
+      },
+      '&-close-text': {
+        color: colorIcon,
+        transition: `color ${motionDurationMid}`,
+        '&:hover': {
+          color: colorIconHover
+        }
+      }
+    }
+  };
+};
+const style_prepareComponentToken = token => {
+  const paddingHorizontal = 12; // Fixed value here.
+  return {
+    withDescriptionIconSize: token.fontSizeHeading3,
+    defaultPadding: `${token.paddingContentVerticalSM}px ${paddingHorizontal}px`,
+    withDescriptionPadding: `${token.paddingMD}px ${token.paddingContentHorizontalLG}px`
+  };
+};
+/* harmony default export */ const alert_style = ((0,genStyleUtils.genStyleHooks)('Alert', token => [genBaseStyle(token), genTypeStyle(token), genActionStyle(token)], style_prepareComponentToken));
+;// ./node_modules/antd/es/alert/Alert.js
+"use client";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const IconNode = props => {
+  const {
+    icon,
+    type,
+    className,
+    style,
+    successIcon,
+    infoIcon,
+    warningIcon,
+    errorIcon
+  } = props;
+  const iconMapFilled = {
+    success: successIcon ?? /*#__PURE__*/external_React_.createElement(CheckCircleFilled["default"], null),
+    info: infoIcon ?? /*#__PURE__*/external_React_.createElement(InfoCircleFilled["default"], null),
+    error: errorIcon ?? /*#__PURE__*/external_React_.createElement(CloseCircleFilled["default"], null),
+    warning: warningIcon ?? /*#__PURE__*/external_React_.createElement(ExclamationCircleFilled["default"], null)
+  };
+  return /*#__PURE__*/external_React_.createElement("span", {
+    className: className,
+    style: style
+  }, icon ?? iconMapFilled[type]);
+};
+const CloseIconNode = props => {
+  const {
+    isClosable,
+    prefixCls,
+    closeIcon,
+    handleClose,
+    ariaProps,
+    className,
+    style
+  } = props;
+  const mergedCloseIcon = closeIcon === true || closeIcon === undefined ? /*#__PURE__*/external_React_.createElement(CloseOutlined["default"], null) : closeIcon;
+  return isClosable ? (/*#__PURE__*/external_React_.createElement("button", {
+    type: "button",
+    onClick: handleClose,
+    className: (0,clsx.clsx)(`${prefixCls}-close-icon`, className),
+    tabIndex: 0,
+    style: style,
+    ...ariaProps
+  }, mergedCloseIcon)) : null;
+};
+const Alert = /*#__PURE__*/external_React_.forwardRef((props, ref) => {
+  const {
+    description,
+    prefixCls: customizePrefixCls,
+    message,
+    title,
+    banner,
+    className,
+    rootClassName,
+    style,
+    onMouseEnter,
+    onMouseLeave,
+    onClick,
+    afterClose,
+    showIcon,
+    closable,
+    closeText,
+    closeIcon,
+    action,
+    id,
+    styles,
+    classNames,
+    ...otherProps
+  } = props;
+  const mergedTitle = title ?? message;
+  const [closed, setClosed] = external_React_.useState(false);
+  if (true) {
+    const warning = (0,_util_warning.devUseWarning)('Alert');
+    [['closeText', 'closable.closeIcon'], ['message', 'title']].forEach(([deprecatedName, newName]) => {
+      warning.deprecated(!(deprecatedName in props), deprecatedName, newName);
+    });
+  }
+  const internalRef = external_React_.useRef(null);
+  external_React_.useImperativeHandle(ref, () => ({
+    nativeElement: internalRef.current
+  }));
+  const {
+    getPrefixCls,
+    direction,
+    closable: contextClosable,
+    closeIcon: contextCloseIcon,
+    className: contextClassName,
+    style: contextStyle,
+    classNames: contextClassNames,
+    styles: contextStyles,
+    successIcon,
+    infoIcon,
+    warningIcon,
+    errorIcon
+  } = (0,config_provider_context.useComponentConfig)('alert');
+  const prefixCls = getPrefixCls('alert', customizePrefixCls);
+  const [hashId, cssVarCls] = alert_style(prefixCls);
+  const {
+    onClose: closableOnClose,
+    afterClose: closableAfterClose
+  } = closable && typeof closable === 'object' ? closable : {};
+  const handleClose = e => {
+    setClosed(true);
+    (closableOnClose ?? props.onClose)?.(e);
+  };
+  const type = external_React_.useMemo(() => {
+    if (props.type !== undefined) {
+      return props.type;
+    }
+    // banner mode defaults to 'warning'
+    return banner ? 'warning' : 'info';
+  }, [props.type, banner]);
+  // closeable when closeText or closeIcon is assigned
+  const isClosable = external_React_.useMemo(() => {
+    if (typeof closable === 'object' && closable.closeIcon) {
+      return true;
+    }
+    if (closeText) {
+      return true;
+    }
+    if (typeof closable === 'boolean') {
+      return closable;
+    }
+    // should be true when closeIcon is 0 or ''
+    if (closeIcon !== false && (0,isNonNullable["default"])(closeIcon)) {
+      return true;
+    }
+    return !!contextClosable;
+  }, [closeText, closeIcon, closable, contextClosable]);
+  // banner mode defaults to Icon
+  const isShowIcon = banner && showIcon === undefined ? true : showIcon;
+  // =========== Merged Props for Semantic ==========
+  const mergedProps = {
+    ...props,
+    prefixCls,
+    type,
+    showIcon: isShowIcon,
+    closable: isClosable
+  };
+  const [mergedClassNames, mergedStyles] = (0,useMergeSemantic.useMergeSemantic)([contextClassNames, classNames], [contextStyles, styles], {
+    props: mergedProps
+  });
+  const alertCls = (0,clsx.clsx)(prefixCls, `${prefixCls}-${type}`, {
+    [`${prefixCls}-with-description`]: !!description,
+    [`${prefixCls}-no-icon`]: !isShowIcon,
+    [`${prefixCls}-banner`]: !!banner,
+    [`${prefixCls}-rtl`]: direction === 'rtl'
+  }, contextClassName, className, rootClassName, mergedClassNames.root, cssVarCls, hashId);
+  const restProps = (0,pickAttrs["default"])(otherProps, {
+    aria: true,
+    data: true
+  });
+  const mergedCloseIcon = external_React_.useMemo(() => {
+    if (typeof closable === 'object' && closable.closeIcon) {
+      return closable.closeIcon;
+    }
+    if (closeText) {
+      return closeText;
+    }
+    if (closeIcon !== undefined) {
+      return closeIcon;
+    }
+    if (typeof contextClosable === 'object' && contextClosable.closeIcon) {
+      return contextClosable.closeIcon;
+    }
+    return contextCloseIcon;
+  }, [closeIcon, closable, contextClosable, closeText, contextCloseIcon]);
+  const mergedAriaProps = external_React_.useMemo(() => {
+    const merged = closable ?? contextClosable;
+    if (typeof merged === 'object') {
+      return (0,pickAttrs["default"])(merged, {
+        data: true,
+        aria: true
+      });
+    }
+    return {};
+  }, [closable, contextClosable]);
+  return /*#__PURE__*/external_React_.createElement(motion_es["default"], {
+    visible: !closed,
+    motionName: `${prefixCls}-motion`,
+    motionAppear: false,
+    motionEnter: false,
+    onLeaveStart: node => ({
+      maxHeight: node.offsetHeight
+    }),
+    onLeaveEnd: closableAfterClose ?? afterClose
+  }, ({
+    className: motionClassName,
+    style: motionStyle
+  }, setRef) => (/*#__PURE__*/external_React_.createElement("div", {
+    id: id,
+    ref: (0,es_ref.composeRef)(internalRef, setRef),
+    "data-show": !closed,
+    className: (0,clsx.clsx)(alertCls, motionClassName),
+    style: {
+      ...mergedStyles.root,
+      ...contextStyle,
+      ...style,
+      ...motionStyle
+    },
+    onMouseEnter: onMouseEnter,
+    onMouseLeave: onMouseLeave,
+    onClick: onClick,
+    role: "alert",
+    ...restProps
+  }, isShowIcon ? (/*#__PURE__*/external_React_.createElement(IconNode, {
+    className: (0,clsx.clsx)(`${prefixCls}-icon`, mergedClassNames.icon),
+    style: mergedStyles.icon,
+    description: description,
+    icon: props.icon,
+    prefixCls: prefixCls,
+    type: type,
+    successIcon: successIcon,
+    infoIcon: infoIcon,
+    warningIcon: warningIcon,
+    errorIcon: errorIcon
+  })) : null, /*#__PURE__*/external_React_.createElement("div", {
+    className: (0,clsx.clsx)(`${prefixCls}-section`, mergedClassNames.section),
+    style: mergedStyles.section
+  }, mergedTitle ? (/*#__PURE__*/external_React_.createElement("div", {
+    className: (0,clsx.clsx)(`${prefixCls}-title`, mergedClassNames.title),
+    style: mergedStyles.title
+  }, mergedTitle)) : null, description ? (/*#__PURE__*/external_React_.createElement("div", {
+    className: (0,clsx.clsx)(`${prefixCls}-description`, mergedClassNames.description),
+    style: mergedStyles.description
+  }, description)) : null), action ? (/*#__PURE__*/external_React_.createElement("div", {
+    className: (0,clsx.clsx)(`${prefixCls}-actions`, mergedClassNames.actions),
+    style: mergedStyles.actions
+  }, action)) : null, /*#__PURE__*/external_React_.createElement(CloseIconNode, {
+    className: mergedClassNames.close,
+    style: mergedStyles.close,
+    isClosable: isClosable,
+    prefixCls: prefixCls,
+    closeIcon: mergedCloseIcon,
+    handleClose: handleClose,
+    ariaProps: mergedAriaProps
+  }))));
+});
+if (true) {
+  Alert.displayName = 'Alert';
+}
+/* harmony default export */ const alert_Alert = (Alert);
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js
+var classCallCheck = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/createClass.js
+var createClass = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/createClass.js");
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js
+var getPrototypeOf = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/isNativeReflectConstruct.js
+var isNativeReflectConstruct = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/isNativeReflectConstruct.js");
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js
+var possibleConstructorReturn = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+;// ./node_modules/@babel/runtime/helpers/esm/callSuper.js
+
+
+
+function _callSuper(t, o, e) {
+  return o = (0,getPrototypeOf["default"])(o), (0,possibleConstructorReturn["default"])(t, (0,isNativeReflectConstruct["default"])() ? Reflect.construct(o, e || [], (0,getPrototypeOf["default"])(t).constructor) : o.apply(t, e));
+}
+
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/inherits.js
+var inherits = __webpack_require__("./node_modules/@babel/runtime/helpers/esm/inherits.js");
+;// ./node_modules/antd/es/alert/ErrorBoundary.js
+"use client";
+
+
+
+
+
+
+
+
+let ErrorBoundary = /*#__PURE__*/function (_React$PureComponent) {
+  function ErrorBoundary() {
+    var _this;
+    (0,classCallCheck["default"])(this, ErrorBoundary);
+    _this = _callSuper(this, ErrorBoundary, arguments);
+    _this.state = {
+      error: undefined,
+      info: {}
+    };
+    return _this;
+  }
+  (0,inherits["default"])(ErrorBoundary, _React$PureComponent);
+  return (0,createClass["default"])(ErrorBoundary, [{
+    key: "componentDidCatch",
+    value: function componentDidCatch(error, info) {
+      this.setState({
+        error,
+        info
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      const {
+        message,
+        title,
+        description,
+        id,
+        children
+      } = this.props;
+      const {
+        error,
+        info
+      } = this.state;
+      const mergedTitle = title ?? message;
+      const componentStack = info?.componentStack || null;
+      const errorMessage = (0,isNonNullable["default"])(mergedTitle) ? mergedTitle : error?.toString();
+      const errorDescription = (0,isNonNullable["default"])(description) ? description : componentStack;
+      if (error) {
+        return /*#__PURE__*/external_React_.createElement(alert_Alert, {
+          id: id,
+          type: "error",
+          title: errorMessage,
+          description: /*#__PURE__*/external_React_.createElement("pre", {
+            style: {
+              fontSize: '0.9em',
+              overflowX: 'auto'
+            }
+          }, errorDescription)
+        });
+      }
+      return children;
+    }
+  }]);
+}(external_React_.PureComponent);
+/* harmony default export */ const alert_ErrorBoundary = (ErrorBoundary);
+;// ./node_modules/antd/es/alert/index.js
+"use client";
+
+
+
+const es_alert_Alert = alert_Alert;
+es_alert_Alert.ErrorBoundary = alert_ErrorBoundary;
+/* harmony default export */ const es_alert = (es_alert_Alert);
 ;// ./src/MainComponents/constants/globalFontFamilyTooltip.js
 
 
@@ -118992,9 +119535,10 @@ const MiscSettingDrawer = props => {
   };
   const getPostTypes = async () => {
     try {
+      const endpoint = endpoints.apiEndpoints.getPostTypesForLayout ? endpoints.apiEndpoints.getPostTypesForLayout(postType) : endpoints.apiEndpoints.getPostTypes;
       const {
         data
-      } = await client["default"].get(endpoints.apiEndpoints.getPostTypes);
+      } = await client["default"].get(endpoint);
       const payload = parseBuilderApiPayload(data);
       if (payload?.status === "success") {
         setPostTypesList(payload.post_types || []);
@@ -119003,8 +119547,27 @@ const MiscSettingDrawer = props => {
       console.error(error);
     }
   };
-  const getPostsList = async () => {
+  const postTypeUnavailable = (0,external_React_.useMemo)(() => {
     if (!postType || postType === "0") {
+      return false;
+    }
+    const match = postTypesList.find(option => option?.value === postType);
+    if (!match) {
+      return postTypesList.length > 0;
+    }
+    return Boolean(match.unavailable || match.disabled);
+  }, [postType, postTypesList]);
+  const postTypeUnavailableMessage = (0,external_React_.useMemo)(() => {
+    if (!postTypeUnavailable) {
+      return "";
+    }
+    if (postType === "product") {
+      return "This layout uses Products, but WooCommerce is not active. Activate WooCommerce or change the post type below.";
+    }
+    return `Post type "${postType}" is not registered on this site. Activate the plugin that provides it, or change the post type below.`;
+  }, [postType, postTypeUnavailable]);
+  const getPostsList = async () => {
+    if (!postType || postType === "0" || postTypeUnavailable) {
       setPostsData([]);
       setPostsList([{
         label: "Select Single Post ",
@@ -119036,12 +119599,14 @@ const MiscSettingDrawer = props => {
     }
   };
   (0,external_React_.useEffect)(() => {
-    getPostTypes();
     loadFontOptions();
   }, []);
   (0,external_React_.useEffect)(() => {
-    getPostsList();
+    getPostTypes();
   }, [postType]);
+  (0,external_React_.useEffect)(() => {
+    getPostsList();
+  }, [postType, postTypeUnavailable]);
   (0,external_React_.useEffect)(() => {
     setPostType(resolvePostTypeFromBuilderData(props.mainBuilderData));
     setSinglePostType(resolveSinglePostFromBuilderData(props.mainBuilderData)?.value ?? "0");
@@ -119189,7 +119754,16 @@ const MiscSettingDrawer = props => {
               children: "General Settings"
             }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
               className: "caf-main-setting-section-body",
-              children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
+              children: [postTypeUnavailable ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(es_alert, {
+                type: "warning",
+                showIcon: true,
+                className: "caf-builder-missing-post-type-alert",
+                style: {
+                  marginBottom: 16
+                },
+                message: "Post type unavailable",
+                description: postTypeUnavailableMessage
+              }) : null, /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
                 className: "caf-main-setting-page data-field",
                 children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("label", {
                   className: "caf-main-setting-page label",
@@ -119271,8 +119845,6 @@ var toConsumableArray = __webpack_require__("./node_modules/@babel/runtime/helpe
 // EXTERNAL MODULE: external "ReactDOM"
 var external_ReactDOM_ = __webpack_require__("react-dom");
 var external_ReactDOM_default = /*#__PURE__*/__webpack_require__.n(external_ReactDOM_);
-// EXTERNAL MODULE: ./node_modules/@rc-component/util/es/pickAttrs.js
-var pickAttrs = __webpack_require__("./node_modules/@rc-component/util/es/pickAttrs.js");
 // EXTERNAL MODULE: ./node_modules/@rc-component/util/es/index.js + 2 modules
 var util_es = __webpack_require__("./node_modules/@rc-component/util/es/index.js");
 ;// ./node_modules/@rc-component/upload/es/attr-accept.js
@@ -120431,7 +121003,7 @@ const genRtlStyle = token => {
 
 
 
-const genBaseStyle = token => {
+const style_genBaseStyle = token => {
   const {
     componentCls,
     colorTextDisabled
@@ -120458,7 +121030,7 @@ const genBaseStyle = token => {
     }
   };
 };
-const style_prepareComponentToken = token => ({
+const upload_style_prepareComponentToken = token => ({
   actionsColor: token.colorIcon,
   pictureCardSize: token.controlHeightLG * 2.55
 });
@@ -120476,8 +121048,8 @@ const style_prepareComponentToken = token => ({
     uploadProgressOffset: calc(calc(marginXS).div(2)).add(lineWidth).equal(),
     uploadPicCardSize: pictureCardSize
   });
-  return [genBaseStyle(uploadToken), dragger(uploadToken), genPictureStyle(uploadToken), genPictureCardStyle(uploadToken), list(uploadToken), motion(uploadToken), rtl(uploadToken), (0,collapse["default"])(uploadToken)];
-}, style_prepareComponentToken));
+  return [style_genBaseStyle(uploadToken), dragger(uploadToken), genPictureStyle(uploadToken), genPictureCardStyle(uploadToken), list(uploadToken), motion(uploadToken), rtl(uploadToken), (0,collapse["default"])(uploadToken)];
+}, upload_style_prepareComponentToken));
 ;// ./node_modules/@ant-design/icons-svg/es/asn/FileTwoTone.js
 // This icon file is generated automatically.
 var FileTwoTone = { "icon": function render(primaryColor, secondaryColor) { return { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M534 352V136H232v752h560V394H576a42 42 0 01-42-42z", "fill": secondaryColor } }, { "tag": "path", "attrs": { "d": "M854.6 288.6L639.4 73.4c-6-6-14.1-9.4-22.6-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.7-9.4-22.7zM602 137.8L790.2 326H602V137.8zM792 888H232V136h302v216a42 42 0 0042 42h216v494z", "fill": primaryColor } }] }; }, "name": "file", "theme": "twotone" };
@@ -120552,8 +121124,6 @@ if (true) {
   PictureTwoTone_RefIcon.displayName = 'PictureTwoTone';
 }
 /* harmony default export */ const icons_PictureTwoTone = (PictureTwoTone_RefIcon);
-// EXTERNAL MODULE: ./node_modules/@rc-component/motion/es/index.js + 12 modules
-var motion_es = __webpack_require__("./node_modules/@rc-component/motion/es/index.js");
 // EXTERNAL MODULE: ./node_modules/antd/es/_util/hooks/useForceUpdate.js
 var useForceUpdate = __webpack_require__("./node_modules/antd/es/_util/hooks/useForceUpdate.js");
 // EXTERNAL MODULE: ./node_modules/antd/es/_util/motion.js
@@ -121415,7 +121985,7 @@ const genAntProgressActive = isRtl => {
 // ====================================================================
 // ==                              Base                              ==
 // ====================================================================
-const style_genBaseStyle = token => {
+const progress_style_genBaseStyle = token => {
   const {
     componentCls: progressCls,
     iconCls: iconPrefixCls
@@ -121677,7 +122247,7 @@ const progress_style_prepareComponentToken = token => ({
     progressStepMinWidth: progressStepMarginInlineEnd,
     progressActiveMotionDuration: '2.4s'
   });
-  return [style_genBaseStyle(progressToken), genLineStyle(progressToken), genCircleStyle(progressToken), genStepStyle(progressToken), genSmallLine(progressToken)];
+  return [progress_style_genBaseStyle(progressToken), genLineStyle(progressToken), genCircleStyle(progressToken), genStepStyle(progressToken), genSmallLine(progressToken)];
 }, progress_style_prepareComponentToken));
 ;// ./node_modules/antd/es/progress/Line.js
 "use client";
@@ -122943,10 +123513,6 @@ es_upload_Upload.LIST_IGNORE = LIST_IGNORE;
 var es_radio = __webpack_require__("./node_modules/antd/es/radio/index.js");
 // EXTERNAL MODULE: ./node_modules/@rc-component/checkbox/es/index.js
 var checkbox_es = __webpack_require__("./node_modules/@rc-component/checkbox/es/index.js");
-// EXTERNAL MODULE: ./node_modules/@rc-component/util/es/ref.js
-var es_ref = __webpack_require__("./node_modules/@rc-component/util/es/ref.js");
-// EXTERNAL MODULE: ./node_modules/antd/es/_util/isNonNullable.js
-var isNonNullable = __webpack_require__("./node_modules/antd/es/_util/isNonNullable.js");
 // EXTERNAL MODULE: ./node_modules/antd/es/_util/wave/index.js + 4 modules
 var wave = __webpack_require__("./node_modules/antd/es/_util/wave/index.js");
 // EXTERNAL MODULE: ./node_modules/antd/es/_util/wave/interface.js
@@ -132671,7 +133237,7 @@ function react_beautiful_dnd_esm_invariant(condition, message) {
   }
 }
 
-var ErrorBoundary = function (_React$Component) {
+var react_beautiful_dnd_esm_ErrorBoundary = function (_React$Component) {
   _inheritsLoose(ErrorBoundary, _React$Component);
 
   function ErrorBoundary() {
@@ -139549,7 +140115,7 @@ function resetServerContext() {
 function DragDropContext(props) {
   var contextId = useInstanceCount();
   var dragHandleUsageInstructions = props.dragHandleUsageInstructions || preset.dragHandleUsageInstructions;
-  return external_React_default().createElement(ErrorBoundary, null, function (setCallbacks) {
+  return external_React_default().createElement(react_beautiful_dnd_esm_ErrorBoundary, null, function (setCallbacks) {
     return external_React_default().createElement(App, {
       nonce: props.nonce,
       contextId: contextId,
@@ -171775,7 +172341,9 @@ function ModuleProductPrice({
 
 
 
-function ModuleProductRating_renderAffixContent(settings, placement, svgContent, postData) {
+function ModuleProductRating_renderAffixContent(settings, placement, svgContent, postData, {
+  showDesignFallback = false
+} = {}) {
   const affix = settings?.[placement];
   if (!affix) {
     return null;
@@ -171784,9 +172352,13 @@ function ModuleProductRating_renderAffixContent(settings, placement, svgContent,
     return (0,esm["default"])(`${affix.meta_text}`);
   }
   if (affix.meta_type === "review_count") {
-    const rawCount = postData?.rating_data?.review_count;
+    let rawCount = postData?.rating_data?.review_count;
     if (rawCount === null || rawCount === undefined || rawCount === "") {
-      return null;
+      // Post canvas only: keep count affix visible for design when data is empty.
+      if (!showDesignFallback) {
+        return null;
+      }
+      rawCount = 0;
     }
     const countText = String(rawCount);
     const separator = affix.count_separator || "none";
@@ -171840,79 +172412,84 @@ function hasZeroAverageRating(postData) {
   const numeric = Number.parseFloat(String(averageRating).trim());
   return !Number.isFinite(numeric) || numeric === 0;
 }
+const TOTAL_STAR_COUNT = 5;
 
-/**
- * Stars display:
- * - 3 / 3.0 → 3 full stars
- * - fractional .1–.4 → floor full + fa-star-half
- * - fractional .5–.9 → floor full + fa-star-half-alt
- */
-function resolveStarDisplayParts(averageRating) {
+/** Filled portion of the 5-star row, as a percentage (3.7 → 74). */
+function resolveStarFillPercent(averageRating) {
   const numeric = Number.parseFloat(String(averageRating ?? "").trim());
   if (!Number.isFinite(numeric) || numeric <= 0) {
-    return {
-      fullStars: 0,
-      halfClass: ""
-    };
+    return 0;
   }
-  const fullStars = Math.floor(numeric);
-  const fraction = Number((numeric - fullStars).toFixed(10));
-  if (fraction <= 0) {
-    return {
-      fullStars,
-      halfClass: ""
-    };
-  }
-  if (fraction >= 0.1 && fraction < 0.5) {
-    return {
-      fullStars,
-      halfClass: "fas fa-star-half"
-    };
-  }
-  if (fraction >= 0.5) {
-    return {
-      fullStars,
-      halfClass: "fas fa-star-half-alt"
-    };
-  }
-
-  // 0 < fraction < 0.1 → treat as whole (no half)
-  return {
-    fullStars,
-    halfClass: ""
-  };
+  const clamped = Math.min(numeric, TOTAL_STAR_COUNT);
+  return Number((clamped / TOTAL_STAR_COUNT * 100).toFixed(4));
 }
-function renderRatingContent(settings, postData) {
+function renderStarRow(modifier, keyPrefix) {
+  const stars = [];
+  for (let index = 0; index < TOTAL_STAR_COUNT; index += 1) {
+    stars.push(/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("i", {
+      className: `fas fa-star caf-rating-star caf-rating-star--${modifier} filter-before-icon`
+    }, `${keyPrefix}-${index}`));
+  }
+  return stars;
+}
+
+/**
+ * Always render 5 stars: an empty base row with a clipped filled row on top,
+ * so fractional ratings (3.7) fill part of a star instead of dropping it.
+ */
+function renderFiveStarIcons(averageRating, keyPrefix = "caf-rating-star") {
+  const fillPercent = resolveStarFillPercent(averageRating);
+  return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("span", {
+    className: "caf-builder-rating-stars",
+    children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
+      className: "caf-builder-rating-stars-base",
+      children: renderStarRow("empty", `${keyPrefix}-empty`)
+    }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
+      className: "caf-builder-rating-stars-fill",
+      style: {
+        width: `${fillPercent}%`
+      },
+      "aria-hidden": "true",
+      children: renderStarRow("filled", `${keyPrefix}-filled`)
+    })]
+  });
+}
+function resolveModuleTextColor(styleDefault, selectedDevice, state) {
+  const deviceKey = selectedDevice || "desktop";
+  const fromDevice = styleDefault?.[deviceKey]?.[state]?.color;
+  if (fromDevice) {
+    return String(fromDevice);
+  }
+  if (deviceKey !== "desktop") {
+    const fromDesktop = styleDefault?.desktop?.[state]?.color;
+    if (fromDesktop) {
+      return String(fromDesktop);
+    }
+  }
+  if (state === "hover") {
+    return resolveModuleTextColor(styleDefault, selectedDevice, "default");
+  }
+  return "";
+}
+function renderRatingContent(settings, postData, {
+  showDesignStarsWhenEmpty = false
+} = {}) {
   const averageRating = resolveAverageRating(postData);
   const ratingDisplay = settings?.rating_display || "stars";
   if (ratingDisplay === "average_value") {
     const numeric = Number.parseFloat(String(averageRating ?? "").trim());
     if (!Number.isFinite(numeric) || numeric === 0) {
+      // Post canvas only: keep average value visible for design when rating is empty.
+      if (showDesignStarsWhenEmpty) {
+        return "0";
+      }
       return null;
     }
     return averageRating;
   }
 
-  // Default: stars
-  const {
-    fullStars,
-    halfClass
-  } = resolveStarDisplayParts(averageRating);
-  if (fullStars <= 0 && !halfClass) {
-    return null;
-  }
-  const stars = [];
-  for (let index = 0; index < fullStars; index += 1) {
-    stars.push(/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("i", {
-      className: "fas fa-star caf-rating-star filter-before-icon"
-    }, `caf-rating-star-${index}`));
-  }
-  if (halfClass) {
-    stars.push(/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("i", {
-      className: `${halfClass} caf-rating-star filter-before-icon`
-    }, "caf-rating-star-half"));
-  }
-  return stars;
+  // Stars: always draw 5 slots (empty base + clipped fill). Rating 0/null → 5 empty.
+  return renderFiveStarIcons(averageRating);
 }
 function ModuleProductRating({
   postData,
@@ -171925,7 +172502,9 @@ function ModuleProductRating({
   selectedDevice,
   indexes,
   setIndexes = () => {},
-  hideAffixWhenZeroRating = false
+  hideAffixWhenZeroRating = false,
+  /** Post builder canvas: average_value "0" + affix design fallbacks when rating is empty. Preview leaves this false. */
+  showDesignStarsWhenEmpty = false
 }) {
   const customClass = settings?.custom_class || "";
   const visibility = settings?.visibility || {};
@@ -171982,38 +172561,83 @@ function ModuleProductRating({
       module
     });
   };
-  const hideAffixForZeroRating = hideAffixWhenZeroRating && hasZeroAverageRating(postData);
-  const prefixContent = !hideAffixForZeroRating && isPostPrefixEnabled(settings) ? ModuleProductRating_renderAffixContent(settings, "prefix", svgPrefixContent, postData) : null;
-  const suffixContent = !hideAffixForZeroRating && isPostSuffixEnabled(settings) ? ModuleProductRating_renderAffixContent(settings, "suffix", svgSuffixContent, postData) : null;
+  const ratingDisplay = settings?.rating_display || "stars";
+  // Preview hides affixes on zero rating only for average_value; stars keep affixes with empty stars.
+  const hideAffixForZeroRating = hideAffixWhenZeroRating && hasZeroAverageRating(postData) && ratingDisplay === "average_value";
+  const affixDesignFallback = showDesignStarsWhenEmpty && !hideAffixWhenZeroRating;
+  const prefixContent = !hideAffixForZeroRating && isPostPrefixEnabled(settings) ? ModuleProductRating_renderAffixContent(settings, "prefix", svgPrefixContent, postData, {
+    showDesignFallback: affixDesignFallback
+  }) : null;
+  const suffixContent = !hideAffixForZeroRating && isPostSuffixEnabled(settings) ? ModuleProductRating_renderAffixContent(settings, "suffix", svgSuffixContent, postData, {
+    showDesignFallback: affixDesignFallback
+  }) : null;
   const showPrefix = Boolean(prefixContent);
   const showSuffix = Boolean(suffixContent);
   const ratingNode = /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
     className: "caf-builder-rating-value",
-    children: renderRatingContent(settings, postData)
+    children: renderRatingContent(settings, postData, {
+      showDesignStarsWhenEmpty
+    })
   });
+  const emptyStarColor = resolveModuleTextColor(styleDefault, selectedDevice, "default");
+  const filledStarColor = resolveModuleTextColor(styleDefault, selectedDevice, "hover");
+  const moduleScope = `.caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex}`;
+  const starLayoutCss = `
+    ${moduleScope} .caf-builder-rating-value .caf-builder-rating-stars {
+      position: relative;
+      display: inline-flex;
+      line-height: 1;
+      vertical-align: middle;
+    }
+    ${moduleScope} .caf-builder-rating-value .caf-builder-rating-stars-base,
+    ${moduleScope} .caf-builder-rating-value .caf-builder-rating-stars-fill {
+      display: inline-flex;
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+    ${moduleScope} .caf-builder-rating-value .caf-builder-rating-stars-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }`;
+  const starColorCss = (emptyStarColor ? `
+    ${moduleScope} .caf-builder-rating-value .caf-rating-star--empty,
+    ${moduleScope}:hover .caf-builder-rating-value .caf-rating-star--empty {
+      color: ${emptyStarColor};
+    }` : "") + (filledStarColor ? `
+    ${moduleScope} .caf-builder-rating-value .caf-rating-star--filled,
+    ${moduleScope} .caf-builder-rating-value .caf-rating-star--half,
+    ${moduleScope}:hover .caf-builder-rating-value .caf-rating-star--filled,
+    ${moduleScope}:hover .caf-builder-rating-value .caf-rating-star--half {
+      color: ${filledStarColor};
+    }` : "");
   const moduleStyles = `
-    .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} {
+    ${moduleScope} {
       ${generateCSS(styleDefault, "default", selectedDevice, settings, postData)}
     }
-    .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex}:hover {
+    ${moduleScope}:hover {
       ${generateCSS(styleDefault, "hover", selectedDevice, settings, postData)}
     }
+    ${starLayoutCss}
+    ${starColorCss}
     .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} .caf-builder-title-suffix-wrapper {
       ${generateCSS(styleDefault?.meta, "default", selectedDevice, settings, postData)}
     }
     .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} .caf-builder-title-suffix-wrapper:hover {
       ${generateCSS(styleDefault?.meta, "hover", selectedDevice, settings, postData)}
     }
-    .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} .caf-builder-prefix-col {
+    ${moduleScope} .caf-builder-prefix-col {
       ${generateCSS(styleDefault?.prefix, "default", selectedDevice, settings, postData)}
     }
-    .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} .caf-builder-prefix-col:hover {
+    ${moduleScope} .caf-builder-prefix-col:hover {
       ${generateCSS(styleDefault?.prefix, "hover", selectedDevice, settings, postData)}
     }
-    .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} .caf-builder-suffix-col {
+    ${moduleScope} .caf-builder-suffix-col {
       ${generateCSS(styleDefault?.suffix, "default", selectedDevice, settings, postData)}
     }
-    .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} .caf-builder-suffix-col:hover {
+    ${moduleScope} .caf-builder-suffix-col:hover {
       ${generateCSS(styleDefault?.suffix, "hover", selectedDevice, settings, postData)}
     }
   `;
@@ -175141,7 +175765,8 @@ function PostBuilderPreviewChromeInner({
                   moduleindex: moduleindex,
                   setIndexes: setIndexes,
                   selectedDevice: selectedDevice,
-                  indexes: indexes
+                  indexes: indexes,
+                  showDesignStarsWhenEmpty: true
                 }) : module.key === "woo_add_to_cart" ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(WooModules_ModuleAddToCart, {
                   postData: effectiveSinglePostData,
                   settings: moduleSettings,

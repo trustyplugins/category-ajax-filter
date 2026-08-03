@@ -7,7 +7,13 @@ import {
   isPostSuffixEnabled,
 } from "../../settingTabContent/ModuleContentData/shared/postModuleTier";
 
-function renderAffixContent(settings, placement, svgContent, postData) {
+function renderAffixContent(
+  settings,
+  placement,
+  svgContent,
+  postData,
+  { showDesignFallback = false } = {},
+) {
   const affix = settings?.[placement];
   if (!affix) {
     return null;
@@ -18,9 +24,13 @@ function renderAffixContent(settings, placement, svgContent, postData) {
   }
 
   if (affix.meta_type === "review_count") {
-    const rawCount = postData?.rating_data?.review_count;
+    let rawCount = postData?.rating_data?.review_count;
     if (rawCount === null || rawCount === undefined || rawCount === "") {
-      return null;
+      // Post canvas only: keep count affix visible for design when data is empty.
+      if (!showDesignFallback) {
+        return null;
+      }
+      rawCount = 0;
     }
     const countText = String(rawCount);
     const separator = affix.count_separator || "none";
@@ -99,74 +109,94 @@ function hasZeroAverageRating(postData) {
   return !Number.isFinite(numeric) || numeric === 0;
 }
 
-/**
- * Stars display:
- * - 3 / 3.0 → 3 full stars
- * - fractional .1–.4 → floor full + fa-star-half
- * - fractional .5–.9 → floor full + fa-star-half-alt
- */
-function resolveStarDisplayParts(averageRating) {
+const TOTAL_STAR_COUNT = 5;
+
+/** Filled portion of the 5-star row, as a percentage (3.7 → 74). */
+function resolveStarFillPercent(averageRating) {
   const numeric = Number.parseFloat(String(averageRating ?? "").trim());
   if (!Number.isFinite(numeric) || numeric <= 0) {
-    return { fullStars: 0, halfClass: "" };
+    return 0;
   }
-
-  const fullStars = Math.floor(numeric);
-  const fraction = Number((numeric - fullStars).toFixed(10));
-
-  if (fraction <= 0) {
-    return { fullStars, halfClass: "" };
-  }
-
-  if (fraction >= 0.1 && fraction < 0.5) {
-    return { fullStars, halfClass: "fas fa-star-half" };
-  }
-
-  if (fraction >= 0.5) {
-    return { fullStars, halfClass: "fas fa-star-half-alt" };
-  }
-
-  // 0 < fraction < 0.1 → treat as whole (no half)
-  return { fullStars, halfClass: "" };
+  const clamped = Math.min(numeric, TOTAL_STAR_COUNT);
+  return Number(((clamped / TOTAL_STAR_COUNT) * 100).toFixed(4));
 }
 
-function renderRatingContent(settings, postData) {
+function renderStarRow(modifier, keyPrefix) {
+  const stars = [];
+  for (let index = 0; index < TOTAL_STAR_COUNT; index += 1) {
+    stars.push(
+      <i
+        key={`${keyPrefix}-${index}`}
+        className={`fas fa-star caf-rating-star caf-rating-star--${modifier} filter-before-icon`}
+      ></i>,
+    );
+  }
+  return stars;
+}
+
+/**
+ * Always render 5 stars: an empty base row with a clipped filled row on top,
+ * so fractional ratings (3.7) fill part of a star instead of dropping it.
+ */
+function renderFiveStarIcons(averageRating, keyPrefix = "caf-rating-star") {
+  const fillPercent = resolveStarFillPercent(averageRating);
+
+  return (
+    <span className="caf-builder-rating-stars">
+      <span className="caf-builder-rating-stars-base">
+        {renderStarRow("empty", `${keyPrefix}-empty`)}
+      </span>
+      <span
+        className="caf-builder-rating-stars-fill"
+        style={{ width: `${fillPercent}%` }}
+        aria-hidden="true"
+      >
+        {renderStarRow("filled", `${keyPrefix}-filled`)}
+      </span>
+    </span>
+  );
+}
+
+function resolveModuleTextColor(styleDefault, selectedDevice, state) {
+  const deviceKey = selectedDevice || "desktop";
+  const fromDevice = styleDefault?.[deviceKey]?.[state]?.color;
+  if (fromDevice) {
+    return String(fromDevice);
+  }
+  if (deviceKey !== "desktop") {
+    const fromDesktop = styleDefault?.desktop?.[state]?.color;
+    if (fromDesktop) {
+      return String(fromDesktop);
+    }
+  }
+  if (state === "hover") {
+    return resolveModuleTextColor(styleDefault, selectedDevice, "default");
+  }
+  return "";
+}
+
+function renderRatingContent(
+  settings,
+  postData,
+  { showDesignStarsWhenEmpty = false } = {},
+) {
   const averageRating = resolveAverageRating(postData);
   const ratingDisplay = settings?.rating_display || "stars";
 
   if (ratingDisplay === "average_value") {
     const numeric = Number.parseFloat(String(averageRating ?? "").trim());
     if (!Number.isFinite(numeric) || numeric === 0) {
+      // Post canvas only: keep average value visible for design when rating is empty.
+      if (showDesignStarsWhenEmpty) {
+        return "0";
+      }
       return null;
     }
     return averageRating;
   }
 
-  // Default: stars
-  const { fullStars, halfClass } = resolveStarDisplayParts(averageRating);
-  if (fullStars <= 0 && !halfClass) {
-    return null;
-  }
-
-  const stars = [];
-  for (let index = 0; index < fullStars; index += 1) {
-    stars.push(
-      <i
-        key={`caf-rating-star-${index}`}
-        className="fas fa-star caf-rating-star filter-before-icon"
-      ></i>,
-    );
-  }
-  if (halfClass) {
-    stars.push(
-      <i
-        key="caf-rating-star-half"
-        className={`${halfClass} caf-rating-star filter-before-icon`}
-      ></i>,
-    );
-  }
-
-  return stars;
+  // Stars: always draw 5 slots (empty base + clipped fill). Rating 0/null → 5 empty.
+  return renderFiveStarIcons(averageRating);
 }
 
 function ModuleProductRating({
@@ -181,6 +211,8 @@ function ModuleProductRating({
   indexes,
   setIndexes = () => {},
   hideAffixWhenZeroRating = false,
+  /** Post builder canvas: average_value "0" + affix design fallbacks when rating is empty. Preview leaves this false. */
+  showDesignStarsWhenEmpty = false,
 }) {
   const customClass = settings?.custom_class || "";
   const visibility = settings?.visibility || {};
@@ -260,33 +292,94 @@ function ModuleProductRating({
     });
   };
 
+  const ratingDisplay = settings?.rating_display || "stars";
+  // Preview hides affixes on zero rating only for average_value; stars keep affixes with empty stars.
   const hideAffixForZeroRating =
-    hideAffixWhenZeroRating && hasZeroAverageRating(postData);
+    hideAffixWhenZeroRating &&
+    hasZeroAverageRating(postData) &&
+    ratingDisplay === "average_value";
+  const affixDesignFallback =
+    showDesignStarsWhenEmpty && !hideAffixWhenZeroRating;
 
   const prefixContent =
     !hideAffixForZeroRating && isPostPrefixEnabled(settings)
-      ? renderAffixContent(settings, "prefix", svgPrefixContent, postData)
+      ? renderAffixContent(settings, "prefix", svgPrefixContent, postData, {
+          showDesignFallback: affixDesignFallback,
+        })
       : null;
   const suffixContent =
     !hideAffixForZeroRating && isPostSuffixEnabled(settings)
-      ? renderAffixContent(settings, "suffix", svgSuffixContent, postData)
+      ? renderAffixContent(settings, "suffix", svgSuffixContent, postData, {
+          showDesignFallback: affixDesignFallback,
+        })
       : null;
   const showPrefix = Boolean(prefixContent);
   const showSuffix = Boolean(suffixContent);
 
   const ratingNode = (
     <div className="caf-builder-rating-value">
-      {renderRatingContent(settings, postData)}
+      {renderRatingContent(settings, postData, { showDesignStarsWhenEmpty })}
     </div>
   );
 
+  const emptyStarColor = resolveModuleTextColor(
+    styleDefault,
+    selectedDevice,
+    "default",
+  );
+  const filledStarColor = resolveModuleTextColor(
+    styleDefault,
+    selectedDevice,
+    "hover",
+  );
+  const moduleScope = `.caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex}`;
+  const starLayoutCss = `
+    ${moduleScope} .caf-builder-rating-value .caf-builder-rating-stars {
+      position: relative;
+      display: inline-flex;
+      line-height: 1;
+      vertical-align: middle;
+    }
+    ${moduleScope} .caf-builder-rating-value .caf-builder-rating-stars-base,
+    ${moduleScope} .caf-builder-rating-value .caf-builder-rating-stars-fill {
+      display: inline-flex;
+      flex: 0 0 auto;
+      white-space: nowrap;
+    }
+    ${moduleScope} .caf-builder-rating-value .caf-builder-rating-stars-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }`;
+  const starColorCss =
+    (emptyStarColor
+      ? `
+    ${moduleScope} .caf-builder-rating-value .caf-rating-star--empty,
+    ${moduleScope}:hover .caf-builder-rating-value .caf-rating-star--empty {
+      color: ${emptyStarColor};
+    }`
+      : "") +
+    (filledStarColor
+      ? `
+    ${moduleScope} .caf-builder-rating-value .caf-rating-star--filled,
+    ${moduleScope} .caf-builder-rating-value .caf-rating-star--half,
+    ${moduleScope}:hover .caf-builder-rating-value .caf-rating-star--filled,
+    ${moduleScope}:hover .caf-builder-rating-value .caf-rating-star--half {
+      color: ${filledStarColor};
+    }`
+      : "");
+
   const moduleStyles = `
-    .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} {
+    ${moduleScope} {
       ${generateCSS(styleDefault, "default", selectedDevice, settings, postData)}
     }
-    .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex}:hover {
+    ${moduleScope}:hover {
       ${generateCSS(styleDefault, "hover", selectedDevice, settings, postData)}
     }
+    ${starLayoutCss}
+    ${starColorCss}
     .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} .caf-builder-title-suffix-wrapper {
       ${generateCSS(
         styleDefault?.meta,
@@ -305,7 +398,7 @@ function ModuleProductRating({
         postData,
       )}
     }
-    .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} .caf-builder-prefix-col {
+    ${moduleScope} .caf-builder-prefix-col {
       ${generateCSS(
         styleDefault?.prefix,
         "default",
@@ -314,7 +407,7 @@ function ModuleProductRating({
         postData,
       )}
     }
-    .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} .caf-builder-prefix-col:hover {
+    ${moduleScope} .caf-builder-prefix-col:hover {
       ${generateCSS(
         styleDefault?.prefix,
         "hover",
@@ -323,7 +416,7 @@ function ModuleProductRating({
         postData,
       )}
     }
-    .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} .caf-builder-suffix-col {
+    ${moduleScope} .caf-builder-suffix-col {
       ${generateCSS(
         styleDefault?.suffix,
         "default",
@@ -332,7 +425,7 @@ function ModuleProductRating({
         postData,
       )}
     }
-    .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} .caf-builder-suffix-col:hover {
+    ${moduleScope} .caf-builder-suffix-col:hover {
       ${generateCSS(
         styleDefault?.suffix,
         "hover",

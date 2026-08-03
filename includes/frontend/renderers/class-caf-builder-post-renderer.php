@@ -430,6 +430,38 @@ class CAF_Builder_Post_Renderer {
 			$this->collect_module_css( $module_style, $module_selector, $module_type, $module_settings );
 		}
 
+		$is_link_root = $this->is_link_root_post_module( $module_type, $module_settings );
+
+		if ( $is_link_root ) {
+			if ( 'woo_add_to_cart' === $module_type ) {
+				$module_class .= ' caf-module-button';
+			}
+
+			$html = $this->apply_link_root_module_shell(
+				$module_content,
+				$module_class,
+				array(
+					'data-module-type' => $module_type,
+				),
+				$module_bg_style
+			);
+
+			return caf_builder_apply_filters(
+				'caf_builder_module_html',
+				$html,
+				$module_for_render,
+				$this->get_hook_context(
+					array(
+						'module_type' => $module_type,
+						'row_key'     => $row_key,
+						'column_key'  => $column_key,
+						'module_key'  => $module_key,
+						'post_id'     => $post_id,
+					)
+				)
+			);
+		}
+
 		$html = '<div class="' . esc_attr( $module_class ) . '"';
 
 		if ( ! empty( $module_bg_style ) ) {
@@ -1173,70 +1205,96 @@ class CAF_Builder_Post_Renderer {
 			return;
 		}
 
-		$link_modules = array( 'title', 'button', 'woo_add_to_cart' );
+		$link_modules   = array( 'title', 'button', 'woo_add_to_cart' );
+		$is_link_root   = $this->is_link_root_post_module( $module_type, $settings );
 		$is_link_module = in_array( $module_type, $link_modules, true ) && (
 			'woo_add_to_cart' === $module_type
 			|| $this->is_truthy_setting( isset( $settings->link->visibility ) ? $settings->link->visibility : false )
 		);
 
-		// ATC always renders an <a>; prefer caf-woo class so Design CSS beats Woo .button skins.
-		$link_selector       = $selector . ' a';
-		$link_hover_selector = $selector . ' a:hover';
-		if ( 'woo_add_to_cart' === $module_type ) {
-			$link_selector       = $selector . ' a.caf-woo-add-to-cart-button';
-			$link_hover_selector = $selector . ' a.caf-woo-add-to-cart-button:hover';
-		}
-
 		if ( $is_link_module ) {
-			$this->css_builder->add(
-				$this->style_generator->generate_responsive_css(
-					$style,
-					'default',
-					$link_selector,
-					array(
-						'background_image_mode' => 'conditional',
-						'settings'              => $settings,
+			if ( $is_link_root ) {
+				$this->css_builder->add(
+					$this->style_generator->generate_responsive_css(
+						$style,
+						'default',
+						$selector,
+						array(
+							'background_image_mode' => 'conditional',
+							'settings'              => $settings,
+						)
 					)
-				)
-			);
+				);
 
-			$this->css_builder->add(
-				$this->style_generator->generate_responsive_css(
-					$style,
-					'hover',
-					$link_hover_selector,
-					array(
-						'background_image_mode' => 'conditional',
-						'settings'              => $settings,
+				$this->css_builder->add(
+					$this->style_generator->generate_responsive_css(
+						$style,
+						'hover',
+						$selector . ':hover',
+						array(
+							'background_image_mode' => 'conditional',
+							'settings'              => $settings,
+						)
 					)
-				)
-			);
+				);
+			} else {
+				$link_selector       = $selector . ' a';
+				$link_hover_selector = $selector . ' a:hover';
+				if ( 'woo_add_to_cart' === $module_type ) {
+					$link_selector       = $selector . ' a.caf-woo-add-to-cart-button';
+					$link_hover_selector = $selector . ' a.caf-woo-add-to-cart-button:hover';
+				}
 
-			$this->css_builder->add(
-				$this->style_generator->generate_responsive_css(
-					$style,
-					'default',
-					$selector,
-					array(
-						'allowed_properties' => array( 'justify-content' ),
-						'force_width_100'    => true,
-						'justify_width_100'  => true,
+				$this->css_builder->add(
+					$this->style_generator->generate_responsive_css(
+						$style,
+						'default',
+						$link_selector,
+						array(
+							'background_image_mode' => 'conditional',
+							'settings'              => $settings,
+						)
 					)
-				)
-			);
+				);
 
-			$this->css_builder->add(
-				$this->style_generator->generate_responsive_css(
-					$style,
-					'hover',
-					$selector . ':hover',
-					array(
-						'allowed_properties' => array( 'justify-content' ),
-						'force_width_100'    => true,
-						'justify_width_100'  => true,
+				$this->css_builder->add(
+					$this->style_generator->generate_responsive_css(
+						$style,
+						'hover',
+						$link_hover_selector,
+						array(
+							'background_image_mode' => 'conditional',
+							'settings'              => $settings,
+						)
 					)
-				)
-			);
+				);
+
+				$this->css_builder->add(
+					$this->style_generator->generate_responsive_css(
+						$style,
+						'default',
+						$selector,
+						array(
+							'allowed_properties' => array( 'justify-content' ),
+							'force_width_100'    => true,
+							'justify_width_100'  => true,
+						)
+					)
+				);
+
+				$this->css_builder->add(
+					$this->style_generator->generate_responsive_css(
+						$style,
+						'hover',
+						$selector . ':hover',
+						array(
+							'allowed_properties' => array( 'justify-content' ),
+							'force_width_100'    => true,
+							'justify_width_100'  => true,
+						)
+					)
+				);
+			}
 		} elseif ( 'image' === $module_type ) {
 			$this->css_builder->add(
 				$this->style_generator->generate_responsive_css(
@@ -1554,6 +1612,94 @@ class CAF_Builder_Post_Renderer {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Whether the module root is the anchor (no wrapper div), matching builder preview.
+	 *
+	 * @param string $module_type     Module key.
+	 * @param object $module_settings Module settings.
+	 * @return bool
+	 */
+	protected function is_link_root_post_module( $module_type, $module_settings ) {
+		if ( 'woo_add_to_cart' === $module_type ) {
+			return true;
+		}
+
+		if ( 'button' === $module_type ) {
+			return $this->is_truthy_setting(
+				isset( $module_settings->link->visibility ) ? $module_settings->link->visibility : false
+			);
+		}
+
+		return false;
+	}
+
+	/**
+	 * Merge module shell classes/attributes onto the root anchor for link-root modules.
+	 *
+	 * @param string $html          Module HTML starting with <a>.
+	 * @param string $module_class  Module classes for the shell.
+	 * @param array  $attributes    Extra data attributes.
+	 * @param string $inline_style  Optional inline style.
+	 * @return string
+	 */
+	protected function apply_link_root_module_shell( $html, $module_class, $attributes = array(), $inline_style = '' ) {
+		$html = trim( (string) $html );
+		if ( '' === $html || false === stripos( $html, '<a' ) ) {
+			return $html;
+		}
+
+		$replaced = preg_replace_callback(
+			'/<a\b([^>]*)>/i',
+			function ( $matches ) use ( $module_class, $attributes, $inline_style ) {
+				$attr_string = $matches[1];
+
+				if ( preg_match( '/\bclass=(["\'])(.*?)\1/i', $attr_string, $class_match ) ) {
+					$merged_class = trim( $module_class . ' ' . $class_match[2] );
+					$attr_string  = preg_replace(
+						'/\bclass=(["\'])(.*?)\1/i',
+						'class="' . esc_attr( $merged_class ) . '"',
+						$attr_string,
+						1
+					);
+				} else {
+					$attr_string .= ' class="' . esc_attr( $module_class ) . '"';
+				}
+
+				foreach ( $attributes as $attr_name => $attr_value ) {
+					if ( '' === (string) $attr_value ) {
+						continue;
+					}
+					$attr_name = preg_replace( '/[^a-zA-Z0-9_\-:]/', '', (string) $attr_name );
+					$attr_string .= sprintf(
+						' %s="%s"',
+						esc_attr( $attr_name ),
+						esc_attr( (string) $attr_value )
+					);
+				}
+
+				if ( '' !== trim( (string) $inline_style ) ) {
+					if ( preg_match( '/\bstyle=(["\'])(.*?)\1/i', $attr_string, $style_match ) ) {
+						$merged_style = trim( $style_match[2] . ' ' . $inline_style );
+						$attr_string  = preg_replace(
+							'/\bstyle=(["\'])(.*?)\1/i',
+							'style="' . esc_attr( $merged_style ) . '"',
+							$attr_string,
+							1
+						);
+					} else {
+						$attr_string .= ' style="' . esc_attr( $inline_style ) . '"';
+					}
+				}
+
+				return '<a' . $attr_string . '>';
+			},
+			$html,
+			1
+		);
+
+		return is_string( $replaced ) ? $replaced : $html;
 	}
 
 	/**

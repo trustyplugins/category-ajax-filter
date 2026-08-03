@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Select, Modal, Switch, Tooltip } from "antd";
+import { Alert, Select, Modal, Switch, Tooltip } from "antd";
 
 import { useDispatch } from "react-redux";
 import { globalFontFamilyTooltipContent } from "./constants/globalFontFamilyTooltip";
@@ -190,40 +190,6 @@ const MiscSettingDrawer = (props) => {
     }
   };
 
-  useEffect(() => {
-    getPostTypes();
-    loadFontOptions();
-  }, []);
-
-  useEffect(() => {
-    const handleCustomFontsUpdated = (event) => {
-      const fonts = Array.isArray(event?.detail?.fonts) ? event.detail.fonts : [];
-      setCustomFonts(fonts);
-      syncCustomFontsMap(fonts);
-    };
-
-    window.addEventListener(CUSTOM_FONTS_UPDATED_EVENT, handleCustomFontsUpdated);
-    return () => {
-      window.removeEventListener(CUSTOM_FONTS_UPDATED_EVENT, handleCustomFontsUpdated);
-    };
-  }, []);
-
-  useEffect(() => {
-    getPostsList();
-  }, [postType]);
-
-  useEffect(() => {
-    setPostType(resolvePostTypeFromBuilderData(props.mainBuilderData));
-    setSinglePostType(
-      resolveSinglePostFromBuilderData(props.mainBuilderData)?.value ?? "0"
-    );
-    const nextGlobalFont = resolveGlobalFontFamilyFromBuilderData(
-      props.mainBuilderData
-    );
-    setGlobalFontFamily(nextGlobalFont);
-    loadFontFamily(nextGlobalFont);
-  }, [props.mainBuilderData]);
-
   const fontFamilyOptions = useMemo(() => {
     const groups = [];
     if (customFonts.length) {
@@ -246,7 +212,10 @@ const MiscSettingDrawer = (props) => {
 
   const getPostTypes = async () => {
     try {
-      const { data } = await apiClient.get(apiEndpoints.getPostTypes);
+      const endpoint = apiEndpoints.getPostTypesForLayout
+        ? apiEndpoints.getPostTypesForLayout(postType)
+        : apiEndpoints.getPostTypes;
+      const { data } = await apiClient.get(endpoint);
       const payload = parseBuilderApiPayload(data);
 
       if (payload?.status === "success") {
@@ -257,8 +226,29 @@ const MiscSettingDrawer = (props) => {
     }
   };
 
-  const getPostsList = async () => {
+  const postTypeUnavailable = useMemo(() => {
     if (!postType || postType === "0") {
+      return false;
+    }
+    const match = postTypesList.find((option) => option?.value === postType);
+    if (!match) {
+      return postTypesList.length > 0;
+    }
+    return Boolean(match.unavailable || match.disabled);
+  }, [postType, postTypesList]);
+
+  const postTypeUnavailableMessage = useMemo(() => {
+    if (!postTypeUnavailable) {
+      return "";
+    }
+    if (postType === "product") {
+      return "This layout uses Products, but WooCommerce is not active. Activate WooCommerce or change the post type below.";
+    }
+    return `Post type "${postType}" is not registered on this site. Activate the plugin that provides it, or change the post type below.`;
+  }, [postType, postTypeUnavailable]);
+
+  const getPostsList = async () => {
+    if (!postType || postType === "0" || postTypeUnavailable) {
       setPostsData([]);
       setPostsList([{ label: "Select Single Post ", value: "0" }]);
       return;
@@ -297,6 +287,43 @@ const MiscSettingDrawer = (props) => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    loadFontOptions();
+  }, []);
+
+  useEffect(() => {
+    getPostTypes();
+  }, [postType]);
+
+  useEffect(() => {
+    const handleCustomFontsUpdated = (event) => {
+      const fonts = Array.isArray(event?.detail?.fonts) ? event.detail.fonts : [];
+      setCustomFonts(fonts);
+      syncCustomFontsMap(fonts);
+    };
+
+    window.addEventListener(CUSTOM_FONTS_UPDATED_EVENT, handleCustomFontsUpdated);
+    return () => {
+      window.removeEventListener(CUSTOM_FONTS_UPDATED_EVENT, handleCustomFontsUpdated);
+    };
+  }, []);
+
+  useEffect(() => {
+    getPostsList();
+  }, [postType, postTypeUnavailable]);
+
+  useEffect(() => {
+    setPostType(resolvePostTypeFromBuilderData(props.mainBuilderData));
+    setSinglePostType(
+      resolveSinglePostFromBuilderData(props.mainBuilderData)?.value ?? "0"
+    );
+    const nextGlobalFont = resolveGlobalFontFamilyFromBuilderData(
+      props.mainBuilderData
+    );
+    setGlobalFontFamily(nextGlobalFont);
+    loadFontFamily(nextGlobalFont);
+  }, [props.mainBuilderData]);
 
   const handlePostTypeChange = (value) => {
     setIsModalOpen(true);
@@ -464,6 +491,16 @@ const MiscSettingDrawer = (props) => {
               <h3 className="caf-main-setting-section-title">General Settings</h3>
 
               <div className="caf-main-setting-section-body">
+                {postTypeUnavailable ? (
+                  <Alert
+                    type="warning"
+                    showIcon
+                    className="caf-builder-missing-post-type-alert"
+                    style={{ marginBottom: 16 }}
+                    message="Post type unavailable"
+                    description={postTypeUnavailableMessage}
+                  />
+                ) : null}
                 <div className="caf-main-setting-page data-field">
                   <label className="caf-main-setting-page label">Change Post Type</label>
                   <Select

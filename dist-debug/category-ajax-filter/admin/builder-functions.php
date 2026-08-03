@@ -312,6 +312,97 @@ function caf_builder_harden_public_ajax_query_args( $args, $data_handler = null 
 }
 
 /**
+ * Whether a layout post type can safely be queried on this site.
+ *
+ * @param string $post_type Post type slug.
+ * @return bool
+ */
+function caf_builder_layout_post_type_is_queryable( $post_type ) {
+	$post_type = sanitize_key( (string) $post_type );
+	if ( '' === $post_type ) {
+		return false;
+	}
+
+	return post_type_exists( $post_type );
+}
+
+/**
+ * User-facing message when a layout CPT is not registered (e.g. WooCommerce off).
+ *
+ * @param string $post_type   Post type slug.
+ * @param bool   $for_visitor Softer copy for public visitors.
+ * @return string
+ */
+function caf_builder_missing_post_type_message( $post_type, $for_visitor = false ) {
+	$post_type = sanitize_key( (string) $post_type );
+
+	if ( $for_visitor ) {
+		return __( 'This filter is temporarily unavailable.', 'category-ajax-filter' );
+	}
+
+	if ( 'product' === $post_type ) {
+		return __( 'This layout uses Products, but WooCommerce is not active. Activate WooCommerce or change the layout post type in Plugin settings.', 'category-ajax-filter' );
+	}
+
+	if ( '' === $post_type ) {
+		return __( 'This layout has no valid post type. Open Plugin settings and choose a post type.', 'category-ajax-filter' );
+	}
+
+	return sprintf(
+		/* translators: %s: post type slug */
+		__( 'This layout uses the post type "%s", which is not registered on this site. Activate the plugin that provides it, or change the layout post type in Plugin settings.', 'category-ajax-filter' ),
+		$post_type
+	);
+}
+
+/**
+ * Append a disabled option for a saved CPT that is no longer registered.
+ *
+ * @param array  $results           Post type options.
+ * @param string $current_post_type Saved layout post type.
+ * @return array
+ */
+function caf_builder_append_unavailable_post_type_option( $results, $current_post_type ) {
+	$current_post_type = sanitize_key( (string) $current_post_type );
+	if ( '' === $current_post_type || '0' === $current_post_type ) {
+		return $results;
+	}
+
+	if ( ! is_array( $results ) ) {
+		$results = array();
+	}
+
+	foreach ( $results as $row ) {
+		if ( is_array( $row ) && isset( $row['value'] ) && (string) $row['value'] === $current_post_type ) {
+			return $results;
+		}
+	}
+
+	if ( caf_builder_layout_post_type_is_queryable( $current_post_type ) ) {
+		return $results;
+	}
+
+	if ( 'product' === $current_post_type ) {
+		$label = __( 'Products (unavailable — activate WooCommerce)', 'category-ajax-filter' );
+	} else {
+		$label = sprintf(
+			/* translators: %s: post type slug */
+			__( '%s (unavailable)', 'category-ajax-filter' ),
+			$current_post_type
+		);
+	}
+
+	$results[] = array(
+		'value'       => $current_post_type,
+		'label'       => $label,
+		'disabled'    => true,
+		'unavailable' => true,
+	);
+
+	return $results;
+}
+
+/**
  * Restrict keyword search to selected source fields.
  *
  * @param string $keyword Raw keyword.
@@ -650,6 +741,16 @@ function get_caf_builder_posts() {
 	$builder_data = $layout_bundle['builder_data'];
 	$args         = clean_query_args( $args );
 	$data_handler = new CAF_Builder_Data( $builder_data, $shortindex );
+	$layout_post_type = $data_handler->get_post_type();
+	if ( ! caf_builder_layout_post_type_is_queryable( $layout_post_type ) ) {
+		wp_send_json_error(
+			array(
+				'message'   => caf_builder_missing_post_type_message( $layout_post_type ),
+				'code'      => 'missing_post_type',
+				'post_type' => $layout_post_type,
+			)
+		);
+	}
 	$args         = $data_handler->strip_placeholder_sort_from_query_args( $args );
 	$args         = caf_builder_apply_filters(
 		'caf_builder_ajax_query_args',
@@ -3676,7 +3777,7 @@ function caf_restore_layout( $request ) {
 	}
 }
 
-function caf_get_post_types_list() {
+function caf_get_post_types_list( $request = null ) {
 	$results    = array();
 	$post_types = get_post_types( array( 'public' => true ), 'objects' );
 	$excluded_post_types = caf_builder_apply_filters(
@@ -3698,9 +3799,19 @@ function caf_get_post_types_list() {
 		);
 	}
 
+	$current_post_type = '';
+	if ( $request instanceof WP_REST_Request ) {
+		$current_post_type = sanitize_key( (string) $request->get_param( 'current_post_type' ) );
+	}
+	if ( '' === $current_post_type && isset( $_GET['current_post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$current_post_type = sanitize_key( wp_unslash( $_GET['current_post_type'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+	}
+	$results = caf_builder_append_unavailable_post_type_option( $results, $current_post_type );
+
 	return array(
-			'status'     => 'success',
-			'post_types' => $results,
+			'status'             => 'success',
+			'post_types'         => $results,
+			'woocommerce_active' => class_exists( 'WooCommerce', false ),
 		);
 }
 /**

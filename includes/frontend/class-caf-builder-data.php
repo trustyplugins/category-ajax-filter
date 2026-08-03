@@ -410,6 +410,20 @@ class CAF_Builder_Data {
 	}
 
 	/**
+	 * Whether the layout post type is registered and queryable on this site.
+	 *
+	 * @return bool
+	 */
+	public function is_post_type_available() {
+		$post_type = $this->get_post_type();
+		if ( function_exists( 'caf_builder_layout_post_type_is_queryable' ) ) {
+			return caf_builder_layout_post_type_is_queryable( $post_type );
+		}
+
+		return '' !== $post_type && post_type_exists( $post_type );
+	}
+
+	/**
 	 * Get dummy image URL.
 	 *
 	 * @return string

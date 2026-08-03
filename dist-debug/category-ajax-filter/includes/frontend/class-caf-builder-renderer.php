@@ -58,6 +58,10 @@ class CAF_Builder_Renderer {
 	 * @return string
 	 */
 	public function render() {
+		if ( method_exists( $this->data_handler, 'is_post_type_available' ) && ! $this->data_handler->is_post_type_available() ) {
+			return $this->render_unavailable_post_type();
+		}
+
 		$query = $this->get_initial_query();
 		caf_builder_do_action( 'caf_builder_render_before', $query, $this->get_hook_context() );
 
@@ -78,6 +82,37 @@ class CAF_Builder_Renderer {
 		$html  = caf_builder_apply_filters( 'caf_builder_render_html', $html, $this->get_hook_context( array( 'query' => $query ) ) );
 		caf_builder_do_action( 'caf_builder_render_after', $html, $query, $this->get_hook_context() );
 		return $html;
+	}
+
+	/**
+	 * Soft-fail markup when the layout CPT is not registered (e.g. WooCommerce deactivated).
+	 *
+	 * @return string
+	 */
+	protected function render_unavailable_post_type() {
+		$post_type   = $this->data_handler->get_post_type();
+		$for_visitor = ! current_user_can( 'edit_posts' );
+		$message     = function_exists( 'caf_builder_missing_post_type_message' )
+			? caf_builder_missing_post_type_message( $post_type, $for_visitor )
+			: __( 'This filter is temporarily unavailable.', 'category-ajax-filter' );
+
+		$attributes = $this->data_handler->get_wrapper_attributes();
+		$existing   = isset( $attributes['class'] ) ? (string) $attributes['class'] : '';
+		$attributes['class'] = trim( $existing . ' caf-builder-post-type-unavailable' );
+		$attributes['data-caf-post-type-unavailable'] = '1';
+		$attributes['data-caf-missing-post-type']     = $post_type;
+		$attributes = caf_builder_apply_filters( 'caf_builder_wrapper_attributes', $attributes, $this->get_hook_context() );
+
+		$html  = '<div ' . $this->build_html_attributes( $attributes ) . '>';
+		$html .= '<p class="caf-builder-unavailable-notice">' . esc_html( $message ) . '</p>';
+		$html .= '</div>';
+
+		return caf_builder_apply_filters(
+			'caf_builder_unavailable_post_type_html',
+			$html,
+			$post_type,
+			$this->get_hook_context()
+		);
 	}
 
 	/**

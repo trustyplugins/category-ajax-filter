@@ -870,6 +870,10 @@ li.caf-terms-list-item.caf-layout-flex-start .manage-ic-lbl.caf-layout-flex-star
     padding: 0;
     width: 100%;
 }
+a.caf-builder-module-main.caf-module-post.caf-module-button {
+    cursor: pointer;
+    text-decoration: none;
+}
 /* Hide browser-native search clear UI to avoid duplicate clear buttons */
 .caf-filter-module-search-output input.caf-search-input-field::-webkit-search-decoration,
 .caf-filter-module-search-output input.caf-search-input-field::-webkit-search-cancel-button,
@@ -1126,4 +1130,20 @@ height: 100%;
     bottom: 100%;
     border-top-color: transparent;
     border-bottom-color: #1d1d1d;
+}
+
+.caf-builder-container.caf-builder-post-type-unavailable {
+    padding: 16px 20px;
+    box-sizing: border-box;
+}
+
+.caf-builder-unavailable-notice {
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid #f0d9a8;
+    border-radius: 6px;
+    background: #fff8e8;
+    color: #5c4a1f;
+    font-size: 14px;
+    line-height: 1.45;
 }

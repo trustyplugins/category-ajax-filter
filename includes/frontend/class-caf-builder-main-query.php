@@ -415,6 +415,13 @@ class CAF_Builder_Main_Query {
 			$post_type = 'post';
 		}
 
+		if ( method_exists( $data_handler, 'is_post_type_available' ) && ! $data_handler->is_post_type_available() ) {
+			return false;
+		}
+		if ( function_exists( 'caf_builder_layout_post_type_is_queryable' ) && ! caf_builder_layout_post_type_is_queryable( $post_type ) ) {
+			return false;
+		}
+
 		if ( 'product' === $post_type ) {
 			if ( function_exists( 'is_shop' ) && ( is_shop() || is_product_taxonomy() ) ) {
 				return true;

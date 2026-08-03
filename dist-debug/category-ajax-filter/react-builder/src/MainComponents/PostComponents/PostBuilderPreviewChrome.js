@@ -197,6 +197,7 @@ function PostBuilderPreviewChromeInner({
                             setIndexes={setIndexes}
                             selectedDevice={selectedDevice}
                             indexes={indexes}
+                            showDesignStarsWhenEmpty
                           />
                         ) : module.key === "woo_add_to_cart" ? (
                           <ModuleAddToCart

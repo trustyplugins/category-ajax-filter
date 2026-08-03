@@ -1,5 +1,9 @@
 export const apiEndpoints = Object.freeze({
   getPostTypes: "get-post-types",
+  getPostTypesForLayout: (currentPostType) =>
+    currentPostType && currentPostType !== "0"
+      ? `get-post-types/?current_post_type=${encodeURIComponent(currentPostType)}`
+      : "get-post-types",
   getPostsList: (postType) =>
     `get-posts-list?post_type=${encodeURIComponent(postType)}`,
   getPostsListSearch: (postType, search = "", perPage = 40) => {
