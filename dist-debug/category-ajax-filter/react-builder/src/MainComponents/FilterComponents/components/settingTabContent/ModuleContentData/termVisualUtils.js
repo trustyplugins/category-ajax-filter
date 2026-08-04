@@ -339,12 +339,48 @@ export const ensureDefaultTermIconsOnSettings = (
   };
 };
 
+/** True when any term in the tree is missing an icon visual. */
+export const termTreeNeedsIconSeed = (terms) => {
+  if (!Array.isArray(terms)) return false;
+  return terms.some(
+    (term) =>
+      !termHasIconVisual(term?.icons) ||
+      (Array.isArray(term?.children_data) &&
+        termTreeNeedsIconSeed(term.children_data))
+  );
+};
+
+/**
+ * Seed default FA tag icons on taxonomy terms when Show Icon is on (Icon mode).
+ * Idempotent — existing custom icons are preserved.
+ */
+export const applyDefaultTermIconsIfNeeded = (settings, postType = "") => {
+  if (!settings || typeof settings !== "object") return settings;
+  if (String(settings.show_icon) !== "true") return settings;
+
+  const visualContext =
+    typeof postType === "string" && postType
+      ? { ...settings, post_type: postType }
+      : settings;
+  if (isTermVisualColor(visualContext)) return settings;
+  if (!Array.isArray(settings.taxonomy_data)) return settings;
+  if (
+    !settings.taxonomy_data.some((group) =>
+      termTreeNeedsIconSeed(group?.term_data)
+    )
+  ) {
+    return settings;
+  }
+
+  return ensureDefaultTermIconsOnSettings(settings);
+};
+
 /** Default icons payload when selecting a term in the current visual mode. */
 export const getDefaultTermIconsForMode = (settings) => {
   if (isTermVisualColor(settings)) {
     return buildColorTermIcons({}, DEFAULT_SWATCH_COLOR, "before");
   }
-  return {};
+  return buildDefaultIconTermIcons({}, DEFAULT_TERM_ICON, "before");
 };
 
 /** Attribute Swatch: default term icons when adding terms by Display As mode. */

@@ -72964,6 +72964,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   TERM_VISUAL_ICON: () => (/* binding */ TERM_VISUAL_ICON),
 /* harmony export */   TERM_VISUAL_TEXT: () => (/* binding */ TERM_VISUAL_TEXT),
 /* harmony export */   applyAttributeSwatchDisplayMode: () => (/* binding */ applyAttributeSwatchDisplayMode),
+/* harmony export */   applyDefaultTermIconsIfNeeded: () => (/* binding */ applyDefaultTermIconsIfNeeded),
 /* harmony export */   applyTermLabelDisplay: () => (/* binding */ applyTermLabelDisplay),
 /* harmony export */   buildColorTermIcons: () => (/* binding */ buildColorTermIcons),
 /* harmony export */   buildDefaultIconTermIcons: () => (/* binding */ buildDefaultIconTermIcons),
@@ -72990,7 +72991,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   shouldHideTermLabel: () => (/* binding */ shouldHideTermLabel),
 /* harmony export */   shouldShowTermLabelAsTooltip: () => (/* binding */ shouldShowTermLabelAsTooltip),
 /* harmony export */   termHasColorSwatch: () => (/* binding */ termHasColorSwatch),
-/* harmony export */   termHasIconVisual: () => (/* binding */ termHasIconVisual)
+/* harmony export */   termHasIconVisual: () => (/* binding */ termHasIconVisual),
+/* harmony export */   termTreeNeedsIconSeed: () => (/* binding */ termTreeNeedsIconSeed)
 /* harmony export */ });
 const TERM_VISUAL_TEXT = "text";
 const TERM_VISUAL_ICON = "icon";
@@ -73260,12 +73262,37 @@ const ensureDefaultTermIconsOnSettings = (settings, defaultIcon = DEFAULT_TERM_I
   };
 };
 
+/** True when any term in the tree is missing an icon visual. */
+const termTreeNeedsIconSeed = terms => {
+  if (!Array.isArray(terms)) return false;
+  return terms.some(term => !termHasIconVisual(term?.icons) || Array.isArray(term?.children_data) && termTreeNeedsIconSeed(term.children_data));
+};
+
+/**
+ * Seed default FA tag icons on taxonomy terms when Show Icon is on (Icon mode).
+ * Idempotent — existing custom icons are preserved.
+ */
+const applyDefaultTermIconsIfNeeded = (settings, postType = "") => {
+  if (!settings || typeof settings !== "object") return settings;
+  if (String(settings.show_icon) !== "true") return settings;
+  const visualContext = typeof postType === "string" && postType ? {
+    ...settings,
+    post_type: postType
+  } : settings;
+  if (isTermVisualColor(visualContext)) return settings;
+  if (!Array.isArray(settings.taxonomy_data)) return settings;
+  if (!settings.taxonomy_data.some(group => termTreeNeedsIconSeed(group?.term_data))) {
+    return settings;
+  }
+  return ensureDefaultTermIconsOnSettings(settings);
+};
+
 /** Default icons payload when selecting a term in the current visual mode. */
 const getDefaultTermIconsForMode = settings => {
   if (isTermVisualColor(settings)) {
     return buildColorTermIcons({}, DEFAULT_SWATCH_COLOR, "before");
   }
-  return {};
+  return buildDefaultIconTermIcons({}, DEFAULT_TERM_ICON, "before");
 };
 
 /** Attribute Swatch: default term icons when adding terms by Display As mode. */
@@ -115292,7 +115319,7 @@ var batch = defaultNoopBatch;
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".js?ver=" + {"src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js":"dba42ad8e8f807a8f2cd","src_MainComponents_FilterComponents_components_settingTabContent_AdvancedTab_js":"b4b9b5fa557c0e4f483a"}[chunkId] + "";
+/******/ 			return "" + chunkId + ".js?ver=" + {"src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js":"43ff1f03a7aafb321f46","src_MainComponents_FilterComponents_components_settingTabContent_AdvancedTab_js":"b4b9b5fa557c0e4f483a"}[chunkId] + "";
 /******/ 		};
 /******/ 	})();
 /******/ 	

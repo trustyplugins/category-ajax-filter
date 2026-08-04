@@ -173,8 +173,23 @@ ul.caf-filter-main-container li {
     position: relative;
 }
 
+span.caf-inline-svg-icon {
+    display: inline-flex;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+span.caf-inline-svg-icon svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+}
+
+span.caf-inline-svg-icon svg path {
+    fill: currentColor;
+}
+
 span.label-icon-common {
-    position: absolute;
     right: 0;
 }
 
@@ -477,9 +492,6 @@ li.selection-list-default i {
     justify-content: space-between;
 }
 
-.filter-layout-container .caf-builder-module-main .caf-filter-label-common.label-header span.label-icon-common {
-    padding: 0 7px;
-}
 #left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list,
 .entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list,
 .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list {
@@ -488,7 +500,7 @@ li.selection-list-default i {
     display: flex;
     flex-wrap: wrap;
     border: none;
-    background-color: transparent !important;
+    background-color: transparent;
     margin: 0;
     list-style-type: none;
     line-height: normal;
@@ -683,12 +695,8 @@ ul.caf-terms-list.caf-attribute-swatch li {
     text-decoration: none;
 }
 
-.filter-layout-container .caf-builder-module-main.caf-module-filter .filter-after-icon {
-    padding-left: 4px;
-}
-
-.filter-layout-container .caf-builder-module-main.caf-module-filter .filter-before-icon {
-    padding-right: 4px;
+.caf-builder-container div.manage-ic-lbl, .caf-builder-container div.manage-text-lbl, span.trm-name {
+    line-height: inherit;
 }
 
 /* Structural only — size/spacing/border/shadow come from Design tab (icon style). */

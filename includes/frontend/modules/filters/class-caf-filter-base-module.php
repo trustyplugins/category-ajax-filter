@@ -487,7 +487,12 @@ abstract class CAF_Filter_Base_Module {
 		$cls  = '' !== $extra_class ? ' ' . $extra_class : '';
 
 		if ( 'svg' === $type && is_object( $icon ) && ! empty( $icon->url ) ) {
-			return '<img src="' . esc_url( $icon->url ) . '" class="caf-inline-svg-icon' . esc_attr( $cls ) . '" alt="" />';
+			$attachment_id = isset( $icon->id ) ? absint( $icon->id ) : 0;
+			return caf_builder_render_uploaded_icon_markup(
+				(string) $icon->url,
+				'caf-inline-svg-icon' . $cls,
+				$attachment_id
+			);
 		}
 		if ( is_string( $icon ) && '' !== $icon ) {
 			return '<i class="' . esc_attr( $icon . $cls ) . '"></i>';

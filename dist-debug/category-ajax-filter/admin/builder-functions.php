@@ -859,6 +859,7 @@ function load_builder_ajax_dependencies() {
 	require_once $base . 'class-caf-builder-css.php';
 	require_once $base . 'class-caf-builder-style-generator.php';
 	require_once $base . 'class-caf-builder-query.php';
+	require_once $base . 'caf-builder-uploaded-icon.php';
 	require_once $base . 'modules/filters/class-caf-filter-base-module.php';
 	require_once $base . 'modules/filters/class-caf-filter-search-module.php';
 	require_once $base . 'modules/filters/class-caf-filter-reset-module.php';

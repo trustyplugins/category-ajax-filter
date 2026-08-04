@@ -30,6 +30,8 @@ import {
   buildColorTermIcons,
   buildIconTermIcons,
   ensureDefaultSwatchColorsOnSettings,
+  ensureDefaultTermIconsOnSettings,
+  applyDefaultTermIconsIfNeeded,
   getDefaultTermIconsForMode,
   resolveTermLabelDisplay,
   applyTermLabelDisplay,
@@ -169,6 +171,40 @@ if (meta_fields) {
       onSettingChange: props.onSettingChange,
       onAfterCommit: (next) => setTaxonomyList(next.taxonomy_data),
     });
+
+  // Seed default tag icons on taxonomy terms when Show Icon is enabled (Icon mode).
+  useEffect(() => {
+    if (!canUseFilterShowIcon()) {
+      return;
+    }
+    const seeded = applyDefaultTermIconsIfNeeded(settingData, resolvedPostType);
+    if (seeded.taxonomy_data === settingData?.taxonomy_data) {
+      return;
+    }
+    commitFilterModuleSettingsPatch({
+      data: props.data,
+      rowindex,
+      columnindex,
+      moduleindex,
+      resolvedPostType,
+      onSettingChange: props.onSettingChange,
+      patch: (s) => {
+        s.taxonomy_data = seeded.taxonomy_data;
+      },
+      onAfterCommit: (next) => setTaxonomyList(next.taxonomy_data),
+    });
+  }, [
+    settingData?.show_icon,
+    settingData?.term_visual,
+    settingData?.taxonomy_data,
+    resolvedPostType,
+    props.data,
+    rowindex,
+    columnindex,
+    moduleindex,
+    props.onSettingChange,
+  ]);
+
   const [termSettingPopUp, setTermSettingPopUp] = useState(false);
   const [termSettingPopUpCusFieldLabel, setTermSettingPopUpCusFieldLabel] =
     useState(false);
@@ -1061,6 +1097,21 @@ if (meta_fields) {
       };
       nextSettings = ensureDefaultSwatchColorsOnSettings(nextSettings);
       setTaxonomyList(nextSettings.taxonomy_data);
+    } else if (
+      prevVisual === TERM_VISUAL_COLOR &&
+      nextVisual === TERM_VISUAL_ICON &&
+      canUseFilterShowIcon()
+    ) {
+      nextSettings = ensureDefaultTermIconsOnSettings(nextSettings);
+      setTaxonomyList(nextSettings.taxonomy_data);
+    }
+    const withDefaultIcons = applyDefaultTermIconsIfNeeded(
+      nextSettings,
+      resolvedPostType
+    );
+    if (withDefaultIcons.taxonomy_data !== nextSettings.taxonomy_data) {
+      nextSettings = withDefaultIcons;
+      setTaxonomyList(nextSettings.taxonomy_data);
     }
     commitFilterModuleReplaceSettings({
       data: props.data,
@@ -1142,6 +1193,13 @@ if (meta_fields) {
       nextSettings = ensureDefaultSwatchColorsOnSettings(nextSettings);
       setTaxonomyList(nextSettings.taxonomy_data);
     } else if (
+      prevVisual === TERM_VISUAL_COLOR &&
+      nextVisual === TERM_VISUAL_ICON &&
+      canUseFilterShowIcon()
+    ) {
+      nextSettings = ensureDefaultTermIconsOnSettings(nextSettings);
+      setTaxonomyList(nextSettings.taxonomy_data);
+    } else if (
       !canUseFilterShowIcon() &&
       String(nextSettings.show_icon) === "true" &&
       canUseFilterColorSwatch(resolvedPostType) &&
@@ -1151,6 +1209,14 @@ if (meta_fields) {
         ...nextSettings,
         term_visual: TERM_VISUAL_COLOR,
       };
+    }
+    const withDefaultIcons = applyDefaultTermIconsIfNeeded(
+      nextSettings,
+      resolvedPostType
+    );
+    if (withDefaultIcons.taxonomy_data !== nextSettings.taxonomy_data) {
+      nextSettings = withDefaultIcons;
+      setTaxonomyList(nextSettings.taxonomy_data);
     }
     commitFilterModuleReplaceSettings({
       data: props.data,

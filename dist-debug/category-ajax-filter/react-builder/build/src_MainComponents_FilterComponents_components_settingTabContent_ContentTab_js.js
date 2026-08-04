@@ -1150,6 +1150,29 @@ const DropdownFilter1 = (0,external_React_.memo)(props => {
     onSettingChange: props.onSettingChange,
     onAfterCommit: next => setTaxonomyList(next.taxonomy_data)
   });
+
+  // Seed default tag icons on taxonomy terms when Show Icon is enabled (Icon mode).
+  (0,external_React_.useEffect)(() => {
+    if (!(0,filterModuleTier.canUseFilterShowIcon)()) {
+      return;
+    }
+    const seeded = (0,termVisualUtils.applyDefaultTermIconsIfNeeded)(settingData, resolvedPostType);
+    if (seeded.taxonomy_data === settingData?.taxonomy_data) {
+      return;
+    }
+    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+      data: props.data,
+      rowindex,
+      columnindex,
+      moduleindex,
+      resolvedPostType,
+      onSettingChange: props.onSettingChange,
+      patch: s => {
+        s.taxonomy_data = seeded.taxonomy_data;
+      },
+      onAfterCommit: next => setTaxonomyList(next.taxonomy_data)
+    });
+  }, [settingData?.show_icon, settingData?.term_visual, settingData?.taxonomy_data, resolvedPostType, props.data, rowindex, columnindex, moduleindex, props.onSettingChange]);
   const [termSettingPopUp, setTermSettingPopUp] = (0,external_React_.useState)(false);
   const [termSettingPopUpCusFieldLabel, setTermSettingPopUpCusFieldLabel] = (0,external_React_.useState)(false);
   const [termSettingPopUpCusFieldIcon, setTermSettingPopUpCusFieldIcon] = (0,external_React_.useState)(false);
@@ -1776,11 +1799,19 @@ const DropdownFilter1 = (0,external_React_.memo)(props => {
       };
       nextSettings = (0,termVisualUtils.ensureDefaultSwatchColorsOnSettings)(nextSettings);
       setTaxonomyList(nextSettings.taxonomy_data);
+    } else if (prevVisual === termVisualUtils.TERM_VISUAL_COLOR && nextVisual === termVisualUtils.TERM_VISUAL_ICON && (0,filterModuleTier.canUseFilterShowIcon)()) {
+      nextSettings = (0,termVisualUtils.ensureDefaultTermIconsOnSettings)(nextSettings);
+      setTaxonomyList(nextSettings.taxonomy_data);
     } else if (!(0,filterModuleTier.canUseFilterShowIcon)() && String(nextSettings.show_icon) === "true" && (0,filterModuleTier.canUseFilterColorSwatch)(resolvedPostType) && nextSettings.term_visual !== termVisualUtils.TERM_VISUAL_COLOR) {
       nextSettings = {
         ...nextSettings,
         term_visual: termVisualUtils.TERM_VISUAL_COLOR
       };
+    }
+    const withDefaultIcons = (0,termVisualUtils.applyDefaultTermIconsIfNeeded)(nextSettings, resolvedPostType);
+    if (withDefaultIcons.taxonomy_data !== nextSettings.taxonomy_data) {
+      nextSettings = withDefaultIcons;
+      setTaxonomyList(nextSettings.taxonomy_data);
     }
     (0,filterSettingsSnapshot.commitFilterModuleReplaceSettings)({
       data: props.data,
@@ -1853,11 +1884,19 @@ const DropdownFilter1 = (0,external_React_.memo)(props => {
       };
       nextSettings = (0,termVisualUtils.ensureDefaultSwatchColorsOnSettings)(nextSettings);
       setTaxonomyList(nextSettings.taxonomy_data);
+    } else if (prevVisual === termVisualUtils.TERM_VISUAL_COLOR && nextVisual === termVisualUtils.TERM_VISUAL_ICON && (0,filterModuleTier.canUseFilterShowIcon)()) {
+      nextSettings = (0,termVisualUtils.ensureDefaultTermIconsOnSettings)(nextSettings);
+      setTaxonomyList(nextSettings.taxonomy_data);
     } else if (!(0,filterModuleTier.canUseFilterShowIcon)() && String(nextSettings.show_icon) === "true" && (0,filterModuleTier.canUseFilterColorSwatch)(resolvedPostType) && nextSettings.term_visual !== termVisualUtils.TERM_VISUAL_COLOR) {
       nextSettings = {
         ...nextSettings,
         term_visual: termVisualUtils.TERM_VISUAL_COLOR
       };
+    }
+    const withDefaultIcons = (0,termVisualUtils.applyDefaultTermIconsIfNeeded)(nextSettings, resolvedPostType);
+    if (withDefaultIcons.taxonomy_data !== nextSettings.taxonomy_data) {
+      nextSettings = withDefaultIcons;
+      setTaxonomyList(nextSettings.taxonomy_data);
     }
     (0,filterSettingsSnapshot.commitFilterModuleReplaceSettings)({
       data: props.data,
@@ -3920,6 +3959,29 @@ const CheckboxFilter = (0,external_React_.memo)(props => {
     onSettingChange: props.onSettingChange,
     onAfterCommit: next => setTaxonomyList(next.taxonomy_data)
   });
+
+  // Seed default tag icons on taxonomy terms when Show Icon is enabled (Icon mode).
+  (0,external_React_.useEffect)(() => {
+    if (!(0,filterModuleTier.canUseFilterShowIcon)()) {
+      return;
+    }
+    const seeded = (0,termVisualUtils.applyDefaultTermIconsIfNeeded)(settingData, resolvedPostType);
+    if (seeded.taxonomy_data === settingData?.taxonomy_data) {
+      return;
+    }
+    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+      data: props.data,
+      rowindex,
+      columnindex,
+      moduleindex,
+      resolvedPostType,
+      onSettingChange: props.onSettingChange,
+      patch: s => {
+        s.taxonomy_data = seeded.taxonomy_data;
+      },
+      onAfterCommit: next => setTaxonomyList(next.taxonomy_data)
+    });
+  }, [settingData?.show_icon, settingData?.term_visual, settingData?.taxonomy_data, resolvedPostType, props.data, rowindex, columnindex, moduleindex, props.onSettingChange]);
   const [termSettingPopUp, setTermSettingPopUp] = (0,external_React_.useState)(false);
   const [termSettingPopUpCusFieldLabel, setTermSettingPopUpCusFieldLabel] = (0,external_React_.useState)(false);
   const [termSettingPopUpCusFieldIcon, setTermSettingPopUpCusFieldIcon] = (0,external_React_.useState)(false);
@@ -4698,6 +4760,14 @@ const CheckboxFilter = (0,external_React_.memo)(props => {
       };
       nextSettings = (0,termVisualUtils.ensureDefaultSwatchColorsOnSettings)(nextSettings);
       setTaxonomyList(nextSettings.taxonomy_data);
+    } else if (prevVisual === termVisualUtils.TERM_VISUAL_COLOR && nextVisual === termVisualUtils.TERM_VISUAL_ICON && (0,filterModuleTier.canUseFilterShowIcon)()) {
+      nextSettings = (0,termVisualUtils.ensureDefaultTermIconsOnSettings)(nextSettings);
+      setTaxonomyList(nextSettings.taxonomy_data);
+    }
+    const withDefaultIcons = (0,termVisualUtils.applyDefaultTermIconsIfNeeded)(nextSettings, resolvedPostType);
+    if (withDefaultIcons.taxonomy_data !== nextSettings.taxonomy_data) {
+      nextSettings = withDefaultIcons;
+      setTaxonomyList(nextSettings.taxonomy_data);
     }
     (0,filterSettingsSnapshot.commitFilterModuleReplaceSettings)({
       data: props.data,
@@ -4768,11 +4838,19 @@ const CheckboxFilter = (0,external_React_.memo)(props => {
       };
       nextSettings = (0,termVisualUtils.ensureDefaultSwatchColorsOnSettings)(nextSettings);
       setTaxonomyList(nextSettings.taxonomy_data);
+    } else if (prevVisual === termVisualUtils.TERM_VISUAL_COLOR && nextVisual === termVisualUtils.TERM_VISUAL_ICON && (0,filterModuleTier.canUseFilterShowIcon)()) {
+      nextSettings = (0,termVisualUtils.ensureDefaultTermIconsOnSettings)(nextSettings);
+      setTaxonomyList(nextSettings.taxonomy_data);
     } else if (!(0,filterModuleTier.canUseFilterShowIcon)() && String(nextSettings.show_icon) === "true" && (0,filterModuleTier.canUseFilterColorSwatch)(resolvedPostType) && nextSettings.term_visual !== termVisualUtils.TERM_VISUAL_COLOR) {
       nextSettings = {
         ...nextSettings,
         term_visual: termVisualUtils.TERM_VISUAL_COLOR
       };
+    }
+    const withDefaultIcons = (0,termVisualUtils.applyDefaultTermIconsIfNeeded)(nextSettings, resolvedPostType);
+    if (withDefaultIcons.taxonomy_data !== nextSettings.taxonomy_data) {
+      nextSettings = withDefaultIcons;
+      setTaxonomyList(nextSettings.taxonomy_data);
     }
     (0,filterSettingsSnapshot.commitFilterModuleReplaceSettings)({
       data: props.data,
@@ -11145,4 +11223,4 @@ const ContentTab = props => {
 /***/ }
 
 }]);
-//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js.js.map?ver=dba42ad8e8f807a8f2cd
+//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js.js.map?ver=43ff1f03a7aafb321f46

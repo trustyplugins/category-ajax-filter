@@ -11830,7 +11830,13 @@ h3.caf-import-section-title {
   width: 100%;
   ;
 }
-
+.row-design-tab-data.misc-cont .ant-tabs-nav
+ {
+    margin: 0;
+}
+.caf-builder-post-preview-wrapper div.manage-ic-lbl,.caf-builder-post-preview-wrapper div.manage-text-lbl,span.trm-name {
+  line-height: inherit;
+}
 li.caf-terms-list-item.caf-show-checkbox.caf-show-icon.caf-show-count.caf-layout-justify-flex-start .manage-ic-lbl,
 li.caf-terms-list-item.caf-show-checkbox.caf-show-icon.caf-show-count.caf-layout-justify-flex-start .manage-ic-lbl.caf-layout-flex-start .manage-text-lbl,
 li.caf-terms-list-item.caf-hidden-checkbox.caf-hidden-icon.caf-hidden-count .manage-ic-lbl,
