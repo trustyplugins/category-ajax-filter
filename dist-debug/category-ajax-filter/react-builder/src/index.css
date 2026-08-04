@@ -10857,6 +10857,7 @@ button.caf-builder-filter-close {
   position: relative;
   overflow: hidden;
   z-index: 0;
+  background-color: #fff;
 }
 
 .caf-mobile-preview-frame-image {
@@ -10871,14 +10872,16 @@ button.caf-builder-filter-close {
 
 .caf-mobile-preview-frame-screen {
   position: absolute;
-  top: 2.03%;
-  left: 4.8%;
-  right: 5%;
-  bottom: 2.32%;
-  border-radius: 28px;
-  overflow: auto;
-  background: transparent;
-  z-index: 0;
+    top: 2.25%;
+    left: 4.8%;
+    right: 4%;
+    bottom: 2.32%;
+    border-radius: 10px;
+    overflow: auto;
+    background: #fff;
+    z-index: 0;
+    padding: 30px 1px 20px 5px;
+    box-sizing: border-box;
 }
 
 .caf-mobile-preview-iframe {
@@ -12410,6 +12413,22 @@ ul.caf-dropdown-opt-list li {
   -webkit-appearance: none;
   appearance: none;
   box-sizing: border-box;
+}
+
+/* Module showmore design sets display:flex — must beat that when button is hidden. */
+.caf-bl-filter .caf-module-filter .caf-term-show-more-item.caf-term-show-more-hidden,
+.caf-builder-template-preview-filter .caf-module-filter .caf-term-show-more-item.caf-term-show-more-hidden,
+.caf-bl-post .caf-module-filter .caf-term-show-more-item.caf-term-show-more-hidden,
+.caf-builder-post-preview .caf-module-filter .caf-term-show-more-item.caf-term-show-more-hidden,
+.caf-bl-post .caf-term-show-more-host .caf-term-show-more-item.caf-term-show-more-hidden,
+.caf-builder-post-preview .caf-term-show-more-host .caf-term-show-more-item.caf-term-show-more-hidden,
+.caf-bl-filter .caf-module-filter .caf-term-show-more-btn[hidden],
+.caf-builder-template-preview-filter .caf-module-filter .caf-term-show-more-btn[hidden],
+.caf-bl-post .caf-module-filter .caf-term-show-more-btn[hidden],
+.caf-builder-post-preview .caf-module-filter .caf-term-show-more-btn[hidden],
+.caf-bl-post .caf-term-show-more-host .caf-term-show-more-btn[hidden],
+.caf-builder-post-preview .caf-term-show-more-host .caf-term-show-more-btn[hidden] {
+  display: none !important;
 }
 
 /* Post builder — Attribute Swatch */
