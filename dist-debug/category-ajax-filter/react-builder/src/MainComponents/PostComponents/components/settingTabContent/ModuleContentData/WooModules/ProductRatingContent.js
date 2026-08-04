@@ -5,11 +5,11 @@ import { Switch, Input, Segmented, Skeleton, Select, Tooltip } from "antd";
 import { commitPostModuleSettingsPatch } from "../postLayoutSnapshot";
 import { resolvePostAffixEnabledForUi } from "../shared/postModuleTier";
 import PostPrefixSuffixProPanel from "../PostPrefixSuffixProPanel";
+import {
+  getPostAffixMetaTextForUi,
+  normalizePostAffixMetaText,
+} from "../shared/postAffixMetaTextUtils";
 
-const RATING_META_TEXT_DEFAULTS = {
-  prefix: "Prefix",
-  suffix: "Suffix",
-};
 const RATING_DISPLAY_DEFAULT = "stars";
 const RATING_DISPLAY_OPTIONS = [
   { label: "Stars", value: "stars" },
@@ -22,12 +22,6 @@ const COUNT_SEPARATOR_OPTIONS = [
   { label: "Hyphen - ", value: "hyphen" },
   { label: "Slash /", value: "slash" },
 ];
-const getDefaultMetaText = (placement) =>
-  RATING_META_TEXT_DEFAULTS[placement] || "Text";
-const normalizeMetaText = (placement, value) => {
-  const nextValue = typeof value === "string" ? value.trim() : "";
-  return nextValue !== "" ? nextValue : getDefaultMetaText(placement);
-};
 const normalizeRatingDisplay = (value) => {
   const allowed = RATING_DISPLAY_OPTIONS.map((option) => option.value);
   return allowed.includes(value) ? value : RATING_DISPLAY_DEFAULT;
@@ -60,15 +54,11 @@ function ProductRatingContent(props) {
     modSettings?.suffix?.meta_type ?? "text",
   );
   const [prefixMetaText, setPrefixMetaText] = useState(
-    modSettings?.prefix?.is_enable === "true"
-      ? normalizeMetaText("prefix", modSettings?.prefix?.meta_text)
-      : modSettings?.prefix?.meta_text ?? "",
+    getPostAffixMetaTextForUi("prefix", modSettings?.prefix),
   );
   const [suffixMetaText, setSuffixMetaText] = useState(
-    modSettings?.suffix?.is_enable === "true"
-      ? normalizeMetaText("suffix", modSettings?.suffix?.meta_text)
-      : modSettings?.suffix?.meta_text ?? "",
-  );
+    getPostAffixMetaTextForUi("suffix", modSettings?.suffix),
+  )
   const [prefixCountSeparator, setPrefixCountSeparator] = useState(
     normalizeCountSeparator(modSettings?.prefix?.count_separator),
   );
@@ -97,57 +87,14 @@ function ProductRatingContent(props) {
     setCheckSuffix(modSettings?.suffix?.is_enable === "false" ? false : true);
     setPrefixMeta(modSettings?.prefix?.meta_type ?? "text");
     setSuffixMeta(modSettings?.suffix?.meta_type ?? "text");
-    setPrefixMetaText(
-      modSettings?.prefix?.is_enable === "true"
-        ? normalizeMetaText("prefix", modSettings?.prefix?.meta_text)
-        : modSettings?.prefix?.meta_text ?? "",
-    );
-    setSuffixMetaText(
-      modSettings?.suffix?.is_enable === "true"
-        ? normalizeMetaText("suffix", modSettings?.suffix?.meta_text)
-        : modSettings?.suffix?.meta_text ?? "",
-    );
+    setPrefixMetaText(getPostAffixMetaTextForUi("prefix", modSettings?.prefix));
+    setSuffixMetaText(getPostAffixMetaTextForUi("suffix", modSettings?.suffix))
     setPrefixCountSeparator(
       normalizeCountSeparator(modSettings?.prefix?.count_separator),
     );
     setSuffixCountSeparator(
       normalizeCountSeparator(modSettings?.suffix?.count_separator),
     );
-  }, [props.data, rowindex, columnindex, moduleindex]);
-
-  useEffect(() => {
-    const shouldPatchPrefix =
-      modSettings?.prefix?.is_enable === "true" &&
-      normalizeMetaText("prefix", modSettings?.prefix?.meta_text) !==
-        (modSettings?.prefix?.meta_text ?? "");
-    const shouldPatchSuffix =
-      modSettings?.suffix?.is_enable === "true" &&
-      normalizeMetaText("suffix", modSettings?.suffix?.meta_text) !==
-        (modSettings?.suffix?.meta_text ?? "");
-
-    if (!shouldPatchPrefix && !shouldPatchSuffix) return;
-
-    commitPostModuleSettingsPatch({
-      data: props.data,
-      rowindex,
-      columnindex,
-      moduleindex,
-      onSettingChange: props.onSettingChange,
-      patch: (s) => {
-        if (shouldPatchPrefix) {
-          s.prefix = {
-            ...(s.prefix || {}),
-            meta_text: normalizeMetaText("prefix", s?.prefix?.meta_text),
-          };
-        }
-        if (shouldPatchSuffix) {
-          s.suffix = {
-            ...(s.suffix || {}),
-            meta_text: normalizeMetaText("suffix", s?.suffix?.meta_text),
-          };
-        }
-      },
-    });
   }, [props.data, rowindex, columnindex, moduleindex]);
 
   const handleRatingDisplayChange = (value) => {
@@ -168,7 +115,7 @@ function ProductRatingContent(props) {
   const handleChangePrefix = (checked) => {
     setCheckPrefix(checked);
     const nextPrefixText = checked
-      ? normalizeMetaText("prefix", modSettings?.prefix?.meta_text)
+      ? normalizePostAffixMetaText("prefix", modSettings?.prefix?.meta_text)
       : modSettings?.prefix?.meta_text ?? "";
     if (checked) {
       setPrefixMetaText(nextPrefixText);
@@ -184,7 +131,7 @@ function ProductRatingContent(props) {
           ...(s.prefix || {}),
           is_enable: checked ? "true" : "false",
           meta_text: checked
-            ? normalizeMetaText("prefix", s?.prefix?.meta_text)
+            ? normalizePostAffixMetaText("prefix", s?.prefix?.meta_text)
             : s?.prefix?.meta_text ?? "",
         };
       },
@@ -194,7 +141,7 @@ function ProductRatingContent(props) {
   const handleChangeSuffix = (checked) => {
     setCheckSuffix(checked);
     const nextSuffixText = checked
-      ? normalizeMetaText("suffix", modSettings?.suffix?.meta_text)
+      ? normalizePostAffixMetaText("suffix", modSettings?.suffix?.meta_text)
       : modSettings?.suffix?.meta_text ?? "";
     if (checked) {
       setSuffixMetaText(nextSuffixText);
@@ -210,7 +157,7 @@ function ProductRatingContent(props) {
           ...(s.suffix || {}),
           is_enable: checked ? "true" : "false",
           meta_text: checked
-            ? normalizeMetaText("suffix", s?.suffix?.meta_text)
+            ? normalizePostAffixMetaText("suffix", s?.suffix?.meta_text)
             : s?.suffix?.meta_text ?? "",
         };
       },
@@ -263,18 +210,11 @@ function ProductRatingContent(props) {
   };
 
   const handleMetaText = (val, placement) => {
-    const isEnabled =
-      placement === "prefix"
-        ? checkPrefix
-        : placement === "suffix"
-          ? checkSuffix
-          : false;
-    const normalizedVal = isEnabled ? normalizeMetaText(placement, val) : val;
     if (placement === "prefix") {
-      setPrefixMetaText(normalizedVal);
+      setPrefixMetaText(val);
     }
     if (placement === "suffix") {
-      setSuffixMetaText(normalizedVal);
+      setSuffixMetaText(val);
     }
     commitPostModuleSettingsPatch({
       data: props.data,
@@ -285,7 +225,7 @@ function ProductRatingContent(props) {
       patch: (s) => {
         s[placement] = {
           ...(s[placement] || {}),
-          meta_text: normalizedVal,
+          meta_text: val,
         };
       },
     });
@@ -294,7 +234,7 @@ function ProductRatingContent(props) {
   const handleMetaTextBlur = (placement, value) => {
     if (placement === "prefix" && !checkPrefix) return;
     if (placement === "suffix" && !checkSuffix) return;
-    const normalizedVal = normalizeMetaText(placement, value);
+    const normalizedVal = normalizePostAffixMetaText(placement, value);
     if (placement === "prefix") {
       setPrefixMetaText(normalizedVal);
     }

@@ -9708,11 +9708,6 @@ span.caf-inline-svg-icon svg {
   height: 1em;
   fill: currentColor;
 }
-
-span.caf-inline-svg-icon svg path {
-  fill: currentColor;
-}
-
 .caf-builder-module-main.caf-module-filter li,
 .caf-builder-module-main.caf-module-filter.caf-module-search .caf-filter-module-search-output,
 .caf-builder-module-main.caf-module-filter.caf-module-search .caf-filter-module-search-wrapper {

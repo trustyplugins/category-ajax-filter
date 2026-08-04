@@ -5,16 +5,10 @@ import { Select, Switch, Input, Segmented, Skeleton, Tooltip } from "antd";
 import { commitPostModuleSettingsPatch } from "./postLayoutSnapshot";
 import { resolvePostAffixEnabledForUi } from "./shared/postModuleTier";
 import PostPrefixSuffixProPanel from "./PostPrefixSuffixProPanel";
-const DATE_META_TEXT_DEFAULTS = {
-  prefix: "Prefix",
-  suffix: "Suffix",
-};
-const getDefaultMetaText = (placement) =>
-  DATE_META_TEXT_DEFAULTS[placement] || "Text";
-const normalizeMetaText = (placement, value) => {
-  const nextValue = typeof value === "string" ? value.trim() : "";
-  return nextValue !== "" ? nextValue : getDefaultMetaText(placement);
-};
+import {
+  getPostAffixMetaTextForUi,
+  normalizePostAffixMetaText,
+} from "./shared/postAffixMetaTextUtils";
 
 function ModuleDateContent(props) {
   const { rowindex, columnindex, moduleindex } = props.indexes;
@@ -36,17 +30,11 @@ function ModuleDateContent(props) {
     modSettings?.suffix?.meta_type ?? "text"
   );
   const [prefixMetaText, setPrefixMetaText] = useState(
-    modSettings?.prefix?.is_enable === "true" &&
-      (modSettings?.prefix?.meta_type ?? "text") === "text"
-      ? normalizeMetaText("prefix", modSettings?.prefix?.meta_text)
-      : modSettings?.prefix?.meta_text ?? ""
+    getPostAffixMetaTextForUi("prefix", modSettings?.prefix),
   );
   const [suffixMetaText, setSuffixMetaText] = useState(
-    modSettings?.suffix?.is_enable === "true" &&
-      (modSettings?.suffix?.meta_type ?? "text") === "text"
-      ? normalizeMetaText("suffix", modSettings?.suffix?.meta_text)
-      : modSettings?.suffix?.meta_text ?? ""
-  );
+    getPostAffixMetaTextForUi("suffix", modSettings?.suffix),
+  )
   const coerceSavedFormat = (v) => {
     if (!v || v === "custom") {
       return v || "d/m/Y";
@@ -85,57 +73,12 @@ function ModuleDateContent(props) {
     setCheckSuffix(modSettings?.suffix?.is_enable === "false" ? false : true);
     setPrefixMeta(modSettings?.prefix?.meta_type ?? "text");
     setSuffixMeta(modSettings?.suffix?.meta_type ?? "text");
-    setPrefixMetaText(
-      modSettings?.prefix?.is_enable === "true" &&
-        (modSettings?.prefix?.meta_type ?? "text") === "text"
-        ? normalizeMetaText("prefix", modSettings?.prefix?.meta_text)
-        : modSettings?.prefix?.meta_text ?? ""
-    );
-    setSuffixMetaText(
-      modSettings?.suffix?.is_enable === "true" &&
-        (modSettings?.suffix?.meta_type ?? "text") === "text"
-        ? normalizeMetaText("suffix", modSettings?.suffix?.meta_text)
-        : modSettings?.suffix?.meta_text ?? ""
-    );
+    setPrefixMetaText(getPostAffixMetaTextForUi("prefix", modSettings?.prefix));
+    setSuffixMetaText(getPostAffixMetaTextForUi("suffix", modSettings?.suffix))
     setFormatValue(coerceSavedFormat(modSettings?.date_format) || "d/m/Y");
     setCustomValue(modSettings?.custom_format || "");
   }, [props.data, rowindex, columnindex, moduleindex]);
-  useEffect(() => {
-    const prefixType = modSettings?.prefix?.meta_type ?? "text";
-    const suffixType = modSettings?.suffix?.meta_type ?? "text";
-    const shouldPatchPrefix =
-      modSettings?.prefix?.is_enable === "true" &&
-      prefixType === "text" &&
-      normalizeMetaText("prefix", modSettings?.prefix?.meta_text) !==
-        (modSettings?.prefix?.meta_text ?? "");
-    const shouldPatchSuffix =
-      modSettings?.suffix?.is_enable === "true" &&
-      suffixType === "text" &&
-      normalizeMetaText("suffix", modSettings?.suffix?.meta_text) !==
-        (modSettings?.suffix?.meta_text ?? "");
-    if (!shouldPatchPrefix && !shouldPatchSuffix) return;
-    commitPostModuleSettingsPatch({
-      data: props.data,
-      rowindex,
-      columnindex,
-      moduleindex,
-      onSettingChange: props.onSettingChange,
-      patch: (s) => {
-        if (shouldPatchPrefix) {
-          s.prefix = {
-            ...(s.prefix || {}),
-            meta_text: normalizeMetaText("prefix", s?.prefix?.meta_text),
-          };
-        }
-        if (shouldPatchSuffix) {
-          s.suffix = {
-            ...(s.suffix || {}),
-            meta_text: normalizeMetaText("suffix", s?.suffix?.meta_text),
-          };
-        }
-      },
-    });
-  }, [props.data, rowindex, columnindex, moduleindex]);
+  
 
   const handleDateFormatChange = (value) => {
     setFormatValue(value);
@@ -174,7 +117,7 @@ function ModuleDateContent(props) {
   const handleChangePrefix = (checked) => {
     setCheckPrefix(checked);
     if (checked && prefixMeta === "text") {
-      setPrefixMetaText(normalizeMetaText("prefix", modSettings?.prefix?.meta_text));
+      setPrefixMetaText(normalizePostAffixMetaText("prefix", modSettings?.prefix?.meta_text));
     }
     commitPostModuleSettingsPatch({
       data: props.data,
@@ -188,7 +131,7 @@ function ModuleDateContent(props) {
           is_enable: checked ? "true" : "false",
           meta_text:
             checked && (s?.prefix?.meta_type ?? "text") === "text"
-              ? normalizeMetaText("prefix", s?.prefix?.meta_text)
+              ? normalizePostAffixMetaText("prefix", s?.prefix?.meta_text)
               : s?.prefix?.meta_text ?? "",
         };
       },
@@ -197,7 +140,7 @@ function ModuleDateContent(props) {
   const handleChangeSuffix = (checked) => {
     setCheckSuffix(checked);
     if (checked && suffixMeta === "text") {
-      setSuffixMetaText(normalizeMetaText("suffix", modSettings?.suffix?.meta_text));
+      setSuffixMetaText(normalizePostAffixMetaText("suffix", modSettings?.suffix?.meta_text));
     }
     commitPostModuleSettingsPatch({
       data: props.data,
@@ -211,7 +154,7 @@ function ModuleDateContent(props) {
           is_enable: checked ? "true" : "false",
           meta_text:
             checked && (s?.suffix?.meta_type ?? "text") === "text"
-              ? normalizeMetaText("suffix", s?.suffix?.meta_text)
+              ? normalizePostAffixMetaText("suffix", s?.suffix?.meta_text)
               : s?.suffix?.meta_text ?? "",
         };
       },
@@ -238,7 +181,7 @@ function ModuleDateContent(props) {
           meta_type: val,
         };
         if (isEnabled && val === "text") {
-          nextMeta.meta_text = normalizeMetaText(placement, nextMeta.meta_text);
+          nextMeta.meta_text = normalizePostAffixMetaText(placement, nextMeta.meta_text);
         }
         s[placement] = {
           ...nextMeta,
@@ -247,25 +190,11 @@ function ModuleDateContent(props) {
     });
   };
   const handleMetaText = (val, placement) => {
-    const isTextMode =
-      placement === "prefix"
-        ? prefixMeta === "text"
-        : placement === "suffix"
-          ? suffixMeta === "text"
-          : false;
-    const isEnabled =
-      placement === "prefix"
-        ? checkPrefix
-        : placement === "suffix"
-          ? checkSuffix
-          : false;
-    const nextVal =
-      isTextMode && isEnabled ? normalizeMetaText(placement, val) : val;
     if (placement === "prefix") {
-      setPrefixMetaText(nextVal);
+      setPrefixMetaText(val);
     }
     if (placement === "suffix") {
-      setSuffixMetaText(nextVal);
+      setSuffixMetaText(val);
     }
     commitPostModuleSettingsPatch({
       data: props.data,
@@ -276,7 +205,7 @@ function ModuleDateContent(props) {
       patch: (s) => {
         s[placement] = {
           ...(s[placement] || {}),
-          meta_text: nextVal,
+          meta_text: val,
         };
       },
     });
@@ -295,7 +224,7 @@ function ModuleDateContent(props) {
           ? checkSuffix
           : false;
     if (!isTextMode || !isEnabled) return;
-    const normalized = normalizeMetaText(placement, value);
+    const normalized = normalizePostAffixMetaText(placement, value);
     if (placement === "prefix") setPrefixMetaText(normalized);
     if (placement === "suffix") setSuffixMetaText(normalized);
     commitPostModuleSettingsPatch({

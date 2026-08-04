@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Input, Segmented, Select, Switch, Tooltip } from "antd";
 import { commitPostModuleSettingsPatch } from "../postLayoutSnapshot";
+import { normalizePostAffixMetaText } from "../shared/postAffixMetaTextUtils";
 
-const META_TEXT_DEFAULTS = { prefix: "Prefix", suffix: "Suffix" };
 const VISIBILITY_OPTIONS = [
   { label: "All Products", value: "all" },
   { label: "Simple Products", value: "simple_products" },
@@ -10,8 +10,7 @@ const VISIBILITY_OPTIONS = [
   { label: "Grouped Products", value: "grouped_products" },
 ];
 
-const normalizeMetaText = (placement, value) =>
-  String(value ?? "").trim() || META_TEXT_DEFAULTS[placement];
+const normalizeMetaText = normalizePostAffixMetaText;
 const normalizeVisibility = (value) =>
   VISIBILITY_OPTIONS.some((option) => option.value === value) ? value : "all";
 

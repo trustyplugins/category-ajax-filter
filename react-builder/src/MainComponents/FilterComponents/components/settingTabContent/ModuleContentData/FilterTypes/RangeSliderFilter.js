@@ -151,17 +151,6 @@ const normalizeRangeSliderSettings = (range, changedKey) => {
     }
   }
 
-  ["prefix", "suffix"].forEach((type) => {
-    const textConfig = out?.[type];
-    if (!textConfig || typeof textConfig !== "object") return;
-    if (textConfig.is_enable === "true") {
-      out[type] = {
-        ...textConfig,
-        value: normalizeRangeTextValue(type, textConfig.value),
-      };
-    }
-  });
-
   return out;
 };
 
@@ -2167,27 +2156,13 @@ const getCompareLabel = (value) => {
     });
   };
 
-  const rangeTextPrefixRaw = settingData?.range_slider?.prefix || {
+  const rangeTextPrefix = settingData?.range_slider?.prefix || {
     is_enable: "false",
     value: "",
   };
-  const rangeTextSuffixRaw = settingData?.range_slider?.suffix || {
+  const rangeTextSuffix = settingData?.range_slider?.suffix || {
     is_enable: "false",
     value: "",
-  };
-  const rangeTextPrefix = {
-    ...rangeTextPrefixRaw,
-    value:
-      rangeTextPrefixRaw?.is_enable === "true"
-        ? normalizeRangeTextValue("prefix", rangeTextPrefixRaw?.value)
-        : rangeTextPrefixRaw?.value || "",
-  };
-  const rangeTextSuffix = {
-    ...rangeTextSuffixRaw,
-    value:
-      rangeTextSuffixRaw?.is_enable === "true"
-        ? normalizeRangeTextValue("suffix", rangeTextSuffixRaw?.value)
-        : rangeTextSuffixRaw?.value || "",
   };
   const rangeCustomDefaultsEnabled = rangeSliderCustomDefaultsEnabled(
     settingData?.range_slider

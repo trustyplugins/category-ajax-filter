@@ -185,10 +185,6 @@ span.caf-inline-svg-icon svg {
     fill: currentColor;
 }
 
-span.caf-inline-svg-icon svg path {
-    fill: currentColor;
-}
-
 span.label-icon-common {
     right: 0;
 }

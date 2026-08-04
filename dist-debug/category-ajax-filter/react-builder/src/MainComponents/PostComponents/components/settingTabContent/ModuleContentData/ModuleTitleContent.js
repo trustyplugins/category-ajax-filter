@@ -6,16 +6,10 @@ import { Switch, Input, Segmented, Skeleton, Tooltip } from "antd";
 import { commitPostModuleSettingsPatch } from "./postLayoutSnapshot";
 import { resolvePostAffixEnabledForUi } from "./shared/postModuleTier";
 import PostPrefixSuffixProPanel from "./PostPrefixSuffixProPanel";
-const TITLE_META_TEXT_DEFAULTS = {
-  prefix: "Prefix",
-  suffix: "Suffix",
-};
-const getDefaultMetaText = (placement) =>
-  TITLE_META_TEXT_DEFAULTS[placement] || "Text";
-const normalizeMetaText = (placement, value) => {
-  const nextValue = typeof value === "string" ? value.trim() : "";
-  return nextValue !== "" ? nextValue : getDefaultMetaText(placement);
-};
+import {
+  getPostAffixMetaTextForUi,
+  normalizePostAffixMetaText,
+} from "./shared/postAffixMetaTextUtils";
 
 function ModuleTitleContent(props) {
   //console.log(props.data);
@@ -38,14 +32,10 @@ function ModuleTitleContent(props) {
     modSettings?.suffix?.meta_type ?? "text"
   );
   const [prefixMetaText, setPrefixMetaText] = useState(
-    modSettings?.prefix?.is_enable === "true"
-      ? normalizeMetaText("prefix", modSettings?.prefix?.meta_text)
-      : modSettings?.prefix?.meta_text ?? ""
+    getPostAffixMetaTextForUi("prefix", modSettings?.prefix),
   );
   const [suffixMetaText, setSuffixMetaText] = useState(
-    modSettings?.suffix?.is_enable === "true"
-      ? normalizeMetaText("suffix", modSettings?.suffix?.meta_text)
-      : modSettings?.suffix?.meta_text ?? ""
+    getPostAffixMetaTextForUi("suffix", modSettings?.suffix),
   );
 
   useEffect(() => {
@@ -68,55 +58,13 @@ function ModuleTitleContent(props) {
     setCheckSuffix(modSettings?.suffix?.is_enable === "false" ? false : true);
     setPrefixMeta(modSettings?.prefix?.meta_type ?? "text");
     setSuffixMeta(modSettings?.suffix?.meta_type ?? "text");
-    setPrefixMetaText(
-      modSettings?.prefix?.is_enable === "true"
-        ? normalizeMetaText("prefix", modSettings?.prefix?.meta_text)
-        : modSettings?.prefix?.meta_text ?? ""
-    );
-    setSuffixMetaText(
-      modSettings?.suffix?.is_enable === "true"
-        ? normalizeMetaText("suffix", modSettings?.suffix?.meta_text)
-        : modSettings?.suffix?.meta_text ?? ""
-    );
-  }, [props.data, rowindex, columnindex, moduleindex]);
-  useEffect(() => {
-    const shouldPatchPrefix =
-      modSettings?.prefix?.is_enable === "true" &&
-      normalizeMetaText("prefix", modSettings?.prefix?.meta_text) !==
-        (modSettings?.prefix?.meta_text ?? "");
-    const shouldPatchSuffix =
-      modSettings?.suffix?.is_enable === "true" &&
-      normalizeMetaText("suffix", modSettings?.suffix?.meta_text) !==
-        (modSettings?.suffix?.meta_text ?? "");
-
-    if (!shouldPatchPrefix && !shouldPatchSuffix) return;
-
-    commitPostModuleSettingsPatch({
-      data: props.data,
-      rowindex,
-      columnindex,
-      moduleindex,
-      onSettingChange: props.onSettingChange,
-      patch: (s) => {
-        if (shouldPatchPrefix) {
-          s.prefix = {
-            ...(s.prefix || {}),
-            meta_text: normalizeMetaText("prefix", s?.prefix?.meta_text),
-          };
-        }
-        if (shouldPatchSuffix) {
-          s.suffix = {
-            ...(s.suffix || {}),
-            meta_text: normalizeMetaText("suffix", s?.suffix?.meta_text),
-          };
-        }
-      },
-    });
+    setPrefixMetaText(getPostAffixMetaTextForUi("prefix", modSettings?.prefix));
+    setSuffixMetaText(getPostAffixMetaTextForUi("suffix", modSettings?.suffix));
   }, [props.data, rowindex, columnindex, moduleindex]);
   const handleChangePrefix = (checked) => {
     setCheckPrefix(checked);
     const nextPrefixText = checked
-      ? normalizeMetaText("prefix", modSettings?.prefix?.meta_text)
+      ? normalizePostAffixMetaText("prefix", modSettings?.prefix?.meta_text)
       : modSettings?.prefix?.meta_text ?? "";
     if (checked) {
       setPrefixMetaText(nextPrefixText);
@@ -132,7 +80,7 @@ function ModuleTitleContent(props) {
           ...(s.prefix || {}),
           is_enable: checked ? "true" : "false",
           meta_text: checked
-            ? normalizeMetaText("prefix", s?.prefix?.meta_text)
+            ? normalizePostAffixMetaText("prefix", s?.prefix?.meta_text)
             : s?.prefix?.meta_text ?? "",
         };
       },
@@ -141,7 +89,7 @@ function ModuleTitleContent(props) {
   const handleChangeSuffix = (checked) => {
     setCheckSuffix(checked);
     const nextSuffixText = checked
-      ? normalizeMetaText("suffix", modSettings?.suffix?.meta_text)
+      ? normalizePostAffixMetaText("suffix", modSettings?.suffix?.meta_text)
       : modSettings?.suffix?.meta_text ?? "";
     if (checked) {
       setSuffixMetaText(nextSuffixText);
@@ -157,7 +105,7 @@ function ModuleTitleContent(props) {
           ...(s.suffix || {}),
           is_enable: checked ? "true" : "false",
           meta_text: checked
-            ? normalizeMetaText("suffix", s?.suffix?.meta_text)
+            ? normalizePostAffixMetaText("suffix", s?.suffix?.meta_text)
             : s?.suffix?.meta_text ?? "",
         };
       },
@@ -190,14 +138,11 @@ function ModuleTitleContent(props) {
     });
   };
   const handleMetaText = (val, placement) => {
-    const isEnabled =
-      placement === "prefix" ? checkPrefix : placement === "suffix" ? checkSuffix : false;
-    const normalizedVal = isEnabled ? normalizeMetaText(placement, val) : val;
     if (placement === "prefix") {
-      setPrefixMetaText(normalizedVal);
+      setPrefixMetaText(val);
     }
     if (placement === "suffix") {
-      setSuffixMetaText(normalizedVal);
+      setSuffixMetaText(val);
     }
     commitPostModuleSettingsPatch({
       data: props.data,
@@ -208,7 +153,7 @@ function ModuleTitleContent(props) {
       patch: (s) => {
         s[placement] = {
           ...(s[placement] || {}),
-          meta_text: normalizedVal,
+          meta_text: val,
         };
       },
     });
@@ -216,7 +161,7 @@ function ModuleTitleContent(props) {
   const handleMetaTextBlur = (placement, value) => {
     if (placement === "prefix" && !checkPrefix) return;
     if (placement === "suffix" && !checkSuffix) return;
-    const normalizedVal = normalizeMetaText(placement, value);
+    const normalizedVal = normalizePostAffixMetaText(placement, value);
     if (placement === "prefix") {
       setPrefixMetaText(normalizedVal);
     }

@@ -7193,16 +7193,6 @@ const normalizeRangeSliderSettings = (range, changedKey) => {
       }
     }
   }
-  ["prefix", "suffix"].forEach(type => {
-    const textConfig = out?.[type];
-    if (!textConfig || typeof textConfig !== "object") return;
-    if (textConfig.is_enable === "true") {
-      out[type] = {
-        ...textConfig,
-        value: normalizeRangeTextValue(type, textConfig.value)
-      };
-    }
-  });
   return out;
 };
 const RangeSliderFilter = (0,external_React_.memo)(props => {
@@ -8972,21 +8962,13 @@ const RangeSliderFilter = (0,external_React_.memo)(props => {
       }
     });
   };
-  const rangeTextPrefixRaw = settingData?.range_slider?.prefix || {
+  const rangeTextPrefix = settingData?.range_slider?.prefix || {
     is_enable: "false",
     value: ""
   };
-  const rangeTextSuffixRaw = settingData?.range_slider?.suffix || {
+  const rangeTextSuffix = settingData?.range_slider?.suffix || {
     is_enable: "false",
     value: ""
-  };
-  const rangeTextPrefix = {
-    ...rangeTextPrefixRaw,
-    value: rangeTextPrefixRaw?.is_enable === "true" ? normalizeRangeTextValue("prefix", rangeTextPrefixRaw?.value) : rangeTextPrefixRaw?.value || ""
-  };
-  const rangeTextSuffix = {
-    ...rangeTextSuffixRaw,
-    value: rangeTextSuffixRaw?.is_enable === "true" ? normalizeRangeTextValue("suffix", rangeTextSuffixRaw?.value) : rangeTextSuffixRaw?.value || ""
   };
   const rangeCustomDefaultsEnabled = rangeSliderCustomDefaultsEnabled(settingData?.range_slider);
   const handleRangeDefaultValuesToggle = enabled => {
@@ -11223,4 +11205,4 @@ const ContentTab = props => {
 /***/ }
 
 }]);
-//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js.js.map?ver=43ff1f03a7aafb321f46
+//# sourceMappingURL=src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js.js.map?ver=cd008e72ee0d7d2e0ed0

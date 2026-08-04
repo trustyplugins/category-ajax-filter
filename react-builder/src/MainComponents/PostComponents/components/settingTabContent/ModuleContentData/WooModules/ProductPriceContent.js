@@ -4,11 +4,11 @@ import ContentIcons from "../ContentComponents/ContentIcons";
 import { Switch, Input, Segmented, Skeleton, Select, Tooltip } from "antd";
 import { commitPostModuleSettingsPatch } from "../postLayoutSnapshot";
 import { canUseFeature } from "../../../../../../tier/capabilities";
+import {
+  getPostAffixMetaTextForUi,
+  normalizePostAffixMetaText,
+} from "../shared/postAffixMetaTextUtils";
 
-const PRICE_META_TEXT_DEFAULTS = {
-  prefix: "Prefix",
-  suffix: "Suffix",
-};
 const TEXT_VISIBILITY_DEFAULT = "all";
 const TEXT_VISIBILITY_OPTIONS = [
   { label: "All Products", value: "all" },
@@ -16,12 +16,6 @@ const TEXT_VISIBILITY_OPTIONS = [
   { label: "Variable Products", value: "variable_products" },
   { label: "Grouped Products", value: "grouped_products" },
 ];
-const getDefaultMetaText = (placement) =>
-  PRICE_META_TEXT_DEFAULTS[placement] || "Text";
-const normalizeMetaText = (placement, value) => {
-  const nextValue = typeof value === "string" ? value.trim() : "";
-  return nextValue !== "" ? nextValue : getDefaultMetaText(placement);
-};
 const normalizeTextVisibility = (value) => {
   const allowed = TEXT_VISIBILITY_OPTIONS.map((option) => option.value);
   return allowed.includes(value) ? value : TEXT_VISIBILITY_DEFAULT;
@@ -59,15 +53,11 @@ function ProductPriceContent(props) {
     resolveAffixMetaType(modSettings?.suffix?.meta_type),
   );
   const [prefixMetaText, setPrefixMetaText] = useState(
-    modSettings?.prefix?.is_enable === "true"
-      ? normalizeMetaText("prefix", modSettings?.prefix?.meta_text)
-      : modSettings?.prefix?.meta_text ?? "",
+    getPostAffixMetaTextForUi("prefix", modSettings?.prefix),
   );
   const [suffixMetaText, setSuffixMetaText] = useState(
-    modSettings?.suffix?.is_enable === "true"
-      ? normalizeMetaText("suffix", modSettings?.suffix?.meta_text)
-      : modSettings?.suffix?.meta_text ?? "",
-  );
+    getPostAffixMetaTextForUi("suffix", modSettings?.suffix),
+  )
   const [showPrice, setShowPrice] = useState(
     resolvePriceDisplayMode(modSettings?.show_price),
   );
@@ -98,16 +88,8 @@ function ProductPriceContent(props) {
     setCheckSuffix(modSettings?.suffix?.is_enable === "false" ? false : true);
     setPrefixMeta(resolveAffixMetaType(modSettings?.prefix?.meta_type));
     setSuffixMeta(resolveAffixMetaType(modSettings?.suffix?.meta_type));
-    setPrefixMetaText(
-      modSettings?.prefix?.is_enable === "true"
-        ? normalizeMetaText("prefix", modSettings?.prefix?.meta_text)
-        : modSettings?.prefix?.meta_text ?? "",
-    );
-    setSuffixMetaText(
-      modSettings?.suffix?.is_enable === "true"
-        ? normalizeMetaText("suffix", modSettings?.suffix?.meta_text)
-        : modSettings?.suffix?.meta_text ?? "",
-    );
+    setPrefixMetaText(getPostAffixMetaTextForUi("prefix", modSettings?.prefix));
+    setSuffixMetaText(getPostAffixMetaTextForUi("suffix", modSettings?.suffix))
     setShowPrice(resolvePriceDisplayMode(modSettings?.show_price));
     setPrefixTextVisibility(
       normalizeTextVisibility(modSettings?.prefix?.text_visibility),
@@ -117,45 +99,10 @@ function ProductPriceContent(props) {
     );
   }, [props.data, rowindex, columnindex, moduleindex]);
 
-  useEffect(() => {
-    const shouldPatchPrefix =
-      modSettings?.prefix?.is_enable === "true" &&
-      normalizeMetaText("prefix", modSettings?.prefix?.meta_text) !==
-        (modSettings?.prefix?.meta_text ?? "");
-    const shouldPatchSuffix =
-      modSettings?.suffix?.is_enable === "true" &&
-      normalizeMetaText("suffix", modSettings?.suffix?.meta_text) !==
-        (modSettings?.suffix?.meta_text ?? "");
-
-    if (!shouldPatchPrefix && !shouldPatchSuffix) return;
-
-    commitPostModuleSettingsPatch({
-      data: props.data,
-      rowindex,
-      columnindex,
-      moduleindex,
-      onSettingChange: props.onSettingChange,
-      patch: (s) => {
-        if (shouldPatchPrefix) {
-          s.prefix = {
-            ...(s.prefix || {}),
-            meta_text: normalizeMetaText("prefix", s?.prefix?.meta_text),
-          };
-        }
-        if (shouldPatchSuffix) {
-          s.suffix = {
-            ...(s.suffix || {}),
-            meta_text: normalizeMetaText("suffix", s?.suffix?.meta_text),
-          };
-        }
-      },
-    });
-  }, [props.data, rowindex, columnindex, moduleindex]);
-
   const handleChangePrefix = (checked) => {
     setCheckPrefix(checked);
     const nextPrefixText = checked
-      ? normalizeMetaText("prefix", modSettings?.prefix?.meta_text)
+      ? normalizePostAffixMetaText("prefix", modSettings?.prefix?.meta_text)
       : modSettings?.prefix?.meta_text ?? "";
     if (checked) {
       setPrefixMetaText(nextPrefixText);
@@ -171,7 +118,7 @@ function ProductPriceContent(props) {
           ...(s.prefix || {}),
           is_enable: checked ? "true" : "false",
           meta_text: checked
-            ? normalizeMetaText("prefix", s?.prefix?.meta_text)
+            ? normalizePostAffixMetaText("prefix", s?.prefix?.meta_text)
             : s?.prefix?.meta_text ?? "",
         };
       },
@@ -181,7 +128,7 @@ function ProductPriceContent(props) {
   const handleChangeSuffix = (checked) => {
     setCheckSuffix(checked);
     const nextSuffixText = checked
-      ? normalizeMetaText("suffix", modSettings?.suffix?.meta_text)
+      ? normalizePostAffixMetaText("suffix", modSettings?.suffix?.meta_text)
       : modSettings?.suffix?.meta_text ?? "";
     if (checked) {
       setSuffixMetaText(nextSuffixText);
@@ -197,7 +144,7 @@ function ProductPriceContent(props) {
           ...(s.suffix || {}),
           is_enable: checked ? "true" : "false",
           meta_text: checked
-            ? normalizeMetaText("suffix", s?.suffix?.meta_text)
+            ? normalizePostAffixMetaText("suffix", s?.suffix?.meta_text)
             : s?.suffix?.meta_text ?? "",
         };
       },
@@ -231,18 +178,11 @@ function ProductPriceContent(props) {
   };
 
   const handleMetaText = (val, placement) => {
-    const isEnabled =
-      placement === "prefix"
-        ? checkPrefix
-        : placement === "suffix"
-        ? checkSuffix
-        : false;
-    const normalizedVal = isEnabled ? normalizeMetaText(placement, val) : val;
     if (placement === "prefix") {
-      setPrefixMetaText(normalizedVal);
+      setPrefixMetaText(val);
     }
     if (placement === "suffix") {
-      setSuffixMetaText(normalizedVal);
+      setSuffixMetaText(val);
     }
     commitPostModuleSettingsPatch({
       data: props.data,
@@ -253,7 +193,7 @@ function ProductPriceContent(props) {
       patch: (s) => {
         s[placement] = {
           ...(s[placement] || {}),
-          meta_text: normalizedVal,
+          meta_text: val,
         };
       },
     });
@@ -262,7 +202,7 @@ function ProductPriceContent(props) {
   const handleMetaTextBlur = (placement, value) => {
     if (placement === "prefix" && !checkPrefix) return;
     if (placement === "suffix" && !checkSuffix) return;
-    const normalizedVal = normalizeMetaText(placement, value);
+    const normalizedVal = normalizePostAffixMetaText(placement, value);
     if (placement === "prefix") {
       setPrefixMetaText(normalizedVal);
     }
