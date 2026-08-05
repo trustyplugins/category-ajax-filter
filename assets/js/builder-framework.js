@@ -643,7 +643,7 @@ jQuery(function ($) {
                 }
             }
 
-            const sorting = this.getSortingData($builder);
+            const sorting = this.resolveSortingData($builder);
 
             if (sorting.orderby && sorting.orderby !== "0") {
                 queryArgs.orderby = sorting.orderby;
@@ -1043,10 +1043,22 @@ jQuery(function ($) {
         resolveSortingData($builder) {
             const sorting = this.getSortingData($builder);
             const defaults = this.getDefaultSortingData($builder);
+            let orderby = sorting.orderby && sorting.orderby !== "0" ? sorting.orderby : "";
+            let order = sorting.order && sorting.order !== "0" ? sorting.order : "";
+
+            if ((!orderby || !order) && typeof CAFUrlState !== "undefined" && CAFUrlState.isEnabled($builder)) {
+                const urlState = CAFUrlState.read($builder) || {};
+                if (!orderby && urlState.orderby && urlState.orderby !== "0") {
+                    orderby = String(urlState.orderby).toLowerCase();
+                }
+                if (!order && urlState.order && urlState.order !== "0") {
+                    order = String(urlState.order).toUpperCase();
+                }
+            }
 
             return {
-                orderby: sorting.orderby && sorting.orderby !== "0" ? sorting.orderby : defaults.orderby,
-                order: sorting.order && sorting.order !== "0" ? sorting.order : defaults.order
+                orderby: orderby || defaults.orderby,
+                order: order || defaults.order
             };
         },
 
@@ -1154,6 +1166,14 @@ jQuery(function ($) {
             }
         },
 
+        hasFrontendSortingUI($builder) {
+            return Boolean(
+                $builder &&
+                    $builder.length &&
+                    $builder.find(".caf-builder-template-preview-sorting-container").length
+            );
+        },
+
         packQueryArgs(queryArgs) {
             const state = {};
             if (!queryArgs || typeof queryArgs !== "object") {
@@ -1197,6 +1217,24 @@ jQuery(function ($) {
 
         serializeFromBuilder($builder) {
             const queryArgs = CAFQueryBuilder.collectQueryArgs($builder, 1);
+
+            if (!this.hasFrontendSortingUI($builder)) {
+                delete queryArgs.orderby;
+                delete queryArgs.order;
+            } else {
+                const sorting = CAFQueryBuilder.getSortingData($builder);
+                if (!sorting.orderby || sorting.orderby === "0") {
+                    delete queryArgs.orderby;
+                } else {
+                    queryArgs.orderby = sorting.orderby;
+                }
+                if (!sorting.order || sorting.order === "0") {
+                    delete queryArgs.order;
+                } else {
+                    queryArgs.order = sorting.order;
+                }
+            }
+
             return this.packQueryArgs(queryArgs);
         },
 

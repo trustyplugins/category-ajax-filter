@@ -752,6 +752,7 @@ function get_caf_builder_posts() {
 		);
 	}
 	$args         = $data_handler->strip_placeholder_sort_from_query_args( $args );
+	$args         = $data_handler->apply_default_sort_to_query_args( $args );
 	$args         = caf_builder_apply_filters(
 		'caf_builder_ajax_query_args',
 		$args,
