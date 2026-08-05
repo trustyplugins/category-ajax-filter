@@ -1738,6 +1738,108 @@ jQuery(function ($) {
             }
         },
 
+        collectUrlMetaKeys(state) {
+            const keys = new Set();
+            this.flattenMetaQueryLeaves((state && state.meta_query) || []).forEach((clause) => {
+                if (clause && clause.key) {
+                    keys.add(String(clause.key));
+                }
+            });
+            return keys;
+        },
+
+        collectUrlTaxonomies(state) {
+            const taxonomies = new Set();
+            CAFQueryBuilder.flattenTaxQueryLeaves((state && state.tax_query) || []).forEach((leaf) => {
+                if (leaf && leaf.taxonomy) {
+                    taxonomies.add(String(leaf.taxonomy));
+                }
+            });
+            return taxonomies;
+        },
+
+        isPredefinedFilterItemSelected($item) {
+            if (!$item || !$item.length) {
+                return false;
+            }
+            if ($item.closest(".caf-dropdown-child").length) {
+                return $item.hasClass("active");
+            }
+            return $item.hasClass("caf-selected") || $item.hasClass("active");
+        },
+
+        isPredefinedSelectionBlockedByUrl($item, $list, urlMetaKeys, urlTaxonomies) {
+            const multipleTerm = String($list.attr("multiple-term") || "false") === "true";
+            if (multipleTerm) {
+                return false;
+            }
+
+            const dataSource = String($list.attr("data-source") || "");
+            const isWooVirtual = String($item.attr("data-woo-virtual") || "") === "1";
+            const metaKey = String($item.attr("data-key") || "");
+            const taxonomy = String($item.attr("taxonomy") || $item.attr("data-key") || "");
+
+            if (
+                dataSource === "custom_field" ||
+                dataSource === "woo_rating" ||
+                dataSource === "woo_meta" ||
+                isWooVirtual
+            ) {
+                return metaKey && urlMetaKeys.has(metaKey);
+            }
+
+            return taxonomy && urlTaxonomies.has(taxonomy);
+        },
+
+        applyPredefinedSelections($builder, state) {
+            state = state && typeof state === "object" ? state : {};
+            const urlMetaKeys = this.collectUrlMetaKeys(state);
+            const urlTaxonomies = this.collectUrlTaxonomies(state);
+
+            $builder.find('.caf-module-filter .caf-terms-list-item[predefine="true"]').each(function () {
+                const $item = $(this);
+                if (CAFUrlState.isPredefinedFilterItemSelected($item)) {
+                    return;
+                }
+
+                const $list = $item.closest(".caf-terms-list");
+                if (!$list.length) {
+                    return;
+                }
+
+                if (CAFUrlState.isPredefinedSelectionBlockedByUrl($item, $list, urlMetaKeys, urlTaxonomies)) {
+                    return;
+                }
+
+                const dataSource = String($list.attr("data-source") || "");
+                const isWooVirtual = String($item.attr("data-woo-virtual") || "") === "1";
+                const metaKey = String($item.attr("data-key") || "");
+                const taxonomy = String($item.attr("taxonomy") || $item.attr("data-key") || "");
+                const termValue = String(
+                    $item.attr("term-id") ||
+                        $item.attr("term-value") ||
+                        CAFBuilder.getFilterItemInput($item).val() ||
+                        ""
+                );
+
+                if (
+                    dataSource === "custom_field" ||
+                    dataSource === "woo_rating" ||
+                    dataSource === "woo_meta" ||
+                    isWooVirtual
+                ) {
+                    if (metaKey && termValue) {
+                        CAFUrlState.selectMetaValue($builder, metaKey, termValue);
+                    }
+                    return;
+                }
+
+                if (taxonomy && termValue) {
+                    CAFUrlState.selectTaxTerm($builder, taxonomy, termValue);
+                }
+            });
+        },
+
         applyState($builder, state) {
             if (!state || typeof state !== "object") {
                 return;
@@ -1764,6 +1866,7 @@ jQuery(function ($) {
 
             this.applySearchState($builder, state);
             this.applySortState($builder, state);
+            this.applyPredefinedSelections($builder, state);
         },
 
         bindPopState() {
@@ -3682,6 +3785,7 @@ jQuery(function ($) {
             this.resetRangeSlidersToInitial($filterLayout, "full");
             this.resetSortingDropdowns($builder);
             this.updateSearchResultUI($builder);
+            CAFUrlState.applyPredefinedSelections($builder, {});
             this.syncSelectedTagsUI($builder);
             this.buildQuery($builder);
         },
