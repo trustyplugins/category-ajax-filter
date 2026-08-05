@@ -261,28 +261,31 @@ li.selection-list-default i {
     align-items: center;
     overflow: hidden;
     box-sizing: border-box;
-    
+
 }
+
 .caf-builder-module-main.caf-module-filter.caf-module-type-range_slider {
     overflow: initial;
-  }
-  .caf-grid.caf-grid-5 {
-    grid-template-columns: repeat(5, minmax(0,1fr));
 }
+
+.caf-grid.caf-grid-5 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
 .caf-grid.caf-grid-4 {
-    grid-template-columns: repeat(4, minmax(0,1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .caf-grid.caf-grid-3 {
-    grid-template-columns: repeat(3, minmax(0,1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .caf-grid.caf-grid-2 {
-    grid-template-columns: repeat(2, minmax(0,1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .caf-grid.caf-grid-1 {
-    grid-template-columns: repeat(1, minmax(0,1fr));
+    grid-template-columns: repeat(1, minmax(0, 1fr));
 }
 
 .caf-grid {
@@ -311,8 +314,8 @@ li.selection-list-default i {
 .caf-builder-container .post-layout-container .caf-builder-module-main.caf-module-type-button a,
 .caf-builder-container .post-layout-container .caf-builder-module-main.caf-module-type-woo_add_to_cart a,
 .caf-builder-container .post-layout-container .caf-builder-module-main.caf-module-type-product_price a {
-  text-decoration: none;
-  line-height: normal;
+    text-decoration: none;
+    line-height: normal;
 }
 
 /* ATC keeps Woo functional classes but Design styles must win over theme .button skins. */
@@ -371,7 +374,7 @@ li.selection-list-default i {
 
 /* Hide WooCommerce's default "View cart" link after CAF Ajax ATC. */
 .caf-builder-module-main.caf-module-type-woo_add_to_cart a.added_to_cart,
-.caf-woo-add-to-cart-button ~ a.added_to_cart {
+.caf-woo-add-to-cart-button~a.added_to_cart {
     display: none !important;
 }
 
@@ -397,6 +400,7 @@ li.selection-list-default i {
 .caf-builder-module-main.caf-module-type-categories {
     display: block;
 }
+
 .caf-builder-module-main.caf-module-type-reset i,
 .caf-builder-module-main.caf-module-type-reset .caf-builder-reset-label {
     cursor: pointer;
@@ -432,9 +436,11 @@ li.selection-list-default i {
     align-items: center;
     margin-top: 30px; */
 }
+
 .caf-builder-preview-pages span.caf-builder-preview-page-no {
     box-sizing: initial;
 }
+
 .caf-builder-preview-pagination .caf-builder-preview-prev-btn,
 .caf-builder-preview-pagination .caf-builder-preview-pages .caf-builder-preview-page-no,
 .caf-builder-preview-pagination .caf-builder-preview-next-btn {
@@ -450,7 +456,7 @@ li.selection-list-default i {
 
 .caf-builder-preview-pagination .load-more-pagination .load-more-btn {
     cursor: pointer;
-    
+
 }
 
 .caf-builder-container .caf-builder-preview-pagination-container .caf-builder-preview-prev-btn,
@@ -501,20 +507,28 @@ li.selection-list-default i {
     list-style-type: none;
     line-height: normal;
 }
-#left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox:not(.caf-woo-rating), ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating),
-.entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox:not(.caf-woo-rating), ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating),
-.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox:not(.caf-woo-rating), ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating),
+
+#left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox:not(.caf-woo-rating),
+ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating),
+.entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox:not(.caf-woo-rating),
+ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating),
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-checkbox:not(.caf-woo-rating),
+ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating),
 #left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-woo-rating,
 .entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-woo-rating,
 .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-woo-rating {
     overflow: auto;
 }
-ul.caf-terms-list.caf-checkbox:not(.caf-woo-rating), ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating) {
+
+ul.caf-terms-list.caf-checkbox:not(.caf-woo-rating),
+ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating) {
     overflow: auto;
 }
+
 ul.caf-terms-list.caf-woo-rating {
     overflow: auto;
 }
+
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.caf-button .caf-taxo-button-main .caf-taxo-input {
     display: none;
 }
@@ -525,20 +539,38 @@ ul.caf-terms-list.caf-woo-rating {
     cursor: pointer;
     line-height: normal;
 }
-.caf-builder-container div, 
-.caf-builder-container span, 
-.caf-builder-container ul, 
-.caf-builder-container li, 
+
+.caf-builder-container div,
+.caf-builder-container span,
+.caf-builder-container ul,
+.caf-builder-container li,
 .caf-builder-container input,
 .caf-builder-container h2 {
     line-height: normal;
 }
+
 .filter-layout-container .caf-builder-module-main.caf-module-filter li.caf-terms-list-item .caf-taxo-button-main {
     cursor: pointer;
 }
+
 ul.caf-terms-list.caf-attribute-swatch li {
     cursor: pointer;
 }
+
+/* Attribute swatch — flat li (icon/label are direct children, no checkbox wrappers) */
+ul.caf-terms-list.caf-attribute-swatch li.caf-terms-list-item,
+.caf-bl-post .caf-module-woo_attribute_swatch ul.caf-attribute-swatch li.caf-terms-list-item,
+.caf-builder-post-preview .caf-module-woo_attribute_swatch ul.caf-attribute-swatch li.caf-terms-list-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    flex-wrap: wrap;
+}
+
+ul.caf-terms-list.caf-attribute-swatch li.caf-terms-list-item .caf-taxo-input {
+    display: none;
+}
+
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-builder-custom-label-inner .before-common {
     margin-right: 5px;
 }
@@ -640,12 +672,15 @@ ul.caf-terms-list.caf-attribute-swatch li {
     padding: 0;
     list-style-type: none;
 }
+
 .caf-builder-module-main.caf-module-filter.caf-module-type-dropdown_filter {
     overflow: visible;
 }
+
 .caf-builder-container.caf-filter-only .filter-layout-container {
     width: 100%;
 }
+
 /* Keep Elementor Products CSS-grid columns after CAF AJAX (Woo float widths otherwise win). */
 .elementor-products-grid ul.products.elementor-grid li.product,
 .elementor-wc-products ul.products.elementor-grid li.product,
@@ -658,10 +693,12 @@ ul.caf-terms-list.caf-attribute-swatch li {
     padding: 0;
     clear: none;
 }
+
 .caf-builder-container p {
     padding: 0;
     margin: 0;
 }
+
 #left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child,
 .entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child,
 .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-dropdown-child {
@@ -691,7 +728,9 @@ ul.caf-terms-list.caf-attribute-swatch li {
     text-decoration: none;
 }
 
-.caf-builder-container div.manage-ic-lbl, .caf-builder-container div.manage-text-lbl, span.trm-name {
+.caf-builder-container div.manage-ic-lbl,
+.caf-builder-container div.manage-text-lbl,
+span.trm-name {
     line-height: inherit;
 }
 
@@ -753,24 +792,24 @@ ul.caf-terms-list.caf-attribute-swatch li {
 }
 
 /* Stars list: rows of stars only. */
-.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-woo-rating--stars > li.caf-woo-rating-item,
-.caf-builder-module-main.caf-module-filter ul.caf-woo-rating--stars > li.caf-woo-rating-item {
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-woo-rating--stars>li.caf-woo-rating-item,
+.caf-builder-module-main.caf-module-filter ul.caf-woo-rating--stars>li.caf-woo-rating-item {
     cursor: pointer;
 }
 
-.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-woo-rating--stars > li.caf-woo-rating-item .caf-rating-stars i,
-.caf-builder-module-main.caf-module-filter ul.caf-woo-rating--stars > li.caf-woo-rating-item .caf-rating-stars i {
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-woo-rating--stars>li.caf-woo-rating-item .caf-rating-stars i,
+.caf-builder-module-main.caf-module-filter ul.caf-woo-rating--stars>li.caf-woo-rating-item .caf-rating-stars i {
     transition: opacity 0.15s ease, color 0.15s ease;
 }
 
 /* Star picker: one star per item, layout from Design tab meta/meta1. */
-.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-woo-rating--picker > li.caf-rating-picker-item,
-.caf-builder-module-main.caf-module-filter ul.caf-woo-rating--picker > li.caf-rating-picker-item {
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-woo-rating--picker>li.caf-rating-picker-item,
+.caf-builder-module-main.caf-module-filter ul.caf-woo-rating--picker>li.caf-rating-picker-item {
     cursor: pointer;
 }
 
-.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-woo-rating--picker > li.caf-rating-picker-item .caf-rating-stars i,
-.caf-builder-module-main.caf-module-filter ul.caf-woo-rating--picker > li.caf-rating-picker-item .caf-rating-stars i {
+.filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-woo-rating--picker>li.caf-rating-picker-item .caf-rating-stars i,
+.caf-builder-module-main.caf-module-filter ul.caf-woo-rating--picker>li.caf-rating-picker-item .caf-rating-stars i {
     transition: opacity 0.15s ease, color 0.15s ease;
 }
 
@@ -834,6 +873,7 @@ ul.caf-terms-list.caf-attribute-swatch li {
     line-height: 0;
     width: 100%;
 }
+
 .caf-builder-module-main.caf-module-post.caf-module-type-image img {
     object-fit: cover;
 }
@@ -849,18 +889,22 @@ li.caf-terms-list-item.caf-layout-flex-start .manage-ic-lbl.caf-layout-flex-star
 .caf-terms-list.caf-dropdown li.caf-terms-list-item.caf-layout-flex-start .manage-text-lbl {
     width: 100%;
 }
+
 .caf-terms-list.caf-dropdown .caf-selected-term-main .result.caf-layout-space-between {
     width: 100%;
 }
+
 .caf-filter-module-search-output {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
-.caf-builder-module-main.caf-module-filter.caf-module-search .caf-filter-module-search-output, 
+
+.caf-builder-module-main.caf-module-filter.caf-module-search .caf-filter-module-search-output,
 .caf-builder-module-main.caf-module-filter.caf-module-search .caf-filter-module-search-wrapper {
     box-sizing: border-box;
 }
+
 .caf-filter-module-search-output input.caf-search-input-field {
     background: none;
     border: none;
@@ -874,10 +918,12 @@ li.caf-terms-list-item.caf-layout-flex-start .manage-ic-lbl.caf-layout-flex-star
     padding: 0;
     width: 100%;
 }
+
 a.caf-builder-module-main.caf-module-post.caf-module-button {
     cursor: pointer;
     text-decoration: none;
 }
+
 /* Hide browser-native search clear UI to avoid duplicate clear buttons */
 .caf-filter-module-search-output input.caf-search-input-field::-webkit-search-decoration,
 .caf-filter-module-search-output input.caf-search-input-field::-webkit-search-cancel-button,
@@ -887,13 +933,18 @@ a.caf-builder-module-main.caf-module-post.caf-module-button {
     appearance: none;
     display: none;
 }
-.caf-filter-module-search-output input, .caf-filter-module-search-output input::placeholder {
+
+.caf-filter-module-search-output input,
+.caf-filter-module-search-output input::placeholder {
     color: currentColor;
 }
+
 span.clear-icon.on-type {
     display: none;
 }
-.caf-terms-list-item.caf-selected .caf-checkbox-box::after, .caf-custom-field-list-item.caf-selected .caf-checkbox-box::after {
+
+.caf-terms-list-item.caf-selected .caf-checkbox-box::after,
+.caf-custom-field-list-item.caf-selected .caf-checkbox-box::after {
     content: '';
     width: 35%;
     height: 60%;
@@ -912,6 +963,7 @@ span.clear-icon.on-type {
 .caf-custom-dropdown-wrapper.active .caf-dropdown-opt-list {
     display: block;
 }
+
 .caf-dropdown-opt-list {
     display: none;
     opacity: 0;
@@ -935,38 +987,53 @@ display: none ;
     flex-direction: column;
     gap: 10px;
 }
+
 .caf-range-slider-values {
     width: 100%;
 }
+
 .caf-range-slider-output .caf-range-slider-ui-wrapper {
     width: 100%;
     box-sizing: border-box;
     cursor: pointer;
 }
+
 .caf-range-slider-output .ui-slider-vertical {
     width: 16px;
     height: 130px;
     min-height: 130px;
 }
+
 /* Vertical single (range min/max): jQuery sets height only; anchor like jQuery UI base slider.css */
 .caf-range-slider-output .ui-slider-vertical .ui-slider-range-min {
     bottom: 0;
     top: auto;
 }
+
 .caf-range-slider-output .ui-slider-vertical .ui-slider-range-max {
     top: 0;
     bottom: auto;
 }
+
 .caf-range-slider-ui.ui-slider-horizontal .ui-slider-range.ui-widget-header {
-position: absolute;
-height: 100%;
+    position: absolute;
+    height: 100%;
 }
+
 .caf-range-slider-ui.ui-slider-vertical .ui-slider-range.ui-widget-header {
     position: absolute;
-    }
+}
+.post-layout-container .caf-builder-template-preview-post-top-wrapper,
+.post-layout-container .caf-builder-template-preview-post-top-wrapper 
+li.caf-terms-list-item.caf-attribute-swatch-term span.trm-name.caf-term-label,
+li.caf-terms-list-item.caf-attribute-swatch-term i {
+    width: inherit;
+    height: inherit;
+}
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-terms-list.toggle_closed {
     display: none !important;
 }
+
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-filter-module-search-output.toggle_closed {
     display: none !important;
 }
@@ -974,7 +1041,9 @@ height: 100%;
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-filter-module-reset-output.toggle_closed {
     display: none !important;
 }
-.caf-builder-module-main.caf-module-type-reset,.caf-filter-module-reset-output {
+
+.caf-builder-module-main.caf-module-type-reset,
+.caf-filter-module-reset-output {
     cursor: pointer;
 }
 
@@ -1070,11 +1139,13 @@ height: 100%;
         display: none !important;
     }
 }
+
 @media (max-width: 1024px) {
     .caf-hide-tablet {
         display: none !important;
     }
 }
+
 @media (max-width: 767px) {
     .caf-hide-mobile {
         display: none !important;
@@ -1085,7 +1156,7 @@ height: 100%;
    Body-ported bubble — does NOT depend on module/layout overflow or Design CSS.
    Keep this block at the END of this file only.
    ========================================================================== */
-.caf-terms-list-item.caf-has-term-tooltip > .caf-term-tooltip {
+.caf-terms-list-item.caf-has-term-tooltip>.caf-term-tooltip {
     display: none !important;
 }
 
