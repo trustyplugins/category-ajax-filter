@@ -69048,7 +69048,10 @@ function buildFilterDesignTabMetaItems(ctx) {
 }
 // EXTERNAL MODULE: ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/shared/filterModuleTier.js + 1 modules
 var filterModuleTier = __webpack_require__("./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/shared/filterModuleTier.js");
+// EXTERNAL MODULE: ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/termVisualUtils.js
+var termVisualUtils = __webpack_require__("./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/termVisualUtils.js");
 ;// ./src/MainComponents/FilterComponents/components/settingTabContent/filterDesignTabMeta1Items.js
+
 
 
 
@@ -69133,7 +69136,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
   }
   const isCollapsePanelOpen = panelKey => activeCollapsePanelKey === panelKey;
   const isWooRatingModule = (0,wooFilterModuleTemplates.isWooRatingFilterModule)(module?.key);
-  const showDesignIconTab = isWooRatingModule ? (0,wooFilterModuleTemplates.usesRatingStarStyles)(settings) : settings?.show_icon === "true";
+  const showDesignIconTab = isWooRatingModule ? (0,wooFilterModuleTemplates.usesRatingStarStyles)(settings) : (0,termVisualUtils.shouldShowFilterDesignIconStyleTab)(settings, module?.key);
   const designIconLabel = isWooRatingModule ? "Stars" : termVisualLabel;
   const showDesignCountTab = !isWooRatingModule && settings?.show_count === "true";
   const isRsSliderDesign = module?.key === "range_slider" && styleTab === "meta1";
@@ -69400,7 +69403,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
             items: styleTab === "selectmeta" ? [{
               key: "selectmeta",
               label: "Select Field"
-            }, settings?.show_icon === 'true' ? {
+            }, settings?.show_icon === 'true' && showDesignIconTab ? {
               key: "selecticon",
               label: termVisualLabel
             } : null].filter(Boolean) : styleTab === "meta" && module?.key === "search" ? (0,filterModuleTier.buildSearchDesignFieldSubTabs)(settings) : [{
@@ -69700,7 +69703,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
           items: rsTrackThumbTabItems ? rsTrackThumbTabItems : styleTab === "selectmeta" ? [{
             key: "selectmeta",
             label: "Select Field"
-          }, settings?.show_icon === 'true' ? {
+          }, settings?.show_icon === 'true' && showDesignIconTab ? {
             key: "selecticon",
             label: termVisualLabel
           } : null].filter(Boolean) : styleTab === "meta" && module?.key === "search" ? (0,filterModuleTier.buildSearchDesignFieldSubTabs)(settings) : [styleTab === "meta1" && module?.key === "dropdown_filter" ? {
@@ -69988,7 +69991,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
           items: rsTrackThumbTabItems ? rsTrackThumbTabItems : styleTab === "selectmeta" ? [{
             key: "selectmeta",
             label: "Select Field"
-          }, settings?.show_icon === 'true' ? {
+          }, settings?.show_icon === 'true' && showDesignIconTab ? {
             key: "selecticon",
             label: termVisualLabel
           } : null].filter(Boolean) : styleTab === "meta" && module?.key === "search" ? (0,filterModuleTier.buildSearchDesignFieldSubTabs)(settings) : [styleTab === "meta1" && module?.key === "dropdown_filter" ? {
@@ -70099,7 +70102,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
           items: rsTrackThumbTabItems ? rsTrackThumbTabItems : styleTab === "selectmeta" ? [{
             key: "selectmeta",
             label: "Select Field"
-          }, settings?.show_icon === 'true' ? {
+          }, settings?.show_icon === 'true' && showDesignIconTab ? {
             key: "selecticon",
             label: termVisualLabel
           } : null].filter(Boolean) : styleTab === "meta" && module?.key === "search" ? (0,filterModuleTier.buildSearchDesignFieldSubTabs)(settings) : [styleTab === "meta1" && module?.key === "dropdown_filter" ? {
@@ -70195,7 +70198,7 @@ function buildFilterDesignTabMeta1Items(ctx) {
           items: rsTrackThumbTabItems ? rsTrackThumbTabItems : styleTab === "selectmeta" ? [{
             key: "selectmeta",
             label: "Select Field"
-          }, settings?.show_icon === 'true' ? {
+          }, settings?.show_icon === 'true' && showDesignIconTab ? {
             key: "selecticon",
             label: termVisualLabel
           } : null].filter(Boolean) : styleTab === "meta" && module?.key === "search" ? (0,filterModuleTier.buildSearchDesignFieldSubTabs)(settings) : [styleTab === "meta1" && module?.key === "dropdown_filter" ? {
@@ -70277,8 +70280,6 @@ function buildFilterDesignTabMeta1Items(ctx) {
 }
 // EXTERNAL MODULE: ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/useResolvedMainBuilderData.js
 var useResolvedMainBuilderData = __webpack_require__("./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/useResolvedMainBuilderData.js");
-// EXTERNAL MODULE: ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/termVisualUtils.js
-var termVisualUtils = __webpack_require__("./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/termVisualUtils.js");
 // EXTERNAL MODULE: ./src/MainComponents/FilterComponents/styleData.js
 var styleData = __webpack_require__("./src/MainComponents/FilterComponents/styleData.js");
 ;// ./src/MainComponents/FilterComponents/components/settingTabContent/DesignTab.js
@@ -70418,11 +70419,22 @@ const DesignTab = props => {
       setSelectedMetaDropdown("container");
     }
   }, [settings?.term_show_more, styleTab]);
+  (0,external_React_.useEffect)(() => {
+    const isCheckboxDropdown = liveModule?.key === "checkbox_filter" || liveModule?.key === "dropdown_filter";
+    if (!isCheckboxDropdown || (0,termVisualUtils.shouldShowFilterDesignIconStyleTab)(settings, liveModule?.key)) {
+      return;
+    }
+    if (selectedMetaDropdown === "icon") {
+      setSelectedMetaDropdown("meta1");
+    } else if (selectedMetaDropdown === "selecticon") {
+      setSelectedMetaDropdown("selectmeta");
+    }
+  }, [liveModule?.key, settings?.show_icon, settings?.term_visual, resolvedPostType, selectedMetaDropdown, styleTab]);
 
   // Legacy layouts: section must exist before HeaderItems / layout resolvers can bind.
   // Only fill when completely missing — same defaults as NewModulePopUp / Content enable.
   (0,external_React_.useEffect)(() => {
-    const canUseShowMoreTab = (0,filterModuleTier.canUseFilterTermShowMore)() && (liveModule?.key === "checkbox_filter" || liveModule?.key === "dropdown_filter" || liveModule?.key === "woo_attribute_swatch") && String(settings?.term_show_more ?? "false") === "true";
+    const canUseShowMoreTab = (0,filterModuleTier.canUseFilterTermShowMore)() && (liveModule?.key === "checkbox_filter" || liveModule?.key === "dropdown_filter") && String(settings?.term_show_more ?? "false") === "true";
     if (!canUseShowMoreTab || liveModule?.style?.showmore || !styleData.fModuleStyle?.showmore) {
       return;
     }
@@ -70493,7 +70505,7 @@ const DesignTab = props => {
   } : null, module.key !== "search" && {
     key: "meta1",
     label: module?.key === "dropdown_filter" ? "Options" : module?.key === "range_slider" ? "Slider" : "Single Item"
-  }, (liveModule?.key === "checkbox_filter" || liveModule?.key === "dropdown_filter" || liveModule?.key === "woo_attribute_swatch") && (0,filterModuleTier.canUseFilterTermShowMore)() && settings?.term_show_more === "true" && {
+  }, (liveModule?.key === "checkbox_filter" || liveModule?.key === "dropdown_filter") && (0,filterModuleTier.canUseFilterTermShowMore)() && settings?.term_show_more === "true" && {
     key: "showmore",
     label: "Show More"
   }].filter(Boolean);
@@ -72272,51 +72284,6 @@ function FilterTermRowProActions({
 
 /***/ },
 
-/***/ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/shared/FilterTermShowMoreProPanel.js"
-/*!*********************************************************************************************************************************!*\
-  !*** ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/shared/FilterTermShowMoreProPanel.js ***!
-  \*********************************************************************************************************************************/
-(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ FilterTermShowMoreProPanel)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var antd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! antd */ "./node_modules/antd/es/switch/index.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
-
-
-
-/** Free keeps the same locked Show More chrome without shipping its settings body. */
-
-function FilterTermShowMoreProPanel() {
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
-      className: "module-content-tab-row no-pad-0",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("label", {
-        className: "setting-label-main",
-        children: "Show More"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
-        className: "module-content-tab-row caf-design-two-half",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("label", {
-          children: "Enable"
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(antd__WEBPACK_IMPORTED_MODULE_1__["default"], {
-          checked: false,
-          disabled: true
-        })]
-      })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("hr", {
-      className: "setting-hr-main"
-    })]
-  });
-}
-
-/***/ },
-
 /***/ "./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/shared/filterModuleTier.js"
 /*!***********************************************************************************************************************************!*\
   !*** ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/shared/filterModuleTier.js + 1 modules ***!
@@ -72989,6 +72956,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   seedDefaultColorOnTermTree: () => (/* binding */ seedDefaultColorOnTermTree),
 /* harmony export */   seedDefaultIconOnTermTree: () => (/* binding */ seedDefaultIconOnTermTree),
 /* harmony export */   shouldHideTermLabel: () => (/* binding */ shouldHideTermLabel),
+/* harmony export */   shouldShowFilterDesignIconStyleTab: () => (/* binding */ shouldShowFilterDesignIconStyleTab),
 /* harmony export */   shouldShowTermLabelAsTooltip: () => (/* binding */ shouldShowTermLabelAsTooltip),
 /* harmony export */   termHasColorSwatch: () => (/* binding */ termHasColorSwatch),
 /* harmony export */   termHasIconVisual: () => (/* binding */ termHasIconVisual),
@@ -73310,6 +73278,21 @@ const getAttributeSwatchDefaultTermIcons = settings => {
 /** Filter Design-tab labels (Icon vs Color only — unchanged for filter modules). */
 const getTermVisualDesignLabel = settings => isTermVisualColor(settings) ? "Color Swatch" : "Icon";
 const getTermVisualWithTextDesignLabel = settings => isTermVisualColor(settings) ? "Color Swatch + Text" : "Icon + Text";
+
+/**
+ * Checkbox/dropdown Design tab: icon/swatch styling sub-tabs (under Text, Spacing, etc.).
+ * Hidden in color-swatch mode — swatch colors live in Content term settings, not design CSS.
+ */
+const shouldShowFilterDesignIconStyleTab = (settings, moduleKey) => {
+  const key = String(moduleKey || "").trim();
+  if (key !== "checkbox_filter" && key !== "dropdown_filter") {
+    return String(settings?.show_icon) === "true";
+  }
+  if (String(settings?.show_icon) !== "true") {
+    return false;
+  }
+  return !isTermVisualColor(settings);
+};
 
 /** Attribute Swatch Design-tab labels (Text | Icon/Image | Color). */
 const getAttributeSwatchDesignLabel = settings => {
@@ -76020,147 +76003,27 @@ const normalizeColorPickerValue = (value, fallback = "#000000", cssValue = "") =
 /***/ },
 
 /***/ "./src/MainComponents/utils/globalFontFamily.js"
-/*!******************************************************************!*\
-  !*** ./src/MainComponents/utils/globalFontFamily.js + 1 modules ***!
-  \******************************************************************/
+/*!******************************************************!*\
+  !*** ./src/MainComponents/utils/globalFontFamily.js ***!
+  \******************************************************/
 (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  DEFAULT_GLOBAL_FONT_FAMILY: () => (/* binding */ DEFAULT_GLOBAL_FONT_FAMILY),
-  applyGlobalFontToLayoutElement: () => (/* binding */ applyGlobalFontToLayoutElement),
-  getCustomFontCssUrl: () => (/* binding */ getCustomFontCssUrl),
-  getGlobalFontFamily: () => (/* binding */ getGlobalFontFamily),
-  isCustomFontFamily: () => (/* binding */ isCustomFontFamily),
-  loadFontFamily: () => (/* binding */ loadFontFamily),
-  loadGoogleFontFamily: () => (/* binding */ loadGoogleFontFamily),
-  preloadGoogleFontsCatalog: () => (/* reexport */ preloadGoogleFontsCatalog),
-  propagateGlobalFontInBuilder: () => (/* binding */ propagateGlobalFontInBuilder),
-  removeCustomFontFromMap: () => (/* binding */ removeCustomFontFromMap),
-  syncCustomFontsMap: () => (/* binding */ syncCustomFontsMap)
-});
-
-// EXTERNAL MODULE: ./src/MainComponents/constants/fontWeightOptions.js
-var fontWeightOptions = __webpack_require__("./src/MainComponents/constants/fontWeightOptions.js");
-;// ./src/MainComponents/utils/googleFontUrl.js
-/** Weights exposed in module Design tab font-weight picker. */
-
-const DEFAULT_BUILDER_WEIGHTS = fontWeightOptions.FONT_WEIGHT_VALUES;
-let googleFontsCatalog = null;
-let googleFontsCatalogPromise = null;
-const getPluginBaseUrl = () => {
-  const base = window?.tc_caf_ajax?.plugin_path || "";
-  return base.endsWith("/") ? base : `${base}/`;
-};
-const variantsToAxisPairs = (variants = []) => {
-  const pairMap = new Map();
-  const addPair = (ital, weight) => {
-    pairMap.set(`${ital},${weight}`, [ital, weight]);
-  };
-  variants.forEach(variant => {
-    const token = String(variant || "").trim().toLowerCase();
-    if (!token) {
-      return;
-    }
-    if (token === "regular") {
-      addPair(0, 400);
-      return;
-    }
-    if (token === "italic") {
-      addPair(1, 400);
-      return;
-    }
-    const italicMatch = token.match(/^(\d+)italic$/);
-    if (italicMatch) {
-      addPair(1, Number(italicMatch[1]));
-      return;
-    }
-    if (/^\d+$/.test(token)) {
-      addPair(0, Number(token));
-    }
-  });
-  return Array.from(pairMap.values());
-};
-const buildGoogleFontsStylesheetUrl = (family, variants = []) => {
-  const normalizedFamily = String(family || "").trim();
-  if (!normalizedFamily) {
-    return "";
-  }
-  let axisPairs = variantsToAxisPairs(variants);
-  if (!axisPairs.length) {
-    axisPairs = DEFAULT_BUILDER_WEIGHTS.map(weight => [0, weight]);
-  }
-  const familyParam = encodeURIComponent(normalizedFamily).replace(/%20/g, "+");
-  const hasItalic = axisPairs.some(([ital]) => ital === 1);
-  if (!hasItalic) {
-    const weights = Array.from(new Set(axisPairs.map(([, weight]) => weight))).sort((a, b) => a - b);
-    return `https://fonts.googleapis.com/css2?family=${familyParam}:wght@${weights.join(";")}&display=swap`;
-  }
-  axisPairs.sort((a, b) => {
-    if (a[0] !== b[0]) {
-      return a[0] - b[0];
-    }
-    return a[1] - b[1];
-  });
-  const axisValue = axisPairs.map(([ital, weight]) => `${ital},${weight}`).join(";");
-  return `https://fonts.googleapis.com/css2?family=${familyParam}:ital,wght@${axisValue}&display=swap`;
-};
-const setGoogleFontsCatalog = (items = []) => {
-  const nextCatalog = {};
-  if (Array.isArray(items)) {
-    items.forEach(item => {
-      if (item?.family && Array.isArray(item?.variants)) {
-        nextCatalog[item.family] = item.variants;
-      }
-    });
-  }
-  googleFontsCatalog = nextCatalog;
-  return googleFontsCatalog;
-};
-const getVariantsForFamily = family => {
-  const normalized = String(family || "").trim();
-  if (!normalized || !googleFontsCatalog) {
-    return [];
-  }
-  return googleFontsCatalog[normalized] || [];
-};
-const preloadGoogleFontsCatalog = () => {
-  if (googleFontsCatalog) {
-    return Promise.resolve(googleFontsCatalog);
-  }
-  if (googleFontsCatalogPromise) {
-    return googleFontsCatalogPromise;
-  }
-  const fontsUrl = `${getPluginBaseUrl()}admin/google-fonts.json`;
-  googleFontsCatalogPromise = fetch(fontsUrl, {
-    credentials: "same-origin",
-    cache: "no-store"
-  }).then(response => {
-    if (!response.ok) {
-      throw new Error(`Failed to load google-fonts.json (${response.status})`);
-    }
-    return response.json();
-  }).then(payload => setGoogleFontsCatalog(payload?.items || [])).catch(error => {
-    console.error("CAF: unable to load google-fonts.json", error);
-    googleFontsCatalog = {};
-    return googleFontsCatalog;
-  });
-  return googleFontsCatalogPromise;
-};
-const resolveGoogleFontsStylesheetUrl = async family => {
-  const normalized = String(family || "").trim();
-  if (!normalized) {
-    return "";
-  }
-  await preloadGoogleFontsCatalog();
-  const variants = getVariantsForFamily(normalized);
-  return buildGoogleFontsStylesheetUrl(normalized, variants);
-};
-;// ./src/MainComponents/utils/globalFontFamily.js
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DEFAULT_GLOBAL_FONT_FAMILY: () => (/* binding */ DEFAULT_GLOBAL_FONT_FAMILY),
+/* harmony export */   applyGlobalFontToLayoutElement: () => (/* binding */ applyGlobalFontToLayoutElement),
+/* harmony export */   getCustomFontCssUrl: () => (/* binding */ getCustomFontCssUrl),
+/* harmony export */   getGlobalFontFamily: () => (/* binding */ getGlobalFontFamily),
+/* harmony export */   isCustomFontFamily: () => (/* binding */ isCustomFontFamily),
+/* harmony export */   loadFontFamily: () => (/* binding */ loadFontFamily),
+/* harmony export */   loadGoogleFontFamily: () => (/* binding */ loadGoogleFontFamily),
+/* harmony export */   preloadGoogleFontsCatalog: () => (/* reexport safe */ _googleFontUrl__WEBPACK_IMPORTED_MODULE_0__.preloadGoogleFontsCatalog),
+/* harmony export */   propagateGlobalFontInBuilder: () => (/* binding */ propagateGlobalFontInBuilder),
+/* harmony export */   removeCustomFontFromMap: () => (/* binding */ removeCustomFontFromMap),
+/* harmony export */   syncCustomFontsMap: () => (/* binding */ syncCustomFontsMap)
+/* harmony export */ });
+/* harmony import */ var _googleFontUrl__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./googleFontUrl */ "./src/MainComponents/utils/googleFontUrl.js");
 
 const DEFAULT_GLOBAL_FONT_FAMILY = "DM Sans";
 const STYLE_DEVICES = ["desktop", "tablet", "mobile"];
@@ -76308,7 +76171,7 @@ const loadFontFamily = fontFamily => {
     document.body.appendChild(link);
     return;
   }
-  resolveGoogleFontsStylesheetUrl(normalized).then(stylesheetUrl => {
+  (0,_googleFontUrl__WEBPACK_IMPORTED_MODULE_0__.resolveGoogleFontsStylesheetUrl)(normalized).then(stylesheetUrl => {
     if (!stylesheetUrl || document.getElementById(linkId)) {
       return;
     }
@@ -76325,6 +76188,139 @@ const loadFontFamily = fontFamily => {
 };
 const loadGoogleFontFamily = loadFontFamily;
 
+
+/***/ },
+
+/***/ "./src/MainComponents/utils/googleFontUrl.js"
+/*!***************************************************!*\
+  !*** ./src/MainComponents/utils/googleFontUrl.js ***!
+  \***************************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   buildGoogleFontsStylesheetUrl: () => (/* binding */ buildGoogleFontsStylesheetUrl),
+/* harmony export */   getVariantsForFamily: () => (/* binding */ getVariantsForFamily),
+/* harmony export */   preloadGoogleFontsCatalog: () => (/* binding */ preloadGoogleFontsCatalog),
+/* harmony export */   resolveGoogleFontsStylesheetUrl: () => (/* binding */ resolveGoogleFontsStylesheetUrl),
+/* harmony export */   setGoogleFontsCatalog: () => (/* binding */ setGoogleFontsCatalog),
+/* harmony export */   variantsToAxisPairs: () => (/* binding */ variantsToAxisPairs)
+/* harmony export */ });
+/* harmony import */ var _constants_fontWeightOptions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../constants/fontWeightOptions */ "./src/MainComponents/constants/fontWeightOptions.js");
+/** Weights exposed in module Design tab font-weight picker. */
+
+const DEFAULT_BUILDER_WEIGHTS = _constants_fontWeightOptions__WEBPACK_IMPORTED_MODULE_0__.FONT_WEIGHT_VALUES;
+let googleFontsCatalog = null;
+let googleFontsCatalogPromise = null;
+const getPluginBaseUrl = () => {
+  const base = window?.tc_caf_ajax?.plugin_path || "";
+  return base.endsWith("/") ? base : `${base}/`;
+};
+const variantsToAxisPairs = (variants = []) => {
+  const pairMap = new Map();
+  const addPair = (ital, weight) => {
+    pairMap.set(`${ital},${weight}`, [ital, weight]);
+  };
+  variants.forEach(variant => {
+    const token = String(variant || "").trim().toLowerCase();
+    if (!token) {
+      return;
+    }
+    if (token === "regular") {
+      addPair(0, 400);
+      return;
+    }
+    if (token === "italic") {
+      addPair(1, 400);
+      return;
+    }
+    const italicMatch = token.match(/^(\d+)italic$/);
+    if (italicMatch) {
+      addPair(1, Number(italicMatch[1]));
+      return;
+    }
+    if (/^\d+$/.test(token)) {
+      addPair(0, Number(token));
+    }
+  });
+  return Array.from(pairMap.values());
+};
+const buildGoogleFontsStylesheetUrl = (family, variants = []) => {
+  const normalizedFamily = String(family || "").trim();
+  if (!normalizedFamily) {
+    return "";
+  }
+  let axisPairs = variantsToAxisPairs(variants);
+  if (!axisPairs.length) {
+    axisPairs = DEFAULT_BUILDER_WEIGHTS.map(weight => [0, weight]);
+  }
+  const familyParam = encodeURIComponent(normalizedFamily).replace(/%20/g, "+");
+  const hasItalic = axisPairs.some(([ital]) => ital === 1);
+  if (!hasItalic) {
+    const weights = Array.from(new Set(axisPairs.map(([, weight]) => weight))).sort((a, b) => a - b);
+    return `https://fonts.googleapis.com/css2?family=${familyParam}:wght@${weights.join(";")}&display=swap`;
+  }
+  axisPairs.sort((a, b) => {
+    if (a[0] !== b[0]) {
+      return a[0] - b[0];
+    }
+    return a[1] - b[1];
+  });
+  const axisValue = axisPairs.map(([ital, weight]) => `${ital},${weight}`).join(";");
+  return `https://fonts.googleapis.com/css2?family=${familyParam}:ital,wght@${axisValue}&display=swap`;
+};
+const setGoogleFontsCatalog = (items = []) => {
+  const nextCatalog = {};
+  if (Array.isArray(items)) {
+    items.forEach(item => {
+      if (item?.family && Array.isArray(item?.variants)) {
+        nextCatalog[item.family] = item.variants;
+      }
+    });
+  }
+  googleFontsCatalog = nextCatalog;
+  return googleFontsCatalog;
+};
+const getVariantsForFamily = family => {
+  const normalized = String(family || "").trim();
+  if (!normalized || !googleFontsCatalog) {
+    return [];
+  }
+  return googleFontsCatalog[normalized] || [];
+};
+const preloadGoogleFontsCatalog = () => {
+  if (googleFontsCatalog) {
+    return Promise.resolve(googleFontsCatalog);
+  }
+  if (googleFontsCatalogPromise) {
+    return googleFontsCatalogPromise;
+  }
+  const fontsUrl = `${getPluginBaseUrl()}admin/google-fonts.json`;
+  googleFontsCatalogPromise = fetch(fontsUrl, {
+    credentials: "same-origin",
+    cache: "no-store"
+  }).then(response => {
+    if (!response.ok) {
+      throw new Error(`Failed to load google-fonts.json (${response.status})`);
+    }
+    return response.json();
+  }).then(payload => setGoogleFontsCatalog(payload?.items || [])).catch(error => {
+    console.error("CAF: unable to load google-fonts.json", error);
+    googleFontsCatalog = {};
+    return googleFontsCatalog;
+  });
+  return googleFontsCatalogPromise;
+};
+const resolveGoogleFontsStylesheetUrl = async family => {
+  const normalized = String(family || "").trim();
+  if (!normalized) {
+    return "";
+  }
+  await preloadGoogleFontsCatalog();
+  const variants = getVariantsForFamily(normalized);
+  return buildGoogleFontsStylesheetUrl(normalized, variants);
+};
 
 /***/ },
 
@@ -81160,6 +81156,7 @@ const apiEndpoints = Object.freeze({
   getWooProductPriceRange: "get-woo-product-price-range/",
   getWooProductMetaRange: metaKey => `get-woo-product-meta-range/?meta_key=${encodeURIComponent(metaKey)}`,
   getWooAttributeTermVisuals: taxonomy => `get-woo-attribute-term-visuals/?taxonomy=${encodeURIComponent(taxonomy)}`,
+  syncAttributeSwatchTaxonomyData: "sync-attribute-swatch-taxonomy-data/",
   postTypesByBuilderIndex: builderIndex => `post-types/?builder_index=${builderIndex}`,
   postsByTypeAndBuilderIndex: (postType, builderIndex) => `get-posts?post_type=${encodeURIComponent(postType)}&&builder_index=${builderIndex}`,
   saveBuilderLayout2: "save-builder-layout2/",
@@ -115319,7 +115316,7 @@ var batch = defaultNoopBatch;
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames based on template
-/******/ 			return "" + chunkId + ".js?ver=" + {"src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js":"cd008e72ee0d7d2e0ed0","src_MainComponents_FilterComponents_components_settingTabContent_AdvancedTab_js":"b4b9b5fa557c0e4f483a"}[chunkId] + "";
+/******/ 			return "" + chunkId + ".js?ver=" + {"src_MainComponents_FilterComponents_components_settingTabContent_ContentTab_js":"d1e0649d24addb10ac27","src_MainComponents_FilterComponents_components_settingTabContent_AdvancedTab_js":"b4b9b5fa557c0e4f483a"}[chunkId] + "";
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -115536,7 +115533,7 @@ var __webpack_exports__ = {};
 (() => {
 "use strict";
 /*!************************************!*\
-  !*** ./src/index.js + 444 modules ***!
+  !*** ./src/index.js + 449 modules ***!
   \************************************/
 
 ;// ./src/index.css
@@ -115559,1217 +115556,6 @@ var skeleton = __webpack_require__("./node_modules/antd/es/skeleton/index.js");
 var tabs = __webpack_require__("./node_modules/antd/es/tabs/index.js");
 // EXTERNAL MODULE: ./node_modules/antd/es/input/index.js + 8 modules
 var input = __webpack_require__("./node_modules/antd/es/input/index.js");
-// EXTERNAL MODULE: ./node_modules/@rc-component/util/es/React/render.js
-var render = __webpack_require__("./node_modules/@rc-component/util/es/React/render.js");
-// EXTERNAL MODULE: ./node_modules/antd/es/app/context.js
-var context = __webpack_require__("./node_modules/antd/es/app/context.js");
-// EXTERNAL MODULE: ./node_modules/antd/es/config-provider/context.js
-var config_provider_context = __webpack_require__("./node_modules/antd/es/config-provider/context.js");
-// EXTERNAL MODULE: ./node_modules/antd/es/config-provider/index.js + 7 modules
-var config_provider = __webpack_require__("./node_modules/antd/es/config-provider/index.js");
-// EXTERNAL MODULE: ./node_modules/antd/node_modules/@ant-design/icons/es/icons/CheckCircleFilled.js + 1 modules
-var CheckCircleFilled = __webpack_require__("./node_modules/antd/node_modules/@ant-design/icons/es/icons/CheckCircleFilled.js");
-// EXTERNAL MODULE: ./node_modules/antd/node_modules/@ant-design/icons/es/icons/CloseCircleFilled.js
-var CloseCircleFilled = __webpack_require__("./node_modules/antd/node_modules/@ant-design/icons/es/icons/CloseCircleFilled.js");
-// EXTERNAL MODULE: ./node_modules/antd/node_modules/@ant-design/icons/es/icons/CloseOutlined.js + 1 modules
-var CloseOutlined = __webpack_require__("./node_modules/antd/node_modules/@ant-design/icons/es/icons/CloseOutlined.js");
-// EXTERNAL MODULE: ./node_modules/antd/node_modules/@ant-design/icons/es/icons/ExclamationCircleFilled.js + 1 modules
-var ExclamationCircleFilled = __webpack_require__("./node_modules/antd/node_modules/@ant-design/icons/es/icons/ExclamationCircleFilled.js");
-// EXTERNAL MODULE: ./node_modules/antd/node_modules/@ant-design/icons/es/icons/InfoCircleFilled.js + 1 modules
-var InfoCircleFilled = __webpack_require__("./node_modules/antd/node_modules/@ant-design/icons/es/icons/InfoCircleFilled.js");
-// EXTERNAL MODULE: ./node_modules/antd/node_modules/@ant-design/icons/es/icons/LoadingOutlined.js
-var LoadingOutlined = __webpack_require__("./node_modules/antd/node_modules/@ant-design/icons/es/icons/LoadingOutlined.js");
-// EXTERNAL MODULE: ./node_modules/@rc-component/notification/es/index.js + 6 modules
-var es = __webpack_require__("./node_modules/@rc-component/notification/es/index.js");
-// EXTERNAL MODULE: ./node_modules/clsx/dist/clsx.mjs
-var clsx = __webpack_require__("./node_modules/clsx/dist/clsx.mjs");
-// EXTERNAL MODULE: ./node_modules/antd/es/_util/hooks/useMergeSemantic.js
-var useMergeSemantic = __webpack_require__("./node_modules/antd/es/_util/hooks/useMergeSemantic.js");
-// EXTERNAL MODULE: ./node_modules/antd/es/_util/hooks/useClosable.js + 1 modules
-var useClosable = __webpack_require__("./node_modules/antd/es/_util/hooks/useClosable.js");
-// EXTERNAL MODULE: ./node_modules/antd/es/_util/warning.js
-var _util_warning = __webpack_require__("./node_modules/antd/es/_util/warning.js");
-// EXTERNAL MODULE: ./node_modules/antd/es/config-provider/hooks/useCSSVarCls.js
-var useCSSVarCls = __webpack_require__("./node_modules/antd/es/config-provider/hooks/useCSSVarCls.js");
-// EXTERNAL MODULE: ./node_modules/@ant-design/cssinjs/es/index.js + 39 modules
-var cssinjs_es = __webpack_require__("./node_modules/@ant-design/cssinjs/es/index.js");
-// EXTERNAL MODULE: ./node_modules/antd/es/_util/hooks/useZIndex.js
-var useZIndex = __webpack_require__("./node_modules/antd/es/_util/hooks/useZIndex.js");
-// EXTERNAL MODULE: ./node_modules/antd/es/style/index.js
-var style = __webpack_require__("./node_modules/antd/es/style/index.js");
-// EXTERNAL MODULE: ./node_modules/@ant-design/cssinjs-utils/es/index.js + 12 modules
-var cssinjs_utils_es = __webpack_require__("./node_modules/@ant-design/cssinjs-utils/es/index.js");
-// EXTERNAL MODULE: ./node_modules/antd/es/theme/util/genStyleUtils.js
-var genStyleUtils = __webpack_require__("./node_modules/antd/es/theme/util/genStyleUtils.js");
-;// ./node_modules/antd/es/notification/style/placement.js
-
-const genNotificationPlacementStyle = token => {
-  const {
-    componentCls,
-    notificationMarginEdge,
-    animationMaxHeight
-  } = token;
-  const noticeCls = `${componentCls}-notice`;
-  const rightFadeIn = new cssinjs_es.Keyframes('antNotificationFadeIn', {
-    '0%': {
-      transform: `translate3d(100%, 0, 0)`,
-      opacity: 0
-    },
-    '100%': {
-      transform: `translate3d(0, 0, 0)`,
-      opacity: 1
-    }
-  });
-  const topFadeIn = new cssinjs_es.Keyframes('antNotificationTopFadeIn', {
-    '0%': {
-      top: -animationMaxHeight,
-      opacity: 0
-    },
-    '100%': {
-      top: 0,
-      opacity: 1
-    }
-  });
-  const bottomFadeIn = new cssinjs_es.Keyframes('antNotificationBottomFadeIn', {
-    '0%': {
-      bottom: token.calc(animationMaxHeight).mul(-1).equal(),
-      opacity: 0
-    },
-    '100%': {
-      bottom: 0,
-      opacity: 1
-    }
-  });
-  const leftFadeIn = new cssinjs_es.Keyframes('antNotificationLeftFadeIn', {
-    '0%': {
-      transform: `translate3d(-100%, 0, 0)`,
-      opacity: 0
-    },
-    '100%': {
-      transform: `translate3d(0, 0, 0)`,
-      opacity: 1
-    }
-  });
-  return {
-    [componentCls]: {
-      [`&${componentCls}-top, &${componentCls}-bottom`]: {
-        marginInline: 0,
-        [noticeCls]: {
-          marginInline: 'auto auto'
-        }
-      },
-      [`&${componentCls}-top`]: {
-        [`${componentCls}-fade-enter${componentCls}-fade-enter-active, ${componentCls}-fade-appear${componentCls}-fade-appear-active`]: {
-          animationName: topFadeIn
-        }
-      },
-      [`&${componentCls}-bottom`]: {
-        [`${componentCls}-fade-enter${componentCls}-fade-enter-active, ${componentCls}-fade-appear${componentCls}-fade-appear-active`]: {
-          animationName: bottomFadeIn
-        }
-      },
-      [`&${componentCls}-topRight, &${componentCls}-bottomRight`]: {
-        [`${componentCls}-fade-enter${componentCls}-fade-enter-active, ${componentCls}-fade-appear${componentCls}-fade-appear-active`]: {
-          animationName: rightFadeIn
-        }
-      },
-      [`&${componentCls}-topLeft, &${componentCls}-bottomLeft`]: {
-        marginRight: {
-          value: 0,
-          _skip_check_: true
-        },
-        marginLeft: {
-          value: notificationMarginEdge,
-          _skip_check_: true
-        },
-        [noticeCls]: {
-          marginInlineEnd: 'auto',
-          marginInlineStart: 0
-        },
-        [`${componentCls}-fade-enter${componentCls}-fade-enter-active, ${componentCls}-fade-appear${componentCls}-fade-appear-active`]: {
-          animationName: leftFadeIn
-        }
-      }
-    }
-  };
-};
-/* harmony default export */ const placement = (genNotificationPlacementStyle);
-;// ./node_modules/antd/es/notification/interface.js
-const NotificationPlacements = ['top', 'topLeft', 'topRight', 'bottom', 'bottomLeft', 'bottomRight'];
-;// ./node_modules/antd/es/notification/style/stack.js
-
-const placementAlignProperty = {
-  topLeft: 'left',
-  topRight: 'right',
-  bottomLeft: 'left',
-  bottomRight: 'right',
-  top: 'left',
-  bottom: 'left'
-};
-const genPlacementStackStyle = (token, placement) => {
-  const {
-    componentCls
-  } = token;
-  return {
-    [`${componentCls}-${placement}`]: {
-      [`&${componentCls}-stack > ${componentCls}-notice-wrapper`]: {
-        [placement.startsWith('top') ? 'top' : 'bottom']: 0,
-        [placementAlignProperty[placement]]: {
-          value: 0,
-          _skip_check_: true
-        }
-      }
-    }
-  };
-};
-const genStackChildrenStyle = token => {
-  const childrenStyle = {};
-  for (let i = 1; i < token.notificationStackLayer; i++) {
-    childrenStyle[`&:nth-last-child(${i + 1})`] = {
-      overflow: 'hidden',
-      [`& > ${token.componentCls}-notice`]: {
-        opacity: 0,
-        transition: `opacity ${token.motionDurationMid}`
-      }
-    };
-  }
-  return {
-    [`&:not(:nth-last-child(-n+${token.notificationStackLayer}))`]: {
-      opacity: 0,
-      overflow: 'hidden',
-      color: 'transparent',
-      pointerEvents: 'none'
-    },
-    ...childrenStyle
-  };
-};
-const genStackedNoticeStyle = token => {
-  const childrenStyle = {};
-  for (let i = 1; i < token.notificationStackLayer; i++) {
-    childrenStyle[`&:nth-last-child(${i + 1})`] = {
-      background: token.colorBgBlur,
-      backdropFilter: 'blur(10px)',
-      '-webkit-backdrop-filter': 'blur(10px)'
-    };
-  }
-  return childrenStyle;
-};
-const genStackStyle = token => {
-  const {
-    componentCls
-  } = token;
-  return {
-    [`${componentCls}-stack`]: {
-      [`& > ${componentCls}-notice-wrapper`]: {
-        transition: `transform ${token.motionDurationSlow}, backdrop-filter 0s`,
-        willChange: 'transform, opacity',
-        position: 'absolute',
-        ...genStackChildrenStyle(token)
-      }
-    },
-    [`${componentCls}-stack:not(${componentCls}-stack-expanded)`]: {
-      [`& > ${componentCls}-notice-wrapper`]: {
-        ...genStackedNoticeStyle(token)
-      }
-    },
-    [`${componentCls}-stack${componentCls}-stack-expanded`]: {
-      [`& > ${componentCls}-notice-wrapper`]: {
-        '&:not(:nth-last-child(-n + 1))': {
-          opacity: 1,
-          overflow: 'unset',
-          color: 'inherit',
-          pointerEvents: 'auto',
-          [`& > ${token.componentCls}-notice`]: {
-            opacity: 1
-          }
-        },
-        '&:after': {
-          content: '""',
-          position: 'absolute',
-          height: token.margin,
-          width: '100%',
-          insetInline: 0,
-          bottom: token.calc(token.margin).mul(-1).equal(),
-          background: 'transparent',
-          pointerEvents: 'auto'
-        }
-      }
-    },
-    ...NotificationPlacements.map(placement => genPlacementStackStyle(token, placement)).reduce((acc, cur) => ({
-      ...acc,
-      ...cur
-    }), {})
-  };
-};
-/* harmony default export */ const stack = (genStackStyle);
-;// ./node_modules/antd/es/notification/style/index.js
-
-
-
-
-
-
-const genNoticeStyle = token => {
-  const {
-    iconCls,
-    componentCls,
-    // .ant-notification
-    boxShadow,
-    fontSizeLG,
-    notificationMarginBottom,
-    borderRadiusLG,
-    colorSuccess,
-    colorInfo,
-    colorWarning,
-    colorError,
-    colorTextHeading,
-    notificationBg,
-    notificationPadding,
-    notificationMarginEdge,
-    progressBg,
-    notificationProgressHeight,
-    fontSize,
-    lineHeight,
-    width,
-    notificationIconSize,
-    colorText,
-    colorSuccessBg,
-    colorErrorBg,
-    colorInfoBg,
-    colorWarningBg,
-    motionDurationMid
-  } = token;
-  const noticeCls = `${componentCls}-notice`;
-  return {
-    position: 'relative',
-    marginBottom: notificationMarginBottom,
-    marginInlineStart: 'auto',
-    background: notificationBg,
-    borderRadius: borderRadiusLG,
-    boxShadow,
-    [noticeCls]: {
-      padding: notificationPadding,
-      width,
-      maxWidth: `calc(100vw - ${(0,cssinjs_es.unit)(token.calc(notificationMarginEdge).mul(2).equal())})`,
-      lineHeight,
-      wordWrap: 'break-word',
-      borderRadius: borderRadiusLG,
-      overflow: 'hidden',
-      // Type-specific background colors
-      '&-success': colorSuccessBg ? {
-        background: colorSuccessBg
-      } : {},
-      '&-error': colorErrorBg ? {
-        background: colorErrorBg
-      } : {},
-      '&-info': colorInfoBg ? {
-        background: colorInfoBg
-      } : {},
-      '&-warning': colorWarningBg ? {
-        background: colorWarningBg
-      } : {}
-    },
-    [`${noticeCls}-title`]: {
-      marginBottom: token.marginXS,
-      color: colorTextHeading,
-      fontSize: fontSizeLG,
-      lineHeight: token.lineHeightLG
-    },
-    [`${noticeCls}-description`]: {
-      fontSize,
-      color: colorText,
-      marginTop: token.marginXS
-    },
-    [`${noticeCls}-closable ${noticeCls}-title`]: {
-      paddingInlineEnd: token.paddingLG
-    },
-    [`${noticeCls}-with-icon ${noticeCls}-title`]: {
-      marginBottom: token.marginXS,
-      marginInlineStart: token.calc(token.marginSM).add(notificationIconSize).equal(),
-      fontSize: fontSizeLG
-    },
-    [`${noticeCls}-with-icon ${noticeCls}-description`]: {
-      marginInlineStart: token.calc(token.marginSM).add(notificationIconSize).equal(),
-      fontSize
-    },
-    // Icon & color style in different selector level
-    // https://github.com/ant-design/ant-design/issues/16503
-    // https://github.com/ant-design/ant-design/issues/15512
-    [`${noticeCls}-icon`]: {
-      position: 'absolute',
-      fontSize: notificationIconSize,
-      lineHeight: 1,
-      // icon-font
-      [`&-success${iconCls}`]: {
-        color: colorSuccess
-      },
-      [`&-info${iconCls}`]: {
-        color: colorInfo
-      },
-      [`&-warning${iconCls}`]: {
-        color: colorWarning
-      },
-      [`&-error${iconCls}`]: {
-        color: colorError
-      }
-    },
-    [`${noticeCls}-close`]: {
-      position: 'absolute',
-      top: token.notificationPaddingVertical,
-      insetInlineEnd: token.notificationPaddingHorizontal,
-      color: token.colorIcon,
-      outline: 'none',
-      width: token.notificationCloseButtonSize,
-      height: token.notificationCloseButtonSize,
-      borderRadius: token.borderRadiusSM,
-      transition: ['color', 'background-color'].map(prop => `${prop} ${motionDurationMid}`).join(', '),
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'none',
-      border: 'none',
-      '&:hover': {
-        color: token.colorIconHover,
-        backgroundColor: token.colorBgTextHover
-      },
-      '&:active': {
-        backgroundColor: token.colorBgTextActive
-      },
-      ...(0,style.genFocusStyle)(token)
-    },
-    [`${noticeCls}-progress`]: {
-      position: 'absolute',
-      display: 'block',
-      appearance: 'none',
-      inlineSize: `calc(100% - ${(0,cssinjs_es.unit)(borderRadiusLG)} * 2)`,
-      left: {
-        _skip_check_: true,
-        value: borderRadiusLG
-      },
-      right: {
-        _skip_check_: true,
-        value: borderRadiusLG
-      },
-      bottom: 0,
-      blockSize: notificationProgressHeight,
-      border: 0,
-      '&, &::-webkit-progress-bar': {
-        borderRadius: borderRadiusLG,
-        backgroundColor: `rgba(0, 0, 0, 0.04)`
-      },
-      '&::-moz-progress-bar': {
-        background: progressBg
-      },
-      '&::-webkit-progress-value': {
-        borderRadius: borderRadiusLG,
-        background: progressBg
-      }
-    },
-    [`${noticeCls}-actions`]: {
-      float: 'right',
-      marginTop: token.marginSM
-    }
-  };
-};
-const genNotificationStyle = token => {
-  const {
-    componentCls,
-    // .ant-notification
-    notificationMarginBottom,
-    notificationMarginEdge,
-    motionDurationMid,
-    motionEaseInOut
-  } = token;
-  const noticeCls = `${componentCls}-notice`;
-  const fadeOut = new cssinjs_es.Keyframes('antNotificationFadeOut', {
-    '0%': {
-      maxHeight: token.animationMaxHeight,
-      marginBottom: notificationMarginBottom
-    },
-    '100%': {
-      maxHeight: 0,
-      marginBottom: 0,
-      paddingTop: 0,
-      paddingBottom: 0,
-      opacity: 0
-    }
-  });
-  return [
-  // ============================ Holder ============================
-  {
-    [componentCls]: {
-      ...(0,style.resetComponent)(token),
-      position: 'fixed',
-      zIndex: token.zIndexPopup,
-      marginRight: {
-        value: notificationMarginEdge,
-        _skip_check_: true
-      },
-      [`${componentCls}-hook-holder`]: {
-        position: 'relative'
-      },
-      //  animation
-      [`${componentCls}-fade-appear-prepare`]: {
-        opacity: '0 !important'
-      },
-      [`${componentCls}-fade-enter, ${componentCls}-fade-appear`]: {
-        animationDuration: token.motionDurationMid,
-        animationTimingFunction: motionEaseInOut,
-        animationFillMode: 'both',
-        opacity: 0,
-        animationPlayState: 'paused'
-      },
-      [`${componentCls}-fade-leave`]: {
-        animationTimingFunction: motionEaseInOut,
-        animationFillMode: 'both',
-        animationDuration: motionDurationMid,
-        animationPlayState: 'paused'
-      },
-      [`${componentCls}-fade-enter${componentCls}-fade-enter-active, ${componentCls}-fade-appear${componentCls}-fade-appear-active`]: {
-        animationPlayState: 'running'
-      },
-      [`${componentCls}-fade-leave${componentCls}-fade-leave-active`]: {
-        animationName: fadeOut,
-        animationPlayState: 'running'
-      },
-      // RTL
-      '&-rtl': {
-        direction: 'rtl',
-        [`${noticeCls}-actions`]: {
-          float: 'left'
-        }
-      }
-    }
-  },
-  // ============================ Notice ============================
-  {
-    [componentCls]: {
-      [`${noticeCls}-wrapper`]: genNoticeStyle(token)
-    }
-  }];
-};
-// ============================== Export ==============================
-const prepareComponentToken = token => ({
-  zIndexPopup: token.zIndexPopupBase + useZIndex.CONTAINER_MAX_OFFSET + 50,
-  width: 384,
-  progressBg: `linear-gradient(90deg, ${token.colorPrimaryBorderHover}, ${token.colorPrimary})`,
-  // Fix notification background color issue
-  // https://github.com/ant-design/ant-design/issues/55649
-  // https://github.com/ant-design/ant-design/issues/56055
-  colorSuccessBg: undefined,
-  colorErrorBg: undefined,
-  colorInfoBg: undefined,
-  colorWarningBg: undefined
-});
-const prepareNotificationToken = token => {
-  const notificationPaddingVertical = token.paddingMD;
-  const notificationPaddingHorizontal = token.paddingLG;
-  const notificationToken = (0,cssinjs_utils_es.mergeToken)(token, {
-    notificationBg: token.colorBgElevated,
-    notificationPaddingVertical,
-    notificationPaddingHorizontal,
-    notificationIconSize: token.calc(token.fontSizeLG).mul(token.lineHeightLG).equal(),
-    notificationCloseButtonSize: token.calc(token.controlHeightLG).mul(0.55).equal(),
-    notificationMarginBottom: token.margin,
-    notificationPadding: `${(0,cssinjs_es.unit)(token.paddingMD)} ${(0,cssinjs_es.unit)(token.paddingContentHorizontalLG)}`,
-    notificationMarginEdge: token.marginLG,
-    animationMaxHeight: 150,
-    notificationStackLayer: 3,
-    notificationProgressHeight: 2
-  });
-  return notificationToken;
-};
-/* harmony default export */ const notification_style = ((0,genStyleUtils.genStyleHooks)('Notification', token => {
-  const notificationToken = prepareNotificationToken(token);
-  return [genNotificationStyle(notificationToken), placement(notificationToken), stack(notificationToken)];
-}, prepareComponentToken));
-;// ./node_modules/antd/es/notification/style/pure-panel.js
-
-
-
-/* harmony default export */ const pure_panel = ((0,genStyleUtils.genSubStyleComponent)(['Notification', 'PurePanel'], token => {
-  const noticeCls = `${token.componentCls}-notice`;
-  const notificationToken = prepareNotificationToken(token);
-  return {
-    [`${noticeCls}-pure-panel`]: {
-      ...genNoticeStyle(notificationToken),
-      width: notificationToken.width,
-      maxWidth: `calc(100vw - ${(0,cssinjs_es.unit)(token.calc(notificationToken.notificationMarginEdge).mul(2).equal())})`,
-      margin: 0
-    }
-  };
-}, prepareComponentToken));
-;// ./node_modules/antd/es/notification/PurePanel.js
-"use client";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const TypeIcon = {
-  info: /*#__PURE__*/external_React_.createElement(InfoCircleFilled["default"], null),
-  success: /*#__PURE__*/external_React_.createElement(CheckCircleFilled["default"], null),
-  error: /*#__PURE__*/external_React_.createElement(CloseCircleFilled["default"], null),
-  warning: /*#__PURE__*/external_React_.createElement(ExclamationCircleFilled["default"], null),
-  loading: /*#__PURE__*/external_React_.createElement(LoadingOutlined["default"], null)
-};
-function getCloseIcon(prefixCls, closeIcon) {
-  if (closeIcon === null || closeIcon === false) {
-    return null;
-  }
-  return closeIcon || /*#__PURE__*/external_React_.createElement(CloseOutlined["default"], {
-    className: `${prefixCls}-close-icon`
-  });
-}
-const typeToIcon = {
-  success: CheckCircleFilled["default"],
-  info: InfoCircleFilled["default"],
-  error: CloseCircleFilled["default"],
-  warning: ExclamationCircleFilled["default"]
-};
-const PureContent = props => {
-  const {
-    prefixCls,
-    icon,
-    type,
-    title,
-    description,
-    actions,
-    role = 'alert',
-    styles,
-    classNames: pureContentCls
-  } = props;
-  let iconNode = null;
-  if (icon) {
-    iconNode = /*#__PURE__*/external_React_.createElement("span", {
-      className: (0,clsx.clsx)(`${prefixCls}-icon`, pureContentCls.icon),
-      style: styles.icon
-    }, icon);
-  } else if (type) {
-    iconNode = /*#__PURE__*/external_React_.createElement(typeToIcon[type] || null, {
-      className: (0,clsx.clsx)(`${prefixCls}-icon`, pureContentCls.icon, `${prefixCls}-icon-${type}`),
-      style: styles.icon
-    });
-  }
-  return /*#__PURE__*/external_React_.createElement("div", {
-    className: (0,clsx.clsx)({
-      [`${prefixCls}-with-icon`]: iconNode
-    }),
-    role: role
-  }, iconNode, /*#__PURE__*/external_React_.createElement("div", {
-    className: (0,clsx.clsx)(`${prefixCls}-title`, pureContentCls.title),
-    style: styles.title
-  }, title), description && (/*#__PURE__*/external_React_.createElement("div", {
-    className: (0,clsx.clsx)(`${prefixCls}-description`, pureContentCls.description),
-    style: styles.description
-  }, description)), actions && (/*#__PURE__*/external_React_.createElement("div", {
-    className: (0,clsx.clsx)(`${prefixCls}-actions`, pureContentCls.actions),
-    style: styles.actions
-  }, actions)));
-};
-/** @private Internal Component. Do not use in your production. */
-const PurePanel = props => {
-  const {
-    prefixCls: staticPrefixCls,
-    icon,
-    type,
-    message,
-    title,
-    description,
-    btn,
-    actions,
-    closeIcon: _closeIcon,
-    className: notificationClassName,
-    style,
-    styles,
-    classNames: notificationClassNames,
-    closable,
-    ...restProps
-  } = props;
-  const {
-    getPrefixCls,
-    className: contextClassName,
-    style: contextStyle,
-    classNames: contextClassNames,
-    styles: contextStyles
-  } = (0,config_provider_context.useComponentConfig)('notification');
-  const [mergedClassNames, mergedStyles] = (0,useMergeSemantic.useMergeSemantic)([contextClassNames, notificationClassNames], [contextStyles, styles], {
-    props
-  });
-  const {
-    notification: notificationContext
-  } = external_React_.useContext(config_provider_context.ConfigContext);
-  const mergedActions = actions ?? btn;
-  if (true) {
-    const warning = (0,_util_warning.devUseWarning)('Notification');
-    [['btn', 'actions'], ['message', 'title']].forEach(([deprecatedName, newName]) => {
-      warning.deprecated(!(deprecatedName in props), deprecatedName, newName);
-    });
-  }
-  const mergedTitle = title ?? message;
-  const prefixCls = staticPrefixCls || getPrefixCls('notification');
-  const noticePrefixCls = `${prefixCls}-notice`;
-  const rootCls = (0,useCSSVarCls["default"])(prefixCls);
-  const [hashId, cssVarCls] = notification_style(prefixCls, rootCls);
-  const [rawClosable, mergedCloseIcon,, ariaProps] = (0,useClosable.useClosable)((0,useClosable.pickClosable)(props), (0,useClosable.pickClosable)(notificationContext), {
-    closable: true,
-    closeIcon: /*#__PURE__*/external_React_.createElement(CloseOutlined["default"], {
-      className: `${prefixCls}-close-icon`
-    }),
-    closeIconRender: icon => getCloseIcon(prefixCls, icon)
-  });
-  const mergedClosable = rawClosable ? {
-    onClose: closable && typeof closable === 'object' ? closable?.onClose : undefined,
-    closeIcon: mergedCloseIcon,
-    ...ariaProps
-  } : false;
-  return /*#__PURE__*/external_React_.createElement("div", {
-    className: (0,clsx.clsx)(`${noticePrefixCls}-pure-panel`, hashId, notificationClassName, cssVarCls, rootCls, mergedClassNames.root),
-    style: mergedStyles.root
-  }, /*#__PURE__*/external_React_.createElement(pure_panel, {
-    prefixCls: prefixCls
-  }), /*#__PURE__*/external_React_.createElement(es.Notice, {
-    style: {
-      ...contextStyle,
-      ...style
-    },
-    ...restProps,
-    prefixCls: prefixCls,
-    eventKey: "pure",
-    duration: null,
-    closable: mergedClosable,
-    className: (0,clsx.clsx)(notificationClassName, contextClassName),
-    content: /*#__PURE__*/external_React_.createElement(PureContent, {
-      classNames: mergedClassNames,
-      styles: mergedStyles,
-      prefixCls: noticePrefixCls,
-      icon: icon,
-      type: type,
-      title: mergedTitle,
-      description: description,
-      actions: mergedActions
-    })
-  }));
-};
-/* harmony default export */ const notification_PurePanel = (PurePanel);
-// EXTERNAL MODULE: ./node_modules/antd/es/theme/useToken.js + 3 modules
-var useToken = __webpack_require__("./node_modules/antd/es/theme/useToken.js");
-;// ./node_modules/antd/es/notification/util.js
-function getPlacementStyle(placement, top, bottom) {
-  let style;
-  switch (placement) {
-    case 'top':
-      style = {
-        left: '50%',
-        transform: 'translateX(-50%)',
-        right: 'auto',
-        top,
-        bottom: 'auto'
-      };
-      break;
-    case 'topLeft':
-      style = {
-        left: 0,
-        top,
-        bottom: 'auto'
-      };
-      break;
-    case 'topRight':
-      style = {
-        right: 0,
-        top,
-        bottom: 'auto'
-      };
-      break;
-    case 'bottom':
-      style = {
-        left: '50%',
-        transform: 'translateX(-50%)',
-        right: 'auto',
-        top: 'auto',
-        bottom
-      };
-      break;
-    case 'bottomLeft':
-      style = {
-        left: 0,
-        top: 'auto',
-        bottom
-      };
-      break;
-    default:
-      style = {
-        right: 0,
-        top: 'auto',
-        bottom
-      };
-      break;
-  }
-  return style;
-}
-function getMotion(prefixCls) {
-  return {
-    motionName: `${prefixCls}-fade`
-  };
-}
-function getCloseIconConfig(closeIcon, notificationConfig, notification) {
-  if (typeof closeIcon !== 'undefined') {
-    return closeIcon;
-  }
-  if (typeof notificationConfig?.closeIcon !== 'undefined') {
-    return notificationConfig.closeIcon;
-  }
-  return notification?.closeIcon;
-}
-;// ./node_modules/antd/es/notification/useNotification.js
-"use client";
-
-
-
-
-
-
-
-
-
-
-
-
-
-const DEFAULT_OFFSET = 24;
-const DEFAULT_DURATION = 4.5;
-const DEFAULT_PLACEMENT = 'topRight';
-const Wrapper = ({
-  children,
-  prefixCls
-}) => {
-  const rootCls = (0,useCSSVarCls["default"])(prefixCls);
-  const [hashId, cssVarCls] = notification_style(prefixCls, rootCls);
-  return /*#__PURE__*/external_React_default().createElement(es.NotificationProvider, {
-    classNames: {
-      list: (0,clsx.clsx)(hashId, cssVarCls, rootCls)
-    }
-  }, children);
-};
-const renderNotifications = (node, {
-  prefixCls,
-  key
-}) => (/*#__PURE__*/external_React_default().createElement(Wrapper, {
-  prefixCls: prefixCls,
-  key: key
-}, node));
-const Holder = /*#__PURE__*/external_React_default().forwardRef((props, ref) => {
-  const {
-    top,
-    bottom,
-    prefixCls: staticPrefixCls,
-    getContainer: staticGetContainer,
-    maxCount,
-    rtl,
-    onAllRemoved,
-    stack,
-    duration = DEFAULT_DURATION,
-    pauseOnHover = true,
-    showProgress
-  } = props;
-  const {
-    getPrefixCls,
-    getPopupContainer,
-    direction
-  } = (0,config_provider_context.useComponentConfig)('notification');
-  const {
-    notification
-  } = (0,external_React_.useContext)(config_provider_context.ConfigContext);
-  const [, token] = (0,useToken["default"])();
-  const prefixCls = staticPrefixCls || getPrefixCls('notification');
-  const mergedDuration = (0,external_React_.useMemo)(() => typeof duration === 'number' && duration > 0 ? duration : false, [duration]);
-  // =============================== Style ===============================
-  const getStyle = placement => getPlacementStyle(placement, top ?? DEFAULT_OFFSET, bottom ?? DEFAULT_OFFSET);
-  const getClassName = () => (0,clsx.clsx)({
-    [`${prefixCls}-rtl`]: rtl ?? direction === 'rtl'
-  });
-  // ============================== Motion ===============================
-  const getNotificationMotion = () => getMotion(prefixCls);
-  // ============================== Origin ===============================
-  const [api, holder] = (0,es.useNotification)({
-    prefixCls,
-    style: getStyle,
-    className: getClassName,
-    motion: getNotificationMotion,
-    closable: {
-      closeIcon: getCloseIcon(prefixCls)
-    },
-    duration: mergedDuration,
-    getContainer: () => staticGetContainer?.() || getPopupContainer?.() || document.body,
-    maxCount,
-    pauseOnHover,
-    showProgress,
-    onAllRemoved,
-    renderNotifications,
-    stack: stack === false ? false : {
-      threshold: typeof stack === 'object' ? stack?.threshold : undefined,
-      offset: 8,
-      gap: token.margin
-    }
-  });
-  const [mergedClassNames, mergedStyles] = (0,useMergeSemantic.useMergeSemantic)([notification?.classNames, props?.classNames], [notification?.styles, props?.styles], {
-    props
-  });
-  // ================================ Ref ================================
-  external_React_default().useImperativeHandle(ref, () => ({
-    ...api,
-    prefixCls,
-    notification,
-    classNames: mergedClassNames,
-    styles: mergedStyles
-  }));
-  return holder;
-});
-// ==============================================================================
-// ==                                   Hook                                   ==
-// ==============================================================================
-function useInternalNotification(notificationConfig) {
-  const holderRef = external_React_default().useRef(null);
-  const warning = (0,_util_warning.devUseWarning)('Notification');
-  const {
-    notification: notificationContext
-  } = external_React_default().useContext(config_provider_context.ConfigContext);
-  // ================================ API ================================
-  const wrapAPI = external_React_default().useMemo(() => {
-    // Wrap with notification content
-    // >>> Open
-    const open = config => {
-      if (!holderRef.current) {
-         true ? warning(false, 'usage', 'You are calling notice in render which will break in React 18 concurrent mode. Please trigger in effect instead.') : 0;
-        return;
-      }
-      const {
-        open: originOpen,
-        prefixCls,
-        notification,
-        classNames: originClassNames,
-        styles: originStyles
-      } = holderRef.current;
-      const contextClassName = notification?.className || {};
-      const contextStyle = notification?.style || {};
-      const noticePrefixCls = `${prefixCls}-notice`;
-      const {
-        title,
-        message,
-        description,
-        icon,
-        type,
-        btn,
-        actions,
-        className,
-        style,
-        role = 'alert',
-        closeIcon,
-        closable,
-        classNames: configClassNames = {},
-        styles = {},
-        ...restConfig
-      } = config;
-      if (true) {
-        [['btn', 'actions'], ['message', 'title']].forEach(([deprecatedName, newName]) => {
-          warning.deprecated(!(deprecatedName in config), deprecatedName, newName);
-        });
-      }
-      const mergedTitle = title ?? message;
-      const mergedActions = actions ?? btn;
-      const realCloseIcon = getCloseIcon(noticePrefixCls, getCloseIconConfig(closeIcon, notificationConfig, notification));
-      const [rawClosable, mergedCloseIcon,, ariaProps] = (0,useClosable.computeClosable)((0,useClosable.pickClosable)({
-        ...(notificationConfig || {}),
-        ...config
-      }), (0,useClosable.pickClosable)(notificationContext), {
-        closable: true,
-        closeIcon: realCloseIcon
-      });
-      const mergedClosable = rawClosable ? {
-        onClose: closable && typeof closable === 'object' ? closable.onClose : undefined,
-        closeIcon: mergedCloseIcon,
-        ...ariaProps
-      } : false;
-      const semanticClassNames = (0,useMergeSemantic.resolveStyleOrClass)(configClassNames, {
-        props: config
-      });
-      const semanticStyles = (0,useMergeSemantic.resolveStyleOrClass)(styles, {
-        props: config
-      });
-      const mergedClassNames = (0,useMergeSemantic.mergeClassNames)(undefined, originClassNames, semanticClassNames);
-      const mergedStyles = (0,useMergeSemantic.mergeStyles)(originStyles, semanticStyles);
-      return originOpen({
-        // use placement from props instead of hard-coding "topRight"
-        placement: notificationConfig?.placement ?? DEFAULT_PLACEMENT,
-        ...restConfig,
-        content: (/*#__PURE__*/external_React_default().createElement(PureContent, {
-          prefixCls: noticePrefixCls,
-          icon: icon,
-          type: type,
-          title: mergedTitle,
-          description: description,
-          actions: mergedActions,
-          role: role,
-          classNames: mergedClassNames,
-          styles: mergedStyles
-        })),
-        className: (0,clsx.clsx)({
-          [`${noticePrefixCls}-${type}`]: type
-        }, className, contextClassName, mergedClassNames.root),
-        style: {
-          ...contextStyle,
-          ...mergedStyles.root,
-          ...style
-        },
-        closable: mergedClosable
-      });
-    };
-    // >>> destroy
-    const destroy = key => {
-      if (key !== undefined) {
-        holderRef.current?.close(key);
-      } else {
-        holderRef.current?.destroy();
-      }
-    };
-    const clone = {
-      open,
-      destroy
-    };
-    const keys = ['success', 'info', 'warning', 'error'];
-    keys.forEach(type => {
-      clone[type] = config => open({
-        ...config,
-        type
-      });
-    });
-    return clone;
-  }, [notificationConfig, notificationContext]);
-  // ============================== Return ===============================
-  return [wrapAPI, /*#__PURE__*/external_React_default().createElement(Holder, {
-    key: "notification-holder",
-    ...notificationConfig,
-    ref: holderRef
-  })];
-}
-function useNotification(notificationConfig) {
-  return useInternalNotification(notificationConfig);
-}
-;// ./node_modules/antd/es/notification/index.js
-"use client";
-
-
-
-
-
-
-
-let notification = null;
-let act = callback => callback();
-let taskQueue = [];
-let defaultGlobalConfig = {};
-function getGlobalContext() {
-  const {
-    getContainer,
-    rtl,
-    maxCount,
-    top,
-    bottom,
-    showProgress,
-    pauseOnHover
-  } = defaultGlobalConfig;
-  const mergedContainer = getContainer?.() || document.body;
-  return {
-    getContainer: () => mergedContainer,
-    rtl,
-    maxCount,
-    top,
-    bottom,
-    showProgress,
-    pauseOnHover
-  };
-}
-const GlobalHolder = /*#__PURE__*/external_React_default().forwardRef((props, ref) => {
-  const {
-    notificationConfig,
-    sync
-  } = props;
-  const {
-    getPrefixCls
-  } = (0,external_React_.useContext)(config_provider_context.ConfigContext);
-  const prefixCls = defaultGlobalConfig.prefixCls || getPrefixCls('notification');
-  const appConfig = (0,external_React_.useContext)(context.AppConfigContext);
-  const [api, holder] = useInternalNotification({
-    ...notificationConfig,
-    prefixCls,
-    ...appConfig.notification
-  });
-  external_React_default().useEffect(sync, []);
-  external_React_default().useImperativeHandle(ref, () => {
-    const instance = {
-      ...api
-    };
-    Object.keys(instance).forEach(method => {
-      instance[method] = (...args) => {
-        sync();
-        return api[method].apply(api, args);
-      };
-    });
-    return {
-      instance,
-      sync
-    };
-  });
-  return holder;
-});
-const GlobalHolderWrapper = /*#__PURE__*/external_React_default().forwardRef((_, ref) => {
-  const [notificationConfig, setNotificationConfig] = external_React_default().useState(getGlobalContext);
-  const sync = () => {
-    setNotificationConfig(getGlobalContext);
-  };
-  external_React_default().useEffect(sync, []);
-  const global = (0,config_provider.globalConfig)();
-  const rootPrefixCls = global.getRootPrefixCls();
-  const rootIconPrefixCls = global.getIconPrefixCls();
-  const theme = global.getTheme();
-  const dom = /*#__PURE__*/external_React_default().createElement(GlobalHolder, {
-    ref: ref,
-    sync: sync,
-    notificationConfig: notificationConfig
-  });
-  return /*#__PURE__*/external_React_default().createElement(config_provider["default"], {
-    prefixCls: rootPrefixCls,
-    iconPrefixCls: rootIconPrefixCls,
-    theme: theme
-  }, global.holderRender ? global.holderRender(dom) : dom);
-});
-const flushNotificationQueue = () => {
-  if (!notification) {
-    const holderFragment = document.createDocumentFragment();
-    const newNotification = {
-      fragment: holderFragment
-    };
-    notification = newNotification;
-    // Delay render to avoid sync issue
-    act(() => {
-      (0,render.render)(/*#__PURE__*/external_React_default().createElement(GlobalHolderWrapper, {
-        ref: node => {
-          const {
-            instance,
-            sync
-          } = node || {};
-          Promise.resolve().then(() => {
-            if (!newNotification.instance && instance) {
-              newNotification.instance = instance;
-              newNotification.sync = sync;
-              flushNotificationQueue();
-            }
-          });
-        }
-      }), holderFragment);
-    });
-    return;
-  }
-  // Notification not ready
-  if (!notification.instance) {
-    return;
-  }
-  // >>> Execute task
-  taskQueue.forEach(task => {
-    switch (task.type) {
-      case 'open':
-        {
-          act(() => {
-            notification.instance.open({
-              ...defaultGlobalConfig,
-              ...task.config
-            });
-          });
-          break;
-        }
-      case 'destroy':
-        act(() => {
-          notification?.instance?.destroy(task.key);
-        });
-        break;
-    }
-  });
-  // Clean up
-  taskQueue = [];
-};
-// ==============================================================================
-// ==                                  Export                                  ==
-// ==============================================================================
-function setNotificationGlobalConfig(config) {
-  defaultGlobalConfig = {
-    ...defaultGlobalConfig,
-    ...config
-  };
-  // Trigger sync for it
-  act(() => {
-    notification?.sync?.();
-  });
-}
-function notification_open(config) {
-  const global = (0,config_provider.globalConfig)();
-  if ( true && !global.holderRender) {
-    (0,config_provider.warnContext)('notification');
-  }
-  taskQueue.push({
-    type: 'open',
-    config
-  });
-  flushNotificationQueue();
-}
-const destroy = key => {
-  taskQueue.push({
-    type: 'destroy',
-    key
-  });
-  flushNotificationQueue();
-};
-const methods = ['success', 'info', 'warning', 'error'];
-const baseStaticMethods = {
-  open: notification_open,
-  destroy,
-  config: setNotificationGlobalConfig,
-  useNotification: useNotification,
-  _InternalPanelDoNotUseOrYouWillBeFired: notification_PurePanel
-};
-const staticMethods = baseStaticMethods;
-methods.forEach(type => {
-  staticMethods[type] = config => notification_open({
-    ...config,
-    type
-  });
-});
-// ==============================================================================
-// ==                                   Test                                   ==
-// ==============================================================================
-const noop = () => {};
-let _actWrapper = noop;
-if (false) // removed by dead control flow
-{}
-const actWrapper = _actWrapper;
-
-let _actDestroy = noop;
-if (false) // removed by dead control flow
-{}
-const actDestroy = _actDestroy;
-
-/* harmony default export */ const es_notification = (staticMethods);
 // EXTERNAL MODULE: ./node_modules/antd/es/select/index.js + 68 modules
 var es_select = __webpack_require__("./node_modules/antd/es/select/index.js");
 // EXTERNAL MODULE: ./node_modules/antd/es/button/index.js
@@ -117823,13 +116609,8 @@ const AddNewPage = props => {
       return {};
     }
   };
-  const openNotification = () => {
-    es_notification.open({
-      message: "Layout saved as draft.",
-      className: "layout-saved-note",
-      duration: 5,
-      onClick: () => {}
-    });
+  const openDraftSavedMessage = () => {
+    message["default"].success("Layout saved as draft.");
   };
   const handleLayout = val => {
     setLayoutType(val);
@@ -117869,7 +116650,7 @@ const AddNewPage = props => {
             nextBuilder.common_data.post_type = postType;
             nextBuilder.post_layout_data.extra_data.single_post_data = firstPost;
           });
-          openNotification();
+          openDraftSavedMessage();
           props.pagePopupState(false);
           props.handleLayoutContainer(true);
         } else {
@@ -118905,14 +117686,38 @@ function BuilderCafLogoIcon({
 var es_tooltip = __webpack_require__("./node_modules/antd/es/tooltip/index.js");
 // EXTERNAL MODULE: ./node_modules/antd/es/switch/index.js + 2 modules
 var es_switch = __webpack_require__("./node_modules/antd/es/switch/index.js");
+// EXTERNAL MODULE: ./node_modules/antd/node_modules/@ant-design/icons/es/icons/CheckCircleFilled.js + 1 modules
+var CheckCircleFilled = __webpack_require__("./node_modules/antd/node_modules/@ant-design/icons/es/icons/CheckCircleFilled.js");
+// EXTERNAL MODULE: ./node_modules/antd/node_modules/@ant-design/icons/es/icons/CloseCircleFilled.js
+var CloseCircleFilled = __webpack_require__("./node_modules/antd/node_modules/@ant-design/icons/es/icons/CloseCircleFilled.js");
+// EXTERNAL MODULE: ./node_modules/antd/node_modules/@ant-design/icons/es/icons/CloseOutlined.js + 1 modules
+var CloseOutlined = __webpack_require__("./node_modules/antd/node_modules/@ant-design/icons/es/icons/CloseOutlined.js");
+// EXTERNAL MODULE: ./node_modules/antd/node_modules/@ant-design/icons/es/icons/ExclamationCircleFilled.js + 1 modules
+var ExclamationCircleFilled = __webpack_require__("./node_modules/antd/node_modules/@ant-design/icons/es/icons/ExclamationCircleFilled.js");
+// EXTERNAL MODULE: ./node_modules/antd/node_modules/@ant-design/icons/es/icons/InfoCircleFilled.js + 1 modules
+var InfoCircleFilled = __webpack_require__("./node_modules/antd/node_modules/@ant-design/icons/es/icons/InfoCircleFilled.js");
 // EXTERNAL MODULE: ./node_modules/@rc-component/motion/es/index.js + 12 modules
-var motion_es = __webpack_require__("./node_modules/@rc-component/motion/es/index.js");
+var es = __webpack_require__("./node_modules/@rc-component/motion/es/index.js");
 // EXTERNAL MODULE: ./node_modules/@rc-component/util/es/pickAttrs.js
 var pickAttrs = __webpack_require__("./node_modules/@rc-component/util/es/pickAttrs.js");
 // EXTERNAL MODULE: ./node_modules/@rc-component/util/es/ref.js
 var es_ref = __webpack_require__("./node_modules/@rc-component/util/es/ref.js");
+// EXTERNAL MODULE: ./node_modules/clsx/dist/clsx.mjs
+var clsx = __webpack_require__("./node_modules/clsx/dist/clsx.mjs");
+// EXTERNAL MODULE: ./node_modules/antd/es/_util/hooks/useMergeSemantic.js
+var useMergeSemantic = __webpack_require__("./node_modules/antd/es/_util/hooks/useMergeSemantic.js");
 // EXTERNAL MODULE: ./node_modules/antd/es/_util/isNonNullable.js
 var isNonNullable = __webpack_require__("./node_modules/antd/es/_util/isNonNullable.js");
+// EXTERNAL MODULE: ./node_modules/antd/es/_util/warning.js
+var _util_warning = __webpack_require__("./node_modules/antd/es/_util/warning.js");
+// EXTERNAL MODULE: ./node_modules/antd/es/config-provider/context.js
+var context = __webpack_require__("./node_modules/antd/es/config-provider/context.js");
+// EXTERNAL MODULE: ./node_modules/@ant-design/cssinjs/es/index.js + 39 modules
+var cssinjs_es = __webpack_require__("./node_modules/@ant-design/cssinjs/es/index.js");
+// EXTERNAL MODULE: ./node_modules/antd/es/style/index.js
+var style = __webpack_require__("./node_modules/antd/es/style/index.js");
+// EXTERNAL MODULE: ./node_modules/antd/es/theme/util/genStyleUtils.js
+var genStyleUtils = __webpack_require__("./node_modules/antd/es/theme/util/genStyleUtils.js");
 ;// ./node_modules/antd/es/alert/style/index.js
 
 
@@ -119082,7 +117887,7 @@ const genActionStyle = token => {
     }
   };
 };
-const style_prepareComponentToken = token => {
+const prepareComponentToken = token => {
   const paddingHorizontal = 12; // Fixed value here.
   return {
     withDescriptionIconSize: token.fontSizeHeading3,
@@ -119090,7 +117895,7 @@ const style_prepareComponentToken = token => {
     withDescriptionPadding: `${token.paddingMD}px ${token.paddingContentHorizontalLG}px`
   };
 };
-/* harmony default export */ const alert_style = ((0,genStyleUtils.genStyleHooks)('Alert', token => [genBaseStyle(token), genTypeStyle(token), genActionStyle(token)], style_prepareComponentToken));
+/* harmony default export */ const alert_style = ((0,genStyleUtils.genStyleHooks)('Alert', token => [genBaseStyle(token), genTypeStyle(token), genActionStyle(token)], prepareComponentToken));
 ;// ./node_modules/antd/es/alert/Alert.js
 "use client";
 
@@ -119200,7 +118005,7 @@ const Alert = /*#__PURE__*/external_React_.forwardRef((props, ref) => {
     infoIcon,
     warningIcon,
     errorIcon
-  } = (0,config_provider_context.useComponentConfig)('alert');
+  } = (0,context.useComponentConfig)('alert');
   const prefixCls = getPrefixCls('alert', customizePrefixCls);
   const [hashId, cssVarCls] = alert_style(prefixCls);
   const {
@@ -119283,7 +118088,7 @@ const Alert = /*#__PURE__*/external_React_.forwardRef((props, ref) => {
     }
     return {};
   }, [closable, contextClosable]);
-  return /*#__PURE__*/external_React_.createElement(motion_es["default"], {
+  return /*#__PURE__*/external_React_.createElement(es["default"], {
     visible: !closed,
     motionName: `${prefixCls}-motion`,
     motionAppear: false,
@@ -119476,7 +118281,7 @@ const resolveGlobalFontFamilyFromBuilderData = mainBuilderData => {
   }
   return "DM Sans";
 };
-// EXTERNAL MODULE: ./src/MainComponents/utils/globalFontFamily.js + 1 modules
+// EXTERNAL MODULE: ./src/MainComponents/utils/globalFontFamily.js
 var utils_globalFontFamily = __webpack_require__("./src/MainComponents/utils/globalFontFamily.js");
 // EXTERNAL MODULE: ./src/tier/TierLockedSection.js
 var TierLockedSection = __webpack_require__("./src/tier/TierLockedSection.js");
@@ -119507,12 +118312,17 @@ const parseBuilderApiPayload = data => {
 };
 const MiscSettingDrawer = props => {
   const dispatch = (0,react_redux.useDispatch)();
+  const mainBuilderDataRef = (0,external_React_.useRef)(props.mainBuilderData);
+  (0,external_React_.useEffect)(() => {
+    mainBuilderDataRef.current = props.mainBuilderData;
+  }, [props.mainBuilderData]);
   const singlePostData = resolveSinglePostFromBuilderData(props.mainBuilderData);
   const [changePostType, setChangePostType] = (0,external_React_.useState)(false);
   const [postTypesList, setPostTypesList] = (0,external_React_.useState)([{
     label: "Select Post Type",
     value: "0"
   }]);
+  const [postTypesLoaded, setPostTypesLoaded] = (0,external_React_.useState)(false);
   const [postsList, setPostsList] = (0,external_React_.useState)([{
     label: "Select Single Post ",
     value: "0"
@@ -119526,7 +118336,7 @@ const MiscSettingDrawer = props => {
   const [fontsLoading, setFontsLoading] = (0,external_React_.useState)(false);
   const [globalFontFamily, setGlobalFontFamily] = (0,external_React_.useState)(() => resolveGlobalFontFamilyFromBuilderData(props.mainBuilderData));
   const commitBuilderPatch = mutator => {
-    const newBuilder = structuredClone(props.mainBuilderData || {});
+    const newBuilder = structuredClone(mainBuilderDataRef.current || {});
     newBuilder.common_data ||= {};
     newBuilder.post_layout_data ||= {};
     newBuilder.post_layout_data.extra_data ||= {};
@@ -119536,6 +118346,7 @@ const MiscSettingDrawer = props => {
     newBuilder.filter_layout_data.initial_data ||= [];
     mutator(newBuilder);
     props.updatedBuilderData(newBuilder);
+    mainBuilderDataRef.current = newBuilder;
     return newBuilder;
   };
   const loadFontOptions = async () => {
@@ -119569,21 +118380,22 @@ const MiscSettingDrawer = props => {
       const payload = parseBuilderApiPayload(data);
       if (payload?.status === "success") {
         setPostTypesList(payload.post_types || []);
+        setPostTypesLoaded(true);
       }
     } catch (error) {
       console.error(error);
     }
   };
   const postTypeUnavailable = (0,external_React_.useMemo)(() => {
-    if (!postType || postType === "0") {
+    if (!postType || postType === "0" || !postTypesLoaded) {
       return false;
     }
     const match = postTypesList.find(option => option?.value === postType);
     if (!match) {
-      return postTypesList.length > 0;
+      return true;
     }
     return Boolean(match.unavailable || match.disabled);
-  }, [postType, postTypesList]);
+  }, [postType, postTypesList, postTypesLoaded]);
   const postTypeUnavailableMessage = (0,external_React_.useMemo)(() => {
     if (!postTypeUnavailable) {
       return "";
@@ -119618,9 +118430,15 @@ const MiscSettingDrawer = props => {
       setPostsData(safePostsList);
       setPostsList(nextPostsList);
       setSinglePostType(newPostId);
-      commitBuilderPatch(newBuilder => {
-        newBuilder.post_layout_data.extra_data.single_post_data = safePostsList.find(item => item.value === newPostId) || {};
-      });
+      const obj = safePostsList.find(item => item.value === newPostId) || {};
+      const currentSingle = resolveSinglePostFromBuilderData(props.mainBuilderData);
+      const currentSingleId = String(currentSingle?.value ?? currentSingle?.id ?? "");
+      const shouldCommitSinglePost = changePostType || currentSingleId !== String(newPostId ?? "") || JSON.stringify(currentSingle || {}) !== JSON.stringify(obj || {});
+      if (shouldCommitSinglePost) {
+        commitBuilderPatch(newBuilder => {
+          newBuilder.post_layout_data.extra_data.single_post_data = obj;
+        });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -120539,6 +119357,8 @@ var useLocale = __webpack_require__("./node_modules/antd/es/locale/useLocale.js"
 var en_US = __webpack_require__("./node_modules/antd/es/locale/en_US.js");
 // EXTERNAL MODULE: ./node_modules/antd/es/style/motion/collapse.js
 var collapse = __webpack_require__("./node_modules/antd/es/style/motion/collapse.js");
+// EXTERNAL MODULE: ./node_modules/@ant-design/cssinjs-utils/es/index.js + 12 modules
+var cssinjs_utils_es = __webpack_require__("./node_modules/@ant-design/cssinjs-utils/es/index.js");
 ;// ./node_modules/antd/es/upload/style/dragger.js
 
 const genDraggerStyle = token => {
@@ -121057,7 +119877,7 @@ const style_genBaseStyle = token => {
     }
   };
 };
-const upload_style_prepareComponentToken = token => ({
+const style_prepareComponentToken = token => ({
   actionsColor: token.colorIcon,
   pictureCardSize: token.controlHeightLG * 2.55
 });
@@ -121076,7 +119896,7 @@ const upload_style_prepareComponentToken = token => ({
     uploadPicCardSize: pictureCardSize
   });
   return [style_genBaseStyle(uploadToken), dragger(uploadToken), genPictureStyle(uploadToken), genPictureCardStyle(uploadToken), list(uploadToken), motion(uploadToken), rtl(uploadToken), (0,collapse["default"])(uploadToken)];
-}, upload_style_prepareComponentToken));
+}, style_prepareComponentToken));
 ;// ./node_modules/@ant-design/icons-svg/es/asn/FileTwoTone.js
 // This icon file is generated automatically.
 var FileTwoTone = { "icon": function render(primaryColor, secondaryColor) { return { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M534 352V136H232v752h560V394H576a42 42 0 01-42-42z", "fill": secondaryColor } }, { "tag": "path", "attrs": { "d": "M854.6 288.6L639.4 73.4c-6-6-14.1-9.4-22.6-9.4H192c-17.7 0-32 14.3-32 32v832c0 17.7 14.3 32 32 32h640c17.7 0 32-14.3 32-32V311.3c0-8.5-3.4-16.7-9.4-22.7zM602 137.8L790.2 326H602V137.8zM792 888H232V136h302v216a42 42 0 0042 42h216v494z", "fill": primaryColor } }] }; }, "name": "file", "theme": "twotone" };
@@ -121103,6 +119923,8 @@ if (true) {
   FileTwoTone_RefIcon.displayName = 'FileTwoTone';
 }
 /* harmony default export */ const icons_FileTwoTone = (FileTwoTone_RefIcon);
+// EXTERNAL MODULE: ./node_modules/antd/node_modules/@ant-design/icons/es/icons/LoadingOutlined.js
+var LoadingOutlined = __webpack_require__("./node_modules/antd/node_modules/@ant-design/icons/es/icons/LoadingOutlined.js");
 ;// ./node_modules/@ant-design/icons-svg/es/asn/PaperClipOutlined.js
 // This icon file is generated automatically.
 var PaperClipOutlined = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M779.3 196.6c-94.2-94.2-247.6-94.2-341.7 0l-261 260.8c-1.7 1.7-2.6 4-2.6 6.4s.9 4.7 2.6 6.4l36.9 36.9a9 9 0 0012.7 0l261-260.8c32.4-32.4 75.5-50.2 121.3-50.2s88.9 17.8 121.2 50.2c32.4 32.4 50.2 75.5 50.2 121.2 0 45.8-17.8 88.8-50.2 121.2l-266 265.9-43.1 43.1c-40.3 40.3-105.8 40.3-146.1 0-19.5-19.5-30.2-45.4-30.2-73s10.7-53.5 30.2-73l263.9-263.8c6.7-6.6 15.5-10.3 24.9-10.3h.1c9.4 0 18.1 3.7 24.7 10.3 6.7 6.7 10.3 15.5 10.3 24.9 0 9.3-3.7 18.1-10.3 24.7L372.4 653c-1.7 1.7-2.6 4-2.6 6.4s.9 4.7 2.6 6.4l36.9 36.9a9 9 0 0012.7 0l215.6-215.6c19.9-19.9 30.8-46.3 30.8-74.4s-11-54.6-30.8-74.4c-41.1-41.1-107.9-41-149 0L463 364 224.8 602.1A172.22 172.22 0 00174 724.8c0 46.3 18.1 89.8 50.8 122.5 33.9 33.8 78.3 50.7 122.7 50.7 44.4 0 88.8-16.9 122.6-50.7l309.2-309C824.8 492.7 850 432 850 367.5c.1-64.6-25.1-125.3-70.7-170.9z" } }] }, "name": "paper-clip", "theme": "outlined" };
@@ -121911,7 +120733,7 @@ const Circle_Circle = props => {
   } = props;
   const {
     direction
-  } = (0,config_provider_context.useComponentConfig)('progress');
+  } = (0,context.useComponentConfig)('progress');
   const mergedRailColor = railColor ?? trailColor;
   const [width, height] = getSize(size, 'circle');
   let {
@@ -122559,7 +121381,7 @@ const Progress = /*#__PURE__*/external_React_.forwardRef((props, ref) => {
     style: contextStyle,
     classNames: contextClassNames,
     styles: contextStyles
-  } = (0,config_provider_context.useComponentConfig)('progress');
+  } = (0,context.useComponentConfig)('progress');
   const prefixCls = getPrefixCls('progress', customizePrefixCls);
   const [hashId, cssVarCls] = progress_style(prefixCls);
   const mergedProps = {
@@ -122817,12 +121639,12 @@ const ListItem = /*#__PURE__*/external_React_.forwardRef(({
   }, previewIcon, mergedStatus === 'done' && downloadIcon, removeIcon));
   const {
     getPrefixCls
-  } = external_React_.useContext(config_provider_context.ConfigContext);
+  } = external_React_.useContext(context.ConfigContext);
   const rootPrefixCls = getPrefixCls();
   const dom = /*#__PURE__*/external_React_.createElement("div", {
     className: listItemClassName,
     style: styles?.item
-  }, icon, fileName, downloadOrDelete, pictureCardActions, showProgress && (/*#__PURE__*/external_React_.createElement(motion_es["default"], {
+  }, icon, fileName, downloadOrDelete, pictureCardActions, showProgress && (/*#__PURE__*/external_React_.createElement(es["default"], {
     motionName: `${rootPrefixCls}-fade`,
     visible: mergedStatus === 'uploading',
     motionDeadline: 2000
@@ -122991,7 +121813,7 @@ const InternalUploadList = (props, ref) => {
   }));
   const {
     getPrefixCls
-  } = external_React_.useContext(config_provider_context.ConfigContext);
+  } = external_React_.useContext(context.ConfigContext);
   // ============================= Render =============================
   const prefixCls = getPrefixCls('upload', customizePrefixCls);
   const rootPrefixCls = getPrefixCls();
@@ -123010,7 +121832,7 @@ const InternalUploadList = (props, ref) => {
   return /*#__PURE__*/external_React_.createElement("div", {
     className: listClassNames,
     style: styles?.list
-  }, /*#__PURE__*/external_React_.createElement(motion_es.CSSMotionList, {
+  }, /*#__PURE__*/external_React_.createElement(es.CSSMotionList, {
     ...motionConfig,
     component: false
   }, ({
@@ -123044,7 +121866,7 @@ const InternalUploadList = (props, ref) => {
     onPreview: onInternalPreview,
     onDownload: onInternalDownload,
     onClose: onInternalClose
-  }))), appendAction && (/*#__PURE__*/external_React_.createElement(motion_es["default"], {
+  }))), appendAction && (/*#__PURE__*/external_React_.createElement(es["default"], {
     ...motionConfig,
     visible: appendActionVisible,
     forceRender: true
@@ -123086,7 +121908,7 @@ if (true) {
 
 const LIST_IGNORE = `__LIST_IGNORE_${Date.now()}__`;
 const InternalUpload = (props, ref) => {
-  const config = (0,config_provider_context.useComponentConfig)('upload');
+  const config = (0,context.useComponentConfig)('upload');
   const {
     fileList,
     defaultFileList,
@@ -123334,7 +122156,7 @@ const InternalUpload = (props, ref) => {
     style: contextStyle,
     classNames: contextClassNames,
     styles: contextStyles
-  } = (0,config_provider_context.useComponentConfig)('upload');
+  } = (0,context.useComponentConfig)('upload');
   const prefixCls = getPrefixCls('upload', customizePrefixCls);
   // =========== Merged Props for Semantic ==========
   const mergedProps = {
@@ -123544,6 +122366,8 @@ var checkbox_es = __webpack_require__("./node_modules/@rc-component/checkbox/es/
 var wave = __webpack_require__("./node_modules/antd/es/_util/wave/index.js");
 // EXTERNAL MODULE: ./node_modules/antd/es/_util/wave/interface.js
 var wave_interface = __webpack_require__("./node_modules/antd/es/_util/wave/interface.js");
+// EXTERNAL MODULE: ./node_modules/antd/es/config-provider/hooks/useCSSVarCls.js
+var useCSSVarCls = __webpack_require__("./node_modules/antd/es/config-provider/hooks/useCSSVarCls.js");
 // EXTERNAL MODULE: ./node_modules/antd/es/form/context.js
 var form_context = __webpack_require__("./node_modules/antd/es/form/context.js");
 ;// ./node_modules/antd/es/checkbox/GroupContext.js
@@ -123823,7 +122647,7 @@ const InternalCheckbox = (props, ref) => {
     style: contextStyle,
     classNames: contextClassNames,
     styles: contextStyles
-  } = (0,config_provider_context.useComponentConfig)('checkbox');
+  } = (0,context.useComponentConfig)('checkbox');
   const checkboxGroup = external_React_.useContext(checkbox_GroupContext);
   const {
     isFormItemInput
@@ -123961,7 +122785,7 @@ const CheckboxGroup = /*#__PURE__*/external_React_.forwardRef((props, ref) => {
   const {
     getPrefixCls,
     direction
-  } = external_React_.useContext(config_provider_context.ConfigContext);
+  } = external_React_.useContext(context.ConfigContext);
   const [value, setValue] = external_React_.useState(restProps.value || defaultValue || []);
   const [registeredValues, setRegisteredValues] = external_React_.useState([]);
   external_React_.useEffect(() => {
@@ -127024,6 +125848,1187 @@ function ImportExportModal({
   });
 }
 /* harmony default export */ const importExport_ImportExportModal = (ImportExportModal);
+// EXTERNAL MODULE: ./node_modules/@rc-component/util/es/React/render.js
+var render = __webpack_require__("./node_modules/@rc-component/util/es/React/render.js");
+// EXTERNAL MODULE: ./node_modules/antd/es/app/context.js
+var app_context = __webpack_require__("./node_modules/antd/es/app/context.js");
+// EXTERNAL MODULE: ./node_modules/antd/es/config-provider/index.js + 7 modules
+var config_provider = __webpack_require__("./node_modules/antd/es/config-provider/index.js");
+// EXTERNAL MODULE: ./node_modules/@rc-component/notification/es/index.js + 6 modules
+var notification_es = __webpack_require__("./node_modules/@rc-component/notification/es/index.js");
+// EXTERNAL MODULE: ./node_modules/antd/es/_util/hooks/useClosable.js + 1 modules
+var useClosable = __webpack_require__("./node_modules/antd/es/_util/hooks/useClosable.js");
+// EXTERNAL MODULE: ./node_modules/antd/es/_util/hooks/useZIndex.js
+var useZIndex = __webpack_require__("./node_modules/antd/es/_util/hooks/useZIndex.js");
+;// ./node_modules/antd/es/notification/style/placement.js
+
+const genNotificationPlacementStyle = token => {
+  const {
+    componentCls,
+    notificationMarginEdge,
+    animationMaxHeight
+  } = token;
+  const noticeCls = `${componentCls}-notice`;
+  const rightFadeIn = new cssinjs_es.Keyframes('antNotificationFadeIn', {
+    '0%': {
+      transform: `translate3d(100%, 0, 0)`,
+      opacity: 0
+    },
+    '100%': {
+      transform: `translate3d(0, 0, 0)`,
+      opacity: 1
+    }
+  });
+  const topFadeIn = new cssinjs_es.Keyframes('antNotificationTopFadeIn', {
+    '0%': {
+      top: -animationMaxHeight,
+      opacity: 0
+    },
+    '100%': {
+      top: 0,
+      opacity: 1
+    }
+  });
+  const bottomFadeIn = new cssinjs_es.Keyframes('antNotificationBottomFadeIn', {
+    '0%': {
+      bottom: token.calc(animationMaxHeight).mul(-1).equal(),
+      opacity: 0
+    },
+    '100%': {
+      bottom: 0,
+      opacity: 1
+    }
+  });
+  const leftFadeIn = new cssinjs_es.Keyframes('antNotificationLeftFadeIn', {
+    '0%': {
+      transform: `translate3d(-100%, 0, 0)`,
+      opacity: 0
+    },
+    '100%': {
+      transform: `translate3d(0, 0, 0)`,
+      opacity: 1
+    }
+  });
+  return {
+    [componentCls]: {
+      [`&${componentCls}-top, &${componentCls}-bottom`]: {
+        marginInline: 0,
+        [noticeCls]: {
+          marginInline: 'auto auto'
+        }
+      },
+      [`&${componentCls}-top`]: {
+        [`${componentCls}-fade-enter${componentCls}-fade-enter-active, ${componentCls}-fade-appear${componentCls}-fade-appear-active`]: {
+          animationName: topFadeIn
+        }
+      },
+      [`&${componentCls}-bottom`]: {
+        [`${componentCls}-fade-enter${componentCls}-fade-enter-active, ${componentCls}-fade-appear${componentCls}-fade-appear-active`]: {
+          animationName: bottomFadeIn
+        }
+      },
+      [`&${componentCls}-topRight, &${componentCls}-bottomRight`]: {
+        [`${componentCls}-fade-enter${componentCls}-fade-enter-active, ${componentCls}-fade-appear${componentCls}-fade-appear-active`]: {
+          animationName: rightFadeIn
+        }
+      },
+      [`&${componentCls}-topLeft, &${componentCls}-bottomLeft`]: {
+        marginRight: {
+          value: 0,
+          _skip_check_: true
+        },
+        marginLeft: {
+          value: notificationMarginEdge,
+          _skip_check_: true
+        },
+        [noticeCls]: {
+          marginInlineEnd: 'auto',
+          marginInlineStart: 0
+        },
+        [`${componentCls}-fade-enter${componentCls}-fade-enter-active, ${componentCls}-fade-appear${componentCls}-fade-appear-active`]: {
+          animationName: leftFadeIn
+        }
+      }
+    }
+  };
+};
+/* harmony default export */ const placement = (genNotificationPlacementStyle);
+;// ./node_modules/antd/es/notification/interface.js
+const NotificationPlacements = ['top', 'topLeft', 'topRight', 'bottom', 'bottomLeft', 'bottomRight'];
+;// ./node_modules/antd/es/notification/style/stack.js
+
+const placementAlignProperty = {
+  topLeft: 'left',
+  topRight: 'right',
+  bottomLeft: 'left',
+  bottomRight: 'right',
+  top: 'left',
+  bottom: 'left'
+};
+const genPlacementStackStyle = (token, placement) => {
+  const {
+    componentCls
+  } = token;
+  return {
+    [`${componentCls}-${placement}`]: {
+      [`&${componentCls}-stack > ${componentCls}-notice-wrapper`]: {
+        [placement.startsWith('top') ? 'top' : 'bottom']: 0,
+        [placementAlignProperty[placement]]: {
+          value: 0,
+          _skip_check_: true
+        }
+      }
+    }
+  };
+};
+const genStackChildrenStyle = token => {
+  const childrenStyle = {};
+  for (let i = 1; i < token.notificationStackLayer; i++) {
+    childrenStyle[`&:nth-last-child(${i + 1})`] = {
+      overflow: 'hidden',
+      [`& > ${token.componentCls}-notice`]: {
+        opacity: 0,
+        transition: `opacity ${token.motionDurationMid}`
+      }
+    };
+  }
+  return {
+    [`&:not(:nth-last-child(-n+${token.notificationStackLayer}))`]: {
+      opacity: 0,
+      overflow: 'hidden',
+      color: 'transparent',
+      pointerEvents: 'none'
+    },
+    ...childrenStyle
+  };
+};
+const genStackedNoticeStyle = token => {
+  const childrenStyle = {};
+  for (let i = 1; i < token.notificationStackLayer; i++) {
+    childrenStyle[`&:nth-last-child(${i + 1})`] = {
+      background: token.colorBgBlur,
+      backdropFilter: 'blur(10px)',
+      '-webkit-backdrop-filter': 'blur(10px)'
+    };
+  }
+  return childrenStyle;
+};
+const genStackStyle = token => {
+  const {
+    componentCls
+  } = token;
+  return {
+    [`${componentCls}-stack`]: {
+      [`& > ${componentCls}-notice-wrapper`]: {
+        transition: `transform ${token.motionDurationSlow}, backdrop-filter 0s`,
+        willChange: 'transform, opacity',
+        position: 'absolute',
+        ...genStackChildrenStyle(token)
+      }
+    },
+    [`${componentCls}-stack:not(${componentCls}-stack-expanded)`]: {
+      [`& > ${componentCls}-notice-wrapper`]: {
+        ...genStackedNoticeStyle(token)
+      }
+    },
+    [`${componentCls}-stack${componentCls}-stack-expanded`]: {
+      [`& > ${componentCls}-notice-wrapper`]: {
+        '&:not(:nth-last-child(-n + 1))': {
+          opacity: 1,
+          overflow: 'unset',
+          color: 'inherit',
+          pointerEvents: 'auto',
+          [`& > ${token.componentCls}-notice`]: {
+            opacity: 1
+          }
+        },
+        '&:after': {
+          content: '""',
+          position: 'absolute',
+          height: token.margin,
+          width: '100%',
+          insetInline: 0,
+          bottom: token.calc(token.margin).mul(-1).equal(),
+          background: 'transparent',
+          pointerEvents: 'auto'
+        }
+      }
+    },
+    ...NotificationPlacements.map(placement => genPlacementStackStyle(token, placement)).reduce((acc, cur) => ({
+      ...acc,
+      ...cur
+    }), {})
+  };
+};
+/* harmony default export */ const stack = (genStackStyle);
+;// ./node_modules/antd/es/notification/style/index.js
+
+
+
+
+
+
+const genNoticeStyle = token => {
+  const {
+    iconCls,
+    componentCls,
+    // .ant-notification
+    boxShadow,
+    fontSizeLG,
+    notificationMarginBottom,
+    borderRadiusLG,
+    colorSuccess,
+    colorInfo,
+    colorWarning,
+    colorError,
+    colorTextHeading,
+    notificationBg,
+    notificationPadding,
+    notificationMarginEdge,
+    progressBg,
+    notificationProgressHeight,
+    fontSize,
+    lineHeight,
+    width,
+    notificationIconSize,
+    colorText,
+    colorSuccessBg,
+    colorErrorBg,
+    colorInfoBg,
+    colorWarningBg,
+    motionDurationMid
+  } = token;
+  const noticeCls = `${componentCls}-notice`;
+  return {
+    position: 'relative',
+    marginBottom: notificationMarginBottom,
+    marginInlineStart: 'auto',
+    background: notificationBg,
+    borderRadius: borderRadiusLG,
+    boxShadow,
+    [noticeCls]: {
+      padding: notificationPadding,
+      width,
+      maxWidth: `calc(100vw - ${(0,cssinjs_es.unit)(token.calc(notificationMarginEdge).mul(2).equal())})`,
+      lineHeight,
+      wordWrap: 'break-word',
+      borderRadius: borderRadiusLG,
+      overflow: 'hidden',
+      // Type-specific background colors
+      '&-success': colorSuccessBg ? {
+        background: colorSuccessBg
+      } : {},
+      '&-error': colorErrorBg ? {
+        background: colorErrorBg
+      } : {},
+      '&-info': colorInfoBg ? {
+        background: colorInfoBg
+      } : {},
+      '&-warning': colorWarningBg ? {
+        background: colorWarningBg
+      } : {}
+    },
+    [`${noticeCls}-title`]: {
+      marginBottom: token.marginXS,
+      color: colorTextHeading,
+      fontSize: fontSizeLG,
+      lineHeight: token.lineHeightLG
+    },
+    [`${noticeCls}-description`]: {
+      fontSize,
+      color: colorText,
+      marginTop: token.marginXS
+    },
+    [`${noticeCls}-closable ${noticeCls}-title`]: {
+      paddingInlineEnd: token.paddingLG
+    },
+    [`${noticeCls}-with-icon ${noticeCls}-title`]: {
+      marginBottom: token.marginXS,
+      marginInlineStart: token.calc(token.marginSM).add(notificationIconSize).equal(),
+      fontSize: fontSizeLG
+    },
+    [`${noticeCls}-with-icon ${noticeCls}-description`]: {
+      marginInlineStart: token.calc(token.marginSM).add(notificationIconSize).equal(),
+      fontSize
+    },
+    // Icon & color style in different selector level
+    // https://github.com/ant-design/ant-design/issues/16503
+    // https://github.com/ant-design/ant-design/issues/15512
+    [`${noticeCls}-icon`]: {
+      position: 'absolute',
+      fontSize: notificationIconSize,
+      lineHeight: 1,
+      // icon-font
+      [`&-success${iconCls}`]: {
+        color: colorSuccess
+      },
+      [`&-info${iconCls}`]: {
+        color: colorInfo
+      },
+      [`&-warning${iconCls}`]: {
+        color: colorWarning
+      },
+      [`&-error${iconCls}`]: {
+        color: colorError
+      }
+    },
+    [`${noticeCls}-close`]: {
+      position: 'absolute',
+      top: token.notificationPaddingVertical,
+      insetInlineEnd: token.notificationPaddingHorizontal,
+      color: token.colorIcon,
+      outline: 'none',
+      width: token.notificationCloseButtonSize,
+      height: token.notificationCloseButtonSize,
+      borderRadius: token.borderRadiusSM,
+      transition: ['color', 'background-color'].map(prop => `${prop} ${motionDurationMid}`).join(', '),
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'none',
+      border: 'none',
+      '&:hover': {
+        color: token.colorIconHover,
+        backgroundColor: token.colorBgTextHover
+      },
+      '&:active': {
+        backgroundColor: token.colorBgTextActive
+      },
+      ...(0,style.genFocusStyle)(token)
+    },
+    [`${noticeCls}-progress`]: {
+      position: 'absolute',
+      display: 'block',
+      appearance: 'none',
+      inlineSize: `calc(100% - ${(0,cssinjs_es.unit)(borderRadiusLG)} * 2)`,
+      left: {
+        _skip_check_: true,
+        value: borderRadiusLG
+      },
+      right: {
+        _skip_check_: true,
+        value: borderRadiusLG
+      },
+      bottom: 0,
+      blockSize: notificationProgressHeight,
+      border: 0,
+      '&, &::-webkit-progress-bar': {
+        borderRadius: borderRadiusLG,
+        backgroundColor: `rgba(0, 0, 0, 0.04)`
+      },
+      '&::-moz-progress-bar': {
+        background: progressBg
+      },
+      '&::-webkit-progress-value': {
+        borderRadius: borderRadiusLG,
+        background: progressBg
+      }
+    },
+    [`${noticeCls}-actions`]: {
+      float: 'right',
+      marginTop: token.marginSM
+    }
+  };
+};
+const genNotificationStyle = token => {
+  const {
+    componentCls,
+    // .ant-notification
+    notificationMarginBottom,
+    notificationMarginEdge,
+    motionDurationMid,
+    motionEaseInOut
+  } = token;
+  const noticeCls = `${componentCls}-notice`;
+  const fadeOut = new cssinjs_es.Keyframes('antNotificationFadeOut', {
+    '0%': {
+      maxHeight: token.animationMaxHeight,
+      marginBottom: notificationMarginBottom
+    },
+    '100%': {
+      maxHeight: 0,
+      marginBottom: 0,
+      paddingTop: 0,
+      paddingBottom: 0,
+      opacity: 0
+    }
+  });
+  return [
+  // ============================ Holder ============================
+  {
+    [componentCls]: {
+      ...(0,style.resetComponent)(token),
+      position: 'fixed',
+      zIndex: token.zIndexPopup,
+      marginRight: {
+        value: notificationMarginEdge,
+        _skip_check_: true
+      },
+      [`${componentCls}-hook-holder`]: {
+        position: 'relative'
+      },
+      //  animation
+      [`${componentCls}-fade-appear-prepare`]: {
+        opacity: '0 !important'
+      },
+      [`${componentCls}-fade-enter, ${componentCls}-fade-appear`]: {
+        animationDuration: token.motionDurationMid,
+        animationTimingFunction: motionEaseInOut,
+        animationFillMode: 'both',
+        opacity: 0,
+        animationPlayState: 'paused'
+      },
+      [`${componentCls}-fade-leave`]: {
+        animationTimingFunction: motionEaseInOut,
+        animationFillMode: 'both',
+        animationDuration: motionDurationMid,
+        animationPlayState: 'paused'
+      },
+      [`${componentCls}-fade-enter${componentCls}-fade-enter-active, ${componentCls}-fade-appear${componentCls}-fade-appear-active`]: {
+        animationPlayState: 'running'
+      },
+      [`${componentCls}-fade-leave${componentCls}-fade-leave-active`]: {
+        animationName: fadeOut,
+        animationPlayState: 'running'
+      },
+      // RTL
+      '&-rtl': {
+        direction: 'rtl',
+        [`${noticeCls}-actions`]: {
+          float: 'left'
+        }
+      }
+    }
+  },
+  // ============================ Notice ============================
+  {
+    [componentCls]: {
+      [`${noticeCls}-wrapper`]: genNoticeStyle(token)
+    }
+  }];
+};
+// ============================== Export ==============================
+const notification_style_prepareComponentToken = token => ({
+  zIndexPopup: token.zIndexPopupBase + useZIndex.CONTAINER_MAX_OFFSET + 50,
+  width: 384,
+  progressBg: `linear-gradient(90deg, ${token.colorPrimaryBorderHover}, ${token.colorPrimary})`,
+  // Fix notification background color issue
+  // https://github.com/ant-design/ant-design/issues/55649
+  // https://github.com/ant-design/ant-design/issues/56055
+  colorSuccessBg: undefined,
+  colorErrorBg: undefined,
+  colorInfoBg: undefined,
+  colorWarningBg: undefined
+});
+const prepareNotificationToken = token => {
+  const notificationPaddingVertical = token.paddingMD;
+  const notificationPaddingHorizontal = token.paddingLG;
+  const notificationToken = (0,cssinjs_utils_es.mergeToken)(token, {
+    notificationBg: token.colorBgElevated,
+    notificationPaddingVertical,
+    notificationPaddingHorizontal,
+    notificationIconSize: token.calc(token.fontSizeLG).mul(token.lineHeightLG).equal(),
+    notificationCloseButtonSize: token.calc(token.controlHeightLG).mul(0.55).equal(),
+    notificationMarginBottom: token.margin,
+    notificationPadding: `${(0,cssinjs_es.unit)(token.paddingMD)} ${(0,cssinjs_es.unit)(token.paddingContentHorizontalLG)}`,
+    notificationMarginEdge: token.marginLG,
+    animationMaxHeight: 150,
+    notificationStackLayer: 3,
+    notificationProgressHeight: 2
+  });
+  return notificationToken;
+};
+/* harmony default export */ const notification_style = ((0,genStyleUtils.genStyleHooks)('Notification', token => {
+  const notificationToken = prepareNotificationToken(token);
+  return [genNotificationStyle(notificationToken), placement(notificationToken), stack(notificationToken)];
+}, notification_style_prepareComponentToken));
+;// ./node_modules/antd/es/notification/style/pure-panel.js
+
+
+
+/* harmony default export */ const pure_panel = ((0,genStyleUtils.genSubStyleComponent)(['Notification', 'PurePanel'], token => {
+  const noticeCls = `${token.componentCls}-notice`;
+  const notificationToken = prepareNotificationToken(token);
+  return {
+    [`${noticeCls}-pure-panel`]: {
+      ...genNoticeStyle(notificationToken),
+      width: notificationToken.width,
+      maxWidth: `calc(100vw - ${(0,cssinjs_es.unit)(token.calc(notificationToken.notificationMarginEdge).mul(2).equal())})`,
+      margin: 0
+    }
+  };
+}, notification_style_prepareComponentToken));
+;// ./node_modules/antd/es/notification/PurePanel.js
+"use client";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const TypeIcon = {
+  info: /*#__PURE__*/external_React_.createElement(InfoCircleFilled["default"], null),
+  success: /*#__PURE__*/external_React_.createElement(CheckCircleFilled["default"], null),
+  error: /*#__PURE__*/external_React_.createElement(CloseCircleFilled["default"], null),
+  warning: /*#__PURE__*/external_React_.createElement(ExclamationCircleFilled["default"], null),
+  loading: /*#__PURE__*/external_React_.createElement(LoadingOutlined["default"], null)
+};
+function getCloseIcon(prefixCls, closeIcon) {
+  if (closeIcon === null || closeIcon === false) {
+    return null;
+  }
+  return closeIcon || /*#__PURE__*/external_React_.createElement(CloseOutlined["default"], {
+    className: `${prefixCls}-close-icon`
+  });
+}
+const typeToIcon = {
+  success: CheckCircleFilled["default"],
+  info: InfoCircleFilled["default"],
+  error: CloseCircleFilled["default"],
+  warning: ExclamationCircleFilled["default"]
+};
+const PureContent = props => {
+  const {
+    prefixCls,
+    icon,
+    type,
+    title,
+    description,
+    actions,
+    role = 'alert',
+    styles,
+    classNames: pureContentCls
+  } = props;
+  let iconNode = null;
+  if (icon) {
+    iconNode = /*#__PURE__*/external_React_.createElement("span", {
+      className: (0,clsx.clsx)(`${prefixCls}-icon`, pureContentCls.icon),
+      style: styles.icon
+    }, icon);
+  } else if (type) {
+    iconNode = /*#__PURE__*/external_React_.createElement(typeToIcon[type] || null, {
+      className: (0,clsx.clsx)(`${prefixCls}-icon`, pureContentCls.icon, `${prefixCls}-icon-${type}`),
+      style: styles.icon
+    });
+  }
+  return /*#__PURE__*/external_React_.createElement("div", {
+    className: (0,clsx.clsx)({
+      [`${prefixCls}-with-icon`]: iconNode
+    }),
+    role: role
+  }, iconNode, /*#__PURE__*/external_React_.createElement("div", {
+    className: (0,clsx.clsx)(`${prefixCls}-title`, pureContentCls.title),
+    style: styles.title
+  }, title), description && (/*#__PURE__*/external_React_.createElement("div", {
+    className: (0,clsx.clsx)(`${prefixCls}-description`, pureContentCls.description),
+    style: styles.description
+  }, description)), actions && (/*#__PURE__*/external_React_.createElement("div", {
+    className: (0,clsx.clsx)(`${prefixCls}-actions`, pureContentCls.actions),
+    style: styles.actions
+  }, actions)));
+};
+/** @private Internal Component. Do not use in your production. */
+const PurePanel = props => {
+  const {
+    prefixCls: staticPrefixCls,
+    icon,
+    type,
+    message,
+    title,
+    description,
+    btn,
+    actions,
+    closeIcon: _closeIcon,
+    className: notificationClassName,
+    style,
+    styles,
+    classNames: notificationClassNames,
+    closable,
+    ...restProps
+  } = props;
+  const {
+    getPrefixCls,
+    className: contextClassName,
+    style: contextStyle,
+    classNames: contextClassNames,
+    styles: contextStyles
+  } = (0,context.useComponentConfig)('notification');
+  const [mergedClassNames, mergedStyles] = (0,useMergeSemantic.useMergeSemantic)([contextClassNames, notificationClassNames], [contextStyles, styles], {
+    props
+  });
+  const {
+    notification: notificationContext
+  } = external_React_.useContext(context.ConfigContext);
+  const mergedActions = actions ?? btn;
+  if (true) {
+    const warning = (0,_util_warning.devUseWarning)('Notification');
+    [['btn', 'actions'], ['message', 'title']].forEach(([deprecatedName, newName]) => {
+      warning.deprecated(!(deprecatedName in props), deprecatedName, newName);
+    });
+  }
+  const mergedTitle = title ?? message;
+  const prefixCls = staticPrefixCls || getPrefixCls('notification');
+  const noticePrefixCls = `${prefixCls}-notice`;
+  const rootCls = (0,useCSSVarCls["default"])(prefixCls);
+  const [hashId, cssVarCls] = notification_style(prefixCls, rootCls);
+  const [rawClosable, mergedCloseIcon,, ariaProps] = (0,useClosable.useClosable)((0,useClosable.pickClosable)(props), (0,useClosable.pickClosable)(notificationContext), {
+    closable: true,
+    closeIcon: /*#__PURE__*/external_React_.createElement(CloseOutlined["default"], {
+      className: `${prefixCls}-close-icon`
+    }),
+    closeIconRender: icon => getCloseIcon(prefixCls, icon)
+  });
+  const mergedClosable = rawClosable ? {
+    onClose: closable && typeof closable === 'object' ? closable?.onClose : undefined,
+    closeIcon: mergedCloseIcon,
+    ...ariaProps
+  } : false;
+  return /*#__PURE__*/external_React_.createElement("div", {
+    className: (0,clsx.clsx)(`${noticePrefixCls}-pure-panel`, hashId, notificationClassName, cssVarCls, rootCls, mergedClassNames.root),
+    style: mergedStyles.root
+  }, /*#__PURE__*/external_React_.createElement(pure_panel, {
+    prefixCls: prefixCls
+  }), /*#__PURE__*/external_React_.createElement(notification_es.Notice, {
+    style: {
+      ...contextStyle,
+      ...style
+    },
+    ...restProps,
+    prefixCls: prefixCls,
+    eventKey: "pure",
+    duration: null,
+    closable: mergedClosable,
+    className: (0,clsx.clsx)(notificationClassName, contextClassName),
+    content: /*#__PURE__*/external_React_.createElement(PureContent, {
+      classNames: mergedClassNames,
+      styles: mergedStyles,
+      prefixCls: noticePrefixCls,
+      icon: icon,
+      type: type,
+      title: mergedTitle,
+      description: description,
+      actions: mergedActions
+    })
+  }));
+};
+/* harmony default export */ const notification_PurePanel = (PurePanel);
+// EXTERNAL MODULE: ./node_modules/antd/es/theme/useToken.js + 3 modules
+var useToken = __webpack_require__("./node_modules/antd/es/theme/useToken.js");
+;// ./node_modules/antd/es/notification/util.js
+function getPlacementStyle(placement, top, bottom) {
+  let style;
+  switch (placement) {
+    case 'top':
+      style = {
+        left: '50%',
+        transform: 'translateX(-50%)',
+        right: 'auto',
+        top,
+        bottom: 'auto'
+      };
+      break;
+    case 'topLeft':
+      style = {
+        left: 0,
+        top,
+        bottom: 'auto'
+      };
+      break;
+    case 'topRight':
+      style = {
+        right: 0,
+        top,
+        bottom: 'auto'
+      };
+      break;
+    case 'bottom':
+      style = {
+        left: '50%',
+        transform: 'translateX(-50%)',
+        right: 'auto',
+        top: 'auto',
+        bottom
+      };
+      break;
+    case 'bottomLeft':
+      style = {
+        left: 0,
+        top: 'auto',
+        bottom
+      };
+      break;
+    default:
+      style = {
+        right: 0,
+        top: 'auto',
+        bottom
+      };
+      break;
+  }
+  return style;
+}
+function getMotion(prefixCls) {
+  return {
+    motionName: `${prefixCls}-fade`
+  };
+}
+function getCloseIconConfig(closeIcon, notificationConfig, notification) {
+  if (typeof closeIcon !== 'undefined') {
+    return closeIcon;
+  }
+  if (typeof notificationConfig?.closeIcon !== 'undefined') {
+    return notificationConfig.closeIcon;
+  }
+  return notification?.closeIcon;
+}
+;// ./node_modules/antd/es/notification/useNotification.js
+"use client";
+
+
+
+
+
+
+
+
+
+
+
+
+
+const DEFAULT_OFFSET = 24;
+const DEFAULT_DURATION = 4.5;
+const DEFAULT_PLACEMENT = 'topRight';
+const Wrapper = ({
+  children,
+  prefixCls
+}) => {
+  const rootCls = (0,useCSSVarCls["default"])(prefixCls);
+  const [hashId, cssVarCls] = notification_style(prefixCls, rootCls);
+  return /*#__PURE__*/external_React_default().createElement(notification_es.NotificationProvider, {
+    classNames: {
+      list: (0,clsx.clsx)(hashId, cssVarCls, rootCls)
+    }
+  }, children);
+};
+const renderNotifications = (node, {
+  prefixCls,
+  key
+}) => (/*#__PURE__*/external_React_default().createElement(Wrapper, {
+  prefixCls: prefixCls,
+  key: key
+}, node));
+const Holder = /*#__PURE__*/external_React_default().forwardRef((props, ref) => {
+  const {
+    top,
+    bottom,
+    prefixCls: staticPrefixCls,
+    getContainer: staticGetContainer,
+    maxCount,
+    rtl,
+    onAllRemoved,
+    stack,
+    duration = DEFAULT_DURATION,
+    pauseOnHover = true,
+    showProgress
+  } = props;
+  const {
+    getPrefixCls,
+    getPopupContainer,
+    direction
+  } = (0,context.useComponentConfig)('notification');
+  const {
+    notification
+  } = (0,external_React_.useContext)(context.ConfigContext);
+  const [, token] = (0,useToken["default"])();
+  const prefixCls = staticPrefixCls || getPrefixCls('notification');
+  const mergedDuration = (0,external_React_.useMemo)(() => typeof duration === 'number' && duration > 0 ? duration : false, [duration]);
+  // =============================== Style ===============================
+  const getStyle = placement => getPlacementStyle(placement, top ?? DEFAULT_OFFSET, bottom ?? DEFAULT_OFFSET);
+  const getClassName = () => (0,clsx.clsx)({
+    [`${prefixCls}-rtl`]: rtl ?? direction === 'rtl'
+  });
+  // ============================== Motion ===============================
+  const getNotificationMotion = () => getMotion(prefixCls);
+  // ============================== Origin ===============================
+  const [api, holder] = (0,notification_es.useNotification)({
+    prefixCls,
+    style: getStyle,
+    className: getClassName,
+    motion: getNotificationMotion,
+    closable: {
+      closeIcon: getCloseIcon(prefixCls)
+    },
+    duration: mergedDuration,
+    getContainer: () => staticGetContainer?.() || getPopupContainer?.() || document.body,
+    maxCount,
+    pauseOnHover,
+    showProgress,
+    onAllRemoved,
+    renderNotifications,
+    stack: stack === false ? false : {
+      threshold: typeof stack === 'object' ? stack?.threshold : undefined,
+      offset: 8,
+      gap: token.margin
+    }
+  });
+  const [mergedClassNames, mergedStyles] = (0,useMergeSemantic.useMergeSemantic)([notification?.classNames, props?.classNames], [notification?.styles, props?.styles], {
+    props
+  });
+  // ================================ Ref ================================
+  external_React_default().useImperativeHandle(ref, () => ({
+    ...api,
+    prefixCls,
+    notification,
+    classNames: mergedClassNames,
+    styles: mergedStyles
+  }));
+  return holder;
+});
+// ==============================================================================
+// ==                                   Hook                                   ==
+// ==============================================================================
+function useInternalNotification(notificationConfig) {
+  const holderRef = external_React_default().useRef(null);
+  const warning = (0,_util_warning.devUseWarning)('Notification');
+  const {
+    notification: notificationContext
+  } = external_React_default().useContext(context.ConfigContext);
+  // ================================ API ================================
+  const wrapAPI = external_React_default().useMemo(() => {
+    // Wrap with notification content
+    // >>> Open
+    const open = config => {
+      if (!holderRef.current) {
+         true ? warning(false, 'usage', 'You are calling notice in render which will break in React 18 concurrent mode. Please trigger in effect instead.') : 0;
+        return;
+      }
+      const {
+        open: originOpen,
+        prefixCls,
+        notification,
+        classNames: originClassNames,
+        styles: originStyles
+      } = holderRef.current;
+      const contextClassName = notification?.className || {};
+      const contextStyle = notification?.style || {};
+      const noticePrefixCls = `${prefixCls}-notice`;
+      const {
+        title,
+        message,
+        description,
+        icon,
+        type,
+        btn,
+        actions,
+        className,
+        style,
+        role = 'alert',
+        closeIcon,
+        closable,
+        classNames: configClassNames = {},
+        styles = {},
+        ...restConfig
+      } = config;
+      if (true) {
+        [['btn', 'actions'], ['message', 'title']].forEach(([deprecatedName, newName]) => {
+          warning.deprecated(!(deprecatedName in config), deprecatedName, newName);
+        });
+      }
+      const mergedTitle = title ?? message;
+      const mergedActions = actions ?? btn;
+      const realCloseIcon = getCloseIcon(noticePrefixCls, getCloseIconConfig(closeIcon, notificationConfig, notification));
+      const [rawClosable, mergedCloseIcon,, ariaProps] = (0,useClosable.computeClosable)((0,useClosable.pickClosable)({
+        ...(notificationConfig || {}),
+        ...config
+      }), (0,useClosable.pickClosable)(notificationContext), {
+        closable: true,
+        closeIcon: realCloseIcon
+      });
+      const mergedClosable = rawClosable ? {
+        onClose: closable && typeof closable === 'object' ? closable.onClose : undefined,
+        closeIcon: mergedCloseIcon,
+        ...ariaProps
+      } : false;
+      const semanticClassNames = (0,useMergeSemantic.resolveStyleOrClass)(configClassNames, {
+        props: config
+      });
+      const semanticStyles = (0,useMergeSemantic.resolveStyleOrClass)(styles, {
+        props: config
+      });
+      const mergedClassNames = (0,useMergeSemantic.mergeClassNames)(undefined, originClassNames, semanticClassNames);
+      const mergedStyles = (0,useMergeSemantic.mergeStyles)(originStyles, semanticStyles);
+      return originOpen({
+        // use placement from props instead of hard-coding "topRight"
+        placement: notificationConfig?.placement ?? DEFAULT_PLACEMENT,
+        ...restConfig,
+        content: (/*#__PURE__*/external_React_default().createElement(PureContent, {
+          prefixCls: noticePrefixCls,
+          icon: icon,
+          type: type,
+          title: mergedTitle,
+          description: description,
+          actions: mergedActions,
+          role: role,
+          classNames: mergedClassNames,
+          styles: mergedStyles
+        })),
+        className: (0,clsx.clsx)({
+          [`${noticePrefixCls}-${type}`]: type
+        }, className, contextClassName, mergedClassNames.root),
+        style: {
+          ...contextStyle,
+          ...mergedStyles.root,
+          ...style
+        },
+        closable: mergedClosable
+      });
+    };
+    // >>> destroy
+    const destroy = key => {
+      if (key !== undefined) {
+        holderRef.current?.close(key);
+      } else {
+        holderRef.current?.destroy();
+      }
+    };
+    const clone = {
+      open,
+      destroy
+    };
+    const keys = ['success', 'info', 'warning', 'error'];
+    keys.forEach(type => {
+      clone[type] = config => open({
+        ...config,
+        type
+      });
+    });
+    return clone;
+  }, [notificationConfig, notificationContext]);
+  // ============================== Return ===============================
+  return [wrapAPI, /*#__PURE__*/external_React_default().createElement(Holder, {
+    key: "notification-holder",
+    ...notificationConfig,
+    ref: holderRef
+  })];
+}
+function useNotification(notificationConfig) {
+  return useInternalNotification(notificationConfig);
+}
+;// ./node_modules/antd/es/notification/index.js
+"use client";
+
+
+
+
+
+
+
+let notification = null;
+let act = callback => callback();
+let taskQueue = [];
+let defaultGlobalConfig = {};
+function getGlobalContext() {
+  const {
+    getContainer,
+    rtl,
+    maxCount,
+    top,
+    bottom,
+    showProgress,
+    pauseOnHover
+  } = defaultGlobalConfig;
+  const mergedContainer = getContainer?.() || document.body;
+  return {
+    getContainer: () => mergedContainer,
+    rtl,
+    maxCount,
+    top,
+    bottom,
+    showProgress,
+    pauseOnHover
+  };
+}
+const GlobalHolder = /*#__PURE__*/external_React_default().forwardRef((props, ref) => {
+  const {
+    notificationConfig,
+    sync
+  } = props;
+  const {
+    getPrefixCls
+  } = (0,external_React_.useContext)(context.ConfigContext);
+  const prefixCls = defaultGlobalConfig.prefixCls || getPrefixCls('notification');
+  const appConfig = (0,external_React_.useContext)(app_context.AppConfigContext);
+  const [api, holder] = useInternalNotification({
+    ...notificationConfig,
+    prefixCls,
+    ...appConfig.notification
+  });
+  external_React_default().useEffect(sync, []);
+  external_React_default().useImperativeHandle(ref, () => {
+    const instance = {
+      ...api
+    };
+    Object.keys(instance).forEach(method => {
+      instance[method] = (...args) => {
+        sync();
+        return api[method].apply(api, args);
+      };
+    });
+    return {
+      instance,
+      sync
+    };
+  });
+  return holder;
+});
+const GlobalHolderWrapper = /*#__PURE__*/external_React_default().forwardRef((_, ref) => {
+  const [notificationConfig, setNotificationConfig] = external_React_default().useState(getGlobalContext);
+  const sync = () => {
+    setNotificationConfig(getGlobalContext);
+  };
+  external_React_default().useEffect(sync, []);
+  const global = (0,config_provider.globalConfig)();
+  const rootPrefixCls = global.getRootPrefixCls();
+  const rootIconPrefixCls = global.getIconPrefixCls();
+  const theme = global.getTheme();
+  const dom = /*#__PURE__*/external_React_default().createElement(GlobalHolder, {
+    ref: ref,
+    sync: sync,
+    notificationConfig: notificationConfig
+  });
+  return /*#__PURE__*/external_React_default().createElement(config_provider["default"], {
+    prefixCls: rootPrefixCls,
+    iconPrefixCls: rootIconPrefixCls,
+    theme: theme
+  }, global.holderRender ? global.holderRender(dom) : dom);
+});
+const flushNotificationQueue = () => {
+  if (!notification) {
+    const holderFragment = document.createDocumentFragment();
+    const newNotification = {
+      fragment: holderFragment
+    };
+    notification = newNotification;
+    // Delay render to avoid sync issue
+    act(() => {
+      (0,render.render)(/*#__PURE__*/external_React_default().createElement(GlobalHolderWrapper, {
+        ref: node => {
+          const {
+            instance,
+            sync
+          } = node || {};
+          Promise.resolve().then(() => {
+            if (!newNotification.instance && instance) {
+              newNotification.instance = instance;
+              newNotification.sync = sync;
+              flushNotificationQueue();
+            }
+          });
+        }
+      }), holderFragment);
+    });
+    return;
+  }
+  // Notification not ready
+  if (!notification.instance) {
+    return;
+  }
+  // >>> Execute task
+  taskQueue.forEach(task => {
+    switch (task.type) {
+      case 'open':
+        {
+          act(() => {
+            notification.instance.open({
+              ...defaultGlobalConfig,
+              ...task.config
+            });
+          });
+          break;
+        }
+      case 'destroy':
+        act(() => {
+          notification?.instance?.destroy(task.key);
+        });
+        break;
+    }
+  });
+  // Clean up
+  taskQueue = [];
+};
+// ==============================================================================
+// ==                                  Export                                  ==
+// ==============================================================================
+function setNotificationGlobalConfig(config) {
+  defaultGlobalConfig = {
+    ...defaultGlobalConfig,
+    ...config
+  };
+  // Trigger sync for it
+  act(() => {
+    notification?.sync?.();
+  });
+}
+function notification_open(config) {
+  const global = (0,config_provider.globalConfig)();
+  if ( true && !global.holderRender) {
+    (0,config_provider.warnContext)('notification');
+  }
+  taskQueue.push({
+    type: 'open',
+    config
+  });
+  flushNotificationQueue();
+}
+const destroy = key => {
+  taskQueue.push({
+    type: 'destroy',
+    key
+  });
+  flushNotificationQueue();
+};
+const methods = ['success', 'info', 'warning', 'error'];
+const baseStaticMethods = {
+  open: notification_open,
+  destroy,
+  config: setNotificationGlobalConfig,
+  useNotification: useNotification,
+  _InternalPanelDoNotUseOrYouWillBeFired: notification_PurePanel
+};
+const staticMethods = baseStaticMethods;
+methods.forEach(type => {
+  staticMethods[type] = config => notification_open({
+    ...config,
+    type
+  });
+});
+// ==============================================================================
+// ==                                   Test                                   ==
+// ==============================================================================
+const noop = () => {};
+let _actWrapper = noop;
+if (false) // removed by dead control flow
+{}
+const actWrapper = _actWrapper;
+
+let _actDestroy = noop;
+if (false) // removed by dead control flow
+{}
+const actDestroy = _actDestroy;
+
+/* harmony default export */ const es_notification = (staticMethods);
 // EXTERNAL MODULE: ./node_modules/@rc-component/portal/es/index.js + 8 modules
 var portal_es = __webpack_require__("./node_modules/@rc-component/portal/es/index.js");
 // EXTERNAL MODULE: ./node_modules/@rc-component/util/es/hooks/useLayoutEffect.js
@@ -127319,7 +127324,7 @@ const DrawerPopup = (props, ref) => {
   }, []);
 
   // ============================ Mask ============================
-  const maskNode = /*#__PURE__*/external_React_.createElement(motion_es["default"], DrawerPopup_extends({
+  const maskNode = /*#__PURE__*/external_React_.createElement(es["default"], DrawerPopup_extends({
     key: "mask"
   }, maskMotion, {
     visible: mask && open
@@ -127417,7 +127422,7 @@ const DrawerPopup = (props, ref) => {
 
   // =========================== Render ==========================
   // >>>>> Panel
-  const panelNode = /*#__PURE__*/external_React_.createElement(motion_es["default"], DrawerPopup_extends({
+  const panelNode = /*#__PURE__*/external_React_.createElement(es["default"], DrawerPopup_extends({
     key: "panel"
   }, motionProps, {
     visible: open,
@@ -127646,7 +127651,7 @@ const DrawerPanel_DrawerPanel = props => {
     classNames: drawerClassNames,
     styles: drawerStyles
   } = props;
-  const drawerContext = (0,config_provider_context.useComponentConfig)('drawer');
+  const drawerContext = (0,context.useComponentConfig)('drawer');
   const {
     classNames: contextClassNames,
     styles: contextStyles,
@@ -128153,7 +128158,7 @@ const Drawer_Drawer = props => {
     classNames: contextClassNames,
     styles: contextStyles,
     mask: contextMask
-  } = (0,config_provider_context.useComponentConfig)('drawer');
+  } = (0,context.useComponentConfig)('drawer');
   const prefixCls = getPrefixCls('drawer', customizePrefixCls);
   const [hashId, cssVarCls] = drawer_style(prefixCls);
   const getContainer =
@@ -128313,7 +128318,7 @@ const Drawer_PurePanel = props => {
   } = props;
   const {
     getPrefixCls
-  } = external_React_.useContext(config_provider_context.ConfigContext);
+  } = external_React_.useContext(context.ConfigContext);
   const prefixCls = getPrefixCls('drawer', customizePrefixCls);
   const [hashId, cssVarCls] = drawer_style(prefixCls);
   const cls = (0,clsx.clsx)(prefixCls, `${prefixCls}-pure`, `${prefixCls}-${placement}`, hashId, cssVarCls, className);
@@ -129211,6 +129216,8 @@ function Header(props) {
   const [pendingNavigation, setPendingNavigation] = (0,external_React_.useState)(null);
   const [modalPopUp, setModalPopUp] = (0,external_React_.useState)(false);
   const [isSaving, setIsSaving] = (0,external_React_.useState)(false);
+  const [saveFeedback, setSaveFeedback] = (0,external_React_.useState)(null);
+  const saveFeedbackTimerRef = (0,external_React_.useRef)(null);
   const currentLayoutName = resolveLayoutNameFromBuilderData(props.mainBuilderData);
   const prevMainBuilderData = (0,external_React_.useRef)(cloneDeep_default()(migrateLayoutDocument(props.mainBuilderData).doc));
   const [builderTitle, setBuilderTitle] = (0,external_React_.useState)(currentLayoutName);
@@ -129269,28 +129276,43 @@ function Header(props) {
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [mainBuilderData]);
+  (0,external_React_.useEffect)(() => {
+    return () => {
+      if (saveFeedbackTimerRef.current) {
+        clearTimeout(saveFeedbackTimerRef.current);
+      }
+    };
+  }, []);
   const handleMiscSettingPage = () => {};
-  const openNotification = (flag = false, didPublish = false) => {
+  const showSaveFeedback = (didPublish = false) => {
+    if (saveFeedbackTimerRef.current) {
+      clearTimeout(saveFeedbackTimerRef.current);
+    }
+    setSaveFeedback(didPublish ? "published" : "saved");
+    saveFeedbackTimerRef.current = setTimeout(() => {
+      setSaveFeedback(null);
+      saveFeedbackTimerRef.current = null;
+    }, 2000);
+  };
+  const maybeShowPostLayoutGuidance = () => {
+    const postLayoutNotStarted = mainBuilderData?.post_layout_data?.breadcrumb_data?.select_builder === "false";
+    if (props.selectType !== "filter" || !postLayoutNotStarted) {
+      return;
+    }
     const handleButtonClick = () => {
       props.setSelectType("");
       props.setCurrStep("1");
     };
-    const successTitle = didPublish ? "Layout Published!" : "Layout Saved!";
-    const messageWithButton = /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(external_ReactJSXRuntime_.Fragment, {
-      children: props.selectType === "filter" && mainBuilderData?.post_layout_data?.breadcrumb_data?.select_builder === "false" ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
-        children: [successTitle, " Now you can go for", flag === false ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(es_button["default"], {
+    es_notification.open({
+      title: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
+        children: ["Filter layout is ready. Continue with", " ", /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(es_button["default"], {
           type: "link",
           onClick: handleButtonClick,
-          children: "Post Layout!"
-        }) : " Post Layout!"]
-      }) : /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
-        children: successTitle
-      })
-    });
-    es_notification.open({
-      title: messageWithButton,
+          children: "Post Layout"
+        }), "."]
+      }),
       className: "layout-saved-note",
-      duration: flag === false ? 3 : 1
+      duration: 4
     });
   };
   const onHandleSaveLayout = async (flag = false) => {
@@ -129336,7 +129358,8 @@ function Header(props) {
         prevMainBuilderData.current = cloneDeep_default()(docWithSessionDevice);
         setMainBuilderData(docWithSessionDevice);
         props.updatedBuilderData(docWithSessionDevice);
-        openNotification(flag, wasDraft);
+        showSaveFeedback(wasDraft);
+        maybeShowPostLayoutGuidance();
         return true;
       } else {
         message["default"].error(response?.data?.message || "Failed to save layout");
@@ -129447,9 +129470,7 @@ function Header(props) {
         setBuilderLabel(response.data.label);
         setBuilderTitle(response.data.label);
         setLayoutRenamePopup(false);
-        es_notification.open({
-          title: "Filter label updated."
-        });
+        message["default"].success("Filter label updated.");
         const updatedBuilder = commitBuilderPatch(nextBuilder => {
           nextBuilder.common_data.layout_name = response.data.label;
         });
@@ -129727,6 +129748,8 @@ function Header(props) {
   const isSaveActionEnabled = !isSaving && (hasChanges || canPublishDraftWithoutChanges);
   const saveActionLabel = isDraftLayout ? "Publish" : "Save";
   const saveActionBusyLabel = isDraftLayout ? "Publishing..." : "Saving...";
+  const saveActionFeedbackLabel = saveFeedback === "published" ? "Published" : saveFeedback === "saved" ? "Saved" : saveActionLabel;
+  const saveButtonLabel = isSaving ? saveActionBusyLabel : saveActionFeedbackLabel;
   const isBuilderSelected = (mainBuilderData, screen) => {
     if (screen === 1) {
       return mainBuilderData?.filter_layout_data?.breadcrumb_data?.select_builder === "true";
@@ -129818,7 +129841,7 @@ function Header(props) {
       }), (parseInt(props.currStep, 10) >= 1 || props?.mainBuilderData?.filter_layout_data?.breadcrumb_data?.select_builder === "true") && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
         className: `caf-save-btn ${isSaveActionEnabled ? "active" : "deactive"}`,
         onClick: isSaveActionEnabled ? () => onHandleSaveLayout() : undefined,
-        children: isSaving ? saveActionBusyLabel : saveActionLabel
+        children: saveButtonLabel
       }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
         onClick: handleCancel,
         children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(MainComponents_BuilderCrossCircleIcon, {
@@ -142091,7 +142114,7 @@ const Sider = /*#__PURE__*/external_React_.forwardRef((props, ref) => {
   const {
     getPrefixCls,
     direction
-  } = (0,external_React_.useContext)(config_provider_context.ConfigContext);
+  } = (0,external_React_.useContext)(context.ConfigContext);
   const prefixCls = getPrefixCls('layout-sider', customizePrefixCls);
   const [hashId, cssVarCls] = sider(prefixCls);
   // ========================= Responsive =========================
@@ -142216,7 +142239,7 @@ const MenuDivider = props => {
   } = props;
   const {
     getPrefixCls
-  } = external_React_.useContext(config_provider_context.ConfigContext);
+  } = external_React_.useContext(context.ConfigContext);
   const prefixCls = getPrefixCls('menu', customizePrefixCls);
   const classString = (0,clsx.clsx)({
     [`${prefixCls}-item-divider-dashed`]: !!dashed
@@ -143568,7 +143591,7 @@ const InternalMenu = /*#__PURE__*/(0,external_React_.forwardRef)((props, ref) =>
   } = props;
   const {
     menu
-  } = external_React_.useContext(config_provider_context.ConfigContext);
+  } = external_React_.useContext(context.ConfigContext);
   const {
     getPrefixCls,
     getPopupContainer,
@@ -143577,7 +143600,7 @@ const InternalMenu = /*#__PURE__*/(0,external_React_.forwardRef)((props, ref) =>
     style: contextStyle,
     classNames: contextClassNames,
     styles: contextStyles
-  } = (0,config_provider_context.useComponentConfig)('menu');
+  } = (0,context.useComponentConfig)('menu');
   const rootPrefixCls = getPrefixCls();
   const passedProps = (0,util_es.omit)(restProps, ['collapsedWidth']);
   // ======================== Warning ==========================
@@ -144123,7 +144146,7 @@ const Dropdown = props => {
     style: contextStyle,
     classNames: contextClassNames,
     styles: contextStyles
-  } = (0,config_provider_context.useComponentConfig)('dropdown');
+  } = (0,context.useComponentConfig)('dropdown');
   const mergedProps = {
     ...props,
     mouseEnterDelay,
@@ -144328,7 +144351,7 @@ const DropdownButton = props => {
     getPopupContainer: getContextPopupContainer,
     getPrefixCls,
     direction
-  } = external_React_.useContext(config_provider_context.ConfigContext);
+  } = external_React_.useContext(context.ConfigContext);
   const {
     prefixCls: customizePrefixCls,
     type = 'default',
@@ -144915,20 +144938,20 @@ function PostModulePickerIcon({
 }
 /* harmony default export */ const components_PostModulePickerIcon = (PostModulePickerIcon);
 // EXTERNAL MODULE: ./src/MainComponents/FilterComponents/styleData.js
-var FilterComponents_styleData = __webpack_require__("./src/MainComponents/FilterComponents/styleData.js");
+var styleData = __webpack_require__("./src/MainComponents/FilterComponents/styleData.js");
 ;// ./src/MainComponents/PostComponents/components/woocommerce/wooAttributeSwatchTemplate.js
 
 const getWooAttributeSwatchModuleTemplate = () => ({
   type: "module",
   title: "Attribute Swatch",
   style: {
-    ...FilterComponents_styleData.fModuleStyle,
+    ...styleData.fModuleStyle,
     container: {
-      ...FilterComponents_styleData.fModuleStyle.container,
+      ...styleData.fModuleStyle.container,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.container.desktop,
+        ...styleData.fModuleStyle.container.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.container.desktop.default,
+          ...styleData.fModuleStyle.container.desktop.default,
           width: "100%",
           height: "auto",
           position: "relative",
@@ -144959,11 +144982,11 @@ const getWooAttributeSwatchModuleTemplate = () => ({
       }
     },
     header: {
-      ...FilterComponents_styleData.fModuleStyle.header,
+      ...styleData.fModuleStyle.header,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.header.desktop,
+        ...styleData.fModuleStyle.header.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.header.desktop.default,
+          ...styleData.fModuleStyle.header.desktop.default,
           width: "100%",
           height: "auto",
           position: "relative",
@@ -144990,11 +145013,11 @@ const getWooAttributeSwatchModuleTemplate = () => ({
       }
     },
     input: {
-      ...FilterComponents_styleData.fModuleStyle.input,
+      ...styleData.fModuleStyle.input,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.input.desktop,
+        ...styleData.fModuleStyle.input.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.input.desktop.default,
+          ...styleData.fModuleStyle.input.desktop.default,
           width: "18px",
           height: "18px",
           position: "relative",
@@ -145029,7 +145052,7 @@ const getWooAttributeSwatchModuleTemplate = () => ({
           borderBottomRightRadius: "4px"
         },
         selected: {
-          ...FilterComponents_styleData.fModuleStyle.input.desktop.selected,
+          ...styleData.fModuleStyle.input.desktop.selected,
           backgroundColor: "rgb(0,0,0)",
           borderTopWidth: "2px",
           borderRightWidth: "2px",
@@ -145047,11 +145070,11 @@ const getWooAttributeSwatchModuleTemplate = () => ({
       }
     },
     meta: {
-      ...FilterComponents_styleData.fModuleStyle.meta,
+      ...styleData.fModuleStyle.meta,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.meta.desktop,
+        ...styleData.fModuleStyle.meta.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.meta.desktop.default,
+          ...styleData.fModuleStyle.meta.desktop.default,
           width: "100%",
           height: "auto",
           position: "relative",
@@ -145080,11 +145103,11 @@ const getWooAttributeSwatchModuleTemplate = () => ({
       }
     },
     mainmeta: {
-      ...FilterComponents_styleData.fModuleStyle.mainmeta,
+      ...styleData.fModuleStyle.mainmeta,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop,
+        ...styleData.fModuleStyle.mainmeta.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop.default,
+          ...styleData.fModuleStyle.mainmeta.desktop.default,
           width: "100%",
           height: "auto",
           position: "relative",
@@ -145112,11 +145135,11 @@ const getWooAttributeSwatchModuleTemplate = () => ({
       }
     },
     selectmeta: {
-      ...FilterComponents_styleData.fModuleStyle.selectmeta,
+      ...styleData.fModuleStyle.selectmeta,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop,
+        ...styleData.fModuleStyle.selectmeta.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop.default,
+          ...styleData.fModuleStyle.selectmeta.desktop.default,
           width: "100%",
           height: "auto",
           position: "relative",
@@ -145159,11 +145182,11 @@ const getWooAttributeSwatchModuleTemplate = () => ({
       }
     },
     meta1: {
-      ...FilterComponents_styleData.fModuleStyle.meta1,
+      ...styleData.fModuleStyle.meta1,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.meta1.desktop,
+        ...styleData.fModuleStyle.meta1.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.meta1.desktop.default,
+          ...styleData.fModuleStyle.meta1.desktop.default,
           width: "auto",
           height: "auto",
           position: "relative",
@@ -145207,21 +145230,21 @@ const getWooAttributeSwatchModuleTemplate = () => ({
           boxShadow: "0px 0px 0px 0px  #333333"
         },
         hover: {
-          ...FilterComponents_styleData.fModuleStyle.meta1.desktop.hover,
+          ...styleData.fModuleStyle.meta1.desktop.hover,
           backgroundColor: "rgb(246,247,251)"
         },
         selected: {
-          ...FilterComponents_styleData.fModuleStyle.meta1.desktop.selected,
+          ...styleData.fModuleStyle.meta1.desktop.selected,
           backgroundColor: "rgb(246,247,251)"
         }
       }
     },
     meta2: {
-      ...FilterComponents_styleData.fModuleStyle.meta2,
+      ...styleData.fModuleStyle.meta2,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.meta2.desktop,
+        ...styleData.fModuleStyle.meta2.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.meta2.desktop.default,
+          ...styleData.fModuleStyle.meta2.desktop.default,
           display: "flex",
           flexFlow: "row",
           alignItems: "center",
@@ -145232,11 +145255,11 @@ const getWooAttributeSwatchModuleTemplate = () => ({
       }
     },
     meta3: {
-      ...FilterComponents_styleData.fModuleStyle.meta3,
+      ...styleData.fModuleStyle.meta3,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.meta3.desktop,
+        ...styleData.fModuleStyle.meta3.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.meta3.desktop.default,
+          ...styleData.fModuleStyle.meta3.desktop.default,
           display: "flex",
           flexFlow: "row",
           alignItems: "center",
@@ -145247,11 +145270,11 @@ const getWooAttributeSwatchModuleTemplate = () => ({
       }
     },
     meta4: {
-      ...FilterComponents_styleData.fModuleStyle.meta4,
+      ...styleData.fModuleStyle.meta4,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.meta4.desktop,
+        ...styleData.fModuleStyle.meta4.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.meta4.desktop.default,
+          ...styleData.fModuleStyle.meta4.desktop.default,
           display: "flex",
           flexFlow: "row",
           alignItems: "flex-start",
@@ -145262,55 +145285,55 @@ const getWooAttributeSwatchModuleTemplate = () => ({
       }
     },
     icon: {
-      ...FilterComponents_styleData.fModuleStyle.icon,
+      ...styleData.fModuleStyle.icon,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.icon.desktop,
+        ...styleData.fModuleStyle.icon.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.icon.desktop.default,
+          ...styleData.fModuleStyle.icon.desktop.default,
           fontSize: "18px",
           color: "rgb(0,0,0)"
         }
       }
     },
     icon2: {
-      ...FilterComponents_styleData.fModuleStyle.icon2,
+      ...styleData.fModuleStyle.icon2,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.icon2.desktop,
+        ...styleData.fModuleStyle.icon2.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.icon2.desktop.default,
+          ...styleData.fModuleStyle.icon2.desktop.default,
           fontSize: "16px",
           color: "#dd3333"
         }
       }
     },
     icon3: {
-      ...FilterComponents_styleData.fModuleStyle.icon3,
+      ...styleData.fModuleStyle.icon3,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.icon3.desktop,
+        ...styleData.fModuleStyle.icon3.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.icon3.desktop.default,
+          ...styleData.fModuleStyle.icon3.desktop.default,
           fontSize: "16px",
           color: "#dd3333"
         }
       }
     },
     selecticon: {
-      ...FilterComponents_styleData.fModuleStyle.selecticon,
+      ...styleData.fModuleStyle.selecticon,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.selecticon.desktop,
+        ...styleData.fModuleStyle.selecticon.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.selecticon.desktop.default,
+          ...styleData.fModuleStyle.selecticon.desktop.default,
           fontSize: "16px",
           color: "#dd3333"
         }
       }
     },
     count: {
-      ...FilterComponents_styleData.fModuleStyle.count,
+      ...styleData.fModuleStyle.count,
       desktop: {
-        ...FilterComponents_styleData.fModuleStyle.count.desktop,
+        ...styleData.fModuleStyle.count.desktop,
         default: {
-          ...FilterComponents_styleData.fModuleStyle.count.desktop.default,
+          ...styleData.fModuleStyle.count.desktop.default,
           width: "auto",
           height: "auto",
           paddingTop: "0px",
@@ -145329,9 +145352,6 @@ const getWooAttributeSwatchModuleTemplate = () => ({
           fontWeight: "300"
         }
       }
-    },
-    showmore: {
-      ...FilterComponents_styleData.fModuleStyle.showmore
     }
   },
   key: "woo_attribute_swatch",
@@ -145361,14 +145381,6 @@ const getWooAttributeSwatchModuleTemplate = () => ({
     hide_term_label: "true",
     show_count: "false",
     count_separator: "brackets",
-    term_show_more: "false",
-    term_visible_limit: "10",
-    show_more_label: "Show more",
-    show_less_label: "Show less",
-    show_more_count: "true",
-    show_more_count_separator: "brackets",
-    show_more_count_prefix: "",
-    show_more_count_suffix: "",
     enable_toggle: "false",
     toggle_position: "right",
     close_toggle: "false",
@@ -145643,6 +145655,14 @@ const getWooProductRatingModuleTemplate = () => ({
           boxShadow: "0px 0px 0px 0px #333333",
           width: "auto",
           height: "auto"
+        }
+      }
+    },
+    star: {
+      desktop: {
+        default: {},
+        hover: {
+          color: "#FFC107"
         }
       }
     }
@@ -149021,6 +149041,25 @@ function ModuleCommentContent(props) {
   });
 }
 /* harmony default export */ const ModuleContentData_ModuleCommentContent = (ModuleCommentContent);
+;// ./src/MainComponents/PostComponents/components/settingTabContent/ModuleContentData/shared/freeformLabelTextUtils.js
+/**
+ * Shared helpers for freeform label/text inputs (button labels, badge text, etc.).
+ * Trim only on blur — not on onChange or layout sync — so spaces between words work while typing.
+ */
+
+const normalizeFreeformLabelText = (value, defaultText = "") => {
+  const nextValue = typeof value === "string" ? value.trim() : "";
+  return nextValue !== "" ? nextValue : defaultText;
+};
+
+/**
+ * Input display: preserve raw text (including trailing spaces) while typing.
+ * Substitutes default only when stored value is empty after trim.
+ */
+const getFreeformLabelTextForUi = (raw, defaultText = "") => {
+  const value = typeof raw === "string" ? raw : "";
+  return value.trim() === "" ? defaultText : value;
+};
 ;// ./src/MainComponents/PostComponents/components/settingTabContent/ModuleContentData/ModuleButtonContent.js
 
 
@@ -149032,15 +149071,16 @@ function ModuleCommentContent(props) {
 
 
 
+
+const DEFAULT_BUTTON_TEXT = "Read More";
 function ModuleButtonContent(props) {
   const {
     rowindex,
     columnindex,
     moduleindex
   } = props.indexes;
-  let title = props?.data?.[rowindex].data[columnindex].data[moduleindex]["settings"]?.changeButtonValue;
-  const [buttonValue, setButtonValue] = (0,external_React_.useState)(title ? title : "Read More");
   const modSettings = props.data[rowindex]?.data[columnindex]?.data[moduleindex]?.settings || {};
+  const [buttonValue, setButtonValue] = (0,external_React_.useState)(getFreeformLabelTextForUi(modSettings?.changeButtonValue, DEFAULT_BUTTON_TEXT));
   const [iconsArray, setIconsArray] = (0,external_React_.useState)("");
   const site_url = tc_caf_ajax.plugin_path;
   let icons_url = site_url + "admin/fa-icons/fontawesome-5.json";
@@ -149065,7 +149105,7 @@ function ModuleButtonContent(props) {
     fetchIcons();
   }, []);
   (0,external_React_.useEffect)(() => {
-    setButtonValue(modSettings?.changeButtonValue || "Read More");
+    setButtonValue(getFreeformLabelTextForUi(modSettings?.changeButtonValue, DEFAULT_BUTTON_TEXT));
     setCheckPrefix(modSettings?.prefix?.is_enable === "false" ? false : true);
     setCheckSuffix(modSettings?.suffix?.is_enable === "false" ? false : true);
     setPrefixMeta(modSettings?.prefix?.meta_type ?? "text");
@@ -149088,6 +149128,20 @@ function ModuleButtonContent(props) {
       onSettingChange: props.onSettingChange,
       patch: s => {
         s.changeButtonValue = value;
+      }
+    });
+  };
+  const handleChangeBlur = e => {
+    const normalized = normalizeFreeformLabelText(e.target.value, DEFAULT_BUTTON_TEXT);
+    setButtonValue(normalized);
+    commitPostModuleSettingsPatch({
+      data: props.data,
+      rowindex,
+      columnindex,
+      moduleindex,
+      onSettingChange: props.onSettingChange,
+      patch: s => {
+        s.changeButtonValue = normalized;
       }
     });
   };
@@ -149228,6 +149282,7 @@ function ModuleButtonContent(props) {
           })
         }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(input["default"], {
           onChange: handleChange,
+          onBlur: handleChangeBlur,
           value: buttonValue,
           placeholder: "Rename Button"
         })]
@@ -149429,6 +149484,7 @@ function resolveBadgeValue(postData, badgeType, isBuilderPreview = false, settin
 
 
 
+
 const SALE_BADGE_TYPE = "sale";
 function SaleBadgeSettings(props) {
   const {
@@ -149444,11 +149500,11 @@ function SaleBadgeSettings(props) {
   const modSettings = data?.[rowindex]?.data?.[columnindex]?.data?.[moduleindex]?.settings || {};
   const saleSettings = getBadgeTypeSettings(modSettings, SALE_BADGE_TYPE);
   const [textSource, setTextSource] = (0,external_React_.useState)(normalizeBadgeTextSource(saleSettings?.text_source));
-  const [customText, setCustomText] = (0,external_React_.useState)(String(saleSettings?.custom_text ?? "").trim() || BADGE_DEFAULT_TEXT.sale);
+  const [customText, setCustomText] = (0,external_React_.useState)(getFreeformLabelTextForUi(saleSettings?.custom_text, BADGE_DEFAULT_TEXT.sale));
   (0,external_React_.useEffect)(() => {
     const nextSaleSettings = getBadgeTypeSettings(modSettings, SALE_BADGE_TYPE);
     setTextSource(normalizeBadgeTextSource(nextSaleSettings?.text_source));
-    setCustomText(String(nextSaleSettings?.custom_text ?? "").trim() || BADGE_DEFAULT_TEXT.sale);
+    setCustomText(getFreeformLabelTextForUi(nextSaleSettings?.custom_text, BADGE_DEFAULT_TEXT.sale));
   }, [data, rowindex, columnindex, moduleindex]);
   const patchSaleSettings = patchFn => {
     commitPostModuleSettingsPatch({
@@ -149487,7 +149543,7 @@ function SaleBadgeSettings(props) {
     });
   };
   const handleCustomTextBlur = event => {
-    const normalized = String(event.target.value ?? "").trim() || BADGE_DEFAULT_TEXT.sale;
+    const normalized = normalizeFreeformLabelText(event.target.value, BADGE_DEFAULT_TEXT.sale);
     setCustomText(normalized);
     patchSaleSettings(sale => {
       sale.custom_text = normalized;
@@ -149555,6 +149611,7 @@ const FeaturedBadgeSettings_applyTaxonomyReorderToCustomFieldData = customFieldD
 
 
 
+
 const NEW_BADGE_TYPE = "new";
 function NewBadgeSettings(props) {
   const {
@@ -149570,13 +149627,13 @@ function NewBadgeSettings(props) {
   const modSettings = data?.[rowindex]?.data?.[columnindex]?.data?.[moduleindex]?.settings || {};
   const newSettings = getBadgeTypeSettings(modSettings, NEW_BADGE_TYPE);
   const [textSource, setTextSource] = (0,external_React_.useState)(normalizeBadgeTextSource(newSettings?.text_source));
-  const [customText, setCustomText] = (0,external_React_.useState)(String(newSettings?.custom_text ?? "").trim() || BADGE_DEFAULT_TEXT.new);
+  const [customText, setCustomText] = (0,external_React_.useState)(getFreeformLabelTextForUi(newSettings?.custom_text, BADGE_DEFAULT_TEXT.new));
   const [condition, setCondition] = (0,external_React_.useState)(normalizeBadgeNewCondition(newSettings?.condition));
   const [days, setDays] = (0,external_React_.useState)(String(normalizeBadgeNewDays(newSettings?.days)));
   (0,external_React_.useEffect)(() => {
     const nextNewSettings = getBadgeTypeSettings(modSettings, NEW_BADGE_TYPE);
     setTextSource(normalizeBadgeTextSource(nextNewSettings?.text_source));
-    setCustomText(String(nextNewSettings?.custom_text ?? "").trim() || BADGE_DEFAULT_TEXT.new);
+    setCustomText(getFreeformLabelTextForUi(nextNewSettings?.custom_text, BADGE_DEFAULT_TEXT.new));
     setCondition(normalizeBadgeNewCondition(nextNewSettings?.condition));
     setDays(String(normalizeBadgeNewDays(nextNewSettings?.days)));
   }, [data, rowindex, columnindex, moduleindex]);
@@ -149617,7 +149674,7 @@ function NewBadgeSettings(props) {
     });
   };
   const handleCustomTextBlur = event => {
-    const normalized = String(event.target.value ?? "").trim() || BADGE_DEFAULT_TEXT.new;
+    const normalized = normalizeFreeformLabelText(event.target.value, BADGE_DEFAULT_TEXT.new);
     setCustomText(normalized);
     patchNewSettings(newBadge => {
       newBadge.custom_text = normalized;
@@ -149842,7 +149899,7 @@ function ModuleBadgesContent(props) {
     }
     const suffixEnabled = modSettings?.suffix?.is_enable === "true";
     const suffixText = String(modSettings?.suffix?.meta_text ?? "").trim();
-    const isUntouchedSuffix = !suffixEnabled && (suffixText === "" || suffixText === getDefaultMetaText("suffix") || suffixText === "Suffix");
+    const isUntouchedSuffix = !suffixEnabled && (suffixText === "" || suffixText === getPostAffixDefaultMetaText("suffix") || suffixText === "Suffix");
     if (!isUntouchedSuffix) {
       return;
     }
@@ -149877,7 +149934,7 @@ function ModuleBadgesContent(props) {
     setBadgeType(nextType);
     const currentSuffixText = String(modSettings?.suffix?.meta_text ?? "").trim();
     const currentSuffixEnabled = modSettings?.suffix?.is_enable === "true";
-    const isUntouchedSuffix = !currentSuffixEnabled && (currentSuffixText === "" || currentSuffixText === getDefaultMetaText("suffix") || currentSuffixText === "Suffix");
+    const isUntouchedSuffix = !currentSuffixEnabled && (currentSuffixText === "" || currentSuffixText === getPostAffixDefaultMetaText("suffix") || currentSuffixText === "Suffix");
     commitPostModuleSettingsPatch({
       data: props.data,
       rowindex,
@@ -149898,7 +149955,7 @@ function ModuleBadgesContent(props) {
           s.suffix = {
             ...(s.suffix || {}),
             is_enable: "false",
-            meta_text: getDefaultMetaText("suffix")
+            meta_text: getPostAffixDefaultMetaText("suffix")
           };
         }
       }
@@ -149909,7 +149966,7 @@ function ModuleBadgesContent(props) {
       setSuffixMetaText("Off");
     } else if (prevType === "discount" && suffixMetaText.trim() === "Off") {
       setCheckSuffix(false);
-      setSuffixMetaText(getDefaultMetaText("suffix"));
+      setSuffixMetaText(getPostAffixDefaultMetaText("suffix"));
     }
   };
   const handleChangePrefix = checked => {
@@ -151270,6 +151327,7 @@ function ProductRatingContent(props) {
 
 
 
+
 const BUTTON_TEXT_BY_TYPE_DEFAULTS = {
   simple: "Add to cart",
   variable: "Select options",
@@ -151293,9 +151351,14 @@ const PRODUCT_TYPE_OPTIONS = [{
   label: "Subscription Product",
   value: "subscription"
 }];
+const DEFAULT_CUSTOM_BUTTON_TEXT = "Add to cart";
+const syncButtonTextByTypeForUi = value => {
+  const source = value && typeof value === "object" ? value : {};
+  return Object.fromEntries(Object.keys(BUTTON_TEXT_BY_TYPE_DEFAULTS).map(type => [type, typeof source[type] === "string" ? source[type] : ""]));
+};
 const normalizeButtonTextByType = value => {
   const source = value && typeof value === "object" ? value : {};
-  return Object.fromEntries(Object.entries(BUTTON_TEXT_BY_TYPE_DEFAULTS).map(([type, fallback]) => [type, String(source[type] ?? "").trim() || fallback]));
+  return Object.fromEntries(Object.entries(BUTTON_TEXT_BY_TYPE_DEFAULTS).map(([type, fallback]) => [type, normalizeFreeformLabelText(source[type], fallback)]));
 };
 const normalizeProductType = value => PRODUCT_TYPE_OPTIONS.some(option => option.value === value) ? value : "simple";
 function AddToCartContent(props) {
@@ -151306,13 +151369,13 @@ function AddToCartContent(props) {
   } = props.indexes;
   const modSettings = props.data[rowindex]?.data[columnindex]?.data[moduleindex]?.settings || {};
   const [textMode, setTextMode] = (0,external_React_.useState)(["custom", "by_product_type"].includes(modSettings?.button_text_mode) ? modSettings.button_text_mode : "woo_default");
-  const [buttonValue, setButtonValue] = (0,external_React_.useState)(modSettings?.changeButtonValue || "Add to cart");
-  const [textByType, setTextByType] = (0,external_React_.useState)(normalizeButtonTextByType(modSettings?.button_text_by_type));
+  const [buttonValue, setButtonValue] = (0,external_React_.useState)(getFreeformLabelTextForUi(modSettings?.changeButtonValue, DEFAULT_CUSTOM_BUTTON_TEXT));
+  const [textByType, setTextByType] = (0,external_React_.useState)(syncButtonTextByTypeForUi(modSettings?.button_text_by_type));
   const [productType, setProductType] = (0,external_React_.useState)(normalizeProductType(modSettings?.button_text_type_key));
   (0,external_React_.useEffect)(() => {
     setTextMode(["custom", "by_product_type"].includes(modSettings?.button_text_mode) ? modSettings.button_text_mode : "woo_default");
-    setButtonValue(modSettings?.changeButtonValue || "Add to cart");
-    setTextByType(normalizeButtonTextByType(modSettings?.button_text_by_type));
+    setButtonValue(getFreeformLabelTextForUi(modSettings?.changeButtonValue, DEFAULT_CUSTOM_BUTTON_TEXT));
+    setTextByType(syncButtonTextByTypeForUi(modSettings?.button_text_by_type));
     setProductType(normalizeProductType(modSettings?.button_text_type_key));
   }, [props.data, rowindex, columnindex, moduleindex]);
   const updateSettings = patch => commitPostModuleSettingsPatch({
@@ -151449,6 +151512,13 @@ function AddToCartContent(props) {
             updateSettings(settings => {
               settings.changeButtonValue = event.target.value;
             });
+          },
+          onBlur: event => {
+            const normalized = normalizeFreeformLabelText(event.target.value, DEFAULT_CUSTOM_BUTTON_TEXT);
+            setButtonValue(normalized);
+            updateSettings(settings => {
+              settings.changeButtonValue = normalized;
+            });
           }
         })]
       }) : null, textMode === "by_product_type" ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
@@ -151483,7 +151553,7 @@ function AddToCartContent(props) {
               });
             },
             onBlur: event => {
-              const value = String(event.target.value ?? "").trim() || BUTTON_TEXT_BY_TYPE_DEFAULTS[productType];
+              const value = normalizeFreeformLabelText(event.target.value, BUTTON_TEXT_BY_TYPE_DEFAULTS[productType]);
               setTextByType({
                 ...textByType,
                 [productType]: value
@@ -156772,12 +156842,83 @@ var TermColorPickerTrigger = __webpack_require__("./src/MainComponents/FilterCom
 var useResolvedMainBuilderData = __webpack_require__("./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/useResolvedMainBuilderData.js");
 // EXTERNAL MODULE: ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/filterSettingsSnapshot.js
 var filterSettingsSnapshot = __webpack_require__("./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/filterSettingsSnapshot.js");
-// EXTERNAL MODULE: ./src/MainComponents/FilterComponents/components/modules-output/shared/termShowMoreUtils.js
-var termShowMoreUtils = __webpack_require__("./src/MainComponents/FilterComponents/components/modules-output/shared/termShowMoreUtils.js");
+;// ./src/MainComponents/PostComponents/components/settingTabContent/ModuleContentData/WooModules/attributeSwatchDefaultTermStrip.js
+const stripPredefineInTermTree = terms => {
+  if (!Array.isArray(terms)) {
+    return terms;
+  }
+  return terms.map(term => ({
+    ...term,
+    predefine: "false",
+    children_data: stripPredefineInTermTree(term.children_data)
+  }));
+};
+
+/** Attribute swatch no longer supports default-term selection — clear legacy saved data. */
+const stripAttributeSwatchDefaultTermSettings = settings => {
+  if (!settings || typeof settings !== "object") {
+    return settings;
+  }
+  settings.predefined_terms = [];
+  settings.cf_predefined_terms = [];
+  if (Array.isArray(settings.taxonomy_data)) {
+    settings.taxonomy_data = settings.taxonomy_data.map(group => ({
+      ...group,
+      term_data: stripPredefineInTermTree(group.term_data)
+    }));
+  }
+  if (Array.isArray(settings.custom_field_data)) {
+    settings.custom_field_data = settings.custom_field_data.map(cf => ({
+      ...cf,
+      custom_field_value_list: (cf.custom_field_value_list || []).map(value => ({
+        ...value,
+        predefine: "false"
+      }))
+    }));
+  }
+  return settings;
+};
+const attributeSwatchSettingsHaveDefaultTermData = settings => {
+  if (!settings || typeof settings !== "object") {
+    return false;
+  }
+  if (Array.isArray(settings.predefined_terms) && settings.predefined_terms.length > 0 || Array.isArray(settings.cf_predefined_terms) && settings.cf_predefined_terms.length > 0) {
+    return true;
+  }
+  const walkTerms = terms => {
+    if (!Array.isArray(terms)) {
+      return false;
+    }
+    for (const term of terms) {
+      if (String(term?.predefine) === "true") {
+        return true;
+      }
+      if (walkTerms(term?.children_data)) {
+        return true;
+      }
+    }
+    return false;
+  };
+  if (Array.isArray(settings.taxonomy_data)) {
+    for (const group of settings.taxonomy_data) {
+      if (walkTerms(group?.term_data)) {
+        return true;
+      }
+    }
+  }
+  if (Array.isArray(settings.custom_field_data)) {
+    for (const cf of settings.custom_field_data) {
+      for (const value of cf?.custom_field_value_list || []) {
+        if (String(value?.predefine) === "true") {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
+};
 // EXTERNAL MODULE: ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/TermTaxonomyLabelText.js
 var TermTaxonomyLabelText = __webpack_require__("./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/TermTaxonomyLabelText.js");
-// EXTERNAL MODULE: ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/shared/FilterTermShowMoreProPanel.js
-var FilterTermShowMoreProPanel = __webpack_require__("./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/shared/FilterTermShowMoreProPanel.js");
 // EXTERNAL MODULE: ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/taxonomyPickerSections.js
 var ModuleContentData_taxonomyPickerSections = __webpack_require__("./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/taxonomyPickerSections.js");
 // EXTERNAL MODULE: ./src/MainComponents/images/caution-sign.svg
@@ -156828,9 +156969,33 @@ var wooAttributeColorImport = __webpack_require__("./src/MainComponents/FilterCo
 
 
 
-
-
-
+const commitSwatchPatch = opts => (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+  ...opts,
+  patch: settings => {
+    opts.patch?.(settings);
+    stripAttributeSwatchDefaultTermSettings(settings);
+  }
+});
+const commitSwatchReplace = opts => (0,filterSettingsSnapshot.commitFilterModuleReplaceSettings)({
+  ...opts,
+  nextSettings: stripAttributeSwatchDefaultTermSettings({
+    ...opts.nextSettings
+  })
+});
+const commitSwatchTaxonomyData = opts => {
+  const {
+    settingsRef,
+    nexttaxonomyData,
+    ...rest
+  } = opts;
+  settingsRef.taxonomy_data = nexttaxonomyData;
+  stripAttributeSwatchDefaultTermSettings(settingsRef);
+  (0,filterSettingsSnapshot.commitFilterModuleTaxonomyData)({
+    ...rest,
+    settingsRef,
+    nexttaxonomyData: settingsRef.taxonomy_data
+  });
+};
 const normalizeCustomFieldData = value => {
   if (Array.isArray(value)) return value;
   if (value && typeof value === "object") return [value];
@@ -156991,7 +157156,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
       return;
     }
     setDataSource("taxonomy");
-    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+    commitSwatchPatch({
       data: props.data,
       rowindex,
       columnindex,
@@ -157014,6 +157179,22 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
       }
     });
   }, [settingData?.data_source, settingData?.term_visual, settingData?.show_icon, settingData?.hide_term_label, settingData?.taxonomy_data, props.data, rowindex, columnindex, moduleindex, resolvedPostType, props.onSettingChange]);
+  (0,external_React_.useEffect)(() => {
+    if (!attributeSwatchSettingsHaveDefaultTermData(settingData)) {
+      return;
+    }
+    commitSwatchPatch({
+      data: props.data,
+      rowindex,
+      columnindex,
+      moduleindex,
+      resolvedPostType,
+      onSettingChange: props.onSettingChange,
+      patch: () => {}
+    });
+    // Strip legacy default-term data once when opening settings.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const {
     importLoading: wooColorImportLoading,
     resetLoading: wooColorResetLoading,
@@ -157446,29 +157627,6 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     let newtaxonomyData = [...settingsRef.taxonomy_data];
     const taxonomyExists = newtaxonomyData.some(data => data.key === termDetail[1]);
     if (taxonomyExists) {
-      // if (contentIconDetail.icon === "" && contentIconDetail.iconChecked) {
-      //   setCheckError(true);
-      //   return;
-      // }
-
-      const allowMultipleDefaults = (0,filterSettingsSnapshot.allowsMultipleDefaultTerms)(settingsRef);
-      if (termPredefined === true) {
-        if (allowMultipleDefaults) {
-          if (!settingsRef.predefined_terms?.includes(termDetail[2])) {
-            settingsRef.predefined_terms.push(termDetail[2]);
-          }
-        } else {
-          settingsRef.predefined_terms = [termDetail[2]];
-          const targetId = (0,filterSettingsSnapshot.extractNumericTermIdFromPredefinedKey)(termDetail[2]);
-          newtaxonomyData = newtaxonomyData.map(group => ({
-            ...group,
-            term_data: (0,filterSettingsSnapshot.setSingleDefaultPredefineInTree)((0,filterSettingsSnapshot.clearAllTermPredefineInTree)(group.term_data), targetId)
-          }));
-        }
-      } else if (settingsRef.predefined_terms?.includes(termDetail[2])) {
-        settingsRef.predefined_terms = settingsRef.predefined_terms.filter(item => item !== termDetail[2]);
-      }
-
       // ✅ find and update the taxonomy inside settingData
       newtaxonomyData = newtaxonomyData.map(data => {
         if (data.key !== termDetail[1]) return data;
@@ -157571,7 +157729,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
         // return 
         const updatedTermData = termData.map(obj => {
           if (obj.key === termDetail[0]) {
-            obj.predefine = termPredefined ? "true" : "false";
+            obj.predefine = "false";
             if (contentIconDetail.iconChecked && contentIconDetail.icon !== "") {
               if ((0,termVisualUtils.isTermVisualColor)(settingsRef) || contentIconDetail.type === "color") {
                 obj.icons = (0,termVisualUtils.buildColorTermIcons)(obj.icons, contentIconDetail.icon, contentIconDetail.position);
@@ -157616,7 +157774,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
           term_data: updatedTermData
         };
       });
-      (0,filterSettingsSnapshot.commitFilterModuleTaxonomyData)({
+      commitSwatchTaxonomyData({
         freshItems,
         rowindex,
         columnindex,
@@ -157645,7 +157803,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     children.forEach(child => {
       if (child.key === termDetail[0]) {
         // ✅ same logic as main update
-        child.predefine = termPredefined ? "true" : "false";
+        child.predefine = "false";
         if (contentIconDetail.iconChecked && contentIconDetail.icon !== "") {
           if ((0,termVisualUtils.isTermVisualColor)(settingsRef) || contentIconDetail.type === "color") {
             child.icons = (0,termVisualUtils.buildColorTermIcons)(child.icons, contentIconDetail.icon, contentIconDetail.position);
@@ -157715,7 +157873,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
   };
   const handleLabel = val => {
     setLabelInput(val);
-    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+    commitSwatchPatch({
       data: props.data,
       rowindex,
       columnindex,
@@ -157750,17 +157908,6 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
   const handleEdit = () => {
     props.openBuilderSetting(true);
   };
-  const seedShowMoreStyleIfNeeded = moduleRef => {
-    if (String(moduleRef?.settings?.term_show_more) !== "true") {
-      return;
-    }
-    if (!moduleRef.style) {
-      moduleRef.style = {};
-    }
-    if (!moduleRef.style.showmore && FilterComponents_styleData.fModuleStyle?.showmore) {
-      moduleRef.style.showmore = JSON.parse(JSON.stringify(FilterComponents_styleData.fModuleStyle.showmore));
-    }
-  };
   const changeInitialData = data => {
     setDataSource(data.data_source);
     if (data.data_source !== settingData.data_source) {
@@ -157791,8 +157938,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
       ...settingData,
       post_type: resolvedPostType
     });
-    let nextSettings = (0,filterSettingsSnapshot.enforceSingleDefaultTermsInSettings)((0,filterModuleTier.applyFilterLabelCollapseTierToSettings)(data));
-    nextSettings = (0,termShowMoreUtils.ensureTermShowMoreSettingsDefaults)(nextSettings);
+    let nextSettings = stripAttributeSwatchDefaultTermSettings((0,filterModuleTier.applyFilterLabelCollapseTierToSettings)(data));
     // Keep show_icon / hide_term_label in sync with Display As (Text | Icon/Image | Color).
     const nextVisual = (0,termVisualUtils.resolveAttributeSwatchDisplayMode)({
       ...nextSettings,
@@ -157807,15 +157953,14 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
       nextSettings = (0,termVisualUtils.ensureDefaultTermIconsOnSettings)(nextSettings);
       setTaxonomyList(nextSettings.taxonomy_data);
     }
-    (0,filterSettingsSnapshot.commitFilterModuleReplaceSettings)({
+    commitSwatchReplace({
       data: props.data,
       rowindex,
       columnindex,
       moduleindex,
       resolvedPostType,
       onSettingChange: props.onSettingChange,
-      nextSettings,
-      patchModule: seedShowMoreStyleIfNeeded
+      nextSettings
     });
   };
   const changeInitialDataOptChange = data => {
@@ -157860,17 +158005,15 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     // items[rowindex].data[columnindex].data[moduleindex]["style"] = styleData ;
     // props.onSettingChange(items);
 
-    let nextSettings = (0,filterSettingsSnapshot.enforceSingleDefaultTermsInSettings)((0,filterModuleTier.applyFilterLabelCollapseTierToSettings)(data));
-    nextSettings = (0,termShowMoreUtils.ensureTermShowMoreSettingsDefaults)(nextSettings);
-    (0,filterSettingsSnapshot.commitFilterModuleReplaceSettings)({
+    let nextSettings = stripAttributeSwatchDefaultTermSettings((0,filterModuleTier.applyFilterLabelCollapseTierToSettings)(data));
+    commitSwatchReplace({
       data: props.data,
       rowindex,
       columnindex,
       moduleindex,
       resolvedPostType,
       onSettingChange: props.onSettingChange,
-      nextSettings,
-      patchModule: seedShowMoreStyleIfNeeded
+      nextSettings
     });
   };
 
@@ -157908,7 +158051,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
   //   items[rowindex].data[columnindex].data[moduleindex]["style"] = styleData ;
   //   props.onSettingChange(items);
 
-  //   commitFilterModuleReplaceSettings({
+  //   commitSwatchReplace({
   //     data: props.data,
   //     rowindex,
   //     columnindex,
@@ -157953,7 +158096,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
   //   items[rowindex].data[columnindex].data[moduleindex]["style"] = styleData ;
   //   props.onSettingChange(items);
 
-  //   commitFilterModuleReplaceSettings({
+  //   commitSwatchReplace({
   //     data: props.data,
   //     rowindex,
   //     columnindex,
@@ -157975,7 +158118,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
         setLoadingCatogries(true);
       }, 400);
     }
-    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+    commitSwatchPatch({
       data: props.data,
       rowindex,
       columnindex,
@@ -158041,7 +158184,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     setCustomFieldArray(updateData);
     settingData.custom_field_data = updateData;
     settingData.cf_predefined_terms = updatedPredefinedTerms;
-    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+    commitSwatchPatch({
       data: props.data,
       rowindex,
       columnindex,
@@ -158065,38 +158208,6 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     setTimeout(() => {
       setTermSettingPopUpCusFieldIcon(true);
     }, 100);
-  };
-  const handleCfPredefinedInline = (cfIndex, valueIndex, checked) => {
-    const cfItem = customFieldArray[cfIndex];
-    const val = cfItem?.custom_field_value_list?.[valueIndex];
-    if (!cfItem || !val?.key) return;
-    const termId = `${String(cfItem.custom_field_key).trim()}___${String(val.key).trim()}`;
-    const allowMultipleDefaults = (0,filterSettingsSnapshot.allowsMultipleDefaultTerms)(settingData);
-    const {
-      customFieldData: updateData,
-      cfPredefinedTerms: updatedPredefinedTerms
-    } = (0,filterSettingsSnapshot.applyCustomFieldDefaultTermToSettings)({
-      customFieldData: customFieldArray,
-      cfPredefinedTerms: settingData.cf_predefined_terms,
-      termId,
-      cfIndex,
-      valueIndex,
-      checked,
-      allowMultiple: allowMultipleDefaults
-    });
-    setCustomFieldArray(updateData);
-    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
-      data: props.data,
-      rowindex,
-      columnindex,
-      moduleindex,
-      resolvedPostType,
-      onSettingChange: props.onSettingChange,
-      patch: s => {
-        s.custom_field_data = updateData;
-        s.cf_predefined_terms = updatedPredefinedTerms;
-      }
-    });
   };
   const handleSaveCustomFieldLabel = () => {
     if (keyValueCf === "" || labelValueCf === "") {
@@ -158151,7 +158262,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     setLabelValueCf("");
     setCheckError(false);
     setCustomFieldArray(updateData);
-    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+    commitSwatchPatch({
       data: props.data,
       rowindex,
       columnindex,
@@ -158194,7 +158305,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     setCurrCustomFieldValue([]);
     setCheckError(false);
     setCustomFieldArray(updateData);
-    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+    commitSwatchPatch({
       data: props.data,
       rowindex,
       columnindex,
@@ -158452,7 +158563,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     });
   };
   const commitSettingsSnapshot = (freshItems, settingsRef, nexttaxonomyData) => {
-    (0,filterSettingsSnapshot.commitFilterModuleTaxonomyData)({
+    commitSwatchTaxonomyData({
       freshItems,
       rowindex,
       columnindex,
@@ -158660,12 +158771,6 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     }
     return null;
   };
-  const isTermPredefined = (taxonomy, term) => {
-    const taxo = settingData.taxonomy_data?.find(d => d.key === taxonomy);
-    if (!taxo) return false;
-    const termObj = findTermObjRecursive(taxo.term_data, term?.id);
-    return termObj?.predefine === "true";
-  };
   const getTermSavedIcons = (taxonomy, term) => {
     const taxo = settingData.taxonomy_data?.find(d => d.key === taxonomy);
     if (!taxo) return null;
@@ -158691,24 +158796,6 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     if (iconValue?.url) return iconValue.url;
     if (iconValue?.icon?.url) return iconValue.icon.url;
     return "";
-  };
-  const updateTermPredefineInTree = (terms, termId, checked) => {
-    if (!Array.isArray(terms)) return terms;
-    return terms.map(obj => {
-      if (obj.key === termId) {
-        return {
-          ...obj,
-          predefine: checked ? "true" : "false"
-        };
-      }
-      if (Array.isArray(obj.children_data) && obj.children_data.length > 0) {
-        return {
-          ...obj,
-          children_data: updateTermPredefineInTree(obj.children_data, termId, checked)
-        };
-      }
-      return obj;
-    });
   };
   const applyColorToTermTree = (terms, termId, color) => {
     if (!Array.isArray(terms)) return terms;
@@ -158754,47 +158841,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
         term_data: applyColorToTermTree(group.term_data, term?.id, color)
       };
     });
-    (0,filterSettingsSnapshot.commitFilterModuleTaxonomyData)({
-      freshItems,
-      rowindex,
-      columnindex,
-      moduleindex,
-      settingsRef,
-      nexttaxonomyData: newtaxonomyData,
-      onSettingChange: props.onSettingChange,
-      onAfterCommit: next => setTaxonomyList(next.taxonomy_data)
-    });
-  };
-  const handleTermPredefinedInline = (term, taxonomy, type, checked) => {
-    if (!handleTermChecked(taxonomy, term, type)) {
-      return;
-    }
-    const term_id = `${taxonomy}___${term?.id}`;
-    const {
-      freshItems,
-      settingsRef
-    } = (0,filterSettingsSnapshot.createFilterModuleSettingsSnapshot)({
-      data: props.data,
-      rowindex,
-      columnindex,
-      moduleindex,
-      resolvedPostType
-    });
-    const allowMultipleDefaults = (0,filterSettingsSnapshot.allowsMultipleDefaultTerms)(settingsRef);
-    (0,filterSettingsSnapshot.applyTaxonomyDefaultTermToSettings)({
-      settingsRef,
-      termKey: term_id,
-      taxonomyKey: taxonomy,
-      numericTermId: term?.id,
-      checked,
-      allowMultiple: allowMultipleDefaults
-    });
-    const taxonomyExists = settingsRef.taxonomy_data?.some(data => data.key === taxonomy);
-    if (!taxonomyExists) {
-      return;
-    }
-    const newtaxonomyData = settingsRef.taxonomy_data;
-    (0,filterSettingsSnapshot.commitFilterModuleTaxonomyData)({
+    commitSwatchTaxonomyData({
       freshItems,
       rowindex,
       columnindex,
@@ -158818,14 +158865,12 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
       post_type: resolvedPostType
     });
     const isTermSelected = handleTermChecked(taxonomy, term, type, parentTermData);
-    const isDefault = isTermPredefined(taxonomy, term);
     const termIcons = getTermSavedIcons(taxonomy, term);
     const hasColor = (0,termVisualUtils.termHasColorSwatch)(termIcons);
     const hasIcon = colorMode ? hasColor : termHasIcon(termIcons) && termIcons?.type !== "color";
     const iconPreviewSrc = getTermIconPreviewSrc(termIcons);
     const swatchColor = (0,termVisualUtils.getTermSwatchColor)(termIcons);
     const termIconActionsLocked = !(0,filterModuleTier.canUseFilterTermIcon)();
-    const termDefaultLocked = !(0,filterModuleTier.canUseFilterTermDefault)();
     const colorTriggerDisabled = !isTermSelected;
     const iconTriggerDisabled = !isTermSelected || termIconActionsLocked;
     const addLabel = colorMode ? hasColor ? "Edit term color" : "Add term color" : hasIcon ? "Edit term icon" : "Add term icon";
@@ -158844,17 +158889,15 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
         onColorCommit: handleColorCommit
       }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(FilterTermRowProActions["default"], {
         isTermSelected: isTermSelected,
-        isDefault: isDefault,
         hasIcon: hasIcon,
         termIcons: termIcons,
         iconPreviewSrc: iconPreviewSrc,
         iconTriggerDisabled: iconTriggerDisabled,
-        termDefaultLocked: termDefaultLocked,
         termIconActionsLocked: termIconActionsLocked,
         addLabel: addLabel,
         onOpenSettings: onOpenSettings,
-        onToggleDefault: checked => handleTermPredefinedInline(term, taxonomy, type, checked),
-        showIconControl: showTermIconControl && !colorMode
+        showIconControl: showTermIconControl && !colorMode,
+        showDefaultControl: false
       })]
     });
   };
@@ -159044,7 +159087,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
       ...itm.icons,
       ...ic
     };
-    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+    commitSwatchPatch({
       data: props.data,
       rowindex,
       columnindex,
@@ -159076,6 +159119,46 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     const group = Array.isArray(settingData?.taxonomy_data) && settingData.taxonomy_data.find(g => g.key === selectedAttributeKey);
     return Array.isArray(group?.term_data) ? group.term_data : [];
   }, [settingData?.taxonomy_data, selectedAttributeKey]);
+
+  // Auto-append newly imported Woo attribute terms (backend merge).
+  (0,external_React_.useEffect)(() => {
+    if (!selectedAttributeKey || selectedAttributeKey === "0" || !Array.isArray(settingData?.taxonomy_data) || settingData.taxonomy_data.length === 0) {
+      return;
+    }
+    let cancelled = false;
+    const syncFromBackend = async () => {
+      try {
+        const response = await client["default"].post(endpoints.apiEndpoints.syncAttributeSwatchTaxonomyData, {
+          taxonomy_data: settingData.taxonomy_data,
+          post_type: resolvedPostType || "product"
+        });
+        const payload = response?.data;
+        if (cancelled || !payload || payload.status !== "success" || !payload.changed || !Array.isArray(payload.taxonomy_data)) {
+          return;
+        }
+        commitSwatchPatch({
+          data: props.data,
+          rowindex,
+          columnindex,
+          moduleindex,
+          resolvedPostType,
+          onSettingChange: props.onSettingChange,
+          patch: settingsRef => {
+            settingsRef.taxonomy_data = payload.taxonomy_data;
+          },
+          onAfterCommit: nextSettings => setTaxonomyList(nextSettings.taxonomy_data)
+        });
+      } catch (error) {
+        // Non-blocking: settings still work with saved snapshot.
+      }
+    };
+    syncFromBackend();
+    return () => {
+      cancelled = true;
+    };
+    // Sync when the module/attribute context opens — not on every taxonomy_data ref change.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAttributeKey, resolvedPostType, rowindex, columnindex, moduleindex]);
   const toSyntheticAttrTerm = savedTerm => ({
     id: savedTerm?.key,
     name: savedTerm?.value,
@@ -159124,7 +159207,6 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
             icons: previous.icons ?? term.icons
           };
         });
-        // Keep user drag order, append any newly available terms at the end.
         allTerms = [...mergedFromPrevious, ...newlyAdded];
       }
       newtaxonomyData = [{
@@ -159196,7 +159278,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     updatedCustomFieldData?.push(newField);
     setCustomFieldArray(updatedCustomFieldData);
     settingData.custom_field_data = updatedCustomFieldData;
-    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+    commitSwatchPatch({
       data: props.data,
       rowindex,
       columnindex,
@@ -159240,7 +159322,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
 
     settingData.custom_field_data = updatedCustomFieldData;
     settingData.cf_predefined_terms = updatedPredefinedTerms;
-    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+    commitSwatchPatch({
       data: props.data,
       rowindex,
       columnindex,
@@ -159265,7 +159347,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     });
     setCustomFieldArray([...updateData]);
     settingData.custom_field_data = updateData;
-    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+    commitSwatchPatch({
       data: props.data,
       rowindex,
       columnindex,
@@ -159289,7 +159371,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     });
     setCustomFieldArray([...updateData]);
     settingData.custom_field_data = updateData;
-    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+    commitSwatchPatch({
       data: props.data,
       rowindex,
       columnindex,
@@ -159323,7 +159405,7 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
     setCustomFieldArray([...updateData]);
     settingData.custom_field_data = updateData;
     settingData.cf_predefined_terms = updatedPredefinedTerms;
-    (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+    commitSwatchPatch({
       data: props.data,
       rowindex,
       columnindex,
@@ -159469,11 +159551,6 @@ const AttributeSwatchContent = (0,external_React_.memo)(props => {
         }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("hr", {
           className: "setting-hr-main"
         })]
-      }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(filterModuleTier.FilterTermShowMoreLockedSection, {
-        children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(FilterTermShowMoreProPanel["default"], {
-          settingData: settingData,
-          onSettingChange: changeInitialData
-        })
       }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
         className: "module-content-tab-row no-pad-0",
         children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("label", {
@@ -166052,13 +166129,21 @@ function buildPostDesignTabSubTabLayoutItems({
   item,
   modulesKeysArray
 }) {
-  return [modulesKeysArray.includes(module?.key) && (item?.prefix?.is_enable === "true" || item?.suffix?.is_enable === "true") ? {
+  const items = [modulesKeysArray.includes(module?.key) && (item?.prefix?.is_enable === "true" || item?.suffix?.is_enable === "true") ? {
     key: "container",
     label: modulesKeysArray.includes(module?.key) && item?.prefix?.is_enable === "true" ? "Prefix + Content" : modulesKeysArray.includes(module?.key) && item?.suffix?.is_enable === "true" ? "Content + Suffix" : "Main"
   } : null, modulesKeysArray.includes(module?.key) && item?.prefix?.is_enable === "true" && item?.suffix?.is_enable === "true" ? {
     key: "meta",
     label: "Content + Suffix"
   } : null].filter(Boolean);
+  const showStarTab = module?.key === "woo_product_rating" && (item?.rating_display || "stars") === "stars";
+  if (!showStarTab) {
+    return items;
+  }
+  return [...items, {
+    key: "star",
+    label: "Star"
+  }];
 }
 function buildPostDesignTabSubTabCommonItems({
   item
@@ -166073,6 +166158,33 @@ function buildPostDesignTabSubTabCommonItems({
     key: "suffix",
     label: "Suffix"
   } : null].filter(Boolean);
+}
+
+/** Text collapse only: All / Prefix / Suffix + Star (product rating + display as stars). */
+function buildPostDesignTabTextSubTabItems({
+  item,
+  module
+}) {
+  const items = buildPostDesignTabSubTabCommonItems({
+    item
+  });
+  const showStarTab = module?.key === "woo_product_rating" && (item?.rating_display || "stars") === "stars";
+  if (!showStarTab) {
+    return items;
+  }
+  return [...items, {
+    key: "star",
+    label: "Star"
+  }];
+}
+function shouldShowPostDesignTabTextSubTabs({
+  item,
+  module,
+  modulesKeysArray
+}) {
+  const hasPrefixSuffixTabs = modulesKeysArray.includes(module?.key) && (item?.prefix?.is_enable === "true" || item?.suffix?.is_enable === "true");
+  const showStarTab = module?.key === "woo_product_rating" && (item?.rating_display || "stars") === "stars";
+  return hasPrefixSuffixTabs || showStarTab;
 }
 ;// ./src/MainComponents/PostComponents/components/settingTabContent/postDesignTabBgType.js
 /**
@@ -166165,6 +166277,7 @@ var ArrowUpOutlined = __webpack_require__("./node_modules/@ant-design/icons/es/i
 
 
 
+
 const Tabs = props => /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(tabs["default"], {
   ...props,
   items: Array.isArray(props.items) ? props.items.filter(Boolean) : props.items
@@ -166183,6 +166296,8 @@ function buildPostDesignTabStyleItemsPart1(ctx) {
     handleSettingChange,
     SubTabLayoutItems,
     subTabCommonItems,
+    textSubTabItems,
+    showTextSubTabs,
     onChangeStyle,
     styleStateAl,
     hoverValue,
@@ -166201,7 +166316,7 @@ function buildPostDesignTabStyleItemsPart1(ctx) {
     key: "0",
     label: "Layout",
     children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)(external_ReactJSXRuntime_.Fragment, {
-      children: [modulesKeysArray.includes(module?.key) && (item?.prefix?.is_enable === "true" || item?.suffix?.is_enable === "true") && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
+      children: [Array.isArray(SubTabLayoutItems) && SubTabLayoutItems.length > 0 && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
         children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(Tabs, {
           activeKey: selectedSubTab,
@@ -166355,46 +166470,89 @@ function buildPostDesignTabStyleItemsPart1(ctx) {
     key: "1",
     label: "Text",
     children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)(external_ReactJSXRuntime_.Fragment, {
-      children: [modulesKeysArray.includes(module?.key) && (item?.prefix?.is_enable === "true" || item?.suffix?.is_enable === "true") && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
+      children: [showTextSubTabs && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
         className: "caf-builder-setting-row-label meta-dropdown-dyn",
         children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(Tabs, {
           activeKey: selectedSubTab,
           onChange: value => handleSettingChange(value)
           // defaultActiveKey="container"
           ,
-          items: subTabCommonItems,
+          items: textSubTabItems || subTabCommonItems,
           defaultActiveKey: selectedSubTab
         })
-      }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
+      }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
         className: (0,collapseMainContentClass.collapseMainContentClass)("text"),
-        children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
-          className: "hoverswitchguard",
-          children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(segmented["default"], {
-            value: hoverSwitchText,
-            style: {
-              marginBottom: 8
-            },
-            onChange: onHoverSwitchText,
-            className: "hoverTabCaf",
-            options: [{
-              label: "Default",
-              value: false
-            }, {
-              label: "Hover",
-              value: true
-            }]
-          })
-        }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(common_component_TextMain, {
-          data: props.data,
-          indexes: props.indexes,
-          property: "text",
-          label: "Text",
-          onChangeStyle: onChangeStyle,
-          fonts: fontFamilyArray,
-          hoverSwitch: hoverSwitchText,
-          deviceSwitch: props.deviceSwitch,
-          styleTab: selectedSubTab !== "container" ? selectedSubTab : ""
-        })]
+        children: selectedSubTab === "star" ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)(external_ReactJSXRuntime_.Fragment, {
+          children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
+            className: "hoverswitchguard",
+            children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(segmented["default"], {
+              value: hoverSwitchText,
+              style: {
+                marginBottom: 8
+              },
+              onChange: onHoverSwitchText,
+              className: "hoverTabCaf",
+              options: [{
+                label: "Default",
+                value: false
+              }, {
+                label: "Active",
+                value: true
+              }]
+            })
+          }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(common_component_ColorMain, {
+            data: props.data,
+            indexes: props.indexes,
+            property: "color",
+            defaultValue: "#333333",
+            label: "Color",
+            onChangeStyle: onChangeStyle,
+            styleState: hoverSwitchText ? "hover" : "default",
+            styleTab: "star",
+            deviceSwitch: props.deviceSwitch
+          }), !hoverSwitchText && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(common_component_SliderMain, {
+            data: props.data,
+            indexes: props.indexes,
+            property: "fontSize",
+            label: "Font Size",
+            defaultSuffix: "px",
+            defaultValue: "14",
+            onChangeStyle: onChangeStyle,
+            styleState: "default",
+            styleTab: "star",
+            deviceSwitch: props.deviceSwitch,
+            isSlider: true
+          })]
+        }) : /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)(external_ReactJSXRuntime_.Fragment, {
+          children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
+            className: "hoverswitchguard",
+            children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(segmented["default"], {
+              value: hoverSwitchText,
+              style: {
+                marginBottom: 8
+              },
+              onChange: onHoverSwitchText,
+              className: "hoverTabCaf",
+              options: [{
+                label: "Default",
+                value: false
+              }, {
+                label: "Hover",
+                value: true
+              }]
+            })
+          }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(common_component_TextMain, {
+            data: props.data,
+            indexes: props.indexes,
+            property: "text",
+            label: "Text",
+            onChangeStyle: onChangeStyle,
+            fonts: fontFamilyArray,
+            hoverSwitch: hoverSwitchText,
+            deviceSwitch: props.deviceSwitch,
+            styleTab: selectedSubTab !== "container" ? selectedSubTab : ""
+          })]
+        })
       })]
     })
   },
@@ -168387,6 +168545,13 @@ const DesignTab = props => {
   const [alignValue, setAlignValue] = external_React_default().useState("Default");
   // console.log(props.indexes);
   (0,external_React_.useEffect)(() => {
+    if (selectedSubTab !== "star") return;
+    const starTabAvailable = module?.key === "woo_product_rating" && (item?.rating_display || "stars") === "stars";
+    if (!starTabAvailable) {
+      setSelectedSubTab("container");
+    }
+  }, [selectedSubTab, module?.key, item?.rating_display]);
+  (0,external_React_.useEffect)(() => {
     const fetchFonts = async () => {
       try {
         const response = await client["default"].get(url);
@@ -168542,6 +168707,7 @@ const DesignTab = props => {
     item,
     modulesKeysArray
   });
+  const hasOnlyStarLayoutTab = Array.isArray(SubTabLayoutItems) && SubTabLayoutItems.length === 1 && SubTabLayoutItems[0]?.key === "star";
   const handleCollapseChange = key => {
     if (!key || !Array.isArray(key) || key.length === 0) return;
     if (type !== "module") return;
@@ -168554,6 +168720,10 @@ const DesignTab = props => {
     const activeCollapseKey = key[0];
     if (module?.key === "categories" && activeCollapseKey === "1") {
       setSelectedSubTab("meta");
+      return;
+    }
+    if (activeCollapseKey === "0" && hasOnlyStarLayoutTab) {
+      setSelectedSubTab("star");
       return;
     }
     setSelectedSubTab("container");
@@ -168574,6 +168744,15 @@ const DesignTab = props => {
   const subTabCommonItems = buildPostDesignTabSubTabCommonItems({
     item
   });
+  const textSubTabItems = buildPostDesignTabTextSubTabItems({
+    item,
+    module
+  });
+  const showTextSubTabs = shouldShowPostDesignTabTextSubTabs({
+    item,
+    module,
+    modulesKeysArray
+  });
   let styleItems = [...buildPostDesignTabStyleItemsPart1({
     props,
     module,
@@ -168583,6 +168762,8 @@ const DesignTab = props => {
     handleSettingChange,
     SubTabLayoutItems,
     subTabCommonItems,
+    textSubTabItems,
+    showTextSubTabs,
     onChangeStyle,
     styleStateAl,
     hoverValue,
@@ -170654,46 +170835,111 @@ function ModuleExcerpt({
   });
 }
 /* harmony default export */ const modules_output_ModuleExcerpt = (ModuleExcerpt);
-;// ./src/MainComponents/PostComponents/components/woocommerce/WooProductCardVariationContext.js
+;// ./src/shared/variationMatrixMatch.js
+/**
+ * WooCommerce-style variation matrix matching (supports "Any attribute" wildcards).
+ * Keep in sync with CAF_Woo_Post_Helper variation helpers and builder-framework.js CFWooCardVariation.
+ */
 
+function getVariationFixedAttribute(rowAttributes, taxonomy) {
+  if (!rowAttributes || typeof rowAttributes !== "object") {
+    return "";
+  }
+  return String(rowAttributes[taxonomy] ?? "").trim();
+}
+function getVariationRowSpecificityScore(rowAttributes) {
+  if (!rowAttributes || typeof rowAttributes !== "object") {
+    return 0;
+  }
+  return Object.keys(rowAttributes).filter(key => getVariationFixedAttribute(rowAttributes, key) !== "").length;
+}
 
-
-
-const WooProductCardVariationContext = (0,external_React_.createContext)(null);
-function findMatchingVariation(matrix, selections) {
-  if (!matrix?.variations?.length || !matrix?.attributes?.length) {
+/**
+ * Whether a matrix row matches user selections (empty row attribute = Woo "Any").
+ */
+function variationRowMatchesSelections(rowAttributes, selections, cardAttributes) {
+  if (!rowAttributes || !selections || !Array.isArray(cardAttributes)) {
+    return false;
+  }
+  for (let i = 0; i < cardAttributes.length; i += 1) {
+    const tax = String(cardAttributes[i] || "").trim();
+    if (!tax) {
+      continue;
+    }
+    const selected = String(selections[tax] ?? "").trim();
+    if (!selected) {
+      return false;
+    }
+    const fixed = getVariationFixedAttribute(rowAttributes, tax);
+    if (fixed && fixed !== selected) {
+      return false;
+    }
+  }
+  return true;
+}
+function compareVariationMatchPriority(nextRow, currentBest) {
+  if (!currentBest) {
+    return true;
+  }
+  const nextScore = getVariationRowSpecificityScore(nextRow?.attributes);
+  const bestScore = getVariationRowSpecificityScore(currentBest?.attributes);
+  if (nextScore !== bestScore) {
+    return nextScore > bestScore;
+  }
+  const nextInStock = nextRow?.is_in_stock !== false && nextRow?.is_purchasable !== false;
+  const bestInStock = currentBest?.is_in_stock !== false && currentBest?.is_purchasable !== false;
+  if (nextInStock !== bestInStock) {
+    return nextInStock;
+  }
+  return false;
+}
+function findBestMatchingVariation(matrix, selections) {
+  if (!matrix?.variations?.length || !matrix?.attributes?.length || !selections) {
     return null;
   }
-  const required = matrix.attributes;
-  for (let i = 0; i < required.length; i += 1) {
-    if (!selections[required[i]]) {
+  const cardAttributes = matrix.attributes;
+  for (let i = 0; i < cardAttributes.length; i += 1) {
+    const tax = String(cardAttributes[i] || "").trim();
+    if (!tax || !String(selections[tax] ?? "").trim()) {
       return null;
     }
+  }
+  let best = null;
+  for (let v = 0; v < matrix.variations.length; v += 1) {
+    const row = matrix.variations[v];
+    if (!row?.attributes) {
+      continue;
+    }
+    if (!variationRowMatchesSelections(row.attributes, selections, cardAttributes)) {
+      continue;
+    }
+    if (compareVariationMatchPriority(row, best)) {
+      best = row;
+    }
+  }
+  return best;
+}
+function isAttributeOptionGloballyAvailable(matrix, taxonomy, slug) {
+  if (!matrix?.variations?.length) {
+    return true;
+  }
+  const tax = String(taxonomy || "").trim();
+  const value = String(slug || "").trim();
+  if (!tax || !value) {
+    return false;
   }
   for (let v = 0; v < matrix.variations.length; v += 1) {
     const row = matrix.variations[v];
     if (!row?.attributes) {
       continue;
     }
-    let match = true;
-    for (let a = 0; a < required.length; a += 1) {
-      const tax = required[a];
-      if (String(row.attributes[tax] || "") !== String(selections[tax] || "")) {
-        match = false;
-        break;
-      }
-    }
-    if (match) {
-      return row;
+    const fixed = getVariationFixedAttribute(row.attributes, tax);
+    if (!fixed || fixed === value) {
+      return true;
     }
   }
-  return null;
+  return false;
 }
-
-/**
- * Whether an attribute option can form a real variation with the other current selections.
- * Ignores the candidate taxonomy's own current selection (Woo-style).
- */
 function isAttributeOptionAvailable(matrix, selections, taxonomy, slug) {
   if (!matrix?.variations?.length || !matrix?.attributes?.length) {
     return true;
@@ -170709,20 +170955,22 @@ function isAttributeOptionAvailable(matrix, selections, taxonomy, slug) {
     if (!row?.attributes) {
       continue;
     }
-    if (String(row.attributes[tax] || "") !== value) {
+    const fixedCandidate = getVariationFixedAttribute(row.attributes, tax);
+    if (fixedCandidate && fixedCandidate !== value) {
       continue;
     }
     let compatible = true;
     for (let a = 0; a < matrix.attributes.length; a += 1) {
-      const otherTax = matrix.attributes[a];
+      const otherTax = String(matrix.attributes[a] || "").trim();
       if (!otherTax || otherTax === tax) {
         continue;
       }
-      const selected = String(otherSelections[otherTax] || "").trim();
+      const selected = String(otherSelections[otherTax] ?? "").trim();
       if (!selected) {
         continue;
       }
-      if (String(row.attributes[otherTax] || "") !== selected) {
+      const fixed = getVariationFixedAttribute(row.attributes, otherTax);
+      if (fixed && fixed !== selected) {
         compatible = false;
         break;
       }
@@ -170732,6 +170980,77 @@ function isAttributeOptionAvailable(matrix, selections, taxonomy, slug) {
     }
   }
   return false;
+}
+;// ./src/MainComponents/PostComponents/components/woocommerce/WooProductCardVariationContext.js
+
+
+
+
+
+const WooProductCardVariationContext = (0,external_React_.createContext)(null);
+function findMatchingVariation(matrix, selections) {
+  return findBestMatchingVariation(matrix, selections);
+}
+function findFirstCompatibleSlug(matrix, selections, taxonomy, slugOrder = []) {
+  const tax = String(taxonomy || "").trim();
+  if (!tax || !matrix?.variations?.length) {
+    return "";
+  }
+  const candidates = [];
+  slugOrder.forEach(slug => {
+    const value = String(slug || "").trim();
+    if (value && candidates.indexOf(value) === -1) {
+      candidates.push(value);
+    }
+  });
+  matrix.variations.forEach(row => {
+    const value = String(row?.attributes?.[tax] || "").trim();
+    if (value && candidates.indexOf(value) === -1) {
+      candidates.push(value);
+    }
+  });
+  for (let i = 0; i < candidates.length; i += 1) {
+    const slug = candidates[i];
+    if (isAttributeOptionAvailable(matrix, selections, tax, slug)) {
+      return slug;
+    }
+  }
+  return "";
+}
+function reconcileSelections(matrix, selections, changedTaxonomy, slugOrderByTax = {}) {
+  const next = selections && typeof selections === "object" ? {
+    ...selections
+  } : {};
+  if (!matrix?.attributes?.length) {
+    return next;
+  }
+  const changedTax = String(changedTaxonomy || "").trim();
+  const attributes = matrix.attributes.map(taxonomy => String(taxonomy || "").trim()).filter(Boolean);
+  const taxesToFix = changedTax ? attributes.filter(tax => tax !== changedTax) : attributes;
+  let changed = true;
+  while (changed) {
+    changed = false;
+    taxesToFix.forEach(tax => {
+      const slug = String(next[tax] || "").trim();
+      if (!slug) {
+        return;
+      }
+      if (isAttributeOptionAvailable(matrix, next, tax, slug)) {
+        return;
+      }
+      const replacement = findFirstCompatibleSlug(matrix, next, tax, slugOrderByTax[tax] || []);
+      if (replacement) {
+        if (replacement !== slug) {
+          next[tax] = replacement;
+          changed = true;
+        }
+        return;
+      }
+      delete next[tax];
+      changed = true;
+    });
+  }
+  return next;
 }
 function pruneInvalidSelections(matrix, selections) {
   const next = selections && typeof selections === "object" ? {
@@ -170768,7 +171087,7 @@ function mergeFilterSlugMapIntoSelections(matrix, baseSelections, filterSlugMap)
     ...baseSelections
   } : {};
   if (!matrix?.attributes?.length || !filterSlugMap || typeof filterSlugMap !== "object") {
-    return pruneInvalidSelections(matrix, next);
+    return reconcileSelections(matrix, next, "", {});
   }
   const pending = {};
   matrix.attributes.forEach(taxonomy => {
@@ -170809,7 +171128,7 @@ function mergeFilterSlugMapIntoSelections(matrix, baseSelections, filterSlugMap)
       }
     });
   }
-  return pruneInvalidSelections(matrix, next);
+  return reconcileSelections(matrix, next, "", {});
 }
 
 /**
@@ -170850,7 +171169,8 @@ function buildInitialSelections(matrix, filterSlugMap = null) {
   const defaults = matrix?.defaults && typeof matrix.defaults === "object" ? {
     ...matrix.defaults
   } : {};
-  return mergeFilterSlugMapIntoSelections(matrix, defaults, filterSlugMap);
+  const merged = mergeFilterSlugMapIntoSelections(matrix, defaults, filterSlugMap);
+  return matrix ? reconcileSelections(matrix, merged, "", {}) : merged;
 }
 function WooProductCardVariationProvider({
   postData,
@@ -170876,7 +171196,7 @@ function WooProductCardVariationProvider({
   (0,external_React_.useEffect)(() => {
     setSelections(matrix ? buildInitialSelections(matrix, resolvedFilterSlugMap) : {});
   }, [postData?.id, matrix, filterMapSignature]);
-  const setSelection = (0,external_React_.useCallback)((taxonomy, slug) => {
+  const setSelection = (0,external_React_.useCallback)((taxonomy, slug, slugOrder = []) => {
     const tax = String(taxonomy || "").trim();
     const value = String(slug || "").trim();
     if (!tax) {
@@ -170889,13 +171209,17 @@ function WooProductCardVariationProvider({
       if (!value) {
         delete draft[tax];
       } else {
-        // Block selecting options that are unavailable with current other selections.
-        if (matrix && !isAttributeOptionAvailable(matrix, prev, tax, value)) {
+        if (matrix && !isAttributeOptionGloballyAvailable(matrix, tax, value)) {
           return prev;
         }
         draft[tax] = value;
       }
-      return matrix ? pruneInvalidSelections(matrix, draft) : draft;
+      if (!matrix) {
+        return draft;
+      }
+      return reconcileSelections(matrix, draft, tax, {
+        [tax]: slugOrder
+      });
     });
   }, [matrix]);
   const resolvedVariation = (0,external_React_.useMemo)(() => matrix ? findMatchingVariation(matrix, selections) : null, [matrix, selections]);
@@ -170909,6 +171233,15 @@ function WooProductCardVariationProvider({
     if (!matrix) {
       return true;
     }
+    return isAttributeOptionGloballyAvailable(matrix, taxonomy, slug);
+  }, [matrix]);
+  const isOptionCompatible = (0,external_React_.useCallback)((taxonomy, slug) => {
+    if (!matrix) {
+      return true;
+    }
+    if (!isAttributeOptionGloballyAvailable(matrix, taxonomy, slug)) {
+      return false;
+    }
     return isAttributeOptionAvailable(matrix, selections, taxonomy, slug);
   }, [matrix, selections]);
   const value = (0,external_React_.useMemo)(() => ({
@@ -170918,8 +171251,9 @@ function WooProductCardVariationProvider({
     resolvedVariation,
     isComplete,
     isOptionAvailable,
+    isOptionCompatible,
     postData: postData || null
-  }), [matrix, selections, setSelection, resolvedVariation, isComplete, isOptionAvailable, postData]);
+  }), [matrix, selections, setSelection, resolvedVariation, isComplete, isOptionAvailable, isOptionCompatible, postData]);
   return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(WooProductCardVariationContext.Provider, {
     value: value,
     children: children
@@ -171065,6 +171399,35 @@ function formatVariationPriceText(pricePayload, showPrice = "default") {
   }
   return String(pricePayload.default || pricePayload.display_price || "");
 }
+function shouldShowVariationRegularPriceAffix(pricePayload, mainPriceText) {
+  if (!pricePayload || typeof pricePayload !== "object") {
+    return false;
+  }
+  const sale = pricePayload.sale_price;
+  if (sale === null || sale === undefined || sale === "" || sale === false) {
+    return false;
+  }
+  const affix = String(pricePayload.regular_affix || "").trim();
+  if (!affix) {
+    return false;
+  }
+  const main = String(mainPriceText || "").trim();
+  if (main && affix === main) {
+    return false;
+  }
+  return true;
+}
+function resolveVariationRegularPriceAffix(pricePayload, showPrice = "default") {
+  if (!pricePayload || typeof pricePayload !== "object") {
+    return "";
+  }
+  const mainText = formatVariationPriceText(pricePayload, showPrice);
+  if (!shouldShowVariationRegularPriceAffix(pricePayload, mainText)) {
+    return "";
+  }
+  return String(pricePayload.regular_affix || "").trim();
+}
+
 ;// ./src/MainComponents/PostComponents/components/modules-output/ModuleImage.js
 
 
@@ -171932,17 +172295,35 @@ function shouldShowRegularPriceAffix(postData, hideDuplicateRegularPrice, settin
   }
   return true;
 }
-function renderAffixContent(settings, placement, svgContent, postData, hideDuplicateRegularPrice, mainPriceText, applyTextVisibilityFilter) {
+function resolveAffixRegularPriceForRender(postData, settings, variationCtx, mainPriceText) {
+  if (variationCtx?.isComplete && variationCtx?.resolvedVariation?.price) {
+    const showPrice = settings?.show_price || "default";
+    return resolveVariationRegularPriceAffix(variationCtx.resolvedVariation.price, showPrice);
+  }
+  return resolveAffixRegularPrice(postData, settings);
+}
+function shouldShowRegularPriceAffixForRender(postData, hideDuplicateRegularPrice, settings, mainPriceText, variationCtx) {
+  if (variationCtx?.isComplete && variationCtx?.resolvedVariation?.price) {
+    const showPrice = settings?.show_price || "default";
+    const mainText = mainPriceText || formatVariationPriceText(variationCtx.resolvedVariation.price, showPrice);
+    return shouldShowVariationRegularPriceAffix(variationCtx.resolvedVariation.price, mainText);
+  }
+  return shouldShowRegularPriceAffix(postData, hideDuplicateRegularPrice, settings, mainPriceText);
+}
+function renderAffixContent(settings, placement, svgContent, postData, hideDuplicateRegularPrice, mainPriceText, applyTextVisibilityFilter, variationCtx = null) {
   const affix = settings?.[placement];
   if (!affix) {
     return null;
   }
   if (affix.meta_type === "regular_price") {
-    if (!shouldShowRegularPriceAffix(postData, hideDuplicateRegularPrice, settings, mainPriceText)) {
+    if (!shouldShowRegularPriceAffixForRender(postData, hideDuplicateRegularPrice, settings, mainPriceText, variationCtx)) {
       return null;
     }
-    const regularPrice = resolveAffixRegularPrice(postData, settings);
-    return regularPrice || null;
+    const regularPrice = resolveAffixRegularPriceForRender(postData, settings, variationCtx, mainPriceText);
+    return regularPrice ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
+      className: "caf-builder-regular-price-affix",
+      children: regularPrice
+    }) : null;
   }
   if (affix.meta_type === "text" && affix.meta_text) {
     // Preview (screen 3) only: honor text_visibility by product type.
@@ -172064,8 +172445,8 @@ function ModuleProductPrice({
   };
 
   // Prefix/suffix stays available for product price on free (icon affixes stay Pro).
-  const prefixContent = String(settings?.prefix?.is_enable ?? "") === "true" ? renderAffixContent(settings, "prefix", svgPrefixContent, postData, hideDuplicateRegularPrice, priceText, applyTextVisibilityFilter) : null;
-  const suffixContent = String(settings?.suffix?.is_enable ?? "") === "true" ? renderAffixContent(settings, "suffix", svgSuffixContent, postData, hideDuplicateRegularPrice, priceText, applyTextVisibilityFilter) : null;
+  const prefixContent = String(settings?.prefix?.is_enable ?? "") === "true" ? renderAffixContent(settings, "prefix", svgPrefixContent, postData, hideDuplicateRegularPrice, priceText, applyTextVisibilityFilter, variationCtx) : null;
+  const suffixContent = String(settings?.suffix?.is_enable ?? "") === "true" ? renderAffixContent(settings, "suffix", svgSuffixContent, postData, hideDuplicateRegularPrice, priceText, applyTextVisibilityFilter, variationCtx) : null;
   const showPrefix = Boolean(prefixContent);
   const showSuffix = Boolean(suffixContent);
   const mediaContent = /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)(external_ReactJSXRuntime_.Fragment, {
@@ -172240,20 +172621,29 @@ function renderFiveStarIcons(averageRating, keyPrefix = "caf-rating-star") {
     })]
   });
 }
-function resolveModuleTextColor(styleDefault, selectedDevice, state) {
+function resolveStarStyleProperty(styleStar, selectedDevice, state, property) {
   const deviceKey = selectedDevice || "desktop";
-  const fromDevice = styleDefault?.[deviceKey]?.[state]?.color;
-  if (fromDevice) {
+  const fromDevice = styleStar?.[deviceKey]?.[state]?.[property];
+  if (fromDevice !== undefined && fromDevice !== null && fromDevice !== "") {
     return String(fromDevice);
   }
-  if (deviceKey !== "desktop") {
-    const fromDesktop = styleDefault?.desktop?.[state]?.color;
-    if (fromDesktop) {
-      return String(fromDesktop);
+  if (state === "hover") {
+    const fromDefault = styleStar?.[deviceKey]?.default?.[property];
+    if (fromDefault !== undefined && fromDefault !== null && fromDefault !== "") {
+      return String(fromDefault);
     }
   }
-  if (state === "hover") {
-    return resolveModuleTextColor(styleDefault, selectedDevice, "default");
+  if (deviceKey !== "desktop") {
+    const fromDesktopState = styleStar?.desktop?.[state]?.[property];
+    if (fromDesktopState !== undefined && fromDesktopState !== null && fromDesktopState !== "") {
+      return String(fromDesktopState);
+    }
+    if (state === "hover") {
+      const fromDesktopDefault = styleStar?.desktop?.default?.[property];
+      if (fromDesktopDefault !== undefined && fromDesktopDefault !== null && fromDesktopDefault !== "") {
+        return String(fromDesktopDefault);
+      }
+    }
   }
   return "";
 }
@@ -172365,10 +172755,13 @@ function ModuleProductRating({
       showDesignStarsWhenEmpty
     })
   });
-  const emptyStarColor = resolveModuleTextColor(styleDefault, selectedDevice, "default");
-  const filledStarColor = resolveModuleTextColor(styleDefault, selectedDevice, "hover");
+  const styleStar = styleDefault?.star;
+  const isStarsDisplay = ratingDisplay === "stars";
+  const emptyStarColor = isStarsDisplay ? resolveStarStyleProperty(styleStar, selectedDevice, "default", "color") : "";
+  const filledStarColor = isStarsDisplay ? resolveStarStyleProperty(styleStar, selectedDevice, "hover", "color") : "";
+  const starFontSize = isStarsDisplay ? resolveStarStyleProperty(styleStar, selectedDevice, "default", "fontSize") : "";
   const moduleScope = `.caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex}`;
-  const starLayoutCss = `
+  const starLayoutCss = isStarsDisplay ? `
     ${moduleScope} .caf-builder-rating-value .caf-builder-rating-stars {
       position: relative;
       display: inline-flex;
@@ -172380,6 +172773,7 @@ function ModuleProductRating({
       display: inline-flex;
       flex: 0 0 auto;
       white-space: nowrap;
+      ${generateCSS(styleStar, "default", selectedDevice, settings, postData)}
     }
     ${moduleScope} .caf-builder-rating-value .caf-builder-rating-stars-fill {
       position: absolute;
@@ -172387,17 +172781,20 @@ function ModuleProductRating({
       left: 0;
       overflow: hidden;
       pointer-events: none;
-    }`;
+    }` : "";
+  // Only emit overrides when Star tab has values so Text All hover can inherit otherwise.
   const starColorCss = (emptyStarColor ? `
-    ${moduleScope} .caf-builder-rating-value .caf-rating-star--empty,
-    ${moduleScope}:hover .caf-builder-rating-value .caf-rating-star--empty {
+    ${moduleScope} .caf-builder-rating-value .caf-rating-star--empty {
       color: ${emptyStarColor};
     }` : "") + (filledStarColor ? `
     ${moduleScope} .caf-builder-rating-value .caf-rating-star--filled,
-    ${moduleScope} .caf-builder-rating-value .caf-rating-star--half,
-    ${moduleScope}:hover .caf-builder-rating-value .caf-rating-star--filled,
-    ${moduleScope}:hover .caf-builder-rating-value .caf-rating-star--half {
+    ${moduleScope} .caf-builder-rating-value .caf-rating-star--half {
       color: ${filledStarColor};
+    }` : "") + (starFontSize ? `
+    ${moduleScope} .caf-builder-rating-value .caf-rating-star--empty,
+    ${moduleScope} .caf-builder-rating-value .caf-rating-star--filled,
+    ${moduleScope} .caf-builder-rating-value .caf-rating-star--half {
+      font-size: ${starFontSize};
     }` : "");
   const moduleStyles = `
     ${moduleScope} {
@@ -173311,44 +173708,6 @@ function FilterModuleSortChrome({
     })]
   });
 }
-;// ./src/MainComponents/FilterComponents/components/modules-output/shared/TermShowMoreButton.js
-
-
-
-function TermShowMoreButton({
-  settings,
-  isExpanded,
-  overflowCount = 0,
-  onToggle
-}) {
-  const config = (0,termShowMoreUtils.resolveTermShowMoreSettings)(settings);
-  if (!config.enabled || config.limit < 1 || overflowCount <= 0) {
-    return null;
-  }
-  const {
-    label,
-    countText
-  } = (0,termShowMoreUtils.buildShowMoreButtonParts)(settings, isExpanded, isExpanded ? 0 : overflowCount);
-  return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("li", {
-    className: "caf-term-show-more-item",
-    "aria-hidden": "false",
-    children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("button", {
-      type: "button",
-      className: "caf-term-show-more-btn",
-      "aria-expanded": isExpanded ? "true" : "false",
-      onClick: event => {
-        event.preventDefault();
-        event.stopPropagation();
-        if (typeof onToggle === "function") {
-          onToggle();
-        }
-      },
-      children: [label, countText ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
-        children: countText
-      }) : null]
-    })
-  });
-}
 ;// ./src/MainComponents/shared/buildLayoutClassesFromStyle.js
 /**
  * Build layout utility classes from a Design tab style object (meta1/meta2/meta3).
@@ -173370,6 +173729,23 @@ function buildLayoutClassesFromStyle(styleObj) {
   if (styleObj.flexFlow) push("direction", styleObj.flexFlow);
   if (styleObj.justifyContent) push("justify", styleObj.justifyContent);
   if (styleObj.alignItems) push("align", styleObj.alignItems);
+  return [...new Set(classes)].join(" ");
+}
+;// ./src/MainComponents/shared/joinClassNames.js
+/**
+ * Join class tokens without empty segments or extra whitespace.
+ *
+ * @param {...(string|number|boolean|null|undefined)} parts
+ * @returns {string}
+ */
+function joinClassNames(...parts) {
+  const classes = [];
+  parts.forEach(part => {
+    if (part == null || part === false || part === true) {
+      return;
+    }
+    String(part).trim().split(/\s+/).filter(Boolean).forEach(token => classes.push(token));
+  });
   return [...new Set(classes)].join(" ");
 }
 ;// ./src/MainComponents/FilterComponents/components/modules-output/shared/useCafTermLabelTooltip.js
@@ -173501,15 +173877,40 @@ const resolvePreviewTermFacetState = ({
   staticCount,
   isSelected = false
 } = {}) => {
-  // Prefer live facet counts whenever present so show_count is not stuck on
-  // layout-baked values (e.g. after query restriction changes). DTC still
-  // controls whether unavailable/disabled styling is applied.
-  if (facetCounts && countKey && Object.prototype.hasOwnProperty.call(facetCounts, countKey)) {
+  const hasStaticCount = staticCount != null && staticCount !== "" && Number.isFinite(Number(staticCount));
+  const getLiveCount = () => {
+    if (!facetCounts || !countKey || !Object.prototype.hasOwnProperty.call(facetCounts, countKey)) {
+      return null;
+    }
     const parsed = parseInt(facetCounts[countKey], 10);
-    const safeCount = Number.isFinite(parsed) ? parsed : 0;
+    return Number.isFinite(parsed) ? parsed : 0;
+  };
+
+  // Dynamic counts: live facet map drives display + unavailable styling.
+  if (dynamicTermCountsEnabled) {
+    const live = getLiveCount();
+    if (live !== null) {
+      return {
+        count: live,
+        unavailable: live <= 0 && !isSelected
+      };
+    }
+  }
+
+  // Static show_count: use layout-baked term.count (catalog / restriction snapshot).
+  if (hasStaticCount) {
     return {
-      count: safeCount,
-      unavailable: dynamicTermCountsEnabled && safeCount <= 0 && !isSelected
+      count: Number(staticCount),
+      unavailable: false
+    };
+  }
+
+  // No baked count yet — fall back to preview facet API (restriction-scoped base query).
+  const live = getLiveCount();
+  if (live !== null) {
+    return {
+      count: live,
+      unavailable: false
     };
   }
   return {
@@ -173543,7 +173944,6 @@ const PreviewFacetCountsContext = (0,external_React_.createContext)({
 });
 const usePreviewFacetCounts = () => (0,external_React_.useContext)(PreviewFacetCountsContext);
 ;// ./src/MainComponents/PostComponents/components/modules-output/WooModules/ModuleAttributeSwatch.js
-
 
 
 
@@ -173621,9 +174021,9 @@ const CheckboxTermPreviewItem = ({
   iconTextVeritcal,
   isSelected,
   isUnavailable = false,
+  isIncompatible = false,
   termSlug = "",
   onToggle,
-  showMoreClassName = "",
   trustConfiguredTerms = false
 }) => {
   const {
@@ -173650,7 +174050,7 @@ const CheckboxTermPreviewItem = ({
   const itemDataKey = isVirtualGroup ? (0,wooVirtualTaxonomies.getWooVirtualMetaKey)(groupKey) : groupKey;
   const resolvedSlug = String(termSlug || item?.slug || "").trim();
   return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("li", {
-    className: `caf-terms-list-item ${itemLayoutClasses} ${isSelected ? "caf-selected" : ""} ${isUnavailable ? "caf-variation-option-unavailable" : ""} caf-hidden-swatch-box ${showIconEnabled ? "caf-show-icon" : "caf-hidden-icon"} caf-hidden-count ${hideTermLabel ? "caf-hide-term-label" : ""} ${showTermTooltipClass ? "caf-has-term-tooltip" : ""} ${isVirtualGroup ? "caf-woo-virtual-item" : ""}${showMoreClassName}`,
+    className: joinClassNames("caf-terms-list-item", "caf-attribute-swatch-term", isSelected && "caf-selected", isUnavailable && "caf-variation-option-unavailable", isIncompatible && "caf-variation-option-incompatible", hideTermLabel && "caf-hide-term-label", showTermTooltipClass && "caf-has-term-tooltip", isVirtualGroup && "caf-woo-virtual-item"),
     taxonomy: groupKey,
     "data-key": itemDataKey,
     "term-id": item.key,
@@ -173671,38 +174071,35 @@ const CheckboxTermPreviewItem = ({
     },
     children: [termTooltipPortal, /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("input", {
       type: "checkbox",
-      className: `caf-taxo-input`,
+      className: "caf-taxo-input",
       value: item.key,
       name: "caf-taxo-input",
       style: {
-        display: 'none'
+        display: "none"
       },
       checked: isSelected,
       readOnly: true,
       "data-predefined": isSelected
-    }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
-      className: `manage-ic-lbl caf-layout-${iconText} ${iconTextVeritcal}`,
-      children: [(0,filterModuleTier.resolveFilterShowIconSetting)(settings?.show_icon, settings) === 'true' && (0,termVisualUtils.isTermVisualColor)(settings) && (0,termVisualUtils.getTermSwatchColor)(item.icons) && (!item.icons?.position || item.icons?.position === "before") && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(TermSwatch, {
-        color: (0,termVisualUtils.getTermSwatchColor)(item.icons),
-        className: "filter-before-icon"
-      }), !(0,termVisualUtils.isTermVisualColor)(settings) && item.icons?.icon && item.icons?.type === 'icon' && (0,filterModuleTier.resolveFilterShowIconSetting)(settings?.show_icon, settings) === 'true' && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("i", {
-        className: `fa-solid ${item.icons.icon} filter-before-icon`
-      }), !(0,termVisualUtils.isTermVisualColor)(settings) && item.icons?.icon && item.icons?.type === 'svg' && (0,filterModuleTier.resolveFilterShowIconSetting)(settings?.show_icon, settings) === 'true' && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(cafUploadedIcon.CafUploadedIcon, {
-        src: item.icons?.icon?.url,
-        className: "caf-inline-svg-icon"
-      }), !hideTermLabel && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
-        className: `manage-text-lbl caf-layout-${textCount} ${textCountVeritcal}`,
-        children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
-          className: "trm-name",
-          children: (0,esm["default"])(`${item?.value}`)
-        })
-      }), (0,filterModuleTier.resolveFilterShowIconSetting)(settings?.show_icon, settings) === 'true' && (0,termVisualUtils.isTermVisualColor)(settings) && (0,termVisualUtils.getTermSwatchColor)(item.icons) && item.icons?.position === "after" && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(TermSwatch, {
-        color: (0,termVisualUtils.getTermSwatchColor)(item.icons),
-        className: "filter-after-icon"
-      }), !(0,termVisualUtils.isTermVisualColor)(settings) && item.icons?.icon && item.icons?.position === "after" && (0,filterModuleTier.resolveFilterShowIconSetting)(settings?.show_icon, settings) === 'true' && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("i", {
-        className: `fa-solid ${item.icons.icon} filter-after-icon`
-      })]
-    })]
+    }), showIconEnabled && (0,termVisualUtils.isTermVisualColor)(settings) && (0,termVisualUtils.getTermSwatchColor)(item.icons) && (!item.icons?.position || item.icons?.position === "before") && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(TermSwatch, {
+      color: (0,termVisualUtils.getTermSwatchColor)(item.icons),
+      className: "filter-before-icon"
+    }), !(0,termVisualUtils.isTermVisualColor)(settings) && item.icons?.icon && item.icons?.type === "icon" && showIconEnabled && (!item.icons?.position || item.icons?.position === "before") && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("i", {
+      className: `fa-solid ${item.icons.icon} filter-before-icon`
+    }), !(0,termVisualUtils.isTermVisualColor)(settings) && item.icons?.icon && item.icons?.type === "svg" && showIconEnabled && (!item.icons?.position || item.icons?.position === "before") && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(cafUploadedIcon.CafUploadedIcon, {
+      src: item.icons?.icon?.url,
+      className: "caf-inline-svg-icon filter-before-icon"
+    }), !hideTermLabel && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
+      className: "trm-name caf-term-label",
+      children: (0,esm["default"])(`${item?.value}`)
+    }), showIconEnabled && (0,termVisualUtils.isTermVisualColor)(settings) && (0,termVisualUtils.getTermSwatchColor)(item.icons) && item.icons?.position === "after" && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(TermSwatch, {
+      color: (0,termVisualUtils.getTermSwatchColor)(item.icons),
+      className: "filter-after-icon"
+    }), !(0,termVisualUtils.isTermVisualColor)(settings) && item.icons?.icon && item.icons?.position === "after" && showIconEnabled && (item.icons?.type === "icon" ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("i", {
+      className: `fa-solid ${item.icons.icon} filter-after-icon`
+    }) : item.icons?.type === "svg" ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(cafUploadedIcon.CafUploadedIcon, {
+      src: item.icons?.icon?.url,
+      className: "caf-inline-svg-icon filter-after-icon"
+    }) : null)]
   });
 };
 const getProductAttributeTermMap = (postData, taxonomyKey) => {
@@ -173817,7 +174214,6 @@ const ModuleAttributeSwatch = ({
   const [enableToggle, setEnableToggle] = (0,external_React_.useState)(outputSettings?.enable_toggle);
   const [closeToggle, setCloseToggle] = (0,external_React_.useState)(outputSettings?.close_toggle);
   const [selectedTermKeys, setSelectedTermKeys] = (0,external_React_.useState)([]);
-  const [termListExpanded, setTermListExpanded] = (0,external_React_.useState)(false);
   const variationCtx = useWooProductCardVariation();
   const resolveTermSlug = (0,external_React_.useCallback)((item, groupKey) => {
     if (item?.slug) {
@@ -173847,6 +174243,14 @@ const ModuleAttributeSwatch = ({
     }
     const slug = resolveTermSlug(item, taxonomy);
     return !variationCtx.isOptionAvailable(taxonomy, slug);
+  }, [variationCtx, resolveTermSlug]);
+  const isTermIncompatible = (0,external_React_.useCallback)((item, groupKey) => {
+    const taxonomy = String(groupKey || "").trim();
+    if (!variationCtx?.matrix || !variationCtx?.isOptionCompatible || !variationCtx.matrix.attributes?.includes(taxonomy)) {
+      return false;
+    }
+    const slug = resolveTermSlug(item, taxonomy);
+    return !variationCtx.isOptionCompatible(taxonomy, slug);
   }, [variationCtx, resolveTermSlug]);
   const getResolvedFlexProperty = (styleObj, metaKey, settings) => {
     if (!styleObj) return "flex-start";
@@ -173934,44 +174338,6 @@ const ModuleAttributeSwatch = ({
       }
     }
   };
-  (0,external_React_.useEffect)(() => {
-    const predefinedTerms = outputSettings?.predefined_terms || [];
-    let defaultSelected = [];
-    const currentTerm = predefinedTerms[0];
-    if (currentTerm?.includes("___")) {
-      const idx = String(currentTerm).lastIndexOf("___");
-      defaultSelected = [String(currentTerm).slice(idx + 3)];
-    } else if (currentTerm) {
-      defaultSelected = [String(currentTerm)];
-    }
-    setSelectedTermKeys(defaultSelected);
-  }, [postData?.id, outputSettings?.predefined_terms]);
-  (0,external_React_.useEffect)(() => {
-    setTermListExpanded(false);
-  }, [outputSettings?.term_show_more, outputSettings?.term_visible_limit, outputSettings?.taxonomy_data]);
-  const showMoreOverflowCount = (0,external_React_.useMemo)(() => {
-    const config = (0,termShowMoreUtils.resolveTermShowMoreSettings)(outputSettings);
-    if (!config.enabled || config.limit < 1) {
-      return 0;
-    }
-    let termIndex = 0;
-    let overflowCount = 0;
-    previewTaxonomyData.forEach(group => {
-      (group?.term_data || []).forEach(item => {
-        if (String(item?.display ?? "true") === "false") {
-          return;
-        }
-        const isPinned = isTermSelected(item, group.key) || String(item?.predefine) === "true";
-        if (!isPinned && termIndex >= config.limit) {
-          overflowCount += 1;
-        }
-        if (!isPinned) {
-          termIndex += 1;
-        }
-      });
-    });
-    return overflowCount;
-  }, [outputSettings, isTermSelected, previewTaxonomyData]);
   const isTermsDataEmpty = () => {
     for (let i = 0; i < previewTaxonomyData.length; i++) {
       if ((previewTaxonomyData[i]?.term_data || []).length !== 0) {
@@ -173994,7 +174360,7 @@ const ModuleAttributeSwatch = ({
   }, [applyFilterLayoutChange, columnindex, initialdata, moduleindex, rowindex]);
   const isModuleActive = indexes?.type === "module" && indexes?.rowindex === rowindex && indexes?.columnindex === columnindex && indexes?.moduleindex === moduleindex;
   const showTermSortChrome = Boolean(onSettingChange) && isModuleActive && canUseFilterTermReorder() && hasMultipleSortableTaxonomyTerms(previewTaxonomyData);
-  const handleCheckboxToggle = (termKey, termSlug, taxonomy) => {
+  const handleCheckboxToggle = (termKey, termSlug, taxonomy, slugOrder = []) => {
     const normalizedKey = String(termKey);
     const normalizedSlug = String(termSlug || "").trim();
     const tax = String(taxonomy || "").trim();
@@ -174003,7 +174369,7 @@ const ModuleAttributeSwatch = ({
         return;
       }
       const isCurrentlySelected = String(variationCtx.selections?.[tax] || "") === normalizedSlug;
-      variationCtx.setSelection(tax, isCurrentlySelected ? "" : normalizedSlug);
+      variationCtx.setSelection(tax, isCurrentlySelected ? "" : normalizedSlug, slugOrder);
       return;
     }
     setSelectedTermKeys(prev => {
@@ -174020,7 +174386,7 @@ const ModuleAttributeSwatch = ({
       moduleindex: moduleindex,
       module: module
     }),
-    className: `caf-builder-module-main caf-module-woo_attribute_swatch caf-term-show-more-host caf-module-${module.key} caf_module_${module.key} caf-module-${moduleindex} ${custom_class} ${isModuleActive ? "active" : ""} ${showTermSortChrome ? "caf-has-term-sort" : ""} ${hideClass}${termListExpanded ? " caf-term-list-expanded" : ""}`,
+    className: joinClassNames("caf-builder-module-main", "caf-module-woo_attribute_swatch", `caf-module-${module.key}`, `caf_module_${module.key}`, `caf-module-${moduleindex}`, custom_class, isModuleActive && "active", showTermSortChrome && "caf-has-term-sort", hideClass),
     children: [onSettingChange ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(FilterModuleSortChrome, {
       isActive: isModuleActive,
       moduleKey: module.key,
@@ -174090,74 +174456,63 @@ const ModuleAttributeSwatch = ({
         })
       })]
     }), closeToggle === "false" && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(external_ReactJSXRuntime_.Fragment, {
-      children: isTermsDataEmpty() ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)(HorizontalScrollList, {
+      children: isTermsDataEmpty() ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(HorizontalScrollList, {
         className: "caf-terms-list caf-attribute-swatch",
         dataSource: "taxonomy",
         categoryRelation: outputSettings?.category_relation ?? "OR",
         multipleTerm: "false",
-        children: [(() => {
-          let termIndex = 0;
-          return previewTaxonomyData.map(group => /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)((external_React_default()).Fragment, {
-            children: (group.term_data || []).map(item => {
-              if (String(item?.display ?? "true") === "false") {
-                return null;
-              }
-              const isSelected = isTermSelected(item, group.key);
-              const isPinned = isSelected || String(item?.predefine) === "true";
-              const showMoreClassName = (0,termShowMoreUtils.getShowMoreItemClassName)(outputSettings, termIndex, isPinned, termListExpanded);
-              if (!isPinned) {
-                termIndex += 1;
-              }
-              return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)((external_React_default()).Fragment, {
-                children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(CheckboxTermPreviewItem, {
-                  item: item,
-                  groupKey: group.key,
-                  settings: outputSettings,
-                  updatedTaxonomy: effectiveUpdatedTaxonomy,
-                  itemLayoutClasses: itemLayoutClasses,
-                  textCount: textCount,
-                  textCountVeritcal: textCountVeritcal,
-                  iconText: iconText,
-                  iconTextVeritcal: iconTextVeritcal,
-                  isSelected: isSelected,
-                  isUnavailable: isTermUnavailable(item, group.key),
-                  termSlug: resolveTermSlug(item, group.key),
-                  onToggle: termKey => handleCheckboxToggle(termKey, resolveTermSlug(item, group.key), group.key),
-                  showMoreClassName: showMoreClassName,
-                  trustConfiguredTerms: true
-                }), item.children_data?.length > 0 && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("ul", {
-                  className: "children",
-                  children: item.children_data.map(child => {
-                    if (String(child?.display ?? "true") === "false") {
-                      return null;
-                    }
-                    return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(CheckboxTermPreviewItem, {
-                      item: child,
-                      groupKey: group.key,
-                      settings: outputSettings,
-                      updatedTaxonomy: effectiveUpdatedTaxonomy,
-                      itemLayoutClasses: itemLayoutClasses,
-                      textCount: textCount,
-                      textCountVeritcal: textCountVeritcal,
-                      iconText: iconText,
-                      iconTextVeritcal: iconTextVeritcal,
-                      isSelected: isTermSelected(child, group.key),
-                      isUnavailable: isTermUnavailable(child, group.key),
-                      termSlug: resolveTermSlug(child, group.key),
-                      onToggle: termKey => handleCheckboxToggle(termKey, resolveTermSlug(child, group.key), group.key),
-                      trustConfiguredTerms: true
-                    }, child.key);
-                  })
-                })]
-              }, item.key);
-            })
-          }, `parent-group-${group.key}`));
-        })(), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(TermShowMoreButton, {
-          settings: outputSettings,
-          isExpanded: termListExpanded,
-          overflowCount: showMoreOverflowCount,
-          onToggle: () => setTermListExpanded(prev => !prev)
-        })]
+        children: previewTaxonomyData.map(group => /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)((external_React_default()).Fragment, {
+          children: (group.term_data || []).map(item => {
+            if (String(item?.display ?? "true") === "false") {
+              return null;
+            }
+            const slugOrder = (group.term_data || []).map(term => resolveTermSlug(term, group.key)).filter(Boolean);
+            const isSelected = isTermSelected(item, group.key);
+            return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)((external_React_default()).Fragment, {
+              children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(CheckboxTermPreviewItem, {
+                item: item,
+                groupKey: group.key,
+                settings: outputSettings,
+                updatedTaxonomy: effectiveUpdatedTaxonomy,
+                itemLayoutClasses: itemLayoutClasses,
+                textCount: textCount,
+                textCountVeritcal: textCountVeritcal,
+                iconText: iconText,
+                iconTextVeritcal: iconTextVeritcal,
+                isSelected: isSelected,
+                isUnavailable: isTermUnavailable(item, group.key),
+                isIncompatible: isTermIncompatible(item, group.key),
+                termSlug: resolveTermSlug(item, group.key),
+                onToggle: termKey => handleCheckboxToggle(termKey, resolveTermSlug(item, group.key), group.key, slugOrder),
+                trustConfiguredTerms: true
+              }), item.children_data?.length > 0 && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("ul", {
+                className: "children",
+                children: item.children_data.map(child => {
+                  if (String(child?.display ?? "true") === "false") {
+                    return null;
+                  }
+                  return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(CheckboxTermPreviewItem, {
+                    item: child,
+                    groupKey: group.key,
+                    settings: outputSettings,
+                    updatedTaxonomy: effectiveUpdatedTaxonomy,
+                    itemLayoutClasses: itemLayoutClasses,
+                    textCount: textCount,
+                    textCountVeritcal: textCountVeritcal,
+                    iconText: iconText,
+                    iconTextVeritcal: iconTextVeritcal,
+                    isSelected: isTermSelected(child, group.key),
+                    isUnavailable: isTermUnavailable(child, group.key),
+                    isIncompatible: isTermIncompatible(child, group.key),
+                    termSlug: resolveTermSlug(child, group.key),
+                    onToggle: termKey => handleCheckboxToggle(termKey, resolveTermSlug(child, group.key), group.key, slugOrder),
+                    trustConfiguredTerms: true
+                  }, child.key);
+                })
+              })]
+            }, item.key);
+          })
+        }, `parent-group-${group.key}`))
       }) : isLayoutProductPreview ? null : /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("p", {
         children: "Select an attribute and terms in Content settings."
       })
@@ -174177,13 +174532,16 @@ const ModuleAttributeSwatch = ({
             .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex}.caf-builder-module-main ul.caf-attribute-swatch:hover{
               ${generateFilterCSS("meta", "hover", selectedDevice, styleDefault)}
             }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item{
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item{
               ${generateFilterCSS("meta1", "default", selectedDevice, styleDefault)}
             }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item:hover{
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item:hover,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item:hover{
               ${generateFilterCSS("meta1", "hover", selectedDevice, styleDefault)}
             }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li .manage-ic-lbl .caf-term-swatch{
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .caf-term-swatch,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .caf-term-swatch{
               display: inline-block;
               width: 1em;
               height: 1em;
@@ -174192,33 +174550,53 @@ const ModuleAttributeSwatch = ({
               vertical-align: middle;
               flex-shrink: 0;
             }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li .manage-ic-lbl i,
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li .manage-ic-lbl svg,
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li .manage-ic-lbl .caf-term-swatch{
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > i,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > svg,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > img.caf-inline-svg-icon,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .caf-term-swatch,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > i,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > svg,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > img.caf-inline-svg-icon,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .caf-term-swatch{
               ${generateFilterCSS("icon", "default", selectedDevice, styleDefault)}
             }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li .manage-ic-lbl i:hover,
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li .manage-ic-lbl svg:hover,
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li .manage-ic-lbl .caf-term-swatch:hover{
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > i:hover,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > svg:hover,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > img.caf-inline-svg-icon:hover,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .caf-term-swatch:hover,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > i:hover,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > svg:hover,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > img.caf-inline-svg-icon:hover,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .caf-term-swatch:hover{
               ${generateFilterCSS("icon", "hover", selectedDevice, styleDefault)}
             }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li .manage-text-lbl span.count-span{
-              ${generateFilterCSS("count", "default", selectedDevice, styleDefault)}
-            }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li .manage-text-lbl span.count-span:hover{
-              ${generateFilterCSS("count", "hover", selectedDevice, styleDefault)}
-            }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li .manage-ic-lbl{
-              ${generateFilterCSS("meta2", "default", selectedDevice, styleDefault)}
-            }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li .manage-ic-lbl:hover{
-              ${generateFilterCSS("meta2", "hover", selectedDevice, styleDefault)}
-            }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li .manage-text-lbl{
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .trm-name,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .trm-name{
               ${generateFilterCSS("meta3", "default", selectedDevice, styleDefault)}
             }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li .manage-text-lbl:hover{
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .trm-name:hover,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .trm-name:hover{
               ${generateFilterCSS("meta3", "hover", selectedDevice, styleDefault)}
+            }
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > i,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > svg,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > img.caf-inline-svg-icon,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .caf-term-swatch,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > i,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > svg,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > img.caf-inline-svg-icon,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .caf-term-swatch{
+              ${generateFilterCSS("meta2", "default", selectedDevice, styleDefault)}
+            }
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > i:hover,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > svg:hover,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > img.caf-inline-svg-icon:hover,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .caf-term-swatch:hover,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > i:hover,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > svg:hover,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > img.caf-inline-svg-icon:hover,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-terms-list-item > .caf-term-swatch:hover{
+              ${generateFilterCSS("meta2", "hover", selectedDevice, styleDefault)}
             }
             .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} .caf-filter-label-common.label-header{
               ${generateFilterLabelCSS("header", "default", selectedDevice, styleDefault)}
@@ -174232,30 +174610,34 @@ const ModuleAttributeSwatch = ({
            .caf-bl-post  .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} .caf-filter-label-common.label-header .caf-builder-filter-label-wrapper:hover{
             ${generateFilterLabelInnerCSS("header", "hover", selectedDevice, styleDefault)}
             }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected {
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected {
               ${generateFilterCSS("meta1", "selected", selectedDevice, styleDefault)}
             }
             
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected .manage-ic-lbl {
-              ${generateFilterCSS("meta2", "selected", selectedDevice, styleDefault)}
-            }
-            
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected .manage-text-lbl {
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > .trm-name,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > .trm-name {
               ${generateFilterCSS("meta3", "selected", selectedDevice, styleDefault)}
             }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected .manage-ic-lbl i,
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected .manage-ic-lbl svg,
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected .manage-ic-lbl .caf-term-swatch{
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > i,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > svg,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > img.caf-inline-svg-icon,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > .caf-term-swatch,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > i,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > svg,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > img.caf-inline-svg-icon,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > .caf-term-swatch{
               ${generateFilterCSS("icon", "selected", selectedDevice, styleDefault)}
             }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected .manage-text-lbl span.count-span{
-              ${generateFilterCSS("count", "selected", selectedDevice, styleDefault)}
-            }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} li.caf-term-show-more-item .caf-term-show-more-btn{
-              ${generateFilterCSS("showmore", "default", selectedDevice, styleDefault)}
-            }
-            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} li.caf-term-show-more-item .caf-term-show-more-btn:hover{
-              ${generateFilterCSS("showmore", "hover", selectedDevice, styleDefault)}
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > i,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > svg,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > img.caf-inline-svg-icon,
+            .caf-bl-post .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > .caf-term-swatch,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > i,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > svg,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > img.caf-inline-svg-icon,
+            .caf-builder-post-preview .caf-row-${rowindex} .caf-column-${columnindex} .caf-module-${moduleindex} ul.caf-attribute-swatch li.caf-selected > .caf-term-swatch{
+              ${generateFilterCSS("meta2", "selected", selectedDevice, styleDefault)}
             }
             `
     })]
@@ -175338,7 +175720,7 @@ function ModuleBadges({
         children: [renderBadgeValue(), renderSuffix()]
       }) : /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)(external_ReactJSXRuntime_.Fragment, {
         children: [renderBadgeValue(), renderSuffix()]
-      }) : isPostPrefixEnabled(settings) ? renderBadgeValue() : badgeValue, /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("style", {
+      }) : isPostPrefixEnabled(settings) ? renderBadgeValue() : renderBadgeValue(), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("style", {
         children: `
             ${moduleScope}{
               ${generateCSS(styleDefault, "default", selectedDevice, settings, postData)}
@@ -175983,6 +176365,10 @@ const {
 } = es_select["default"];
 const MainArea = props => {
   const dispatch = (0,react_redux.useDispatch)();
+  const mainBuilderDataRef = (0,external_React_.useRef)(props.mainBuilderData);
+  (0,external_React_.useEffect)(() => {
+    mainBuilderDataRef.current = props.mainBuilderData;
+  }, [props.mainBuilderData]);
   const resolvedPostExtraData = resolvePostExtraDataFromBuilderData(props.mainBuilderData);
   const builderPostPreviewData = (0,react_redux.useSelector)(selectors.selectBuilderPostPreviewData);
   const effectiveSinglePostData = builderPostPreviewData && typeof builderPostPreviewData === "object" && !Array.isArray(builderPostPreviewData) && Object.keys(builderPostPreviewData).length > 0 ? builderPostPreviewData : resolvedPostExtraData.single_post_data || {};
@@ -176233,7 +176619,7 @@ const MainArea = props => {
       if (!Array.isArray(freshItems) || typeof props.updatedBuilderData !== "function") {
         return;
       }
-      const nextBuilder = structuredClone(props.mainBuilderData || {});
+      const nextBuilder = structuredClone(mainBuilderDataRef.current || {});
       if (!nextBuilder.post_layout_data) {
         nextBuilder.post_layout_data = {};
       }
@@ -179767,18 +180153,35 @@ var wooFilterModuleTemplates = __webpack_require__("./src/MainComponents/FilterC
 
 
 
+const NewModulePopUp_MODULE_SECTION_LABEL_STYLE = {
+  flex: "0 0 100%",
+  width: "100%",
+  margin: 0,
+  padding: "2px 2px 0",
+  listStyle: "none",
+  fontSize: "13px",
+  fontWeight: 600,
+  color: "#4c5866",
+  cursor: "default",
+  background: "transparent",
+  height: "auto",
+  border: "none",
+  display: "block",
+  boxSizing: "border-box"
+};
+const isWooPickerModule = moduleKey => moduleKey === "woo_rating_filter";
 const NewModulePopUp_NewModulePopUp = props => {
   const initialModules = [{
     type: "module",
     title: "Checkbox Filter",
     style: {
-      ...FilterComponents_styleData.fModuleStyle,
+      ...styleData.fModuleStyle,
       container: {
-        ...FilterComponents_styleData.fModuleStyle.container,
+        ...styleData.fModuleStyle.container,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.container.desktop,
+          ...styleData.fModuleStyle.container.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.container.desktop.default,
+            ...styleData.fModuleStyle.container.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -179809,11 +180212,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       header: {
-        ...FilterComponents_styleData.fModuleStyle.header,
+        ...styleData.fModuleStyle.header,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.header.desktop,
+          ...styleData.fModuleStyle.header.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.header.desktop.default,
+            ...styleData.fModuleStyle.header.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -179840,11 +180243,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       input: {
-        ...FilterComponents_styleData.fModuleStyle.input,
+        ...styleData.fModuleStyle.input,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.input.desktop,
+          ...styleData.fModuleStyle.input.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.input.desktop.default,
+            ...styleData.fModuleStyle.input.desktop.default,
             width: "18px",
             height: "18px",
             position: "relative",
@@ -179879,7 +180282,7 @@ const NewModulePopUp_NewModulePopUp = props => {
             borderBottomRightRadius: "4px"
           },
           selected: {
-            ...FilterComponents_styleData.fModuleStyle.input.desktop.selected,
+            ...styleData.fModuleStyle.input.desktop.selected,
             backgroundColor: "rgb(0,0,0)",
             borderTopWidth: "2px",
             borderRightWidth: "2px",
@@ -179897,11 +180300,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta: {
-        ...FilterComponents_styleData.fModuleStyle.meta,
+        ...styleData.fModuleStyle.meta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta.desktop,
+          ...styleData.fModuleStyle.meta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta.desktop.default,
+            ...styleData.fModuleStyle.meta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -179930,11 +180333,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       mainmeta: {
-        ...FilterComponents_styleData.fModuleStyle.mainmeta,
+        ...styleData.fModuleStyle.mainmeta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop,
+          ...styleData.fModuleStyle.mainmeta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop.default,
+            ...styleData.fModuleStyle.mainmeta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -179962,11 +180365,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       selectmeta: {
-        ...FilterComponents_styleData.fModuleStyle.selectmeta,
+        ...styleData.fModuleStyle.selectmeta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop,
+          ...styleData.fModuleStyle.selectmeta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop.default,
+            ...styleData.fModuleStyle.selectmeta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -180009,11 +180412,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta1: {
-        ...FilterComponents_styleData.fModuleStyle.meta1,
+        ...styleData.fModuleStyle.meta1,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta1.desktop,
+          ...styleData.fModuleStyle.meta1.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta1.desktop.default,
+            ...styleData.fModuleStyle.meta1.desktop.default,
             width: "auto",
             height: "auto",
             position: "relative",
@@ -180057,21 +180460,21 @@ const NewModulePopUp_NewModulePopUp = props => {
             boxShadow: "0px 0px 0px 0px  #333333"
           },
           hover: {
-            ...FilterComponents_styleData.fModuleStyle.meta1.desktop.hover,
+            ...styleData.fModuleStyle.meta1.desktop.hover,
             backgroundColor: "rgb(246,247,251)"
           },
           selected: {
-            ...FilterComponents_styleData.fModuleStyle.meta1.desktop.selected,
+            ...styleData.fModuleStyle.meta1.desktop.selected,
             backgroundColor: "rgb(246,247,251)"
           }
         }
       },
       meta2: {
-        ...FilterComponents_styleData.fModuleStyle.meta2,
+        ...styleData.fModuleStyle.meta2,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta2.desktop,
+          ...styleData.fModuleStyle.meta2.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta2.desktop.default,
+            ...styleData.fModuleStyle.meta2.desktop.default,
             display: "flex",
             flexFlow: "row",
             alignItems: "center",
@@ -180082,11 +180485,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta3: {
-        ...FilterComponents_styleData.fModuleStyle.meta3,
+        ...styleData.fModuleStyle.meta3,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta3.desktop,
+          ...styleData.fModuleStyle.meta3.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta3.desktop.default,
+            ...styleData.fModuleStyle.meta3.desktop.default,
             display: "flex",
             flexFlow: "row",
             alignItems: "center",
@@ -180097,11 +180500,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta4: {
-        ...FilterComponents_styleData.fModuleStyle.meta4,
+        ...styleData.fModuleStyle.meta4,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta4.desktop,
+          ...styleData.fModuleStyle.meta4.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta4.desktop.default,
+            ...styleData.fModuleStyle.meta4.desktop.default,
             display: "flex",
             flexFlow: "row",
             alignItems: "flex-start",
@@ -180112,55 +180515,55 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       icon: {
-        ...FilterComponents_styleData.fModuleStyle.icon,
+        ...styleData.fModuleStyle.icon,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon.desktop,
+          ...styleData.fModuleStyle.icon.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon.desktop.default,
+            ...styleData.fModuleStyle.icon.desktop.default,
             fontSize: "18px",
             color: "rgb(0,0,0)"
           }
         }
       },
       icon2: {
-        ...FilterComponents_styleData.fModuleStyle.icon2,
+        ...styleData.fModuleStyle.icon2,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon2.desktop,
+          ...styleData.fModuleStyle.icon2.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon2.desktop.default,
+            ...styleData.fModuleStyle.icon2.desktop.default,
             fontSize: "16px",
             color: "#dd3333"
           }
         }
       },
       icon3: {
-        ...FilterComponents_styleData.fModuleStyle.icon3,
+        ...styleData.fModuleStyle.icon3,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon3.desktop,
+          ...styleData.fModuleStyle.icon3.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon3.desktop.default,
+            ...styleData.fModuleStyle.icon3.desktop.default,
             fontSize: "16px",
             color: "#dd3333"
           }
         }
       },
       selecticon: {
-        ...FilterComponents_styleData.fModuleStyle.selecticon,
+        ...styleData.fModuleStyle.selecticon,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.selecticon.desktop,
+          ...styleData.fModuleStyle.selecticon.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.selecticon.desktop.default,
+            ...styleData.fModuleStyle.selecticon.desktop.default,
             fontSize: "16px",
             color: "#dd3333"
           }
         }
       },
       count: {
-        ...FilterComponents_styleData.fModuleStyle.count,
+        ...styleData.fModuleStyle.count,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.count.desktop,
+          ...styleData.fModuleStyle.count.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.count.desktop.default,
+            ...styleData.fModuleStyle.count.desktop.default,
             width: "auto",
             height: "auto",
             paddingTop: "0px",
@@ -180181,7 +180584,7 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       showmore: {
-        ...FilterComponents_styleData.fModuleStyle.showmore
+        ...styleData.fModuleStyle.showmore
       }
     },
     key: "checkbox_filter",
@@ -180235,13 +180638,13 @@ const NewModulePopUp_NewModulePopUp = props => {
     type: "module",
     title: "Dropdown Filter",
     style: {
-      ...FilterComponents_styleData.fModuleStyle,
+      ...styleData.fModuleStyle,
       container: {
-        ...FilterComponents_styleData.fModuleStyle.container,
+        ...styleData.fModuleStyle.container,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.container.desktop,
+          ...styleData.fModuleStyle.container.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.container.desktop.default,
+            ...styleData.fModuleStyle.container.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -180272,11 +180675,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       header: {
-        ...FilterComponents_styleData.fModuleStyle.header,
+        ...styleData.fModuleStyle.header,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.header.desktop,
+          ...styleData.fModuleStyle.header.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.header.desktop.default,
+            ...styleData.fModuleStyle.header.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -180303,11 +180706,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       input: {
-        ...FilterComponents_styleData.fModuleStyle.input,
+        ...styleData.fModuleStyle.input,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.input.desktop,
+          ...styleData.fModuleStyle.input.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.input.desktop.default,
+            ...styleData.fModuleStyle.input.desktop.default,
             width: "18px",
             height: "18px",
             position: "relative",
@@ -180328,11 +180731,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta: {
-        ...FilterComponents_styleData.fModuleStyle.meta,
+        ...styleData.fModuleStyle.meta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta.desktop,
+          ...styleData.fModuleStyle.meta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta.desktop.default,
+            ...styleData.fModuleStyle.meta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -180361,11 +180764,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       mainmeta: {
-        ...FilterComponents_styleData.fModuleStyle.mainmeta,
+        ...styleData.fModuleStyle.mainmeta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop,
+          ...styleData.fModuleStyle.mainmeta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop.default,
+            ...styleData.fModuleStyle.mainmeta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -180410,11 +180813,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       selectmeta: {
-        ...FilterComponents_styleData.fModuleStyle.selectmeta,
+        ...styleData.fModuleStyle.selectmeta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop,
+          ...styleData.fModuleStyle.selectmeta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop.default,
+            ...styleData.fModuleStyle.selectmeta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -180458,11 +180861,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta1: {
-        ...FilterComponents_styleData.fModuleStyle.meta1,
+        ...styleData.fModuleStyle.meta1,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta1.desktop,
+          ...styleData.fModuleStyle.meta1.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta1.desktop.default,
+            ...styleData.fModuleStyle.meta1.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -180506,21 +180909,21 @@ const NewModulePopUp_NewModulePopUp = props => {
             boxShadow: "0px 0px 0px 0px  #333333"
           },
           hover: {
-            ...FilterComponents_styleData.fModuleStyle.meta1.desktop.hover,
+            ...styleData.fModuleStyle.meta1.desktop.hover,
             backgroundColor: "rgb(246,247,251)"
           },
           selected: {
-            ...FilterComponents_styleData.fModuleStyle.meta1.desktop.selected,
+            ...styleData.fModuleStyle.meta1.desktop.selected,
             backgroundColor: "rgb(246,247,251)"
           }
         }
       },
       meta2: {
-        ...FilterComponents_styleData.fModuleStyle.meta2,
+        ...styleData.fModuleStyle.meta2,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta2.desktop,
+          ...styleData.fModuleStyle.meta2.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta2.desktop.default,
+            ...styleData.fModuleStyle.meta2.desktop.default,
             display: "flex",
             flexFlow: "column",
             alignItems: "flex-start",
@@ -180531,11 +180934,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta3: {
-        ...FilterComponents_styleData.fModuleStyle.meta3,
+        ...styleData.fModuleStyle.meta3,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta3.desktop,
+          ...styleData.fModuleStyle.meta3.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta3.desktop.default,
+            ...styleData.fModuleStyle.meta3.desktop.default,
             display: "flex",
             flexFlow: "row",
             alignItems: "flex-start",
@@ -180546,11 +180949,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta4: {
-        ...FilterComponents_styleData.fModuleStyle.meta4,
+        ...styleData.fModuleStyle.meta4,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta4.desktop,
+          ...styleData.fModuleStyle.meta4.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta4.desktop.default,
+            ...styleData.fModuleStyle.meta4.desktop.default,
             display: "flex",
             flexFlow: "row",
             alignItems: "center",
@@ -180561,11 +180964,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       icon: {
-        ...FilterComponents_styleData.fModuleStyle.icon,
+        ...styleData.fModuleStyle.icon,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon.desktop,
+          ...styleData.fModuleStyle.icon.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon.desktop.default,
+            ...styleData.fModuleStyle.icon.desktop.default,
             fontSize: "16px",
             color: "rgb(6,6,6)",
             paddingBottom: "0px",
@@ -180576,33 +180979,33 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       icon2: {
-        ...FilterComponents_styleData.fModuleStyle.icon2,
+        ...styleData.fModuleStyle.icon2,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon2.desktop,
+          ...styleData.fModuleStyle.icon2.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon2.desktop.default,
+            ...styleData.fModuleStyle.icon2.desktop.default,
             fontSize: "16px",
             color: "#dd3333"
           }
         }
       },
       icon3: {
-        ...FilterComponents_styleData.fModuleStyle.icon3,
+        ...styleData.fModuleStyle.icon3,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon3.desktop,
+          ...styleData.fModuleStyle.icon3.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon3.desktop.default,
+            ...styleData.fModuleStyle.icon3.desktop.default,
             fontSize: "16px",
             color: "#dd3333"
           }
         }
       },
       selecticon: {
-        ...FilterComponents_styleData.fModuleStyle.selecticon,
+        ...styleData.fModuleStyle.selecticon,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.selecticon.desktop,
+          ...styleData.fModuleStyle.selecticon.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.selecticon.desktop.default,
+            ...styleData.fModuleStyle.selecticon.desktop.default,
             fontSize: "16px",
             color: "rgb(2,2,2)",
             paddingBottom: "0px",
@@ -180613,11 +181016,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       count: {
-        ...FilterComponents_styleData.fModuleStyle.count,
+        ...styleData.fModuleStyle.count,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.count.desktop,
+          ...styleData.fModuleStyle.count.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.count.desktop.default,
+            ...styleData.fModuleStyle.count.desktop.default,
             width: "auto",
             height: "auto",
             paddingTop: "0px",
@@ -180636,7 +181039,7 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       showmore: {
-        ...FilterComponents_styleData.fModuleStyle.showmore
+        ...styleData.fModuleStyle.showmore
       }
     },
     key: "dropdown_filter",
@@ -180708,13 +181111,13 @@ const NewModulePopUp_NewModulePopUp = props => {
     type: "module",
     title: "Reset",
     style: {
-      ...FilterComponents_styleData.fModuleStyle,
+      ...styleData.fModuleStyle,
       container: {
-        ...FilterComponents_styleData.fModuleStyle.container,
+        ...styleData.fModuleStyle.container,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.container.desktop,
+          ...styleData.fModuleStyle.container.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.container.desktop.default,
+            ...styleData.fModuleStyle.container.desktop.default,
             width: "auto",
             height: "auto",
             position: "relative",
@@ -180746,17 +181149,17 @@ const NewModulePopUp_NewModulePopUp = props => {
             left: "auto"
           },
           hover: {
-            ...FilterComponents_styleData.fModuleStyle.container.desktop.hover,
+            ...styleData.fModuleStyle.container.desktop.hover,
             backgroundColor: "rgba(3,3,3,0)"
           }
         }
       },
       header: {
-        ...FilterComponents_styleData.fModuleStyle.header,
+        ...styleData.fModuleStyle.header,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.header.desktop,
+          ...styleData.fModuleStyle.header.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.header.desktop.default,
+            ...styleData.fModuleStyle.header.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -180781,11 +181184,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       input: {
-        ...FilterComponents_styleData.fModuleStyle.input,
+        ...styleData.fModuleStyle.input,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.input.desktop,
+          ...styleData.fModuleStyle.input.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.input.desktop.default,
+            ...styleData.fModuleStyle.input.desktop.default,
             width: "18px",
             height: "18px",
             position: "relative",
@@ -180806,11 +181209,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta: {
-        ...FilterComponents_styleData.fModuleStyle.meta,
+        ...styleData.fModuleStyle.meta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta.desktop,
+          ...styleData.fModuleStyle.meta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta.desktop.default,
+            ...styleData.fModuleStyle.meta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -180838,11 +181241,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       mainmeta: {
-        ...FilterComponents_styleData.fModuleStyle.mainmeta,
+        ...styleData.fModuleStyle.mainmeta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop,
+          ...styleData.fModuleStyle.mainmeta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop.default,
+            ...styleData.fModuleStyle.mainmeta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -180870,11 +181273,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       selectmeta: {
-        ...FilterComponents_styleData.fModuleStyle.selectmeta,
+        ...styleData.fModuleStyle.selectmeta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop,
+          ...styleData.fModuleStyle.selectmeta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop.default,
+            ...styleData.fModuleStyle.selectmeta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -180917,11 +181320,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta1: {
-        ...FilterComponents_styleData.fModuleStyle.meta1,
+        ...styleData.fModuleStyle.meta1,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta1.desktop,
+          ...styleData.fModuleStyle.meta1.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta1.desktop.default,
+            ...styleData.fModuleStyle.meta1.desktop.default,
             width: "auto",
             height: "auto",
             position: "relative",
@@ -180964,11 +181367,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta2: {
-        ...FilterComponents_styleData.fModuleStyle.meta2,
+        ...styleData.fModuleStyle.meta2,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta2.desktop,
+          ...styleData.fModuleStyle.meta2.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta2.desktop.default,
+            ...styleData.fModuleStyle.meta2.desktop.default,
             display: "flex",
             flexFlow: "column",
             alignItems: "flex-start",
@@ -180979,11 +181382,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta3: {
-        ...FilterComponents_styleData.fModuleStyle.meta3,
+        ...styleData.fModuleStyle.meta3,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta3.desktop,
+          ...styleData.fModuleStyle.meta3.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta3.desktop.default,
+            ...styleData.fModuleStyle.meta3.desktop.default,
             display: "flex",
             flexFlow: "row",
             alignItems: "flex-start",
@@ -180994,11 +181397,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta4: {
-        ...FilterComponents_styleData.fModuleStyle.meta4,
+        ...styleData.fModuleStyle.meta4,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta4.desktop,
+          ...styleData.fModuleStyle.meta4.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta4.desktop.default,
+            ...styleData.fModuleStyle.meta4.desktop.default,
             display: "flex",
             flexFlow: "row",
             alignItems: "flex-start",
@@ -181009,11 +181412,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       icon: {
-        ...FilterComponents_styleData.fModuleStyle.icon,
+        ...styleData.fModuleStyle.icon,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon.desktop,
+          ...styleData.fModuleStyle.icon.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon.desktop.default,
+            ...styleData.fModuleStyle.icon.desktop.default,
             fontSize: "15px",
             color: "rgb(96,96,96)",
             width: "auto",
@@ -181023,44 +181426,44 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       icon2: {
-        ...FilterComponents_styleData.fModuleStyle.icon2,
+        ...styleData.fModuleStyle.icon2,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon2.desktop,
+          ...styleData.fModuleStyle.icon2.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon2.desktop.default,
+            ...styleData.fModuleStyle.icon2.desktop.default,
             fontSize: "16px",
             color: "#dd3333"
           }
         }
       },
       icon3: {
-        ...FilterComponents_styleData.fModuleStyle.icon3,
+        ...styleData.fModuleStyle.icon3,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon3.desktop,
+          ...styleData.fModuleStyle.icon3.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon3.desktop.default,
+            ...styleData.fModuleStyle.icon3.desktop.default,
             fontSize: "16px",
             color: "#dd3333"
           }
         }
       },
       selecticon: {
-        ...FilterComponents_styleData.fModuleStyle.selecticon,
+        ...styleData.fModuleStyle.selecticon,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.selecticon.desktop,
+          ...styleData.fModuleStyle.selecticon.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.selecticon.desktop.default,
+            ...styleData.fModuleStyle.selecticon.desktop.default,
             fontSize: "16px",
             color: "#dd3333"
           }
         }
       },
       count: {
-        ...FilterComponents_styleData.fModuleStyle.count,
+        ...styleData.fModuleStyle.count,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.count.desktop,
+          ...styleData.fModuleStyle.count.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.count.desktop.default,
+            ...styleData.fModuleStyle.count.desktop.default,
             width: "auto",
             height: "auto",
             paddingTop: "0px",
@@ -181104,13 +181507,13 @@ const NewModulePopUp_NewModulePopUp = props => {
     type: "module",
     title: "Custom Text",
     style: {
-      ...FilterComponents_styleData.fModuleStyle,
+      ...styleData.fModuleStyle,
       container: {
-        ...FilterComponents_styleData.fModuleStyle.container,
+        ...styleData.fModuleStyle.container,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.container.desktop,
+          ...styleData.fModuleStyle.container.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.container.desktop.default,
+            ...styleData.fModuleStyle.container.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -181140,19 +181543,19 @@ const NewModulePopUp_NewModulePopUp = props => {
           }
         },
         mobile: {
-          ...FilterComponents_styleData.fModuleStyle.container.mobile,
+          ...styleData.fModuleStyle.container.mobile,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.container.mobile.default,
+            ...styleData.fModuleStyle.container.mobile.default,
             fontSize: "12px"
           }
         }
       },
       icon: {
-        ...FilterComponents_styleData.fModuleStyle.icon,
+        ...styleData.fModuleStyle.icon,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon.desktop,
+          ...styleData.fModuleStyle.icon.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon.desktop.default,
+            ...styleData.fModuleStyle.icon.desktop.default,
             fontSize: "15px",
             color: "rgb(96,96,96)",
             width: "auto",
@@ -181184,13 +181587,13 @@ const NewModulePopUp_NewModulePopUp = props => {
     type: "module",
     title: "Range Slider",
     style: {
-      ...FilterComponents_styleData.fModuleStyle,
+      ...styleData.fModuleStyle,
       container: {
-        ...FilterComponents_styleData.fModuleStyle.container,
+        ...styleData.fModuleStyle.container,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.container.desktop,
+          ...styleData.fModuleStyle.container.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.container.desktop.default,
+            ...styleData.fModuleStyle.container.desktop.default,
             width: "auto",
             height: "auto",
             position: "relative",
@@ -181220,11 +181623,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       header: {
-        ...FilterComponents_styleData.fModuleStyle.header,
+        ...styleData.fModuleStyle.header,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.header.desktop,
+          ...styleData.fModuleStyle.header.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.header.desktop.default,
+            ...styleData.fModuleStyle.header.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -181250,11 +181653,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       input: {
-        ...FilterComponents_styleData.fModuleStyle.input,
+        ...styleData.fModuleStyle.input,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.input.desktop,
+          ...styleData.fModuleStyle.input.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.input.desktop.default,
+            ...styleData.fModuleStyle.input.desktop.default,
             width: "18px",
             height: "18px",
             position: "relative",
@@ -181275,11 +181678,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta: {
-        ...FilterComponents_styleData.fModuleStyle.meta,
+        ...styleData.fModuleStyle.meta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta.desktop,
+          ...styleData.fModuleStyle.meta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta.desktop.default,
+            ...styleData.fModuleStyle.meta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -181299,22 +181702,22 @@ const NewModulePopUp_NewModulePopUp = props => {
             marginLeft: "0"
           },
           hover: {
-            ...FilterComponents_styleData.fModuleStyle.meta.desktop.hover
+            ...styleData.fModuleStyle.meta.desktop.hover
           }
         },
         tablet: {
-          ...FilterComponents_styleData.fModuleStyle.meta.tablet
+          ...styleData.fModuleStyle.meta.tablet
         },
         mobile: {
-          ...FilterComponents_styleData.fModuleStyle.meta.mobile
+          ...styleData.fModuleStyle.meta.mobile
         }
       },
       mainmeta: {
-        ...FilterComponents_styleData.fModuleStyle.mainmeta,
+        ...styleData.fModuleStyle.mainmeta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop,
+          ...styleData.fModuleStyle.mainmeta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop.default,
+            ...styleData.fModuleStyle.mainmeta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -181342,11 +181745,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       selectmeta: {
-        ...FilterComponents_styleData.fModuleStyle.selectmeta,
+        ...styleData.fModuleStyle.selectmeta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop,
+          ...styleData.fModuleStyle.selectmeta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop.default,
+            ...styleData.fModuleStyle.selectmeta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -181389,29 +181792,29 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta1: {
-        ...FilterComponents_styleData.fModuleStyle.meta1,
+        ...styleData.fModuleStyle.meta1,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta1.desktop,
+          ...styleData.fModuleStyle.meta1.desktop,
           default: {
             fontFamily: "Open Sans",
             fontSize: "16px",
             color: "rgb(96,96,96)"
           },
           hover: {
-            ...FilterComponents_styleData.fModuleStyle.meta1.desktop.hover
+            ...styleData.fModuleStyle.meta1.desktop.hover
           }
         },
         tablet: {
-          ...FilterComponents_styleData.fModuleStyle.meta1.tablet
+          ...styleData.fModuleStyle.meta1.tablet
         },
         mobile: {
-          ...FilterComponents_styleData.fModuleStyle.meta1.mobile
+          ...styleData.fModuleStyle.meta1.mobile
         }
       },
       meta2: {
-        ...FilterComponents_styleData.fModuleStyle.meta2,
+        ...styleData.fModuleStyle.meta2,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta2.desktop,
+          ...styleData.fModuleStyle.meta2.desktop,
           default: {
             display: "block",
             flexFlow: "unset",
@@ -181435,24 +181838,24 @@ const NewModulePopUp_NewModulePopUp = props => {
             marginLeft: "6px"
           },
           hover: {
-            ...FilterComponents_styleData.fModuleStyle.meta2.desktop.hover
+            ...styleData.fModuleStyle.meta2.desktop.hover
           },
           active: {
-            ...FilterComponents_styleData.fModuleStyle.meta2.desktop.active,
+            ...styleData.fModuleStyle.meta2.desktop.active,
             backgroundColor: "rgb(0,0,0)"
           }
         },
         tablet: {
-          ...FilterComponents_styleData.fModuleStyle.meta2.tablet
+          ...styleData.fModuleStyle.meta2.tablet
         },
         mobile: {
-          ...FilterComponents_styleData.fModuleStyle.meta2.mobile
+          ...styleData.fModuleStyle.meta2.mobile
         }
       },
       meta3: {
-        ...FilterComponents_styleData.fModuleStyle.meta3,
+        ...styleData.fModuleStyle.meta3,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta3.desktop,
+          ...styleData.fModuleStyle.meta3.desktop,
           default: {
             display: "block",
             flexFlow: "unset",
@@ -181492,7 +181895,7 @@ const NewModulePopUp_NewModulePopUp = props => {
             boxShadow: "0px 0px 0px 0px #333333"
           },
           hover: {
-            ...FilterComponents_styleData.fModuleStyle.meta3.desktop.hover,
+            ...styleData.fModuleStyle.meta3.desktop.hover,
             borderTopWidth: "3px",
             borderRightWidth: "3px",
             borderBottomWidth: "3px",
@@ -181508,18 +181911,18 @@ const NewModulePopUp_NewModulePopUp = props => {
           }
         },
         tablet: {
-          ...FilterComponents_styleData.fModuleStyle.meta3.tablet
+          ...styleData.fModuleStyle.meta3.tablet
         },
         mobile: {
-          ...FilterComponents_styleData.fModuleStyle.meta3.mobile
+          ...styleData.fModuleStyle.meta3.mobile
         }
       },
       meta4: {
-        ...FilterComponents_styleData.fModuleStyle.meta4,
+        ...styleData.fModuleStyle.meta4,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta4.desktop,
+          ...styleData.fModuleStyle.meta4.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta4.desktop.default,
+            ...styleData.fModuleStyle.meta4.desktop.default,
             display: "flex",
             flexFlow: "row",
             alignItems: "flex-start",
@@ -181530,55 +181933,55 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       icon: {
-        ...FilterComponents_styleData.fModuleStyle.icon,
+        ...styleData.fModuleStyle.icon,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon.desktop,
+          ...styleData.fModuleStyle.icon.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon.desktop.default,
+            ...styleData.fModuleStyle.icon.desktop.default,
             fontSize: "16px",
             color: "#dd3333"
           }
         }
       },
       icon2: {
-        ...FilterComponents_styleData.fModuleStyle.icon2,
+        ...styleData.fModuleStyle.icon2,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon2.desktop,
+          ...styleData.fModuleStyle.icon2.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon2.desktop.default,
+            ...styleData.fModuleStyle.icon2.desktop.default,
             fontSize: "16px",
             color: "#dd3333"
           }
         }
       },
       icon3: {
-        ...FilterComponents_styleData.fModuleStyle.icon3,
+        ...styleData.fModuleStyle.icon3,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon3.desktop,
+          ...styleData.fModuleStyle.icon3.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon3.desktop.default,
+            ...styleData.fModuleStyle.icon3.desktop.default,
             fontSize: "16px",
             color: "#dd3333"
           }
         }
       },
       selecticon: {
-        ...FilterComponents_styleData.fModuleStyle.selecticon,
+        ...styleData.fModuleStyle.selecticon,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.selecticon.desktop,
+          ...styleData.fModuleStyle.selecticon.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.selecticon.desktop.default,
+            ...styleData.fModuleStyle.selecticon.desktop.default,
             fontSize: "16px",
             color: "#dd3333"
           }
         }
       },
       count: {
-        ...FilterComponents_styleData.fModuleStyle.count,
+        ...styleData.fModuleStyle.count,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.count.desktop,
+          ...styleData.fModuleStyle.count.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.count.desktop.default,
+            ...styleData.fModuleStyle.count.desktop.default,
             width: "auto",
             height: "auto",
             paddingTop: "0px",
@@ -181649,13 +182052,13 @@ const NewModulePopUp_NewModulePopUp = props => {
     type: "module",
     title: "Search",
     style: {
-      ...FilterComponents_styleData.fModuleStyle,
+      ...styleData.fModuleStyle,
       container: {
-        ...FilterComponents_styleData.fModuleStyle.container,
+        ...styleData.fModuleStyle.container,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.container.desktop,
+          ...styleData.fModuleStyle.container.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.container.desktop.default,
+            ...styleData.fModuleStyle.container.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -181681,11 +182084,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       header: {
-        ...FilterComponents_styleData.fModuleStyle.header,
+        ...styleData.fModuleStyle.header,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.header.desktop,
+          ...styleData.fModuleStyle.header.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.header.desktop.default,
+            ...styleData.fModuleStyle.header.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -181712,11 +182115,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       input: {
-        ...FilterComponents_styleData.fModuleStyle.input,
+        ...styleData.fModuleStyle.input,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.input.desktop,
+          ...styleData.fModuleStyle.input.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.input.desktop.default,
+            ...styleData.fModuleStyle.input.desktop.default,
             width: "100%",
             height: "50px",
             position: "relative",
@@ -181752,7 +182155,7 @@ const NewModulePopUp_NewModulePopUp = props => {
             gap: "5px"
           },
           selected: {
-            ...FilterComponents_styleData.fModuleStyle.input.desktop.selected,
+            ...styleData.fModuleStyle.input.desktop.selected,
             backgroundColor: "rgb(246,247,251)",
             borderTopWidth: "2px",
             borderRightWidth: "2px",
@@ -181773,11 +182176,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta: {
-        ...FilterComponents_styleData.fModuleStyle.meta,
+        ...styleData.fModuleStyle.meta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta.desktop,
+          ...styleData.fModuleStyle.meta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta.desktop.default,
+            ...styleData.fModuleStyle.meta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -181821,11 +182224,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       mainmeta: {
-        ...FilterComponents_styleData.fModuleStyle.mainmeta,
+        ...styleData.fModuleStyle.mainmeta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop,
+          ...styleData.fModuleStyle.mainmeta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop.default,
+            ...styleData.fModuleStyle.mainmeta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -181853,11 +182256,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       selectmeta: {
-        ...FilterComponents_styleData.fModuleStyle.selectmeta,
+        ...styleData.fModuleStyle.selectmeta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop,
+          ...styleData.fModuleStyle.selectmeta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop.default,
+            ...styleData.fModuleStyle.selectmeta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -181900,11 +182303,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta1: {
-        ...FilterComponents_styleData.fModuleStyle.meta1,
+        ...styleData.fModuleStyle.meta1,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta1.desktop,
+          ...styleData.fModuleStyle.meta1.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta1.desktop.default,
+            ...styleData.fModuleStyle.meta1.desktop.default,
             width: "auto",
             height: "auto",
             position: "relative",
@@ -181947,11 +182350,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta2: {
-        ...FilterComponents_styleData.fModuleStyle.meta2,
+        ...styleData.fModuleStyle.meta2,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta2.desktop,
+          ...styleData.fModuleStyle.meta2.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta2.desktop.default,
+            ...styleData.fModuleStyle.meta2.desktop.default,
             display: "flex",
             flexFlow: "row",
             alignItems: "center",
@@ -181994,11 +182397,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta3: {
-        ...FilterComponents_styleData.fModuleStyle.meta3,
+        ...styleData.fModuleStyle.meta3,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta3.desktop,
+          ...styleData.fModuleStyle.meta3.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta3.desktop.default,
+            ...styleData.fModuleStyle.meta3.desktop.default,
             display: "flex",
             flexFlow: "row",
             alignItems: "flex-start",
@@ -182009,11 +182412,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta4: {
-        ...FilterComponents_styleData.fModuleStyle.meta4,
+        ...styleData.fModuleStyle.meta4,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta4.desktop,
+          ...styleData.fModuleStyle.meta4.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta4.desktop.default,
+            ...styleData.fModuleStyle.meta4.desktop.default,
             display: "flex",
             flexFlow: "row",
             alignItems: "flex-start",
@@ -182024,11 +182427,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       icon: {
-        ...FilterComponents_styleData.fModuleStyle.icon,
+        ...styleData.fModuleStyle.icon,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon.desktop,
+          ...styleData.fModuleStyle.icon.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon.desktop.default,
+            ...styleData.fModuleStyle.icon.desktop.default,
             fontSize: "18px",
             color: "rgb(96,96,96)",
             paddingBottom: "0px",
@@ -182042,11 +182445,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       icon2: {
-        ...FilterComponents_styleData.fModuleStyle.icon2,
+        ...styleData.fModuleStyle.icon2,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon2.desktop,
+          ...styleData.fModuleStyle.icon2.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon2.desktop.default,
+            ...styleData.fModuleStyle.icon2.desktop.default,
             fontSize: "18px",
             color: "rgb(20,134,0)",
             paddingBottom: "0px",
@@ -182057,11 +182460,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       icon3: {
-        ...FilterComponents_styleData.fModuleStyle.icon3,
+        ...styleData.fModuleStyle.icon3,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon3.desktop,
+          ...styleData.fModuleStyle.icon3.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon3.desktop.default,
+            ...styleData.fModuleStyle.icon3.desktop.default,
             fontSize: "18px",
             color: "rgb(96,96,96)",
             paddingTop: "0px",
@@ -182072,22 +182475,22 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       selecticon: {
-        ...FilterComponents_styleData.fModuleStyle.selecticon,
+        ...styleData.fModuleStyle.selecticon,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.selecticon.desktop,
+          ...styleData.fModuleStyle.selecticon.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.selecticon.desktop.default,
+            ...styleData.fModuleStyle.selecticon.desktop.default,
             fontSize: "16px",
             color: "#dd3333"
           }
         }
       },
       count: {
-        ...FilterComponents_styleData.fModuleStyle.count,
+        ...styleData.fModuleStyle.count,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.count.desktop,
+          ...styleData.fModuleStyle.count.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.count.desktop.default,
+            ...styleData.fModuleStyle.count.desktop.default,
             width: "auto",
             height: "auto",
             paddingTop: "0px",
@@ -182176,13 +182579,13 @@ const NewModulePopUp_NewModulePopUp = props => {
     type: "module",
     title: "Star rating",
     style: {
-      ...FilterComponents_styleData.fModuleStyle,
+      ...styleData.fModuleStyle,
       container: {
-        ...FilterComponents_styleData.fModuleStyle.container,
+        ...styleData.fModuleStyle.container,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.container.desktop,
+          ...styleData.fModuleStyle.container.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.container.desktop.default,
+            ...styleData.fModuleStyle.container.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -182213,11 +182616,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       header: {
-        ...FilterComponents_styleData.fModuleStyle.header,
+        ...styleData.fModuleStyle.header,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.header.desktop,
+          ...styleData.fModuleStyle.header.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.header.desktop.default,
+            ...styleData.fModuleStyle.header.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -182265,11 +182668,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta: {
-        ...FilterComponents_styleData.fModuleStyle.meta,
+        ...styleData.fModuleStyle.meta,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta.desktop,
+          ...styleData.fModuleStyle.meta.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta.desktop.default,
+            ...styleData.fModuleStyle.meta.desktop.default,
             width: "100%",
             height: "auto",
             position: "relative",
@@ -182354,11 +182757,11 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       meta2: {
-        ...FilterComponents_styleData.fModuleStyle.meta2,
+        ...styleData.fModuleStyle.meta2,
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.meta2.desktop,
+          ...styleData.fModuleStyle.meta2.desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.meta2.desktop.default,
+            ...styleData.fModuleStyle.meta2.desktop.default,
             display: "flex",
             flexFlow: "row",
             alignItems: "center",
@@ -182386,13 +182789,13 @@ const NewModulePopUp_NewModulePopUp = props => {
         }
       },
       icon: {
-        ...FilterComponents_styleData.fModuleStyle.icon,
+        ...styleData.fModuleStyle.icon,
         ...(0,wooFilterModuleTemplates.getWooRatingIconStyleDefaults)(),
         desktop: {
-          ...FilterComponents_styleData.fModuleStyle.icon.desktop,
+          ...styleData.fModuleStyle.icon.desktop,
           ...(0,wooFilterModuleTemplates.getWooRatingIconStyleDefaults)().desktop,
           default: {
-            ...FilterComponents_styleData.fModuleStyle.icon.desktop.default,
+            ...styleData.fModuleStyle.icon.desktop.default,
             ...(0,wooFilterModuleTemplates.getWooRatingIconStyleDefaults)().desktop.default
           },
           hover: {
@@ -182449,6 +182852,49 @@ const NewModulePopUp_NewModulePopUp = props => {
   const selectModuleImage = key => {
     return titleImgTitle;
   };
+  const filterModules = modules.filter(item => !isWooPickerModule(item.key));
+  const wooModules = modules.filter(item => isWooPickerModule(item.key));
+  const renderModuleItem = item => {
+    const moduleLocked = (0,capabilities.isModuleLocked)(item.key, "filter");
+    const moduleContent = /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)(external_ReactJSXRuntime_.Fragment, {
+      children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(components_FilterModulePickerIcon, {
+        moduleKey: item.key
+      }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
+        children: [item.title, moduleLocked ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
+          className: "caf-builder-tier-locked-wrap__badge caf-filter-module-picker-pro-badge",
+          children: "Pro"
+        }) : null]
+      })]
+    });
+    return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("li", {
+      className: `caf-filter-select-module-pop-up${moduleLocked ? " caf-builder-tier-locked-module-picker-item" : ""}`,
+      onClick: () => {
+        if (!moduleLocked) {
+          props.onSelectModule(item);
+        }
+      },
+      children: moduleLocked ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(es_tooltip["default"], {
+        classNames: {
+          root: "caf-builder-tooltip caf-builder-tier-locked-tooltip"
+        },
+        placement: "topLeft",
+        title: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("span", {
+          className: "caf-builder-tier-locked-section__tooltip-text",
+          children: [item.title, " is available in Category Ajax Filter Pro.", " ", /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("a", {
+            href: (0,capabilities.getUpgradeUrl)(),
+            target: "_blank",
+            rel: "noopener noreferrer",
+            className: "caf-builder-tier-locked-section__upgrade-link",
+            children: "Upgrade to Pro"
+          })]
+        }),
+        children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
+          className: "caf-builder-tier-locked-module-picker-item__inner",
+          children: moduleContent
+        })
+      }) : moduleContent
+    }, item.key);
+  };
   return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
     className: "setting-popup-overlay-wrapper new-module",
     children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
@@ -182472,49 +182918,17 @@ const NewModulePopUp_NewModulePopUp = props => {
             value: searchValue,
             onChange: handleModuleSearch
           })
-        }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("ul", {
+        }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("ul", {
           className: "new-modules-items",
-          children: modules.map(item => {
-            const moduleLocked = (0,capabilities.isModuleLocked)(item.key, "filter");
-            const moduleContent = /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)(external_ReactJSXRuntime_.Fragment, {
-              children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(components_FilterModulePickerIcon, {
-                moduleKey: item.key
-              }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
-                children: [item.title, moduleLocked ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
-                  className: "caf-builder-tier-locked-wrap__badge caf-filter-module-picker-pro-badge",
-                  children: "Pro"
-                }) : null]
-              })]
-            });
-            return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("li", {
-              className: `caf-filter-select-module-pop-up${moduleLocked ? " caf-builder-tier-locked-module-picker-item" : ""}`,
-              onClick: () => {
-                if (!moduleLocked) {
-                  props.onSelectModule(item);
-                }
+          children: [filterModules.map(renderModuleItem), wooModules.length > 0 ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)(external_ReactJSXRuntime_.Fragment, {
+            children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("li", {
+              style: {
+                ...NewModulePopUp_MODULE_SECTION_LABEL_STYLE,
+                paddingTop: filterModules.length > 0 ? "10px" : "2px"
               },
-              children: moduleLocked ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(es_tooltip["default"], {
-                classNames: {
-                  root: "caf-builder-tooltip caf-builder-tier-locked-tooltip"
-                },
-                placement: "topLeft",
-                title: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("span", {
-                  className: "caf-builder-tier-locked-section__tooltip-text",
-                  children: [item.title, " is available in Category Ajax Filter Pro.", " ", /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("a", {
-                    href: (0,capabilities.getUpgradeUrl)(),
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                    className: "caf-builder-tier-locked-section__upgrade-link",
-                    children: "Upgrade to Pro"
-                  })]
-                }),
-                children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
-                  className: "caf-builder-tier-locked-module-picker-item__inner",
-                  children: moduleContent
-                })
-              }) : moduleContent
-            }, item.key);
-          })
+              children: "Woo Modules"
+            }), wooModules.map(renderModuleItem)]
+          }) : null]
         })]
       })]
     })
@@ -182756,7 +183170,7 @@ const newColumn_newColumnData = {
   type: 'column',
   data: [],
   style: {
-    ...FilterComponents_styleData.fColumnStyle
+    ...styleData.fColumnStyle
   },
   settings: {
     collapse_status: "false",
@@ -182775,7 +183189,7 @@ const newColumn_newColumnData = {
 const newRow_newRowData = {
   type: "row",
   style: {
-    ...FilterComponents_styleData.fRowStyle
+    ...styleData.fRowStyle
   },
   settings: {
     collapse_status: "false",
@@ -182802,7 +183216,7 @@ const newRow_newRowData = {
     },
     data: [],
     style: {
-      ...FilterComponents_styleData.fColumnStyle
+      ...styleData.fColumnStyle
     }
   }
   //End Column
@@ -183366,7 +183780,13 @@ const handlePreviewSelectedTagClose = (event, scopeDocument, selectedTagData) =>
     const moduleSelector = tagRowId && tagColumnId && tagModuleId ? `.caf-bl-filter .caf-row-${tagRowId} .caf-column-${tagColumnId} .caf-module-${tagModuleId}` : ".caf-bl-filter .caf_module_checkbox_filter";
     const moduleRoot = scopeDocument.querySelector(moduleSelector);
     if (moduleRoot) {
-      const selectedTerm = Array.from(moduleRoot.querySelectorAll(".caf-terms-list-item.caf-selected")).find(item => normalizeText(item.querySelector(".trm-name")?.textContent) === normalizeText(tagValue));
+      const tagTermId = String(tagItem.getAttribute("data-value") || "").trim();
+      const selectedTerm = Array.from(moduleRoot.querySelectorAll(".caf-terms-list-item.caf-selected")).find(item => {
+        if (tagTermId && /^\d+$/.test(tagTermId)) {
+          return String(item.getAttribute("term-id") || item.getAttribute("term-value") || "") === tagTermId;
+        }
+        return normalizeText(resolveListItemTermLabel(item)) === normalizeText(tagValue);
+      });
       if (selectedTerm) {
         selectedTerm.click();
       }
@@ -184377,6 +184797,33 @@ const SEARCH_TAG_SOURCE = "search";
 const WOO_RATING_TAG_SOURCE = "woo_rating";
 const escapeTagAttr = value => String(value ?? "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
+/**
+ * Resolve a filter term label for selected-tag chips — never include facet counts.
+ * Color/icon-only terms often hide .trm-name; fall back to tooltip/data attrs.
+ */
+const resolveListItemTermLabel = listItem => {
+  if (!listItem) {
+    return "";
+  }
+  const nameEl = listItem.querySelector(".trm-name, .caf-term-label");
+  const nameText = nameEl?.textContent?.trim();
+  if (nameText) {
+    return nameText;
+  }
+  const tooltipEl = listItem.querySelector(".caf-term-tooltip");
+  const tooltipText = tooltipEl?.textContent?.trim();
+  if (tooltipText) {
+    return tooltipText;
+  }
+  const attrLabel = String(listItem.getAttribute("data-caf-term-label") || listItem.getAttribute("data-caf-tooltip") || listItem.getAttribute("title") || "").trim();
+  if (attrLabel) {
+    return attrLabel;
+  }
+  const clone = listItem.cloneNode(true);
+  clone.querySelectorAll(".count-span, .caf-term-tooltip, input, .caf-checkbox-box, .caf-term-swatch, svg, img, i").forEach(el => el.remove());
+  return String(clone.textContent || "").trim();
+};
+
 /** Find an index class (e.g. caf-row-2) on element or ancestors. */
 const findIndexFromSelfOrAncestors = (startEl, classPrefix) => {
   let node = startEl;
@@ -184411,7 +184858,7 @@ const pushCheckboxTagEntry = (entries, seen, listItem, moduleRoot) => {
   if (!listItem) {
     return;
   }
-  const labelText = listItem.querySelector(".trm-name")?.textContent?.trim() || String(listItem.textContent || "").trim();
+  const labelText = resolveListItemTermLabel(listItem);
   if (!labelText) {
     return;
   }
@@ -184421,7 +184868,8 @@ const pushCheckboxTagEntry = (entries, seen, listItem, moduleRoot) => {
     columnId,
     moduleId
   } = extractModuleIds(resolvedModuleRoot);
-  const dedupeKey = `${rowId}-${columnId}-${moduleId}-${labelText}`;
+  const termValue = String(listItem.getAttribute("term-id") || listItem.getAttribute("term-value") || "").trim();
+  const dedupeKey = `${rowId}-${columnId}-${moduleId}-${termValue || labelText}`;
   if (seen.has(dedupeKey)) {
     return;
   }
@@ -184429,6 +184877,7 @@ const pushCheckboxTagEntry = (entries, seen, listItem, moduleRoot) => {
   entries.push({
     type: CHECKBOX_TAG_SOURCE,
     label: labelText,
+    value: termValue || labelText,
     rowId,
     columnId,
     moduleId
@@ -184455,7 +184904,7 @@ const readDropdownTermLabel = rootEl => {
   if (!rootEl) {
     return "";
   }
-  return rootEl.querySelector(".trm-name")?.textContent?.trim() || rootEl.querySelector(".cf-value-name")?.textContent?.trim() || "";
+  return resolveListItemTermLabel(rootEl);
 };
 
 /** Collect active dropdown tags across all dropdown modules (one tag per module). */
@@ -185386,7 +185835,51 @@ const CustomFieldData_hasMultipleSortableCustomFieldValues = () => false;
 const CustomFieldData_customFieldDataToTaxonomyReorderShape = () => [];
 const CustomFieldData_applyTaxonomyReorderToCustomFieldData = customFieldData => customFieldData;
 /* harmony default export */ const CustomFieldData = (CustomFieldData_NullModule);
+// EXTERNAL MODULE: ./src/MainComponents/FilterComponents/components/modules-output/shared/termShowMoreUtils.js
+var termShowMoreUtils = __webpack_require__("./src/MainComponents/FilterComponents/components/modules-output/shared/termShowMoreUtils.js");
+;// ./src/MainComponents/FilterComponents/components/modules-output/shared/TermShowMoreButton.js
+
+
+
+function TermShowMoreButton({
+  settings,
+  isExpanded,
+  overflowCount = 0,
+  onToggle
+}) {
+  const config = (0,termShowMoreUtils.resolveTermShowMoreSettings)(settings);
+  if (!config.enabled || config.limit < 1 || overflowCount <= 0) {
+    return null;
+  }
+  const {
+    label,
+    countText
+  } = (0,termShowMoreUtils.buildShowMoreButtonParts)(settings, isExpanded, isExpanded ? 0 : overflowCount);
+  return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("li", {
+    className: "caf-term-show-more-item",
+    "aria-hidden": "false",
+    children: /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("button", {
+      type: "button",
+      className: "caf-term-show-more-btn",
+      "aria-expanded": isExpanded ? "true" : "false",
+      onClick: event => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (typeof onToggle === "function") {
+          onToggle();
+        }
+      },
+      children: [label, countText ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
+        children: countText
+      }) : null]
+    })
+  });
+}
+// EXTERNAL MODULE: ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/termCountUtils.js
+var termCountUtils = __webpack_require__("./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/termCountUtils.js");
 ;// ./src/MainComponents/FilterComponents/components/modules-output/CheckboxFilter.js
+
+
 
 
 
@@ -185517,12 +186010,13 @@ const CheckboxFilter_CheckboxTermPreviewItem = ({
     isSelected
   });
   return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("li", {
-    className: `caf-terms-list-item ${itemLayoutClasses} ${isSelected ? "caf-selected" : ""} ${showCheckboxEnabled ? "caf-show-checkbox" : "caf-hidden-checkbox"} ${showIconEnabled ? "caf-show-icon" : "caf-hidden-icon"} ${showCountEnabled ? "caf-show-count" : "caf-hidden-count"} ${hideTermLabel ? "caf-hide-term-label" : ""} ${showTermTooltipClass ? "caf-has-term-tooltip" : ""} ${isVirtualGroup ? "caf-woo-virtual-item" : ""} ${unavailable ? "caf-facet-term-unavailable" : ""}${showMoreClassName}`,
+    className: joinClassNames("caf-terms-list-item", itemLayoutClasses, isSelected && "caf-selected", showCheckboxEnabled ? "caf-show-checkbox" : "caf-hidden-checkbox", showIconEnabled ? "caf-show-icon" : "caf-hidden-icon", showCountEnabled ? "caf-show-count" : "caf-hidden-count", hideTermLabel && "caf-hide-term-label", showTermTooltipClass && "caf-has-term-tooltip", isVirtualGroup && "caf-woo-virtual-item", unavailable && "caf-facet-term-unavailable", showMoreClassName),
     taxonomy: groupKey,
     "data-key": itemDataKey,
     "term-id": item.key,
     "term-value": item.key,
     "term-slug": item?.slug || undefined,
+    "data-caf-term-label": termLabel || undefined,
     "aria-disabled": unavailable ? "true" : undefined,
     ...(isVirtualGroup ? {
       "data-woo-virtual": "1",
@@ -185551,7 +186045,7 @@ const CheckboxFilter_CheckboxTermPreviewItem = ({
     }), settings?.show_checkbox === 'true' && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
       className: "caf-checkbox-box"
     }), /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
-      className: `manage-ic-lbl caf-layout-${iconText} ${iconTextVeritcal}`,
+      className: joinClassNames("manage-ic-lbl", `caf-layout-${iconText}`, iconTextVeritcal),
       children: [(0,filterModuleTier.resolveFilterShowIconSetting)(settings?.show_icon, settings) === 'true' && (0,termVisualUtils.isTermVisualColor)(settings) && (0,termVisualUtils.getTermSwatchColor)(item.icons) && (!item.icons?.position || item.icons?.position === "before") && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(CheckboxFilter_TermSwatch, {
         color: (0,termVisualUtils.getTermSwatchColor)(item.icons),
         className: "filter-before-icon"
@@ -185561,7 +186055,7 @@ const CheckboxFilter_CheckboxTermPreviewItem = ({
         src: item.icons?.icon?.url,
         className: "caf-inline-svg-icon"
       }), (!hideTermLabel || showCountEnabled) && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
-        className: `manage-text-lbl caf-layout-${textCount} ${textCountVeritcal}`,
+        className: joinClassNames(`manage-text-lbl caf-layout-${textCount}`, textCountVeritcal),
         children: [!hideTermLabel && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
           className: "trm-name",
           children: (0,esm["default"])(`${item?.value}`)
@@ -185605,6 +186099,7 @@ const CheckboxFilter = ({
     };
   }, [settings, mainBuilderData]);
   const moduleRootRef = (0,external_React_.useRef)(null);
+  const countBackfillRef = (0,external_React_.useRef)(false);
   const applyFilterLayoutChange = (0,external_React_.useCallback)(freshItems => (0,filterSettingsSnapshot.dispatchFilterLayoutChange)({
     freshItems,
     mainBuilderData,
@@ -185723,6 +186218,60 @@ const CheckboxFilter = ({
       cancelled = true;
     };
   }, [JSON.stringify(settings.taxonomy_data), outputSettings.data_source, outputSettings.custom_field_data, selectType]);
+
+  // Heal missing term counts when show_count is on (new modules / terms without baked count).
+  (0,external_React_.useEffect)(() => {
+    if (String(outputSettings?.show_count) !== "true") {
+      return;
+    }
+    if (outputSettings?.data_source && outputSettings.data_source !== "taxonomy") {
+      return;
+    }
+    const groups = outputSettings?.taxonomy_data;
+    if (!Array.isArray(groups) || groups.length === 0) {
+      return;
+    }
+    const needsBackfill = groups.some(group => (group?.term_data || []).some(term => (0,termCountUtils.termCountNeedsBackfill)(term?.count)));
+    if (!needsBackfill || countBackfillRef.current) {
+      return;
+    }
+    const postType = (0,useResolvedMainBuilderData.getResolvedFilterPostType)(mainBuilderData, outputSettings?.post_type) || outputSettings?.post_type || "post";
+    let cancelled = false;
+    countBackfillRef.current = true;
+    (async () => {
+      try {
+        const res = await client["default"].get(endpoints.apiEndpoints.getTaxonomyRecursiveData(postType));
+        if (cancelled || res?.data?.status !== "success") {
+          countBackfillRef.current = false;
+          return;
+        }
+        const {
+          next,
+          changed
+        } = (0,termCountUtils.backfillTaxonomyDataCounts)(groups, (0,termCountUtils.buildTermCountMapFromTaxonomyList)(res.data.taxonomy_list));
+        if (!changed || cancelled) {
+          return;
+        }
+        (0,filterSettingsSnapshot.commitFilterModuleSettingsPatch)({
+          data: initialdata,
+          rowindex,
+          columnindex,
+          moduleindex,
+          resolvedPostType: postType,
+          onSettingChange: applyFilterLayoutChange,
+          patch: settingsRef => {
+            settingsRef.taxonomy_data = next;
+          }
+        });
+      } catch (error) {
+        countBackfillRef.current = false;
+        console.warn(error);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [outputSettings?.show_count, outputSettings?.data_source, outputSettings?.taxonomy_data, outputSettings?.post_type, mainBuilderData, initialdata, rowindex, columnindex, moduleindex, applyFilterLayoutChange]);
   (0,external_React_.useEffect)(() => {
     if (outputSettings?.enable_toggle) {
       setEnableToggle(outputSettings.enable_toggle);
@@ -185931,7 +186480,7 @@ const CheckboxFilter = ({
       moduleindex: moduleindex,
       module: module
     }),
-    className: `caf-builder-module-main caf-module-filter caf_module_${module.key} caf-module-${moduleindex} ${custom_class} ${isModuleActive ? "active" : ""} ${showTermSortChrome ? "caf-has-term-sort" : ""} ${hideClass}${termListExpanded ? " caf-term-list-expanded" : ""}`,
+    className: joinClassNames("caf-builder-module-main", "caf-module-filter", `caf_module_${module.key}`, `caf-module-${moduleindex}`, custom_class, isModuleActive && "active", showTermSortChrome && "caf-has-term-sort", hideClass, termListExpanded && "caf-term-list-expanded"),
     children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(FilterModuleSortChrome, {
       isActive: isModuleActive,
       moduleKey: module.key,
@@ -186183,9 +186732,8 @@ const CheckboxFilter = ({
   });
 };
 /* harmony default export */ const modules_output_CheckboxFilter = (CheckboxFilter);
-// EXTERNAL MODULE: ./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/termCountUtils.js
-var termCountUtils = __webpack_require__("./src/MainComponents/FilterComponents/components/settingTabContent/ModuleContentData/termCountUtils.js");
 ;// ./src/MainComponents/FilterComponents/components/modules-output/DropdownFilter.js
+
 
 
 
@@ -186257,7 +186805,7 @@ function DropdownAllOptionItem({
   const icons = settings?.dropdown_data?.all_option?.icons;
   const isActive = activeTermKey === "0";
   return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("li", {
-    className: `caf-terms-list-item caf-dropdown-all-option caf-layout-${iconText} ${isActive ? "caf-selected active" : ""}`,
+    className: joinClassNames("caf-terms-list-item", "caf-dropdown-all-option", `caf-layout-${iconText}`, isActive && "caf-selected active"),
     "term-id": "0",
     "term-value": "all",
     predefine: "false",
@@ -186331,11 +186879,12 @@ function DropdownTermPreviewItem({
     isSelected
   });
   return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("li", {
-    className: `caf-terms-list-item caf-layout-${iconText} ${isSelected ? "caf-selected active" : ""} ${hideTermLabel ? "caf-hide-term-label" : ""} ${showTermTooltipClass ? "caf-has-term-tooltip" : ""} ${isVirtualGroup ? "caf-woo-virtual-item" : ""} ${unavailable ? "caf-facet-term-unavailable" : ""}${showMoreClassName}`,
+    className: joinClassNames("caf-terms-list-item", `caf-layout-${iconText}`, isSelected && "caf-selected active", hideTermLabel && "caf-hide-term-label", showTermTooltipClass && "caf-has-term-tooltip", isVirtualGroup && "caf-woo-virtual-item", unavailable && "caf-facet-term-unavailable", showMoreClassName),
     taxonomy: groupKey,
     "data-key": itemDataKey,
     "term-id": item.key,
     "term-value": item.key,
+    "data-caf-term-label": termLabel || undefined,
     "aria-disabled": unavailable ? "true" : undefined,
     ...(isVirtualGroup ? {
       "data-woo-virtual": "1",
@@ -186360,7 +186909,7 @@ function DropdownTermPreviewItem({
       src: item.icons?.icon?.url,
       className: "caf-inline-svg-icon"
     }), (!hideTermLabel || settings?.show_count === "true") && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
-      className: `manage-text-lbl caf-layout-${textCount} ${textCountVeritcal}`,
+      className: joinClassNames(`manage-text-lbl caf-layout-${textCount}`, textCountVeritcal),
       children: [!hideTermLabel && /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("span", {
         className: "trm-name",
         children: (0,esm["default"])(`${item?.value}`)
@@ -187067,7 +187616,7 @@ const DropdownFilter = ({
       moduleindex: moduleindex,
       module: module
     }),
-    className: `caf-builder-module-main caf-module-filter caf_module_${module.key} caf-module-${moduleindex} ${custom_class} ${isModuleActive ? "active" : ""} ${showTermSortChrome ? "caf-has-term-sort" : ""} ${hideClass}${termListExpanded ? " caf-term-list-expanded" : ""}`,
+    className: joinClassNames("caf-builder-module-main", "caf-module-filter", `caf_module_${module.key}`, `caf-module-${moduleindex}`, custom_class, isModuleActive && "active", showTermSortChrome && "caf-has-term-sort", hideClass, termListExpanded && "caf-term-list-expanded"),
     children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(FilterModuleSortChrome, {
       isActive: isModuleActive,
       moduleKey: module.key,
@@ -189375,7 +189924,7 @@ function FilterBuilderContainer(props) {
       },
       data: [],
       style: {
-        ...FilterComponents_styleData.fColumnStyle
+        ...styleData.fColumnStyle
       }
     }];
     let index = rowindex + 1;
@@ -204989,7 +205538,7 @@ const Grid = props => {
                             columnindex: columnindex,
                             moduleindex: moduleindex,
                             selectedDevice: selectedDevice,
-                            isBuilderPreview: false,
+                            isBuilderPreview: true,
                             selectType: "post-preview"
                           }) : module.key === "categories" ? /*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)(modules_output_ModuleCategories, {
                             postData: post,
@@ -205411,7 +205960,64 @@ const FilterPreview = props => {
   });
 };
 /* harmony default export */ const postPreview_FilterPreview = (FilterPreview);
+// EXTERNAL MODULE: ./src/MainComponents/utils/googleFontUrl.js
+var googleFontUrl = __webpack_require__("./src/MainComponents/utils/googleFontUrl.js");
+;// ./src/MainComponents/utils/loadGoogleFontsFromLayout.js
+
+
+const collectFontFamilies = (node, fontFamilies) => {
+  if (Array.isArray(node)) {
+    node.forEach(item => collectFontFamilies(item, fontFamilies));
+    return;
+  }
+  if (!node || typeof node !== "object") {
+    return;
+  }
+  Object.entries(node).forEach(([key, value]) => {
+    if (key === "fontFamily" && typeof value === "string") {
+      const normalized = value.trim();
+      if (normalized) {
+        fontFamilies.add(normalized);
+      }
+    }
+    collectFontFamilies(value, fontFamilies);
+  });
+};
+const getFontLinkId = fontFamily => `caf-font-${String(fontFamily).trim().replace(/\s+/g, "-")}`;
+const collectFontFamiliesFromObject = node => {
+  const fontFamilies = new Set();
+  collectFontFamilies(node, fontFamilies);
+  return fontFamilies;
+};
+const loadFontFamiliesFromObject = node => {
+  collectFontFamiliesFromObject(node).forEach(fontFamily => {
+    (0,utils_globalFontFamily.loadFontFamily)(fontFamily);
+  });
+};
+const loadGoogleFontsFromLayout = async (layoutData = []) => {
+  const fontFamilies = new Set();
+  collectFontFamilies(layoutData, fontFamilies);
+  if (!fontFamilies.size) {
+    return;
+  }
+  await (0,googleFontUrl.preloadGoogleFontsCatalog)();
+  fontFamilies.forEach(fontFamily => {
+    const linkId = getFontLinkId(fontFamily);
+    if (document.getElementById(linkId)) {
+      return;
+    }
+    const customCssUrl = (0,utils_globalFontFamily.getCustomFontCssUrl)(fontFamily);
+    const link = document.createElement("link");
+    link.async = true;
+    link.id = linkId;
+    link.type = "text/css";
+    link.rel = "stylesheet";
+    link.href = customCssUrl ? customCssUrl : (0,googleFontUrl.buildGoogleFontsStylesheetUrl)(fontFamily, (0,googleFontUrl.getVariantsForFamily)(fontFamily));
+    document.body.appendChild(link);
+  });
+};
 ;// ./src/MainComponents/PreviewComponents/postPreview/Pagination.js
+
 
 
 
@@ -205444,6 +206050,9 @@ const Pagination = ({
   (0,external_React_.useEffect)(() => {
     setInputPage(currPage);
   }, [currPage]);
+  (0,external_React_.useEffect)(() => {
+    loadFontFamiliesFromObject(effectivePaginationData);
+  }, [effectivePaginationData]);
 
   // useEffect(() => {
   //   let counter = 0;
@@ -205566,42 +206175,6 @@ const Pagination = ({
       }
     }
   };
-  /*============================================== Start Font Family Linking =========================================================*/
-  const loadFont = fontFamily => {
-    if (!document.getElementById(fontFamily) && fontFamily) {
-      const link = document.createElement("link");
-      link.href = `https://fonts.googleapis.com/css?family=${fontFamily}:regular&display=swap`;
-      link.async = true;
-      link.id = fontFamily;
-      link.type = "text/css";
-      link.rel = "stylesheet";
-      document.body.appendChild(link);
-    }
-  };
-
-  /* Start Main Font Loading */
-  if (effectivePaginationData?.style?.desktop?.default?.fontFamily) {
-    loadFont(effectivePaginationData.style.desktop.default.fontFamily);
-  }
-  if (effectivePaginationData?.style?.desktop?.hover?.fontFamily) {
-    loadFont(effectivePaginationData.style.desktop.hover.fontFamily);
-  }
-  if (effectivePaginationData?.style?.tablet?.default?.fontFamily) {
-    loadFont(effectivePaginationData.style.tablet.default.fontFamily);
-  }
-  if (effectivePaginationData?.style?.tablet?.hover?.fontFamily) {
-    loadFont(effectivePaginationData.style.tablet.hover.fontFamily);
-  }
-  if (effectivePaginationData?.style?.mobile?.default?.fontFamily) {
-    loadFont(effectivePaginationData.style.mobile.default.fontFamily);
-  }
-  if (effectivePaginationData?.style?.mobile?.hover?.fontFamily) {
-    loadFont(effectivePaginationData.style.mobile.hover.fontFamily);
-  }
-  /* End Main Font Loading */
-  /*============================================== End Font Family Linking =========================================================*/
-
-  //console.log(page)
   if (isHiddenOnDevice(effectivePaginationData?.settings, deviceType)) {
     return null;
   }
@@ -205831,36 +206404,9 @@ const Loader = ({
   checkLoading,
   isDesignPreview = false
 }) => {
-  /*============================================== Start Font Family Linking =========================================================*/
-  const loadFont = fontFamily => {
-    (0,utils_globalFontFamily.loadFontFamily)(fontFamily);
-  };
-
-  /* Start Main Font Loading */
-
-  if (loaderData?.icon_data?.style?.desktop?.default?.fontFamily) {
-    loadFont(loaderData?.icon_data?.style.desktop.default.fontFamily);
-  }
-  if (loaderData?.icon_data?.style?.desktop?.hover?.fontFamily) {
-    loadFont(loaderData?.icon_data?.style.desktop.hover.fontFamily);
-  }
-  if (loaderData?.icon_data?.style?.tablet?.default?.fontFamily) {
-    loadFont(loaderData?.icon_data?.style.tablet.default.fontFamily);
-  }
-  if (loaderData?.icon_data?.style?.tablet?.hover?.fontFamily) {
-    loadFont(loaderData?.icon_data?.style.tablet.hover.fontFamily);
-  }
-  if (loaderData?.icon_data?.style?.mobile?.default?.fontFamily) {
-    loadFont(loaderData?.icon_data?.style.mobile.default.fontFamily);
-  }
-  if (loaderData?.icon_data?.style?.mobile?.hover?.fontFamily) {
-    loadFont(loaderData?.icon_data?.style.mobile.hover.fontFamily);
-  }
-
-  /* End Main Font Loading */
-
-  /*============================================== End Font Family Linking =========================================================*/
-
+  (0,external_React_.useEffect)(() => {
+    loadFontFamiliesFromObject(loaderData);
+  }, [loaderData]);
   return /*#__PURE__*/(0,external_ReactJSXRuntime_.jsxs)("div", {
     className: `caf-builder-template-preview-loader-container ${checkLoading ? "active" : ""} ${isDesignPreview ? "is-design-preview" : ""} ${loaderData.custom_class ?? ""}`,
     children: [/*#__PURE__*/(0,external_ReactJSXRuntime_.jsx)("div", {
@@ -210824,7 +211370,7 @@ const builderLayoutData = {
     initial_data: [{
       type: "row",
       style: {
-        ...FilterComponents_styleData.fRowStyle
+        ...styleData.fRowStyle
       },
       settings: {
         collapse_status: "false",
@@ -210850,19 +211396,19 @@ const builderLayoutData = {
           }
         },
         style: {
-          ...FilterComponents_styleData.fColumnStyle
+          ...styleData.fColumnStyle
         },
         data: [{
           type: "module",
           title: "Search",
           style: {
-            ...FilterComponents_styleData.fModuleStyle,
+            ...styleData.fModuleStyle,
             container: {
-              ...FilterComponents_styleData.fModuleStyle.container,
+              ...styleData.fModuleStyle.container,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.container.desktop,
+                ...styleData.fModuleStyle.container.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.container.desktop.default,
+                  ...styleData.fModuleStyle.container.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -210888,11 +211434,11 @@ const builderLayoutData = {
               }
             },
             header: {
-              ...FilterComponents_styleData.fModuleStyle.header,
+              ...styleData.fModuleStyle.header,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.header.desktop,
+                ...styleData.fModuleStyle.header.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.header.desktop.default,
+                  ...styleData.fModuleStyle.header.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -210919,11 +211465,11 @@ const builderLayoutData = {
               }
             },
             input: {
-              ...FilterComponents_styleData.fModuleStyle.input,
+              ...styleData.fModuleStyle.input,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.input.desktop,
+                ...styleData.fModuleStyle.input.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.input.desktop.default,
+                  ...styleData.fModuleStyle.input.desktop.default,
                   width: "100%",
                   height: "50px",
                   position: "relative",
@@ -210959,7 +211505,7 @@ const builderLayoutData = {
                   gap: "5px"
                 },
                 selected: {
-                  ...FilterComponents_styleData.fModuleStyle.input.desktop.selected,
+                  ...styleData.fModuleStyle.input.desktop.selected,
                   backgroundColor: "rgb(246,247,251)",
                   borderTopWidth: "2px",
                   borderRightWidth: "2px",
@@ -210980,11 +211526,11 @@ const builderLayoutData = {
               }
             },
             meta: {
-              ...FilterComponents_styleData.fModuleStyle.meta,
+              ...styleData.fModuleStyle.meta,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta.desktop,
+                ...styleData.fModuleStyle.meta.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta.desktop.default,
+                  ...styleData.fModuleStyle.meta.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -211028,11 +211574,11 @@ const builderLayoutData = {
               }
             },
             mainmeta: {
-              ...FilterComponents_styleData.fModuleStyle.mainmeta,
+              ...styleData.fModuleStyle.mainmeta,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop,
+                ...styleData.fModuleStyle.mainmeta.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop.default,
+                  ...styleData.fModuleStyle.mainmeta.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -211060,11 +211606,11 @@ const builderLayoutData = {
               }
             },
             selectmeta: {
-              ...FilterComponents_styleData.fModuleStyle.selectmeta,
+              ...styleData.fModuleStyle.selectmeta,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop,
+                ...styleData.fModuleStyle.selectmeta.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop.default,
+                  ...styleData.fModuleStyle.selectmeta.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -211107,11 +211653,11 @@ const builderLayoutData = {
               }
             },
             meta1: {
-              ...FilterComponents_styleData.fModuleStyle.meta1,
+              ...styleData.fModuleStyle.meta1,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta1.desktop,
+                ...styleData.fModuleStyle.meta1.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta1.desktop.default,
+                  ...styleData.fModuleStyle.meta1.desktop.default,
                   width: "auto",
                   height: "auto",
                   position: "relative",
@@ -211154,11 +211700,11 @@ const builderLayoutData = {
               }
             },
             meta2: {
-              ...FilterComponents_styleData.fModuleStyle.meta2,
+              ...styleData.fModuleStyle.meta2,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta2.desktop,
+                ...styleData.fModuleStyle.meta2.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta2.desktop.default,
+                  ...styleData.fModuleStyle.meta2.desktop.default,
                   display: "flex",
                   flexFlow: "row",
                   alignItems: "center",
@@ -211201,11 +211747,11 @@ const builderLayoutData = {
               }
             },
             meta3: {
-              ...FilterComponents_styleData.fModuleStyle.meta3,
+              ...styleData.fModuleStyle.meta3,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta3.desktop,
+                ...styleData.fModuleStyle.meta3.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta3.desktop.default,
+                  ...styleData.fModuleStyle.meta3.desktop.default,
                   display: "flex",
                   flexFlow: "row",
                   alignItems: "flex-start",
@@ -211216,11 +211762,11 @@ const builderLayoutData = {
               }
             },
             meta4: {
-              ...FilterComponents_styleData.fModuleStyle.meta4,
+              ...styleData.fModuleStyle.meta4,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta4.desktop,
+                ...styleData.fModuleStyle.meta4.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta4.desktop.default,
+                  ...styleData.fModuleStyle.meta4.desktop.default,
                   display: "flex",
                   flexFlow: "row",
                   alignItems: "flex-start",
@@ -211231,11 +211777,11 @@ const builderLayoutData = {
               }
             },
             icon: {
-              ...FilterComponents_styleData.fModuleStyle.icon,
+              ...styleData.fModuleStyle.icon,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.icon.desktop,
+                ...styleData.fModuleStyle.icon.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.icon.desktop.default,
+                  ...styleData.fModuleStyle.icon.desktop.default,
                   fontSize: "18px",
                   color: "rgb(96,96,96)",
                   paddingBottom: "0px",
@@ -211249,11 +211795,11 @@ const builderLayoutData = {
               }
             },
             icon2: {
-              ...FilterComponents_styleData.fModuleStyle.icon2,
+              ...styleData.fModuleStyle.icon2,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.icon2.desktop,
+                ...styleData.fModuleStyle.icon2.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.icon2.desktop.default,
+                  ...styleData.fModuleStyle.icon2.desktop.default,
                   fontSize: "18px",
                   color: "rgb(20,134,0)",
                   paddingBottom: "0px",
@@ -211264,11 +211810,11 @@ const builderLayoutData = {
               }
             },
             icon3: {
-              ...FilterComponents_styleData.fModuleStyle.icon3,
+              ...styleData.fModuleStyle.icon3,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.icon3.desktop,
+                ...styleData.fModuleStyle.icon3.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.icon3.desktop.default,
+                  ...styleData.fModuleStyle.icon3.desktop.default,
                   fontSize: "18px",
                   color: "rgb(96,96,96)",
                   paddingTop: "0px",
@@ -211279,22 +211825,22 @@ const builderLayoutData = {
               }
             },
             selecticon: {
-              ...FilterComponents_styleData.fModuleStyle.selecticon,
+              ...styleData.fModuleStyle.selecticon,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.selecticon.desktop,
+                ...styleData.fModuleStyle.selecticon.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.selecticon.desktop.default,
+                  ...styleData.fModuleStyle.selecticon.desktop.default,
                   fontSize: "16px",
                   color: "#dd3333"
                 }
               }
             },
             count: {
-              ...FilterComponents_styleData.fModuleStyle.count,
+              ...styleData.fModuleStyle.count,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.count.desktop,
+                ...styleData.fModuleStyle.count.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.count.desktop.default,
+                  ...styleData.fModuleStyle.count.desktop.default,
                   width: "auto",
                   height: "auto",
                   paddingTop: "0px",
@@ -211383,13 +211929,13 @@ const builderLayoutData = {
           type: "module",
           title: "Checkbox Filter",
           style: {
-            ...FilterComponents_styleData.fModuleStyle,
+            ...styleData.fModuleStyle,
             container: {
-              ...FilterComponents_styleData.fModuleStyle.container,
+              ...styleData.fModuleStyle.container,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.container.desktop,
+                ...styleData.fModuleStyle.container.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.container.desktop.default,
+                  ...styleData.fModuleStyle.container.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -211420,11 +211966,11 @@ const builderLayoutData = {
               }
             },
             header: {
-              ...FilterComponents_styleData.fModuleStyle.header,
+              ...styleData.fModuleStyle.header,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.header.desktop,
+                ...styleData.fModuleStyle.header.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.header.desktop.default,
+                  ...styleData.fModuleStyle.header.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -211451,11 +211997,11 @@ const builderLayoutData = {
               }
             },
             input: {
-              ...FilterComponents_styleData.fModuleStyle.input,
+              ...styleData.fModuleStyle.input,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.input.desktop,
+                ...styleData.fModuleStyle.input.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.input.desktop.default,
+                  ...styleData.fModuleStyle.input.desktop.default,
                   width: "18px",
                   height: "18px",
                   position: "relative",
@@ -211490,7 +212036,7 @@ const builderLayoutData = {
                   borderBottomRightRadius: "4px"
                 },
                 selected: {
-                  ...FilterComponents_styleData.fModuleStyle.input.desktop.selected,
+                  ...styleData.fModuleStyle.input.desktop.selected,
                   backgroundColor: "rgb(0,0,0)",
                   borderTopWidth: "2px",
                   borderRightWidth: "2px",
@@ -211508,11 +212054,11 @@ const builderLayoutData = {
               }
             },
             meta: {
-              ...FilterComponents_styleData.fModuleStyle.meta,
+              ...styleData.fModuleStyle.meta,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta.desktop,
+                ...styleData.fModuleStyle.meta.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta.desktop.default,
+                  ...styleData.fModuleStyle.meta.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -211541,11 +212087,11 @@ const builderLayoutData = {
               }
             },
             mainmeta: {
-              ...FilterComponents_styleData.fModuleStyle.mainmeta,
+              ...styleData.fModuleStyle.mainmeta,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop,
+                ...styleData.fModuleStyle.mainmeta.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop.default,
+                  ...styleData.fModuleStyle.mainmeta.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -211573,11 +212119,11 @@ const builderLayoutData = {
               }
             },
             selectmeta: {
-              ...FilterComponents_styleData.fModuleStyle.selectmeta,
+              ...styleData.fModuleStyle.selectmeta,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop,
+                ...styleData.fModuleStyle.selectmeta.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop.default,
+                  ...styleData.fModuleStyle.selectmeta.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -211620,11 +212166,11 @@ const builderLayoutData = {
               }
             },
             meta1: {
-              ...FilterComponents_styleData.fModuleStyle.meta1,
+              ...styleData.fModuleStyle.meta1,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta1.desktop,
+                ...styleData.fModuleStyle.meta1.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta1.desktop.default,
+                  ...styleData.fModuleStyle.meta1.desktop.default,
                   width: "auto",
                   height: "auto",
                   position: "relative",
@@ -211668,21 +212214,21 @@ const builderLayoutData = {
                   boxShadow: "0px 0px 0px 0px  #333333"
                 },
                 hover: {
-                  ...FilterComponents_styleData.fModuleStyle.meta1.desktop.hover,
+                  ...styleData.fModuleStyle.meta1.desktop.hover,
                   backgroundColor: "rgb(246,247,251)"
                 },
                 selected: {
-                  ...FilterComponents_styleData.fModuleStyle.meta1.desktop.selected,
+                  ...styleData.fModuleStyle.meta1.desktop.selected,
                   backgroundColor: "rgb(246,247,251)"
                 }
               }
             },
             meta2: {
-              ...FilterComponents_styleData.fModuleStyle.meta2,
+              ...styleData.fModuleStyle.meta2,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta2.desktop,
+                ...styleData.fModuleStyle.meta2.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta2.desktop.default,
+                  ...styleData.fModuleStyle.meta2.desktop.default,
                   display: "flex",
                   flexFlow: "row",
                   alignItems: "center",
@@ -211693,11 +212239,11 @@ const builderLayoutData = {
               }
             },
             meta3: {
-              ...FilterComponents_styleData.fModuleStyle.meta3,
+              ...styleData.fModuleStyle.meta3,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta3.desktop,
+                ...styleData.fModuleStyle.meta3.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta3.desktop.default,
+                  ...styleData.fModuleStyle.meta3.desktop.default,
                   display: "flex",
                   flexFlow: "row",
                   alignItems: "center",
@@ -211708,11 +212254,11 @@ const builderLayoutData = {
               }
             },
             meta4: {
-              ...FilterComponents_styleData.fModuleStyle.meta4,
+              ...styleData.fModuleStyle.meta4,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta4.desktop,
+                ...styleData.fModuleStyle.meta4.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta4.desktop.default,
+                  ...styleData.fModuleStyle.meta4.desktop.default,
                   display: "flex",
                   flexFlow: "row",
                   alignItems: "flex-start",
@@ -211723,55 +212269,55 @@ const builderLayoutData = {
               }
             },
             icon: {
-              ...FilterComponents_styleData.fModuleStyle.icon,
+              ...styleData.fModuleStyle.icon,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.icon.desktop,
+                ...styleData.fModuleStyle.icon.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.icon.desktop.default,
+                  ...styleData.fModuleStyle.icon.desktop.default,
                   fontSize: "18px",
                   color: "rgb(0,0,0)"
                 }
               }
             },
             icon2: {
-              ...FilterComponents_styleData.fModuleStyle.icon2,
+              ...styleData.fModuleStyle.icon2,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.icon2.desktop,
+                ...styleData.fModuleStyle.icon2.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.icon2.desktop.default,
+                  ...styleData.fModuleStyle.icon2.desktop.default,
                   fontSize: "16px",
                   color: "#dd3333"
                 }
               }
             },
             icon3: {
-              ...FilterComponents_styleData.fModuleStyle.icon3,
+              ...styleData.fModuleStyle.icon3,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.icon3.desktop,
+                ...styleData.fModuleStyle.icon3.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.icon3.desktop.default,
+                  ...styleData.fModuleStyle.icon3.desktop.default,
                   fontSize: "16px",
                   color: "#dd3333"
                 }
               }
             },
             selecticon: {
-              ...FilterComponents_styleData.fModuleStyle.selecticon,
+              ...styleData.fModuleStyle.selecticon,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.selecticon.desktop,
+                ...styleData.fModuleStyle.selecticon.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.selecticon.desktop.default,
+                  ...styleData.fModuleStyle.selecticon.desktop.default,
                   fontSize: "16px",
                   color: "#dd3333"
                 }
               }
             },
             count: {
-              ...FilterComponents_styleData.fModuleStyle.count,
+              ...styleData.fModuleStyle.count,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.count.desktop,
+                ...styleData.fModuleStyle.count.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.count.desktop.default,
+                  ...styleData.fModuleStyle.count.desktop.default,
                   width: "auto",
                   height: "auto",
                   paddingTop: "0px",
@@ -211832,13 +212378,13 @@ const builderLayoutData = {
           type: "module",
           title: "Reset",
           style: {
-            ...FilterComponents_styleData.fModuleStyle,
+            ...styleData.fModuleStyle,
             container: {
-              ...FilterComponents_styleData.fModuleStyle.container,
+              ...styleData.fModuleStyle.container,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.container.desktop,
+                ...styleData.fModuleStyle.container.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.container.desktop.default,
+                  ...styleData.fModuleStyle.container.desktop.default,
                   width: "auto",
                   height: "auto",
                   position: "relative",
@@ -211870,17 +212416,17 @@ const builderLayoutData = {
                   left: "auto"
                 },
                 hover: {
-                  ...FilterComponents_styleData.fModuleStyle.container.desktop.hover,
+                  ...styleData.fModuleStyle.container.desktop.hover,
                   backgroundColor: "rgba(3,3,3,0)"
                 }
               }
             },
             header: {
-              ...FilterComponents_styleData.fModuleStyle.header,
+              ...styleData.fModuleStyle.header,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.header.desktop,
+                ...styleData.fModuleStyle.header.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.header.desktop.default,
+                  ...styleData.fModuleStyle.header.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -211905,11 +212451,11 @@ const builderLayoutData = {
               }
             },
             input: {
-              ...FilterComponents_styleData.fModuleStyle.input,
+              ...styleData.fModuleStyle.input,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.input.desktop,
+                ...styleData.fModuleStyle.input.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.input.desktop.default,
+                  ...styleData.fModuleStyle.input.desktop.default,
                   width: "18px",
                   height: "18px",
                   position: "relative",
@@ -211930,11 +212476,11 @@ const builderLayoutData = {
               }
             },
             meta: {
-              ...FilterComponents_styleData.fModuleStyle.meta,
+              ...styleData.fModuleStyle.meta,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta.desktop,
+                ...styleData.fModuleStyle.meta.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta.desktop.default,
+                  ...styleData.fModuleStyle.meta.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -211962,11 +212508,11 @@ const builderLayoutData = {
               }
             },
             mainmeta: {
-              ...FilterComponents_styleData.fModuleStyle.mainmeta,
+              ...styleData.fModuleStyle.mainmeta,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop,
+                ...styleData.fModuleStyle.mainmeta.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.mainmeta.desktop.default,
+                  ...styleData.fModuleStyle.mainmeta.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -211994,11 +212540,11 @@ const builderLayoutData = {
               }
             },
             selectmeta: {
-              ...FilterComponents_styleData.fModuleStyle.selectmeta,
+              ...styleData.fModuleStyle.selectmeta,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop,
+                ...styleData.fModuleStyle.selectmeta.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.selectmeta.desktop.default,
+                  ...styleData.fModuleStyle.selectmeta.desktop.default,
                   width: "100%",
                   height: "auto",
                   position: "relative",
@@ -212041,11 +212587,11 @@ const builderLayoutData = {
               }
             },
             meta1: {
-              ...FilterComponents_styleData.fModuleStyle.meta1,
+              ...styleData.fModuleStyle.meta1,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta1.desktop,
+                ...styleData.fModuleStyle.meta1.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta1.desktop.default,
+                  ...styleData.fModuleStyle.meta1.desktop.default,
                   width: "auto",
                   height: "auto",
                   position: "relative",
@@ -212088,11 +212634,11 @@ const builderLayoutData = {
               }
             },
             meta2: {
-              ...FilterComponents_styleData.fModuleStyle.meta2,
+              ...styleData.fModuleStyle.meta2,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta2.desktop,
+                ...styleData.fModuleStyle.meta2.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta2.desktop.default,
+                  ...styleData.fModuleStyle.meta2.desktop.default,
                   display: "flex",
                   flexFlow: "column",
                   alignItems: "flex-start",
@@ -212103,11 +212649,11 @@ const builderLayoutData = {
               }
             },
             meta3: {
-              ...FilterComponents_styleData.fModuleStyle.meta3,
+              ...styleData.fModuleStyle.meta3,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta3.desktop,
+                ...styleData.fModuleStyle.meta3.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta3.desktop.default,
+                  ...styleData.fModuleStyle.meta3.desktop.default,
                   display: "flex",
                   flexFlow: "row",
                   alignItems: "flex-start",
@@ -212118,11 +212664,11 @@ const builderLayoutData = {
               }
             },
             meta4: {
-              ...FilterComponents_styleData.fModuleStyle.meta4,
+              ...styleData.fModuleStyle.meta4,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.meta4.desktop,
+                ...styleData.fModuleStyle.meta4.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.meta4.desktop.default,
+                  ...styleData.fModuleStyle.meta4.desktop.default,
                   display: "flex",
                   flexFlow: "row",
                   alignItems: "flex-start",
@@ -212133,11 +212679,11 @@ const builderLayoutData = {
               }
             },
             icon: {
-              ...FilterComponents_styleData.fModuleStyle.icon,
+              ...styleData.fModuleStyle.icon,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.icon.desktop,
+                ...styleData.fModuleStyle.icon.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.icon.desktop.default,
+                  ...styleData.fModuleStyle.icon.desktop.default,
                   fontSize: "15px",
                   color: "rgb(96,96,96)",
                   width: "auto",
@@ -212147,44 +212693,44 @@ const builderLayoutData = {
               }
             },
             icon2: {
-              ...FilterComponents_styleData.fModuleStyle.icon2,
+              ...styleData.fModuleStyle.icon2,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.icon2.desktop,
+                ...styleData.fModuleStyle.icon2.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.icon2.desktop.default,
+                  ...styleData.fModuleStyle.icon2.desktop.default,
                   fontSize: "16px",
                   color: "#dd3333"
                 }
               }
             },
             icon3: {
-              ...FilterComponents_styleData.fModuleStyle.icon3,
+              ...styleData.fModuleStyle.icon3,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.icon3.desktop,
+                ...styleData.fModuleStyle.icon3.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.icon3.desktop.default,
+                  ...styleData.fModuleStyle.icon3.desktop.default,
                   fontSize: "16px",
                   color: "#dd3333"
                 }
               }
             },
             selecticon: {
-              ...FilterComponents_styleData.fModuleStyle.selecticon,
+              ...styleData.fModuleStyle.selecticon,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.selecticon.desktop,
+                ...styleData.fModuleStyle.selecticon.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.selecticon.desktop.default,
+                  ...styleData.fModuleStyle.selecticon.desktop.default,
                   fontSize: "16px",
                   color: "#dd3333"
                 }
               }
             },
             count: {
-              ...FilterComponents_styleData.fModuleStyle.count,
+              ...styleData.fModuleStyle.count,
               desktop: {
-                ...FilterComponents_styleData.fModuleStyle.count.desktop,
+                ...styleData.fModuleStyle.count.desktop,
                 default: {
-                  ...FilterComponents_styleData.fModuleStyle.count.desktop.default,
+                  ...styleData.fModuleStyle.count.desktop.default,
                   width: "auto",
                   height: "auto",
                   paddingTop: "0px",

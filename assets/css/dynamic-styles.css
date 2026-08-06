@@ -390,6 +390,40 @@ li.selection-list-default i {
     color: inherit;
 }
 
+/* Product rating — typography cascade + fractional star row structure. */
+.caf-builder-module-main.caf-module-type-woo_product_rating .caf-builder-rating-value {
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+}
+
+.caf-builder-module-main.caf-module-type-woo_product_rating .caf-builder-rating-stars {
+    position: relative;
+    display: inline-flex;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.caf-builder-module-main.caf-module-type-woo_product_rating .caf-builder-rating-stars-base,
+.caf-builder-module-main.caf-module-type-woo_product_rating .caf-builder-rating-stars-fill {
+    display: inline-flex;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.caf-builder-module-main.caf-module-type-woo_product_rating .caf-builder-rating-stars-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
 .caf-builder-post-area {
     display: block;
 }
