@@ -573,9 +573,10 @@ ul.caf-terms-list.caf-woo-rating {
     cursor: pointer;
     line-height: normal;
 }
-
+.caf-builder-container span {
+    line-height: inherit;
+}
 .caf-builder-container div,
-.caf-builder-container span,
 .caf-builder-container ul,
 .caf-builder-container li,
 .caf-builder-container input,
