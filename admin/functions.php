@@ -237,16 +237,6 @@ class CAF_Meta_Boxes
     public function add_post_metabox()
     {
         add_meta_box('caf_top_meta_box', __('Settings', 'category-ajax-filter'), array($this, 'caf_top_meta_box'), 'caf_posts', 'normal', 'core' /*,array()*/);
-        if (class_exists('TC_CAF_PRO')) {
-            $caf_pro_class = new TC_CAF_PRO();
-            if ($caf_pro_class->check_license() == 'Activated') {
-                add_meta_box('caf_side_meta_box_pro', __('CAF Announcements', 'category-ajax-filter'), 'caf_side_meta_box_pro', 'caf_posts', 'side', 'core' /*,array()*/);
-            } else {
-                add_meta_box('caf_side_meta_box', __('CAF Pro Features', 'category-ajax-filter'), array($this, 'caf_side_meta_box'), 'caf_posts', 'side', 'core' /*,array()*/);
-            }
-        } else {
-            add_meta_box('caf_side_meta_box', __('CAF Pro Features', 'category-ajax-filter'), array($this, 'caf_side_meta_box'), 'caf_posts', 'side', 'core' /*,array()*/);
-        }
     }
 
     public function caf_top_meta_box()
@@ -346,32 +336,6 @@ class CAF_Meta_Boxes
             <!-- END SHORTCODE TAB DATA -->
         </div>
     <?php
-    }
-
-    public function caf_side_meta_box()
-    {
-    ?>
-        <ul class='caf-pro-features'>
-            <li><?php echo esc_html__('1. Multiple Taxonomy Selection/Filter', 'category-ajax-filter'); ?> <a href='https://caf.trustyplugins.com/multiple-taxonomy-filter/' style='color:#fff;text-decoration:underline;' target='_blank'>Demo</a>.</li>
-            <li><?php echo esc_html__('2. Multiple Taxonomy Dropdown/Filter', 'category-ajax-filter') ?> <a href='https://caf.trustyplugins.com/multiple-taxonomy-dropdown-filter/' style='color:#fff;text-decoration:underline;' target='_blank'>Demo</a>.</li>
-            <li><?php echo esc_html__('3. Select Default Category on first Page load.', 'category-ajax-filter'); ?></li>
-            <li><?php echo esc_html__("4. Overwrite Layout in Your theme's folder.", "category-ajax-filter"); ?></li>
-            <li><?php echo esc_html__('5. 10 More Post Layouts.', 'category-ajax-filter'); ?></li>
-            <li><?php echo esc_html__('6. Multiple Checkbox Filter Layout.', 'category-ajax-filter'); ?></li>
-            <li><?php echo esc_html__('7. Support Multiple Section on same page.', 'category-ajax-filter'); ?></li>
-            <li><?php echo esc_html__('8. Sort Posts Settings.', 'category-ajax-filter'); ?></li>
-            <li><?php echo esc_html__('9. Load More Posts added in Pagination.', 'category-ajax-filter'); ?></li>
-            <li><?php echo esc_html__('10. Google Fonts List Added.', 'category-ajax-filter'); ?></li>
-            <li><?php echo esc_html__('11. More Filter/Action Hooks for developers.', 'category-ajax-filter'); ?></li>
-            <li><?php echo esc_html__('12. 1 On Demand Layout For new user.', 'category-ajax-filter'); ?></li>
-            <li><?php echo esc_html__('13. Translation Settings for Default Strings.', 'category-ajax-filter'); ?></li>
-            <li><?php echo esc_html__('14. 50+ Post Animation effects Added.', 'category-ajax-filter'); ?></li>
-            <li><?php echo esc_html__('15. New Tabs Filter Layout Added.', 'category-ajax-filter'); ?></li>
-            <li><?php echo esc_html__('16. Scroll to top of filter after pagination click.', 'category-ajax-filter'); ?></li>
-            <li><?php echo esc_html__('17. Search Field added to search through posts.', 'category-ajax-filter'); ?></li>
-            <li class="button"><a href="https://trustyplugins.com" target="_blank"><span class="dashicons dashicons-visibility"></span><?php echo esc_html__('View Demo', 'category-ajax-filter'); ?></a><a href="https://trustyplugins.com" target="_blank"><span class="dashicons dashicons-download"></span><?php echo esc_html__('Buy Now', 'category-ajax-filter'); ?></a></li>
-        </ul>
-<?php
     }
 }
 
