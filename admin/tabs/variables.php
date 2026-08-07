@@ -54,7 +54,6 @@ $caf_post_desc_font_size = '12';
 $caf_post_desc_font_color = '#23282d';
 /*---- ADVANCED TAB USED DEFAULT VARIABLES ----*/
 $caf_special_post_class = '';
-$caf_special_security = 'disable';
 /*---- GENERAL TAB SUBMITTED VARIABLE VALUES ----*/
 if (get_post_meta($post->ID, 'caf_cpt_value')) {
     $select = get_post_meta($post->ID, 'caf_cpt_value', true);
@@ -169,9 +168,6 @@ if (get_post_meta($post->ID, 'caf_post_desc_font_color')) {
 /*---- ADVANCED TAB SUBMITTED VARIABLE VALUES ----*/
 if (get_post_meta($post->ID, 'caf_special_post_class')) {
     $caf_special_post_class = get_post_meta($post->ID, 'caf_special_post_class', true);
-}
-if (get_post_meta($post->ID, 'caf_special_security')) {
-    $caf_special_security = get_post_meta($post->ID, 'caf_special_security', true);
 }
 //echo "post type ".$select;
 //echo "taxonomy ".$tax;

@@ -232,10 +232,6 @@ class CAF_Meta_Boxes
             $caf_special_post_class = sanitize_text_field( wp_unslash( $_POST['caf-special-post-class'] ) );
             update_post_meta($post_id, 'caf_special_post_class', $caf_special_post_class);
         }
-        if (isset($_POST['caf-special-security'])) {
-            $caf_special_security = sanitize_text_field( wp_unslash( $_POST['caf-special-security'] ) );
-            update_post_meta($post_id, 'caf_special_security', $caf_special_security);
-        }
     }
 
     public function add_post_metabox()

@@ -121,7 +121,22 @@ class CAF_get_filter_posts
     {
         add_action('wp_ajax_get_filter_posts', array($this, 'get_filter_posts'));
         add_action('wp_ajax_nopriv_get_filter_posts', array($this, 'get_filter_posts'));
+        // Uncached nonce refresh for page-cache compatibility (do not require prior nonce).
+        add_action('wp_ajax_tc_caf_refresh_nonce', array($this, 'tc_caf_refresh_nonce'));
+        add_action('wp_ajax_nopriv_tc_caf_refresh_nonce', array($this, 'tc_caf_refresh_nonce'));
     }
+    /**
+     * Return a fresh frontend AJAX nonce.
+     * Safe for full-page caches: admin-ajax.php POST is typically not cached.
+     */
+    public function tc_caf_refresh_nonce()
+    {
+        nocache_headers();
+        wp_send_json_success(array(
+            'nonce' => wp_create_nonce('tc_caf_ajax_nonce'),
+        ));
+    }
+
     public function get_filter_posts()
     {
         check_ajax_referer('tc_caf_ajax_nonce', 'nonce');

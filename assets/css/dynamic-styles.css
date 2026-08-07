@@ -335,7 +335,7 @@ li.selection-list-default i {
     padding: 0;
     font: inherit;
     font-weight: inherit;
-    line-height: normal;
+    line-height: inherit;
     letter-spacing: inherit;
     text-transform: inherit;
     color: inherit;

@@ -256,6 +256,14 @@ AI Search (Pro) uses semantic, NLP-based matching so results reflect what a visi
 * Security and escaping fixes for export and template output.
 
 
+= 2.9.0 = (06/08/2026)
+* Fixed frontend AJAX failures (-1 / "Posts found: error") on sites using page cache by refreshing the nonce via an uncached request.
+* Frontend filter AJAX nonce is always verified (Security Enable/Disable option removed).
+* Hardened frontend filter AJAX to use trusted filter settings from post meta.
+* Admin taxonomy/terms AJAX is no longer available to logged-out users.
+* Improved filter meta save capability checks.
+* Readme and version updated.
+
 = 2.8.5.2 = (24/07/2026)
 * Nonce/sanitization functions updated.
 * Readme updated.
