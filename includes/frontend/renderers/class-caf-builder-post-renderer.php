@@ -874,15 +874,31 @@ class CAF_Builder_Post_Renderer {
 		$excerpt_length = 20;
 
 		if ( isset( $settings->excerptLength ) && '' !== (string) $settings->excerptLength ) {
-			$excerpt_length = absint( $settings->excerptLength );
+			$excerpt_length = (int) $settings->excerptLength;
 		}
 
-		$post        = get_post( $post_id );
+		$post = get_post( $post_id );
+
+		if ( $html_render ) {
+			$html_source = '';
+			if ( $post && '' !== trim( (string) $post->post_content ) ) {
+				$html_source = (string) $post->post_content;
+				$html_source = strip_shortcodes( $html_source );
+				if ( function_exists( 'excerpt_remove_blocks' ) ) {
+					$html_source = excerpt_remove_blocks( $html_source );
+				}
+			}
+			if ( '' === trim( wp_strip_all_tags( $html_source ) ) ) {
+				$html_source = (string) get_the_excerpt( $post_id );
+			}
+
+			$trimmed = $this->trim_html_excerpt_to_words( $html_source, $excerpt_length );
+			return wp_kses_post( $trimmed );
+		}
+
+		$raw_excerpt = wp_strip_all_tags( (string) get_the_excerpt( $post_id ) );
 		$description = $post ? wp_strip_all_tags( (string) $post->post_content ) : '';
-		$raw_excerpt = wp_strip_all_tags( get_the_excerpt( $post_id ) );
-		$source_text = $html_render
-			? ( '' !== $description ? $description : $raw_excerpt )
-			: ( '' !== $raw_excerpt ? $raw_excerpt : $description );
+		$source_text = '' !== trim( $raw_excerpt ) ? $raw_excerpt : $description;
 
 		return esc_html( $this->trim_excerpt_to_words( $source_text, $excerpt_length ) );
 	}
@@ -909,6 +925,65 @@ class CAF_Builder_Post_Renderer {
 		}
 
 		return implode( ' ', array_slice( $words, 0, $word_limit ) ) . '...';
+	}
+
+	/**
+	 * Trim HTML by word count while keeping tags balanced (matches builder ModuleExcerpt).
+	 *
+	 * @param string $html       Source HTML.
+	 * @param int    $word_limit Word limit.
+	 * @return string
+	 */
+	protected function trim_html_excerpt_to_words( $html, $word_limit ) {
+		$content = (string) $html;
+		if ( '' === trim( $content ) ) {
+			return '';
+		}
+		if ( $word_limit <= 0 ) {
+			return $content;
+		}
+
+		$words     = 0;
+		$output    = '';
+		$open_tags = array();
+		$truncated = false;
+
+		if ( ! preg_match_all( '/(<[^>]+?>|[^<>\s]+|\s+)/u', $content, $tokens ) || empty( $tokens[0] ) ) {
+			return $this->trim_excerpt_to_words( wp_strip_all_tags( $content ), $word_limit );
+		}
+
+		foreach ( $tokens[0] as $token ) {
+			if ( preg_match( '/^<[^>]+>$/', $token ) ) {
+				$output .= $token;
+				if ( preg_match( '/^<([a-z0-9]+)(?![^>]*\/>)(?:\s[^>]*)?>$/i', $token, $matches ) ) {
+					$tag = strtolower( $matches[1] );
+					if ( ! in_array( $tag, array( 'br', 'hr', 'img', 'input', 'meta', 'link', 'source', 'area', 'base', 'col', 'embed', 'wbr' ), true ) ) {
+						$open_tags[] = $tag;
+					}
+				} elseif ( preg_match( '/^<\/([a-z0-9]+)>$/i', $token, $matches ) ) {
+					array_pop( $open_tags );
+				}
+			} elseif ( '' === trim( $token ) ) {
+				$output .= $token;
+			} else {
+				$output .= $token;
+				++$words;
+				if ( $words >= $word_limit ) {
+					$truncated = true;
+					break;
+				}
+			}
+		}
+
+		while ( ! empty( $open_tags ) ) {
+			$output .= '</' . array_pop( $open_tags ) . '>';
+		}
+
+		if ( $truncated ) {
+			$output .= '...';
+		}
+
+		return trim( $output );
 	}
 
 	/**
