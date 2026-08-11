@@ -177,18 +177,30 @@ class CAF_Builder_Tier {
 	}
 
 	/**
-	 * @param string $module_key Module key slug.
+	 * @param string      $module_key Module key slug.
+	 * @param string|null $post_type  Layout post type (Free Range Slider requires product).
 	 * @return bool
 	 */
-	public static function can_use_filter_module( $module_key ) {
+	public static function can_use_filter_module( $module_key, $post_type = null ) {
 		$limits  = self::get_limits();
 		$allowed = $limits['filter_modules'];
+		$key     = self::normalize_filter_module_key( $module_key );
 
-		if ( empty( $allowed ) ) {
-			return true;
+		if ( ! empty( $allowed ) && ! in_array( $key, $allowed, true ) ) {
+			return false;
 		}
 
-		return in_array( self::normalize_filter_module_key( $module_key ), $allowed, true );
+		// Free Range Slider is Woo `_price` only — Product layouts (+ Woo) only.
+		if ( 'range_slider' === $key && ! self::is_pro() ) {
+			if ( ! self::can_use_product_post_type() ) {
+				return false;
+			}
+			if ( null !== $post_type && '' !== (string) $post_type && 'product' !== (string) $post_type ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	public static function normalize_post_module_key( $module_key ) {

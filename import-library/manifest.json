@@ -1,0 +1,304 @@
+{
+    "manifest_version": "2026.07.06.1-local",
+    "source": "local",
+    "templates": [
+        {
+            "id": "library_filter_checkbox_filter_full-width-checkbox",
+            "title": "Full width Checkbox",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single checkbox filter module preset.",
+            "tier": "free",
+            "file": "templates/library_filter_checkbox_filter_full-width-checkbox.json",
+            "filterLibraryTab": "checkbox_filter",
+            "preview": "previews/library_filter_checkbox_filter_full-width-checkbox.jpg"
+        },
+        {
+            "id": "library_filter_checkbox_filter_list-style",
+            "title": "List Style Checkbox",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single checkbox filter module preset.",
+            "tier": "free",
+            "file": "templates/library_filter_checkbox_filter_list-style.json",
+            "filterLibraryTab": "checkbox_filter",
+            "preview": "previews/library_filter_checkbox_filter_list-style.jpg"
+        },
+        {
+            "id": "library_filter_checkbox_filter_radio-style-checkbox",
+            "title": "Radio Style Checkbox",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single checkbox filter module preset.",
+            "tier": "free",
+            "file": "templates/library_filter_checkbox_filter_radio-style-checkbox.json",
+            "filterLibraryTab": "checkbox_filter",
+            "preview": "previews/library_filter_checkbox_filter_radio-style-checkbox.jpg"
+        },
+        {
+            "id": "library_filter_checkbox_filter_solid-button",
+            "title": "Solid Button Checkbox",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single checkbox filter module preset.",
+            "tier": "free",
+            "file": "templates/library_filter_checkbox_filter_solid-button.json",
+            "filterLibraryTab": "checkbox_filter",
+            "preview": "previews/library_filter_checkbox_filter_solid-button.jpg"
+        },
+        {
+            "id": "library_filter_checkbox_filter_traditional",
+            "title": "Traditional Checkbox",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single checkbox filter module preset.",
+            "tier": "free",
+            "file": "templates/library_filter_checkbox_filter_traditional.json",
+            "filterLibraryTab": "checkbox_filter",
+            "preview": "previews/library_filter_checkbox_filter_traditional.jpg"
+        },
+        {
+            "id": "library_filter_dropdown_filter_button-style-dropdown",
+            "title": "Button Style Dropdown",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single dropdown filter module preset.",
+            "tier": "free",
+            "file": "templates/library_filter_dropdown_filter_button-style-dropdown.json",
+            "filterLibraryTab": "dropdown_filter",
+            "preview": "previews/library_filter_dropdown_filter_button-style-dropdown.jpg"
+        },
+        {
+            "id": "library_filter_dropdown_filter_dropdown-with-label",
+            "title": "Dropdown with Label",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single dropdown filter module preset.",
+            "tier": "free",
+            "file": "templates/library_filter_dropdown_filter_dropdown-with-label.json",
+            "filterLibraryTab": "dropdown_filter",
+            "preview": "previews/library_filter_dropdown_filter_dropdown-with-label.jpg"
+        },
+        {
+            "id": "library_filter_dropdown_filter_traditional-dropdown",
+            "title": "Traditional Dropdown",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single dropdown filter module preset.",
+            "tier": "free",
+            "file": "templates/library_filter_dropdown_filter_traditional-dropdown.json",
+            "filterLibraryTab": "dropdown_filter",
+            "preview": "previews/library_filter_dropdown_filter_traditional-dropdown.jpg"
+        },
+        {
+            "id": "library_filter_full_filter_full-sidebar-filter",
+            "title": "Full Sidebar Filter",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Full filter area preset.",
+            "tier": "free",
+            "file": "templates/library_filter_full_filter_full-sidebar-filter.json",
+            "filterLibraryTab": "full_filter",
+            "preview": "previews/library_filter_full_filter_full-sidebar-filter.jpg"
+        },
+        {
+            "id": "library_filter_full_filter_full-width-topbar",
+            "title": "Full Width Topbar",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Full filter area preset.",
+            "tier": "free",
+            "file": "templates/library_filter_full_filter_full-width-topbar.json",
+            "filterLibraryTab": "full_filter",
+            "preview": "previews/library_filter_full_filter_full-width-topbar.jpg"
+        },
+        {
+            "id": "library_filter_full_filter_search-dropdown",
+            "title": "Search + Dropdown",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Full filter area preset.",
+            "tier": "free",
+            "file": "templates/library_filter_full_filter_search-dropdown.json",
+            "filterLibraryTab": "full_filter",
+            "preview": "previews/library_filter_full_filter_search-dropdown.jpg"
+        },
+        {
+            "id": "library_filter_reset_reset-button-text",
+            "title": "Reset Button Text",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single reset module preset.",
+            "tier": "free",
+            "file": "templates/library_filter_reset_reset-button-text.json",
+            "filterLibraryTab": "reset",
+            "preview": "previews/library_filter_reset_reset-button-text.jpg"
+        },
+        {
+            "id": "library_filter_reset_reset-button",
+            "title": "Reset Button",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single reset module preset.",
+            "tier": "free",
+            "file": "templates/library_filter_reset_reset-button.json",
+            "filterLibraryTab": "reset",
+            "preview": "previews/library_filter_reset_reset-button.jpg"
+        },
+        {
+            "id": "library_filter_search_round-search-box",
+            "title": "Round Search Box",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single search module preset.",
+            "tier": "free",
+            "file": "templates/library_filter_search_round-search-box.json",
+            "filterLibraryTab": "search",
+            "preview": "previews/library_filter_search_round-search-box.jpg"
+        },
+        {
+            "id": "library_filter_search_square-search-box",
+            "title": "Square Search Box",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single search module preset.",
+            "tier": "free",
+            "file": "templates/library_filter_search_square-search-box.json",
+            "filterLibraryTab": "search",
+            "preview": "previews/library_filter_search_square-search-box.jpg"
+        },
+        {
+            "id": "library_full_filter_layout_full-width-layout",
+            "title": "Full Width Layout",
+            "section": "full_filter_layout",
+            "scope": "full_layout",
+            "description": "Complete filter, post, and preview settings preset.",
+            "tier": "free",
+            "file": "templates/library_full_filter_layout_full-width-layout.json",
+            "preview": "previews/library_full_filter_layout_full-width-layout.jpg"
+        },
+        {
+            "id": "library_full_filter_layout_full-width-sidebar",
+            "title": "Full Width Sidebar",
+            "section": "full_filter_layout",
+            "scope": "full_layout",
+            "description": "Complete filter, post, and preview settings preset.",
+            "tier": "free",
+            "file": "templates/library_full_filter_layout_full-width-sidebar.json",
+            "preview": "previews/library_full_filter_layout_full-width-sidebar.jpg"
+        },
+        {
+            "id": "library_full_filter_layout_full-width-with-search",
+            "title": "Full Width with Search",
+            "section": "full_filter_layout",
+            "scope": "full_layout",
+            "description": "Complete filter, post, and preview settings preset.",
+            "tier": "free",
+            "file": "templates/library_full_filter_layout_full-width-with-search.json",
+            "preview": "previews/library_full_filter_layout_full-width-with-search.jpg"
+        },
+        {
+            "id": "library_full_filter_layout_job-board-layout",
+            "title": "Job Board Layout",
+            "section": "full_filter_layout",
+            "scope": "full_layout",
+            "description": "Complete filter, post, and preview settings preset.",
+            "tier": "free",
+            "file": "templates/library_full_filter_layout_job-board-layout.json",
+            "preview": "previews/library_full_filter_layout_job-board-layout.jpg"
+        },
+        {
+            "id": "library_full_filter_layout_recipe-filter-layout",
+            "title": "Recipe Filter Layout",
+            "section": "full_filter_layout",
+            "scope": "full_layout",
+            "description": "Complete filter, post, and preview settings preset.",
+            "tier": "free",
+            "file": "templates/library_full_filter_layout_recipe-filter-layout.json",
+            "preview": "previews/library_full_filter_layout_recipe-filter-layout.jpg"
+        },
+        {
+            "id": "library_full_filter_layout_sidebar-filter-layout",
+            "title": "Sidebar Filter Layout",
+            "section": "full_filter_layout",
+            "scope": "full_layout",
+            "description": "Complete filter, post, and preview settings preset.",
+            "tier": "free",
+            "file": "templates/library_full_filter_layout_sidebar-filter-layout.json",
+            "preview": "previews/library_full_filter_layout_sidebar-filter-layout.jpg"
+        },
+        {
+            "id": "library_layout_settings_pagination_pagination-circle",
+            "title": "Pagination Circle",
+            "section": "layout_settings",
+            "scope": "layout_settings",
+            "description": "Layout settings preset.",
+            "tier": "free",
+            "file": "templates/library_layout_settings_pagination_pagination-circle.json",
+            "layoutSettingsLibraryTab": "pagination",
+            "preview": "previews/library_layout_settings_pagination_pagination-circle.jpg"
+        },
+        {
+            "id": "library_layout_settings_pagination_pagination-square",
+            "title": "Pagination Square",
+            "section": "layout_settings",
+            "scope": "layout_settings",
+            "description": "Layout settings preset.",
+            "tier": "free",
+            "file": "templates/library_layout_settings_pagination_pagination-square.json",
+            "layoutSettingsLibraryTab": "pagination",
+            "preview": "previews/library_layout_settings_pagination_pagination-square.jpg"
+        },
+        {
+            "id": "library_layout_settings_pagination_pagination-text",
+            "title": "Pagination Text",
+            "section": "layout_settings",
+            "scope": "layout_settings",
+            "description": "Layout settings preset.",
+            "tier": "free",
+            "file": "templates/library_layout_settings_pagination_pagination-text.json",
+            "layoutSettingsLibraryTab": "pagination",
+            "preview": "previews/library_layout_settings_pagination_pagination-text.jpg"
+        },
+        {
+            "id": "library_single_post_item_fancy-post-item",
+            "title": "Fancy Post Item",
+            "section": "single_post_item",
+            "scope": "post_layout",
+            "description": "Post card layout preset.",
+            "tier": "free",
+            "file": "templates/library_single_post_item_fancy-post-item.json",
+            "preview": "previews/library_single_post_item_fancy-post-item.jpg"
+        },
+        {
+            "id": "library_single_post_item_full-width-post",
+            "title": "Full Width Post",
+            "section": "single_post_item",
+            "scope": "post_layout",
+            "description": "Post card layout preset.",
+            "tier": "free",
+            "file": "templates/library_single_post_item_full-width-post.json",
+            "preview": "previews/library_single_post_item_full-width-post.jpg"
+        },
+        {
+            "id": "library_single_post_item_glossy-look-post-item",
+            "title": "Glossy Look Post Item",
+            "section": "single_post_item",
+            "scope": "post_layout",
+            "description": "Post card layout preset.",
+            "tier": "free",
+            "file": "templates/library_single_post_item_glossy-look-post-item.json",
+            "preview": "previews/library_single_post_item_glossy-look-post-item.jpg"
+        },
+        {
+            "id": "library_single_post_item_single-post-item-simple",
+            "title": "Single Post Item Simple",
+            "section": "single_post_item",
+            "scope": "post_layout",
+            "description": "Post card layout preset.",
+            "tier": "free",
+            "file": "templates/library_single_post_item_single-post-item-simple.json",
+            "preview": "previews/library_single_post_item_single-post-item-simple.jpg"
+        }
+    ]
+}

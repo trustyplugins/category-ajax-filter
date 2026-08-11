@@ -9,6 +9,7 @@
 
 # Release output (do not nest dist inside dist)
 dist
+dist-debug
 
 # Logs / OS junk
 *.log

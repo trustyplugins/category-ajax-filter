@@ -91,9 +91,6 @@ $caf_free_woo_runtime = TC_CAF_PATH . 'includes/woocommerce/class-caf-free-woo.p
 if (file_exists($caf_free_woo_runtime)) {
     require_once $caf_free_woo_runtime;
 }
-if (!defined('CAF_IMPORT_LIBRARY_FREE_LICENSE_KEY')) {
-    define('CAF_IMPORT_LIBRARY_FREE_LICENSE_KEY', 'caf-free-tier');
-}
 
 class TC_CAF_Plugin
 {

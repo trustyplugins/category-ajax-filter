@@ -2438,9 +2438,10 @@ function caf_filter_post_layout_modules_by_tier( $initial_data ) {
  * Remove filter modules that are not allowed on the current tier.
  *
  * @param array<int, mixed> $initial_data Filter layout initial_data tree.
+ * @param string|null       $post_type    Layout post type (Free Range Slider needs product).
  * @return array<int, mixed>
  */
-function caf_filter_filter_layout_modules_by_tier( $initial_data ) {
+function caf_filter_filter_layout_modules_by_tier( $initial_data, $post_type = null ) {
 	if ( ! is_array( $initial_data ) || ! class_exists( 'CAF_Builder_Tier' ) ) {
 		return is_array( $initial_data ) ? $initial_data : array();
 	}
@@ -2460,13 +2461,13 @@ function caf_filter_filter_layout_modules_by_tier( $initial_data ) {
 			$column->data = array_values(
 				array_filter(
 					$column->data,
-					static function ( $module ) {
+					static function ( $module ) use ( $post_type ) {
 						$module = is_object( $module ) ? $module : (object) $module;
 						if ( empty( $module->key ) ) {
 							return true;
 						}
 
-						return CAF_Builder_Tier::can_use_filter_module( (string) $module->key );
+						return CAF_Builder_Tier::can_use_filter_module( (string) $module->key, $post_type );
 					}
 				)
 			);
@@ -3200,8 +3201,14 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 		$layout_data->post_layout_data->initial_data = array();
 	}
 
+	$layout_post_type = '';
+	if ( isset( $layout_data->common_data ) && is_object( $layout_data->common_data ) && isset( $layout_data->common_data->post_type ) ) {
+		$layout_post_type = (string) $layout_data->common_data->post_type;
+	}
+
 	$layout_data->filter_layout_data->initial_data = caf_filter_filter_layout_modules_by_tier(
-		$layout_data->filter_layout_data->initial_data
+		$layout_data->filter_layout_data->initial_data,
+		$layout_post_type
 	);
 
 	$layout_data->filter_layout_data->initial_data = caf_enforce_single_instance_filter_modules(
