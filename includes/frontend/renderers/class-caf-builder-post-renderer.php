@@ -85,6 +85,9 @@ class CAF_Builder_Post_Renderer {
 
 			$post_id   = isset( $post->ID ) ? absint( $post->ID ) : 0;
 			$image_url = get_the_post_thumbnail_url( $post_id, 'full' );
+			if ( is_string( $image_url ) && '' !== $image_url && function_exists( 'caf_normalize_frontend_media_url' ) ) {
+				$image_url = caf_normalize_frontend_media_url( $image_url );
+			}
 
 			echo '<article class="caf-builder-post-area post-id-' . esc_attr( $post_id ) . '" data-post-id="' . esc_attr( $post_id ) . '">';
 
@@ -1870,6 +1873,13 @@ class CAF_Builder_Post_Renderer {
 	protected function build_post_image_tag( $image_src, $alt_text, $attachment_id = 0, $image_data = null, $fallback_src = '' ) {
 		if ( ! is_string( $image_src ) || '' === $image_src ) {
 			return '';
+		}
+
+		if ( function_exists( 'caf_normalize_frontend_media_url' ) ) {
+			$image_src = caf_normalize_frontend_media_url( $image_src );
+			if ( is_string( $fallback_src ) && '' !== $fallback_src ) {
+				$fallback_src = caf_normalize_frontend_media_url( $fallback_src );
+			}
 		}
 
 		$attrs = array(

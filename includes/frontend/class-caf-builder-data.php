@@ -9,6 +9,51 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Normalize a frontend media URL scheme to match the current request (HTTPS/HTTP).
+ * Prevents mixed-content when baked placeholders or WP URLs are http on https pages.
+ *
+ * @param mixed $url Candidate media URL.
+ * @return string
+ */
+function caf_normalize_frontend_media_url( $url ) {
+	if ( ! is_string( $url ) ) {
+		return '';
+	}
+
+	$url = trim( $url );
+	if ( '' === $url || '#' === $url ) {
+		return $url;
+	}
+
+	// Relative paths (not protocol-relative) — leave as-is.
+	if ( 0 === strpos( $url, '/' ) && 0 !== strpos( $url, '//' ) ) {
+		/**
+		 * Filter normalized frontend media URL.
+		 *
+		 * @param string $url Media URL.
+		 */
+		return (string) apply_filters( 'caf_normalize_frontend_media_url', $url );
+	}
+
+	$is_absolute =
+		0 === stripos( $url, 'http://' )
+		|| 0 === stripos( $url, 'https://' )
+		|| 0 === strpos( $url, '//' );
+
+	if ( $is_absolute && function_exists( 'set_url_scheme' ) ) {
+		$scheme = ( function_exists( 'is_ssl' ) && is_ssl() ) ? 'https' : 'http';
+		$url    = set_url_scheme( $url, $scheme );
+	}
+
+	/**
+	 * Filter normalized frontend media URL.
+	 *
+	 * @param string $url Media URL.
+	 */
+	return (string) apply_filters( 'caf_normalize_frontend_media_url', $url );
+}
+
 class CAF_Builder_Data {
 
 	/**
@@ -429,7 +474,10 @@ class CAF_Builder_Data {
 	 * @return string
 	 */
 	public function get_dummy_image_url() {
-		return defined( 'TC_CAF_URL' ) ? TC_CAF_URL . 'assets/unnamed.jpg' : '';
+		$url = defined( 'TC_CAF_URL' ) ? TC_CAF_URL . 'assets/unnamed.jpg' : '';
+		return function_exists( 'caf_normalize_frontend_media_url' )
+			? caf_normalize_frontend_media_url( $url )
+			: $url;
 	}
 
 	/**
