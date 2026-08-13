@@ -935,8 +935,7 @@ li.caf-terms-list-item.caf-layout-flex-start .manage-ic-lbl.caf-layout-flex-star
     justify-content: space-between;
 }
 
-.caf-builder-module-main.caf-module-filter.caf-module-search .caf-filter-module-search-output,
-.caf-builder-module-main.caf-module-filter.caf-module-search .caf-filter-module-search-wrapper {
+.caf-builder-module-main.caf-module-filter.caf-module-search .caf-filter-module-search-output {
     box-sizing: border-box;
 }
 

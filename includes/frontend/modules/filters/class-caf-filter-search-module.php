@@ -109,7 +109,6 @@ class CAF_Filter_Search_Module extends CAF_Filter_Base_Module {
 		}
 
 		$html  = $this->render_label();
-		$html .= '<div class="caf-filter-module-search-wrapper">';
 		$html .= '<div class="' . esc_attr( $search_output_class ) . '"';
 		$html .= ' row-id="' . esc_attr( $this->row_key ) . '"';
 		$html .= ' column-id="' . esc_attr( $this->column_key ) . '"';
@@ -179,7 +178,6 @@ class CAF_Filter_Search_Module extends CAF_Filter_Base_Module {
 		}
 
 		$html .= '</div>';
-		$html .= '</div>';
 
 		return $html;
 	}
@@ -191,17 +189,12 @@ class CAF_Filter_Search_Module extends CAF_Filter_Base_Module {
 	 */
 	protected function collect_css() {
 		$module_selector = $this->get_module_selector();
-		$meta_style      = $this->get_style_section( 'meta' );
 		$meta1_style     = $this->get_style_section( 'meta1' );
 		$meta2_style     = $this->get_style_section( 'meta2' );
 		$input_style     = $this->get_style_section( 'input' );
-		// echo "<pre>";
-		// print_r($input_style);
-		// echo "</pre>";
 		$icon_style     = $this->get_style_section( 'icon' );
 		$icon2_style    = $this->get_style_section( 'icon2' );
 		$icon3_style    = $this->get_style_section( 'icon3' );
-		$meta_selector  = $module_selector . ' .caf-filter-module-search-wrapper';
 		$meta1_selector = $module_selector . ' .caf-filter-module-search-output .caf-search-left-col';
 		$meta2_selector = $module_selector . ' .caf-filter-module-search-output .caf-search-right-col';
 		$input_selector = $module_selector . ' .caf-filter-module-search-output';
@@ -211,7 +204,6 @@ class CAF_Filter_Search_Module extends CAF_Filter_Base_Module {
 		$focused        = $module_selector . ' .caf-filter-module-search-output.caf-focused';
 		$placeholder    = $module_selector . ' .caf-filter-module-search-output input.caf-search-input-field::placeholder';
 
-		$this->collect_default_and_hover_css( $meta_style, $meta_selector );
 		$this->collect_default_and_hover_css( $meta1_style, $meta1_selector );
 		$this->collect_default_and_hover_css( $meta2_style, $meta2_selector );
 		$this->collect_default_and_hover_css( $input_style, $input_selector );
