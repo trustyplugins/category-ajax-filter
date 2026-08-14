@@ -73,7 +73,6 @@
 .caf-builder-container [class*="caf-builder-template-preview-"] button {
     font: inherit;
     letter-spacing: inherit;
-    text-transform: inherit;
     box-sizing: border-box;
 }
 
@@ -553,7 +552,6 @@ ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating),
 .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list.caf-woo-rating {
     overflow: auto;
 }
-
 ul.caf-terms-list.caf-checkbox:not(.caf-woo-rating),
 ul.caf-terms-list.caf-attribute-swatch:not(.caf-woo-rating) {
     overflow: auto;
@@ -868,6 +866,7 @@ span.trm-name {
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-filter-module-search-output {
     display: flex;
     width: 100%;
+    box-sizing: border-box;
 }
 
 .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-filter-module-search-output input.input-field {
@@ -951,6 +950,7 @@ li.caf-terms-list-item.caf-layout-flex-start .manage-ic-lbl.caf-layout-flex-star
     outline: none;
     padding: 0;
     width: 100%;
+    text-transform: inherit;
 }
 
 a.caf-builder-module-main.caf-module-post.caf-module-button {
