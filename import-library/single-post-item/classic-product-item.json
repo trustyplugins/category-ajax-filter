@@ -1,0 +1,1837 @@
+{
+  "common_data": {
+    "post_type": "product",
+    "global_font_family": "DM Sans",
+    "analytics_enabled": false,
+    "filter_url_enabled": false,
+    "schema_enabled": false
+  },
+  "post_layout_data": {
+    "initial_data": [
+      {
+        "type": "row",
+        "style": {
+          "desktop": {
+            "default": {
+              "width": "100%",
+              "height": "auto",
+              "position": "relative",
+              "paddingTop": "0",
+              "paddingRight": "0",
+              "paddingBottom": "25px",
+              "paddingLeft": "0",
+              "marginTop": "0",
+              "marginRight": "0",
+              "marginBottom": "0px",
+              "marginLeft": "0",
+              "backgroundColor": "rgb(255,255,255)",
+              "color": "#333333",
+              "fontSize": "14px",
+              "fontFamily": "Open Sans",
+              "float": "none",
+              "justifyContent": "flex-start",
+              "alignItems": "flex-start",
+              "display": "flex",
+              "flexFlow": "column",
+              "borderTopWidth": "0px",
+              "borderRightWidth": "0px",
+              "borderBottomWidth": "0px",
+              "borderLeftWidth": "0px",
+              "borderTopColor": "rgb(221,221,221)",
+              "borderRightColor": "rgb(221,221,221)",
+              "borderBottomColor": "rgb(221,221,221)",
+              "borderLeftColor": "rgb(221,221,221)",
+              "borderTopStyle": "solid",
+              "borderRightStyle": "solid",
+              "borderBottomStyle": "solid",
+              "borderLeftStyle": "solid",
+              "boxShadow": "0px 0px 0px 0px #333333",
+              "top": "auto",
+              "right": "auto",
+              "bottom": "auto",
+              "left": "auto",
+              "gap": "10px",
+              "borderTopLeftRadius": "0px",
+              "borderTopRightRadius": "0px"
+            },
+            "hover": {}
+          },
+          "tablet": {
+            "default": {},
+            "hover": {}
+          },
+          "mobile": {
+            "default": {},
+            "hover": {}
+          }
+        },
+        "settings": {
+          "background_image": "",
+          "bg_type": "color",
+          "collapse_status": "false",
+          "custom_class": "",
+          "admin_label": "",
+          "visibility": {
+            "mobile": "false",
+            "tablet": "false",
+            "desktop": "false"
+          }
+        },
+        "data": [
+          {
+            "type": "column",
+            "settings": {
+              "background_image": "",
+              "bg_type": "color",
+              "collapse_status": "false",
+              "admin_label": "",
+              "custom_class": "",
+              "visibility": {
+                "mobile": "false",
+                "tablet": "false",
+                "desktop": "false"
+              }
+            },
+            "style": {
+              "desktop": {
+                "default": {
+                  "height": "auto",
+                  "position": "relative",
+                  "paddingTop": "0",
+                  "paddingRight": "0",
+                  "paddingBottom": "0",
+                  "paddingLeft": "0",
+                  "marginTop": "0",
+                  "marginRight": "0",
+                  "marginBottom": "0",
+                  "marginLeft": "0",
+                  "backgroundColor": "",
+                  "color": "#333333",
+                  "fontSize": "14px",
+                  "fontFamily": "Open Sans",
+                  "justifyContent": "flex-start",
+                  "alignItems": "flex-start",
+                  "flexBasis": "auto",
+                  "display": "flex",
+                  "boxShadow": "0px 0px 0px 0px #333333",
+                  "width": "100%",
+                  "borderTopLeftRadius": "0px",
+                  "borderTopRightRadius": "0px"
+                },
+                "hover": {}
+              },
+              "tablet": {
+                "default": {},
+                "hover": {}
+              },
+              "mobile": {
+                "default": {},
+                "hover": {}
+              }
+            },
+            "data": [
+              {
+                "type": "module",
+                "title": "Post Image",
+                "style": {
+                  "desktop": {
+                    "default": {
+                      "height": "auto",
+                      "position": "relative",
+                      "paddingTop": "0px",
+                      "paddingRight": "0",
+                      "paddingBottom": "0px",
+                      "paddingLeft": "0",
+                      "marginTop": "0",
+                      "marginRight": "0",
+                      "marginBottom": "0",
+                      "marginLeft": "0",
+                      "backgroundColor": "#00000000",
+                      "color": "#4c5866",
+                      "fontFamily": "Open Sans",
+                      "fontSize": "14px",
+                      "flexBasis": "auto",
+                      "justifyContent": "flex-start",
+                      "boxShadow": "0px 0px 0px 0px #333333",
+                      "top": "auto",
+                      "right": "auto",
+                      "bottom": "auto",
+                      "left": "auto",
+                      "width": "100%",
+                      "borderTopLeftRadius": "0px",
+                      "borderTopRightRadius": "0px"
+                    },
+                    "hover": {}
+                  },
+                  "tablet": {
+                    "default": {},
+                    "hover": {}
+                  },
+                  "mobile": {
+                    "default": {},
+                    "hover": {}
+                  },
+                  "meta": {
+                    "desktop": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  },
+                  "prefix": {
+                    "desktop": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  },
+                  "suffix": {
+                    "desktop": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  }
+                },
+                "key": "image",
+                "settings": {
+                  "background_image": "",
+                  "image_size": "medium_large",
+                  "custom_class": "",
+                  "admin_label": "",
+                  "placeholder_image": "",
+                  "image_source": "featured_image",
+                  "custom_field": "0",
+                  "link": {
+                    "condition": false,
+                    "customlink": "",
+                    "target": "same-tab",
+                    "type": "post-url",
+                    "visibility": true,
+                    "custom_field": "0"
+                  },
+                  "visibility": {
+                    "mobile": "false",
+                    "tablet": "false",
+                    "desktop": "false"
+                  },
+                  "prefix": {
+                    "is_enable": "false",
+                    "meta_type": "text",
+                    "meta_text": ""
+                  },
+                  "suffix": {
+                    "is_enable": "false",
+                    "meta_type": "text",
+                    "meta_text": ""
+                  },
+                  "icons": {
+                    "visibility": false,
+                    "icon": "",
+                    "type": "icon",
+                    "position": ""
+                  }
+                }
+              },
+              {
+                "type": "module",
+                "title": "Badges",
+                "key": "badges",
+                "style": {
+                  "desktop": {
+                    "default": {
+                      "height": "auto",
+                      "position": "absolute",
+                      "paddingTop": "6px",
+                      "paddingRight": "12px",
+                      "paddingBottom": "6px",
+                      "paddingLeft": "12px",
+                      "marginTop": "0",
+                      "marginRight": "0",
+                      "marginBottom": "0",
+                      "marginLeft": "0",
+                      "backgroundColor": "rgb(41,164,0)",
+                      "color": "rgb(255,255,255)",
+                      "fontFamily": "DM Sans",
+                      "fontSize": "12px",
+                      "flexBasis": "auto",
+                      "justifyContent": "flex-start",
+                      "boxShadow": "0px 0px 0px 0px  #333333",
+                      "top": "5px",
+                      "right": "5px",
+                      "bottom": "auto",
+                      "left": "auto",
+                      "display": "flex",
+                      "gap": "6px",
+                      "width": "auto",
+                      "borderTopLeftRadius": "2px",
+                      "borderTopRightRadius": "2px",
+                      "borderBottomLeftRadius": "2px",
+                      "borderBottomRightRadius": "2px"
+                    },
+                    "hover": {
+                      "backgroundColor": "rgb(41,164,0)"
+                    }
+                  },
+                  "tablet": {
+                    "default": {},
+                    "hover": {}
+                  },
+                  "mobile": {
+                    "default": {
+                      "paddingTop": "5px",
+                      "paddingBottom": "5px",
+                      "paddingLeft": "10px",
+                      "paddingRight": "10px",
+                      "fontSize": "11px"
+                    },
+                    "hover": {}
+                  },
+                  "meta": {
+                    "desktop": {
+                      "default": {
+                        "display": "flex",
+                        "justifyContent": "flex-start",
+                        "gap": "0px",
+                        "flexFlow": "row"
+                      },
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  },
+                  "prefix": {
+                    "desktop": {
+                      "default": {
+                        "boxShadow": "0px 0px 0px 0px #333333",
+                        "width": "auto",
+                        "height": "auto"
+                      },
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  },
+                  "suffix": {
+                    "desktop": {
+                      "default": {
+                        "boxShadow": "0px 0px 0px 0px #333333",
+                        "width": "auto",
+                        "height": "auto"
+                      },
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  }
+                },
+                "settings": {
+                  "background_image": "",
+                  "custom_class": "",
+                  "admin_label": "",
+                  "badge_type": "sale",
+                  "badge_settings": {
+                    "sale": {
+                      "text_source": "default",
+                      "custom_text": "Sale"
+                    },
+                    "featured": {
+                      "text_source": "default",
+                      "custom_text": "Featured"
+                    },
+                    "new": {
+                      "text_source": "default",
+                      "custom_text": "New",
+                      "condition": "default",
+                      "days": 30
+                    },
+                    "stock_status_text": {
+                      "display": "current",
+                      "text_source": "default",
+                      "custom_text": "In stock"
+                    },
+                    "stock_quantity": {
+                      "low_stock_threshold_enable": "false",
+                      "show_when_quantity": 5
+                    },
+                    "discount": {
+                      "discount_type": "percentage"
+                    },
+                    "best_seller": {
+                      "text_source": "default",
+                      "custom_text": "Best Seller",
+                      "min_sale": "default",
+                      "min_sale_count": 1
+                    }
+                  },
+                  "prefix": {
+                    "is_enable": "false",
+                    "meta_type": "text",
+                    "meta_text": ""
+                  },
+                  "suffix": {
+                    "is_enable": "false",
+                    "meta_type": "text",
+                    "meta_text": ""
+                  },
+                  "visibility": {
+                    "mobile": "false",
+                    "tablet": "false",
+                    "desktop": "false"
+                  },
+                  "icons": {
+                    "visibility": false,
+                    "icon": "",
+                    "type": "icon",
+                    "position": ""
+                  },
+                  "link": {
+                    "custom_field": "0",
+                    "type": "post-url"
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "type": "column",
+            "settings": {
+              "background_image": "",
+              "bg_type": "color",
+              "collapse_status": "false",
+              "admin_label": "",
+              "custom_class": "",
+              "visibility": {
+                "mobile": "false",
+                "tablet": "false",
+                "desktop": "false"
+              }
+            },
+            "style": {
+              "desktop": {
+                "default": {
+                  "height": "auto",
+                  "position": "relative",
+                  "paddingTop": "5px",
+                  "paddingRight": "0px",
+                  "paddingBottom": "0",
+                  "paddingLeft": "0px",
+                  "marginTop": "0",
+                  "marginRight": "0",
+                  "marginBottom": "0",
+                  "marginLeft": "0",
+                  "backgroundColor": "",
+                  "color": "#333333",
+                  "fontSize": "14px",
+                  "fontFamily": "Open Sans",
+                  "justifyContent": "flex-start",
+                  "alignItems": "flex-start",
+                  "flexBasis": "auto",
+                  "display": "flex",
+                  "boxShadow": "0px 0px 0px 0px #333333",
+                  "width": "100%",
+                  "borderTopLeftRadius": "0px",
+                  "borderTopRightRadius": "0px",
+                  "flexFlow": "column",
+                  "top": "auto",
+                  "right": "auto",
+                  "bottom": "auto",
+                  "left": "auto",
+                  "gap": "10px"
+                },
+                "hover": {}
+              },
+              "tablet": {
+                "default": {},
+                "hover": {}
+              },
+              "mobile": {
+                "default": {},
+                "hover": {}
+              }
+            },
+            "data": [
+              {
+                "type": "module",
+                "title": "Post Title",
+                "style": {
+                  "desktop": {
+                    "default": {
+                      "height": "auto",
+                      "position": "relative",
+                      "paddingTop": "0px",
+                      "paddingRight": "0",
+                      "paddingBottom": "0px",
+                      "paddingLeft": "0",
+                      "marginTop": "0",
+                      "marginRight": "0",
+                      "marginBottom": "0",
+                      "marginLeft": "0",
+                      "backgroundColor": "#ffffff",
+                      "color": "rgb(0,0,0)",
+                      "fontFamily": "DM Sans",
+                      "fontSize": "17px",
+                      "flexBasis": "auto",
+                      "justifyContent": "flex-start",
+                      "boxShadow": "0px 0px 0px 0px #333333",
+                      "top": "auto",
+                      "right": "auto",
+                      "bottom": "auto",
+                      "left": "auto",
+                      "fontWeight": "500",
+                      "width": "100%"
+                    },
+                    "hover": {}
+                  },
+                  "tablet": {
+                    "default": {},
+                    "hover": {}
+                  },
+                  "mobile": {
+                    "default": {
+                      "fontSize": "18px"
+                    },
+                    "hover": {}
+                  },
+                  "meta": {
+                    "desktop": {
+                      "default": {
+                        "display": "flex",
+                        "justifyContent": "flex-start",
+                        "gap": "0px",
+                        "flexFlow": "row"
+                      },
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  },
+                  "prefix": {
+                    "desktop": {
+                      "default": {
+                        "boxShadow": "0px 0px 0px 0px #333333",
+                        "width": "auto",
+                        "height": "auto"
+                      },
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  },
+                  "suffix": {
+                    "desktop": {
+                      "default": {
+                        "boxShadow": "0px 0px 0px 0px #333333",
+                        "width": "auto",
+                        "height": "auto"
+                      },
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  }
+                },
+                "key": "title",
+                "settings": {
+                  "background_image": "",
+                  "custom_class": "",
+                  "admin_label": "",
+                  "link": {
+                    "visibility": true,
+                    "type": "post-url",
+                    "customlink": "",
+                    "target": "same-tab",
+                    "condition": false,
+                    "custom_field": "0"
+                  },
+                  "prefix": {
+                    "is_enable": "false",
+                    "meta_type": "text",
+                    "meta_text": ""
+                  },
+                  "suffix": {
+                    "is_enable": "false",
+                    "meta_type": "text",
+                    "meta_text": ""
+                  },
+                  "visibility": {
+                    "mobile": "false",
+                    "tablet": "false",
+                    "desktop": "false"
+                  },
+                  "icons": {
+                    "visibility": false,
+                    "icon": "",
+                    "type": "icon",
+                    "position": ""
+                  }
+                }
+              },
+              {
+                "type": "module",
+                "title": "Product Price",
+                "key": "product_price",
+                "style": {
+                  "desktop": {
+                    "default": {
+                      "height": "auto",
+                      "position": "relative",
+                      "paddingTop": "0px",
+                      "paddingRight": "0",
+                      "paddingBottom": "0px",
+                      "paddingLeft": "0",
+                      "marginTop": "0",
+                      "marginRight": "0",
+                      "marginBottom": "0",
+                      "marginLeft": "0",
+                      "backgroundColor": "#ffffff",
+                      "color": "rgb(0,0,0)",
+                      "fontFamily": "DM Sans",
+                      "fontSize": "18px",
+                      "flexBasis": "auto",
+                      "justifyContent": "flex-start",
+                      "boxShadow": "0px 0px 0px 0px #333333",
+                      "top": "auto",
+                      "right": "auto",
+                      "bottom": "auto",
+                      "left": "auto",
+                      "fontWeight": "400",
+                      "width": "100%",
+                      "display": "flex",
+                      "gap": "6px"
+                    },
+                    "hover": {}
+                  },
+                  "tablet": {
+                    "default": {},
+                    "hover": {}
+                  },
+                  "mobile": {
+                    "default": {
+                      "fontSize": "18px"
+                    },
+                    "hover": {}
+                  },
+                  "meta": {
+                    "desktop": {
+                      "default": {
+                        "display": "flex",
+                        "justifyContent": "flex-start",
+                        "gap": "0px",
+                        "flexFlow": "row"
+                      },
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  },
+                  "prefix": {
+                    "desktop": {
+                      "default": {
+                        "boxShadow": "0px 0px 0px 0px #333333",
+                        "width": "auto",
+                        "height": "auto"
+                      },
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  },
+                  "suffix": {
+                    "desktop": {
+                      "default": {
+                        "boxShadow": "0px 0px 0px 0px #333333",
+                        "width": "auto",
+                        "height": "auto",
+                        "fontSize": "13px",
+                        "color": "rgb(169,169,169)",
+                        "fontStyle": "normal",
+                        "textTransform": "inherit",
+                        "textDecoration": "line-through",
+                        "fontWeight": "400"
+                      },
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  }
+                },
+                "settings": {
+                  "background_image": "",
+                  "custom_class": "",
+                  "admin_label": "",
+                  "show_price": "default",
+                  "prefix": {
+                    "is_enable": "false",
+                    "meta_type": "regular_price",
+                    "meta_text": "Prefix",
+                    "text_visibility": "all",
+                    "icons": {
+                      "visibility": false,
+                      "icon": "",
+                      "type": "icon"
+                    }
+                  },
+                  "suffix": {
+                    "is_enable": "true",
+                    "meta_type": "regular_price",
+                    "meta_text": "Suffix",
+                    "text_visibility": "all",
+                    "icons": {
+                      "visibility": false,
+                      "icon": "",
+                      "type": "icon"
+                    }
+                  },
+                  "visibility": {
+                    "mobile": "false",
+                    "tablet": "false",
+                    "desktop": "false"
+                  },
+                  "icons": {
+                    "visibility": false,
+                    "icon": "",
+                    "type": "icon",
+                    "position": ""
+                  },
+                  "link": {
+                    "custom_field": "0",
+                    "type": "post-url"
+                  }
+                }
+              },
+              {
+                "type": "module",
+                "title": "Add to Cart",
+                "key": "woo_add_to_cart",
+                "style": {
+                  "desktop": {
+                    "default": {
+                      "height": "auto",
+                      "position": "relative",
+                      "paddingTop": "8px",
+                      "paddingRight": "15px",
+                      "paddingBottom": "8px",
+                      "paddingLeft": "15px",
+                      "marginTop": "10px",
+                      "marginRight": "0",
+                      "marginBottom": "0",
+                      "marginLeft": "0",
+                      "backgroundColor": "rgb(3,3,3)",
+                      "color": "rgb(247,247,247)",
+                      "fontFamily": "DM Sans",
+                      "fontSize": "14px",
+                      "flexBasis": "auto",
+                      "justifyContent": "flex-start",
+                      "boxShadow": "0px 0px 0px 0px  #333333",
+                      "top": "auto",
+                      "right": "auto",
+                      "bottom": "auto",
+                      "left": "auto",
+                      "display": "flex",
+                      "gap": "8px",
+                      "width": "auto",
+                      "borderTopLeftRadius": "4px",
+                      "borderTopRightRadius": "4px",
+                      "borderBottomLeftRadius": "4px",
+                      "borderBottomRightRadius": "4px",
+                      "fontWeight": "400"
+                    },
+                    "hover": {
+                      "backgroundColor": "rgb(0,0,0)"
+                    }
+                  },
+                  "tablet": {
+                    "default": {},
+                    "hover": {}
+                  },
+                  "mobile": {
+                    "default": {
+                      "paddingTop": "10px",
+                      "paddingBottom": "10px",
+                      "paddingLeft": "20px",
+                      "paddingRight": "20px",
+                      "fontSize": "14px"
+                    },
+                    "hover": {}
+                  },
+                  "meta": {
+                    "desktop": {
+                      "default": {
+                        "display": "flex",
+                        "justifyContent": "flex-start",
+                        "gap": "0px",
+                        "flexFlow": "row"
+                      },
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  },
+                  "prefix": {
+                    "desktop": {
+                      "default": {
+                        "boxShadow": "0px 0px 0px 0px #333333",
+                        "width": "auto",
+                        "height": "auto"
+                      },
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  },
+                  "suffix": {
+                    "desktop": {
+                      "default": {
+                        "boxShadow": "0px 0px 0px 0px #333333",
+                        "width": "auto",
+                        "height": "auto"
+                      },
+                      "hover": {}
+                    },
+                    "tablet": {
+                      "default": {},
+                      "hover": {}
+                    },
+                    "mobile": {
+                      "default": {},
+                      "hover": {}
+                    }
+                  }
+                },
+                "settings": {
+                  "background_image": "",
+                  "custom_class": "",
+                  "admin_label": "",
+                  "changeButtonValue": "Add to cart",
+                  "button_text_mode": "by_product_type",
+                  "button_text_type_key": "simple",
+                  "button_text_by_type": {
+                    "simple": "Add to cart",
+                    "variable": "Select options",
+                    "grouped": "View products",
+                    "external": "Buy product",
+                    "subscription": "Subscribe"
+                  },
+                  "button_icon": {
+                    "icons": {
+                      "visibility": true,
+                      "icon": "fas fa-shopping-cart",
+                      "type": "icon",
+                      "position": "before-button"
+                    }
+                  },
+                  "atc_behaviour": "product_page",
+                  "after_atc": "none",
+                  "after_atc_text": "Added",
+                  "link": {
+                    "visibility": true,
+                    "type": "post-url",
+                    "customlink": "",
+                    "target": "same-tab",
+                    "custom_field": "0"
+                  },
+                  "prefix": {
+                    "is_enable": "false",
+                    "meta_type": "text",
+                    "meta_text": ""
+                  },
+                  "suffix": {
+                    "is_enable": "false",
+                    "meta_type": "text",
+                    "meta_text": ""
+                  },
+                  "visibility": {
+                    "mobile": "false",
+                    "tablet": "false",
+                    "desktop": "false"
+                  },
+                  "icons": {
+                    "visibility": false,
+                    "icon": "",
+                    "type": "icon",
+                    "position": ""
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "extra_data": {
+      "slider_data": {
+        "value": "30",
+        "suffix": "%"
+      },
+      "bg_color": "#00000000",
+      "single_post_data": {
+        "label": "Classic Heeled Sandal",
+        "value": 16779,
+        "id": 16779,
+        "key": 16779,
+        "title": "Classic Heeled Sandal",
+        "description": "",
+        "excerpt": "",
+        "url": "https://demo.trustyplugins.com/product/classic-heeled-sandal/",
+        "image": "https://demo.trustyplugins.com/wp-content/uploads/2026/07/classic_heeled_sandal_coffee.jpg",
+        "imageArray": {
+          "sizes": [
+            "thumbnail",
+            "medium",
+            "medium_large",
+            "large"
+          ],
+          "thumbnail": "https://demo.trustyplugins.com/wp-content/uploads/2026/07/classic_heeled_sandal_coffee-150x150.jpg",
+          "medium": "https://demo.trustyplugins.com/wp-content/uploads/2026/07/classic_heeled_sandal_coffee-300x300.jpg",
+          "medium_large": "https://demo.trustyplugins.com/wp-content/uploads/2026/07/classic_heeled_sandal_coffee-768x768.jpg",
+          "large": "https://demo.trustyplugins.com/wp-content/uploads/2026/07/classic_heeled_sandal_coffee.jpg"
+        },
+        "taxonomies": {
+          "product_brand": {
+            "name": "product_brand",
+            "label": "Brands",
+            "labels": {
+              "name": "Brands",
+              "singular_name": "Brand",
+              "search_items": "Search Brands",
+              "popular_items": null,
+              "all_items": "All Brands",
+              "parent_item": "Parent Brand",
+              "parent_item_colon": "Parent Brand:",
+              "name_field_description": "The name is how it appears on your site.",
+              "slug_field_description": "The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.",
+              "parent_field_description": "Assign a parent term to create a hierarchy. The term Jazz, for example, would be the parent of Bebop and Big Band.",
+              "desc_field_description": "The description is not prominent by default; however, some themes may show it.",
+              "edit_item": "Edit Brand",
+              "view_item": "View Category",
+              "update_item": "Update Brand",
+              "add_new_item": "Add New Brand",
+              "new_item_name": "New Brand Name",
+              "separate_items_with_commas": null,
+              "add_or_remove_items": null,
+              "choose_from_most_used": null,
+              "not_found": "No Brands Found",
+              "no_terms": "No brands",
+              "filter_by_item": "Filter by category",
+              "items_list_navigation": "Categories list navigation",
+              "items_list": "Categories list",
+              "most_used": "Most Used",
+              "back_to_items": "&larr; Go to Brands",
+              "item_link": "Category Link",
+              "item_link_description": "A link to a category.",
+              "menu_name": "Brands",
+              "template_name": "Products by Brand",
+              "name_admin_bar": "Brand",
+              "archives": "All Brands"
+            },
+            "description": "",
+            "public": true,
+            "publicly_queryable": true,
+            "hierarchical": true,
+            "show_ui": true,
+            "show_in_menu": true,
+            "show_in_nav_menus": true,
+            "show_tagcloud": true,
+            "show_in_quick_edit": true,
+            "show_admin_column": true,
+            "meta_box_cb": "post_categories_meta_box",
+            "meta_box_sanitize_cb": "taxonomy_meta_box_sanitize_cb_checkboxes",
+            "object_type": [
+              "product"
+            ],
+            "cap": {
+              "manage_terms": "manage_product_terms",
+              "edit_terms": "edit_product_terms",
+              "delete_terms": "delete_product_terms",
+              "assign_terms": "assign_product_terms"
+            },
+            "rewrite": {
+              "with_front": false,
+              "hierarchical": true,
+              "ep_mask": 0,
+              "slug": "brand"
+            },
+            "query_var": "product_brand",
+            "update_count_callback": "_wc_term_recount",
+            "show_in_rest": true,
+            "rest_base": false,
+            "rest_namespace": "wp/v2",
+            "rest_controller_class": false,
+            "rest_controller": {},
+            "default_term": null,
+            "sort": null,
+            "args": null,
+            "_builtin": false
+          },
+          "product_type": {
+            "name": "product_type",
+            "label": "Product type",
+            "labels": {
+              "name": "Product type",
+              "singular_name": "Product type",
+              "search_items": "Search Tags",
+              "popular_items": "Popular Tags",
+              "all_items": "Product type",
+              "parent_item": null,
+              "parent_item_colon": null,
+              "name_field_description": "The name is how it appears on your site.",
+              "slug_field_description": "The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.",
+              "parent_field_description": null,
+              "desc_field_description": "The description is not prominent by default; however, some themes may show it.",
+              "edit_item": "Edit Tag",
+              "view_item": "View Tag",
+              "update_item": "Update Tag",
+              "add_new_item": "Add Tag",
+              "new_item_name": "New Tag Name",
+              "separate_items_with_commas": "Separate tags with commas",
+              "add_or_remove_items": "Add or remove tags",
+              "choose_from_most_used": "Choose from the most used tags",
+              "not_found": "No tags found.",
+              "no_terms": "No tags",
+              "filter_by_item": null,
+              "items_list_navigation": "Tags list navigation",
+              "items_list": "Tags list",
+              "most_used": "Most Used",
+              "back_to_items": "&larr; Go to Tags",
+              "item_link": "Tag Link",
+              "item_link_description": "A link to a tag.",
+              "menu_name": "Product type",
+              "name_admin_bar": "Product type",
+              "archives": "Product type",
+              "template_name": "Product type Archives"
+            },
+            "description": "",
+            "public": false,
+            "publicly_queryable": false,
+            "hierarchical": false,
+            "show_ui": false,
+            "show_in_menu": false,
+            "show_in_nav_menus": false,
+            "show_tagcloud": false,
+            "show_in_quick_edit": false,
+            "show_admin_column": false,
+            "meta_box_cb": "post_tags_meta_box",
+            "meta_box_sanitize_cb": "taxonomy_meta_box_sanitize_cb_input",
+            "object_type": [
+              "product"
+            ],
+            "cap": {
+              "manage_terms": "manage_categories",
+              "edit_terms": "manage_categories",
+              "delete_terms": "manage_categories",
+              "assign_terms": "edit_posts"
+            },
+            "rewrite": false,
+            "query_var": false,
+            "update_count_callback": "",
+            "show_in_rest": false,
+            "rest_base": false,
+            "rest_namespace": false,
+            "rest_controller_class": false,
+            "rest_controller": null,
+            "default_term": null,
+            "sort": null,
+            "args": null,
+            "_builtin": false
+          },
+          "product_visibility": {
+            "name": "product_visibility",
+            "label": "Product visibility",
+            "labels": {
+              "name": "Product visibility",
+              "singular_name": "Product visibility",
+              "search_items": "Search Tags",
+              "popular_items": "Popular Tags",
+              "all_items": "Product visibility",
+              "parent_item": null,
+              "parent_item_colon": null,
+              "name_field_description": "The name is how it appears on your site.",
+              "slug_field_description": "The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.",
+              "parent_field_description": null,
+              "desc_field_description": "The description is not prominent by default; however, some themes may show it.",
+              "edit_item": "Edit Tag",
+              "view_item": "View Tag",
+              "update_item": "Update Tag",
+              "add_new_item": "Add Tag",
+              "new_item_name": "New Tag Name",
+              "separate_items_with_commas": "Separate tags with commas",
+              "add_or_remove_items": "Add or remove tags",
+              "choose_from_most_used": "Choose from the most used tags",
+              "not_found": "No tags found.",
+              "no_terms": "No tags",
+              "filter_by_item": null,
+              "items_list_navigation": "Tags list navigation",
+              "items_list": "Tags list",
+              "most_used": "Most Used",
+              "back_to_items": "&larr; Go to Tags",
+              "item_link": "Tag Link",
+              "item_link_description": "A link to a tag.",
+              "menu_name": "Product visibility",
+              "name_admin_bar": "Product visibility",
+              "archives": "Product visibility",
+              "template_name": "Product visibility Archives"
+            },
+            "description": "",
+            "public": false,
+            "publicly_queryable": false,
+            "hierarchical": false,
+            "show_ui": false,
+            "show_in_menu": false,
+            "show_in_nav_menus": false,
+            "show_tagcloud": false,
+            "show_in_quick_edit": false,
+            "show_admin_column": false,
+            "meta_box_cb": "post_tags_meta_box",
+            "meta_box_sanitize_cb": "taxonomy_meta_box_sanitize_cb_input",
+            "object_type": [
+              "product",
+              "product_variation"
+            ],
+            "cap": {
+              "manage_terms": "manage_categories",
+              "edit_terms": "manage_categories",
+              "delete_terms": "manage_categories",
+              "assign_terms": "edit_posts"
+            },
+            "rewrite": false,
+            "query_var": false,
+            "update_count_callback": "",
+            "show_in_rest": false,
+            "rest_base": false,
+            "rest_namespace": false,
+            "rest_controller_class": false,
+            "rest_controller": null,
+            "default_term": null,
+            "sort": null,
+            "args": null,
+            "_builtin": false
+          },
+          "product_cat": {
+            "name": "product_cat",
+            "label": "Product categories",
+            "labels": {
+              "name": "Product categories",
+              "singular_name": "Category",
+              "search_items": "Search categories",
+              "popular_items": null,
+              "all_items": "All categories",
+              "parent_item": "Parent category",
+              "parent_item_colon": "Parent category:",
+              "name_field_description": "The name is how it appears on your site.",
+              "slug_field_description": "The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.",
+              "parent_field_description": "Assign a parent term to create a hierarchy. The term Jazz, for example, would be the parent of Bebop and Big Band.",
+              "desc_field_description": "The description is not prominent by default; however, some themes may show it.",
+              "edit_item": "Edit category",
+              "view_item": "View Category",
+              "update_item": "Update category",
+              "add_new_item": "Add new category",
+              "new_item_name": "New category name",
+              "separate_items_with_commas": null,
+              "add_or_remove_items": null,
+              "choose_from_most_used": null,
+              "not_found": "No categories found",
+              "no_terms": "No categories",
+              "filter_by_item": "Filter by category",
+              "items_list_navigation": "Categories list navigation",
+              "items_list": "Categories list",
+              "most_used": "Most Used",
+              "back_to_items": "&larr; Go to Categories",
+              "item_link": "Product Category Link",
+              "item_link_description": "A link to a product category.",
+              "menu_name": "Categories",
+              "template_name": "Products by Category",
+              "name_admin_bar": "Category",
+              "archives": "All categories"
+            },
+            "description": "",
+            "public": true,
+            "publicly_queryable": true,
+            "hierarchical": true,
+            "show_ui": true,
+            "show_in_menu": true,
+            "show_in_nav_menus": true,
+            "show_tagcloud": true,
+            "show_in_quick_edit": true,
+            "show_admin_column": false,
+            "meta_box_cb": "post_categories_meta_box",
+            "meta_box_sanitize_cb": "taxonomy_meta_box_sanitize_cb_checkboxes",
+            "object_type": [
+              "product"
+            ],
+            "cap": {
+              "manage_terms": "manage_product_terms",
+              "edit_terms": "edit_product_terms",
+              "delete_terms": "delete_product_terms",
+              "assign_terms": "assign_product_terms"
+            },
+            "rewrite": {
+              "with_front": false,
+              "hierarchical": true,
+              "ep_mask": 0,
+              "slug": "product-category"
+            },
+            "query_var": "product_cat",
+            "update_count_callback": "_wc_term_recount",
+            "show_in_rest": true,
+            "rest_base": false,
+            "rest_namespace": "wp/v2",
+            "rest_controller_class": false,
+            "rest_controller": {},
+            "default_term": null,
+            "sort": null,
+            "args": null,
+            "_builtin": false
+          },
+          "product_tag": {
+            "name": "product_tag",
+            "label": "Product tags",
+            "labels": {
+              "name": "Product tags",
+              "singular_name": "Tag",
+              "search_items": "Search tags",
+              "popular_items": "Popular tags",
+              "all_items": "All tags",
+              "parent_item": null,
+              "parent_item_colon": null,
+              "name_field_description": "The name is how it appears on your site.",
+              "slug_field_description": "The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.",
+              "parent_field_description": null,
+              "desc_field_description": "The description is not prominent by default; however, some themes may show it.",
+              "edit_item": "Edit tag",
+              "view_item": "View Tag",
+              "update_item": "Update tag",
+              "add_new_item": "Add new tag",
+              "new_item_name": "New tag name",
+              "separate_items_with_commas": "Separate tags with commas",
+              "add_or_remove_items": "Add or remove tags",
+              "choose_from_most_used": "Choose from the most used tags",
+              "not_found": "No tags found",
+              "no_terms": "No tags",
+              "filter_by_item": null,
+              "items_list_navigation": "Tags list navigation",
+              "items_list": "Tags list",
+              "most_used": "Most Used",
+              "back_to_items": "&larr; Go to Tags",
+              "item_link": "Product Tag Link",
+              "item_link_description": "A link to a product tag.",
+              "menu_name": "Tags",
+              "template_name": "Products by Tag",
+              "name_admin_bar": "Tag",
+              "archives": "All tags"
+            },
+            "description": "",
+            "public": true,
+            "publicly_queryable": true,
+            "hierarchical": false,
+            "show_ui": true,
+            "show_in_menu": true,
+            "show_in_nav_menus": true,
+            "show_tagcloud": true,
+            "show_in_quick_edit": true,
+            "show_admin_column": false,
+            "meta_box_cb": "post_tags_meta_box",
+            "meta_box_sanitize_cb": "taxonomy_meta_box_sanitize_cb_input",
+            "object_type": [
+              "product"
+            ],
+            "cap": {
+              "manage_terms": "manage_product_terms",
+              "edit_terms": "edit_product_terms",
+              "delete_terms": "delete_product_terms",
+              "assign_terms": "assign_product_terms"
+            },
+            "rewrite": {
+              "with_front": false,
+              "hierarchical": false,
+              "ep_mask": 0,
+              "slug": "product-tag"
+            },
+            "query_var": "product_tag",
+            "update_count_callback": "_wc_term_recount",
+            "show_in_rest": true,
+            "rest_base": false,
+            "rest_namespace": "wp/v2",
+            "rest_controller_class": false,
+            "rest_controller": {},
+            "default_term": null,
+            "sort": null,
+            "args": null,
+            "_builtin": false
+          },
+          "product_shipping_class": {
+            "name": "product_shipping_class",
+            "label": "Product shipping classes",
+            "labels": {
+              "name": "Product shipping classes",
+              "singular_name": "Shipping class",
+              "search_items": "Search shipping classes",
+              "popular_items": "Popular Tags",
+              "all_items": "All shipping classes",
+              "parent_item": "Parent shipping class",
+              "parent_item_colon": "Parent shipping class:",
+              "name_field_description": "The name is how it appears on your site.",
+              "slug_field_description": "The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.",
+              "parent_field_description": null,
+              "desc_field_description": "The description is not prominent by default; however, some themes may show it.",
+              "edit_item": "Edit shipping class",
+              "view_item": "View Tag",
+              "update_item": "Update shipping class",
+              "add_new_item": "Add new shipping class",
+              "new_item_name": "New shipping class Name",
+              "separate_items_with_commas": "Separate tags with commas",
+              "add_or_remove_items": "Add or remove tags",
+              "choose_from_most_used": "Choose from the most used tags",
+              "not_found": "No tags found.",
+              "no_terms": "No tags",
+              "filter_by_item": null,
+              "items_list_navigation": "Tags list navigation",
+              "items_list": "Tags list",
+              "most_used": "Most Used",
+              "back_to_items": "&larr; Go to Tags",
+              "item_link": "Tag Link",
+              "item_link_description": "A link to a tag.",
+              "menu_name": "Shipping classes",
+              "name_admin_bar": "Shipping class",
+              "archives": "All shipping classes",
+              "template_name": "Shipping class Archives"
+            },
+            "description": "",
+            "public": false,
+            "publicly_queryable": false,
+            "hierarchical": false,
+            "show_ui": false,
+            "show_in_menu": false,
+            "show_in_nav_menus": false,
+            "show_tagcloud": false,
+            "show_in_quick_edit": false,
+            "show_admin_column": false,
+            "meta_box_cb": "post_tags_meta_box",
+            "meta_box_sanitize_cb": "taxonomy_meta_box_sanitize_cb_input",
+            "object_type": [
+              "product",
+              "product_variation"
+            ],
+            "cap": {
+              "manage_terms": "manage_product_terms",
+              "edit_terms": "edit_product_terms",
+              "delete_terms": "delete_product_terms",
+              "assign_terms": "assign_product_terms"
+            },
+            "rewrite": false,
+            "query_var": false,
+            "update_count_callback": "_update_post_term_count",
+            "show_in_rest": false,
+            "rest_base": false,
+            "rest_namespace": false,
+            "rest_controller_class": false,
+            "rest_controller": null,
+            "default_term": null,
+            "sort": null,
+            "args": null,
+            "_builtin": false
+          },
+          "pos_product_visibility": {
+            "name": "pos_product_visibility",
+            "label": "POS Product visibility",
+            "labels": {
+              "name": "POS Product visibility",
+              "singular_name": "POS Product visibility",
+              "search_items": "Search Tags",
+              "popular_items": "Popular Tags",
+              "all_items": "POS Product visibility",
+              "parent_item": null,
+              "parent_item_colon": null,
+              "name_field_description": "The name is how it appears on your site.",
+              "slug_field_description": "The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.",
+              "parent_field_description": null,
+              "desc_field_description": "The description is not prominent by default; however, some themes may show it.",
+              "edit_item": "Edit Tag",
+              "view_item": "View Tag",
+              "update_item": "Update Tag",
+              "add_new_item": "Add Tag",
+              "new_item_name": "New Tag Name",
+              "separate_items_with_commas": "Separate tags with commas",
+              "add_or_remove_items": "Add or remove tags",
+              "choose_from_most_used": "Choose from the most used tags",
+              "not_found": "No tags found.",
+              "no_terms": "No tags",
+              "filter_by_item": null,
+              "items_list_navigation": "Tags list navigation",
+              "items_list": "Tags list",
+              "most_used": "Most Used",
+              "back_to_items": "&larr; Go to Tags",
+              "item_link": "Tag Link",
+              "item_link_description": "A link to a tag.",
+              "menu_name": "POS Product visibility",
+              "name_admin_bar": "POS Product visibility",
+              "archives": "POS Product visibility",
+              "template_name": "POS Product visibility Archives"
+            },
+            "description": "",
+            "public": false,
+            "publicly_queryable": false,
+            "hierarchical": false,
+            "show_ui": false,
+            "show_in_menu": false,
+            "show_in_nav_menus": false,
+            "show_tagcloud": false,
+            "show_in_quick_edit": false,
+            "show_admin_column": false,
+            "meta_box_cb": "post_tags_meta_box",
+            "meta_box_sanitize_cb": "taxonomy_meta_box_sanitize_cb_input",
+            "object_type": [
+              "product",
+              "product_variation"
+            ],
+            "cap": {
+              "manage_terms": "manage_categories",
+              "edit_terms": "manage_categories",
+              "delete_terms": "manage_categories",
+              "assign_terms": "edit_posts"
+            },
+            "rewrite": false,
+            "query_var": false,
+            "update_count_callback": "",
+            "show_in_rest": false,
+            "rest_base": false,
+            "rest_namespace": false,
+            "rest_controller_class": false,
+            "rest_controller": null,
+            "default_term": null,
+            "sort": null,
+            "args": null,
+            "_builtin": false
+          },
+          "pa_color": {
+            "name": "pa_color",
+            "label": "Product Color",
+            "labels": {
+              "name": "Product Color",
+              "singular_name": "Color",
+              "search_items": "Search Color",
+              "popular_items": "Popular Tags",
+              "all_items": "All Color",
+              "parent_item": "Parent Color",
+              "parent_item_colon": "Parent Color:",
+              "name_field_description": "The name is how it appears on your site.",
+              "slug_field_description": "The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.",
+              "parent_field_description": null,
+              "desc_field_description": "The description is not prominent by default; however, some themes may show it.",
+              "edit_item": "Edit Color",
+              "view_item": "View Tag",
+              "update_item": "Update Color",
+              "add_new_item": "Add new Color",
+              "new_item_name": "New Color",
+              "separate_items_with_commas": "Separate tags with commas",
+              "add_or_remove_items": "Add or remove tags",
+              "choose_from_most_used": "Choose from the most used tags",
+              "not_found": "No &quot;Color&quot; found",
+              "no_terms": "No tags",
+              "filter_by_item": null,
+              "items_list_navigation": "Tags list navigation",
+              "items_list": "Tags list",
+              "most_used": "Most Used",
+              "back_to_items": "&larr; Back to \"Color\" attributes",
+              "item_link": "Tag Link",
+              "item_link_description": "A link to a tag.",
+              "menu_name": "Product Color",
+              "name_admin_bar": "Color",
+              "archives": "All Color",
+              "template_name": "Color Archives"
+            },
+            "description": "",
+            "public": false,
+            "publicly_queryable": false,
+            "hierarchical": false,
+            "show_ui": true,
+            "show_in_menu": false,
+            "show_in_nav_menus": false,
+            "show_tagcloud": true,
+            "show_in_quick_edit": false,
+            "show_admin_column": false,
+            "meta_box_cb": false,
+            "meta_box_sanitize_cb": "taxonomy_meta_box_sanitize_cb_input",
+            "object_type": [
+              "product"
+            ],
+            "cap": {
+              "manage_terms": "manage_product_terms",
+              "edit_terms": "edit_product_terms",
+              "delete_terms": "delete_product_terms",
+              "assign_terms": "assign_product_terms"
+            },
+            "rewrite": false,
+            "query_var": false,
+            "update_count_callback": "_update_post_term_count",
+            "show_in_rest": false,
+            "rest_base": false,
+            "rest_namespace": false,
+            "rest_controller_class": false,
+            "rest_controller": null,
+            "default_term": null,
+            "sort": false,
+            "args": null,
+            "_builtin": false
+          },
+          "pa_size": {
+            "name": "pa_size",
+            "label": "Product Size",
+            "labels": {
+              "name": "Product Size",
+              "singular_name": "Size",
+              "search_items": "Search Size",
+              "popular_items": "Popular Tags",
+              "all_items": "All Size",
+              "parent_item": "Parent Size",
+              "parent_item_colon": "Parent Size:",
+              "name_field_description": "The name is how it appears on your site.",
+              "slug_field_description": "The &#8220;slug&#8221; is the URL-friendly version of the name. It is usually all lowercase and contains only letters, numbers, and hyphens.",
+              "parent_field_description": null,
+              "desc_field_description": "The description is not prominent by default; however, some themes may show it.",
+              "edit_item": "Edit Size",
+              "view_item": "View Tag",
+              "update_item": "Update Size",
+              "add_new_item": "Add new Size",
+              "new_item_name": "New Size",
+              "separate_items_with_commas": "Separate tags with commas",
+              "add_or_remove_items": "Add or remove tags",
+              "choose_from_most_used": "Choose from the most used tags",
+              "not_found": "No &quot;Size&quot; found",
+              "no_terms": "No tags",
+              "filter_by_item": null,
+              "items_list_navigation": "Tags list navigation",
+              "items_list": "Tags list",
+              "most_used": "Most Used",
+              "back_to_items": "&larr; Back to \"Size\" attributes",
+              "item_link": "Tag Link",
+              "item_link_description": "A link to a tag.",
+              "menu_name": "Product Size",
+              "name_admin_bar": "Size",
+              "archives": "All Size",
+              "template_name": "Size Archives"
+            },
+            "description": "",
+            "public": false,
+            "publicly_queryable": false,
+            "hierarchical": false,
+            "show_ui": true,
+            "show_in_menu": false,
+            "show_in_nav_menus": false,
+            "show_tagcloud": true,
+            "show_in_quick_edit": false,
+            "show_admin_column": false,
+            "meta_box_cb": false,
+            "meta_box_sanitize_cb": "taxonomy_meta_box_sanitize_cb_input",
+            "object_type": [
+              "product"
+            ],
+            "cap": {
+              "manage_terms": "manage_product_terms",
+              "edit_terms": "edit_product_terms",
+              "delete_terms": "delete_product_terms",
+              "assign_terms": "assign_product_terms"
+            },
+            "rewrite": false,
+            "query_var": false,
+            "update_count_callback": "_update_post_term_count",
+            "show_in_rest": false,
+            "rest_base": false,
+            "rest_namespace": false,
+            "rest_controller_class": false,
+            "rest_controller": null,
+            "default_term": null,
+            "sort": false,
+            "args": null,
+            "_builtin": false
+          }
+        },
+        "categories": {
+          "product_brand": [],
+          "product_type": [
+            {
+              "term_id": 5,
+              "name": "variable",
+              "slug": "variable",
+              "term_group": 0,
+              "term_taxonomy_id": 5,
+              "taxonomy": "product_type",
+              "description": "",
+              "parent": 0,
+              "count": 10,
+              "filter": "raw",
+              "term_link": "https://demo.trustyplugins.com/?taxonomy=product_type&term=variable"
+            }
+          ],
+          "product_visibility": [],
+          "product_cat": [
+            {
+              "term_id": 322,
+              "name": "Sandals",
+              "slug": "sandals",
+              "term_group": 0,
+              "term_taxonomy_id": 322,
+              "taxonomy": "product_cat",
+              "description": "",
+              "parent": 0,
+              "count": 3,
+              "filter": "raw",
+              "term_link": "https://demo.trustyplugins.com/product-category/sandals/"
+            }
+          ],
+          "product_tag": [],
+          "product_shipping_class": [],
+          "pos_product_visibility": [],
+          "pa_color": [
+            {
+              "term_id": 319,
+              "name": "Coffee",
+              "slug": "coffee",
+              "term_group": 0,
+              "term_taxonomy_id": 319,
+              "taxonomy": "pa_color",
+              "description": "",
+              "parent": 0,
+              "count": 3,
+              "filter": "raw",
+              "term_link": "https://demo.trustyplugins.com/?taxonomy=pa_color&term=coffee"
+            },
+            {
+              "term_id": 325,
+              "name": "Cream",
+              "slug": "cream",
+              "term_group": 0,
+              "term_taxonomy_id": 325,
+              "taxonomy": "pa_color",
+              "description": "",
+              "parent": 0,
+              "count": 1,
+              "filter": "raw",
+              "term_link": "https://demo.trustyplugins.com/?taxonomy=pa_color&term=cream"
+            }
+          ],
+          "pa_size": [
+            {
+              "term_id": 313,
+              "name": "11",
+              "slug": "11",
+              "term_group": 0,
+              "term_taxonomy_id": 313,
+              "taxonomy": "pa_size",
+              "description": "",
+              "parent": 0,
+              "count": 7,
+              "filter": "raw",
+              "term_link": "https://demo.trustyplugins.com/?taxonomy=pa_size&term=11"
+            },
+            {
+              "term_id": 314,
+              "name": "12",
+              "slug": "12",
+              "term_group": 0,
+              "term_taxonomy_id": 314,
+              "taxonomy": "pa_size",
+              "description": "",
+              "parent": 0,
+              "count": 8,
+              "filter": "raw",
+              "term_link": "https://demo.trustyplugins.com/?taxonomy=pa_size&term=12"
+            },
+            {
+              "term_id": 315,
+              "name": "13",
+              "slug": "13",
+              "term_group": 0,
+              "term_taxonomy_id": 315,
+              "taxonomy": "pa_size",
+              "description": "",
+              "parent": 0,
+              "count": 4,
+              "filter": "raw",
+              "term_link": "https://demo.trustyplugins.com/?taxonomy=pa_size&term=13"
+            },
+            {
+              "term_id": 308,
+              "name": "6",
+              "slug": "6",
+              "term_group": 0,
+              "term_taxonomy_id": 308,
+              "taxonomy": "pa_size",
+              "description": "",
+              "parent": 0,
+              "count": 6,
+              "filter": "raw",
+              "term_link": "https://demo.trustyplugins.com/?taxonomy=pa_size&term=6"
+            },
+            {
+              "term_id": 309,
+              "name": "7",
+              "slug": "7",
+              "term_group": 0,
+              "term_taxonomy_id": 309,
+              "taxonomy": "pa_size",
+              "description": "",
+              "parent": 0,
+              "count": 8,
+              "filter": "raw",
+              "term_link": "https://demo.trustyplugins.com/?taxonomy=pa_size&term=7"
+            },
+            {
+              "term_id": 311,
+              "name": "9",
+              "slug": "9",
+              "term_group": 0,
+              "term_taxonomy_id": 311,
+              "taxonomy": "pa_size",
+              "description": "",
+              "parent": 0,
+              "count": 10,
+              "filter": "raw",
+              "term_link": "https://demo.trustyplugins.com/?taxonomy=pa_size&term=9"
+            }
+          ]
+        },
+        "author": "admin",
+        "author_avatar": "https://demo.trustyplugins.com/wp-content/litespeed/avatar/2dd1e6adc32705f732581a03236d6d4e.jpg?ver=1786390336",
+        "date": "28-07-26",
+        "post_date": "2026-07-28 08:20:15",
+        "meta_fields": {
+          "total_sales": [
+            "0"
+          ],
+          "_price": [
+            "270"
+          ]
+        },
+        "customtext": "Custom text",
+        "commentcount": 0,
+        "product": {
+          "price_html": "<del aria-hidden=\"true\"><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\" translate=\"no\">&#36;</span>290.00</bdi></span></del> <span class=\"screen-reader-text\">Original price was: &#036;290.00.</span><ins aria-hidden=\"true\"><span class=\"woocommerce-Price-amount amount\"><bdi><span class=\"woocommerce-Price-currencySymbol\" translate=\"no\">&#36;</span>270.00</bdi></span></ins><span class=\"screen-reader-text\">Current price is: &#036;270.00.</span>",
+          "regular_price": "",
+          "sale_price": "",
+          "add_to_cart_text": "Buy Now",
+          "add_to_cart_url": "https://demo.trustyplugins.com/product/classic-heeled-sandal/",
+          "is_purchasable": true,
+          "is_in_stock": true,
+          "is_on_sale": true,
+          "is_featured": false,
+          "stock_quantity": null,
+          "stock_status": "instock",
+          "sku": "",
+          "total_sales": 0,
+          "date_created": "2026-07-28T08:20:15+00:00",
+          "product_type": "variable",
+          "product_id": 16779
+        },
+        "price_data": {
+          "currency": "&#36;",
+          "product_type": "variable",
+          "regular_price": "290.00",
+          "sale_price": "270.00"
+        }
+      },
+      "layout_source": "caf_builder",
+      "results_selector": "ul.products"
+    },
+    "breadcrumb_data": {
+      "select_builder": "true",
+      "select_layout": "false"
+    }
+  },
+  "_export_meta": {
+    "version": "1.0.0",
+    "plugin": "category-ajax-filter-pro",
+    "exported_at": "2026-08-14T07:27:44.092Z",
+    "scope": "post_layout",
+    "layout_settings_mode": null,
+    "layout_settings_option": null,
+    "layout_settings_custom_options": []
+  }
+}

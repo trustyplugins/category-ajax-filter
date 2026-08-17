@@ -1,5 +1,5 @@
 {
-    "manifest_version": "2026.07.06.1-local",
+    "manifest_version": "2026.08.14.8-local",
     "source": "local",
     "templates": [
         {
@@ -9,9 +9,9 @@
             "scope": "filter_layout",
             "description": "Single checkbox filter module preset.",
             "tier": "free",
-            "file": "templates/library_filter_checkbox_filter_full-width-checkbox.json",
+            "file": "filter/checkbox/full-width-checkbox.json",
             "filterLibraryTab": "checkbox_filter",
-            "preview": "previews/library_filter_checkbox_filter_full-width-checkbox.jpg"
+            "preview": "previews/full-width-checkbox.jpg"
         },
         {
             "id": "library_filter_checkbox_filter_list-style",
@@ -20,9 +20,9 @@
             "scope": "filter_layout",
             "description": "Single checkbox filter module preset.",
             "tier": "free",
-            "file": "templates/library_filter_checkbox_filter_list-style.json",
+            "file": "filter/checkbox/list-style-checkbox.json",
             "filterLibraryTab": "checkbox_filter",
-            "preview": "previews/library_filter_checkbox_filter_list-style.jpg"
+            "preview": "previews/list-style-checkbox.jpg"
         },
         {
             "id": "library_filter_checkbox_filter_radio-style-checkbox",
@@ -31,9 +31,9 @@
             "scope": "filter_layout",
             "description": "Single checkbox filter module preset.",
             "tier": "free",
-            "file": "templates/library_filter_checkbox_filter_radio-style-checkbox.json",
+            "file": "filter/checkbox/radio-style-checkbox.json",
             "filterLibraryTab": "checkbox_filter",
-            "preview": "previews/library_filter_checkbox_filter_radio-style-checkbox.jpg"
+            "preview": "previews/radio-style-checkbox.jpg"
         },
         {
             "id": "library_filter_checkbox_filter_solid-button",
@@ -42,9 +42,9 @@
             "scope": "filter_layout",
             "description": "Single checkbox filter module preset.",
             "tier": "free",
-            "file": "templates/library_filter_checkbox_filter_solid-button.json",
+            "file": "filter/checkbox/solid-button-checkbox.json",
             "filterLibraryTab": "checkbox_filter",
-            "preview": "previews/library_filter_checkbox_filter_solid-button.jpg"
+            "preview": "previews/solid-button-checkbox.jpg"
         },
         {
             "id": "library_filter_checkbox_filter_traditional",
@@ -53,9 +53,20 @@
             "scope": "filter_layout",
             "description": "Single checkbox filter module preset.",
             "tier": "free",
-            "file": "templates/library_filter_checkbox_filter_traditional.json",
+            "file": "filter/checkbox/traditional-checkbox.json",
             "filterLibraryTab": "checkbox_filter",
-            "preview": "previews/library_filter_checkbox_filter_traditional.jpg"
+            "preview": "previews/traditional-checkbox.jpg"
+        },
+        {
+            "id": "library_filter_checkbox_filter_color-swatch-checkbox",
+            "title": "Color Swatch Checkbox",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single checkbox filter module preset.",
+            "tier": "free",
+            "file": "filter/checkbox/color-swatch-checkbox.json",
+            "filterLibraryTab": "checkbox_filter",
+            "preview": "previews/color-swatch-checkbox.jpg"
         },
         {
             "id": "library_filter_dropdown_filter_button-style-dropdown",
@@ -64,9 +75,9 @@
             "scope": "filter_layout",
             "description": "Single dropdown filter module preset.",
             "tier": "free",
-            "file": "templates/library_filter_dropdown_filter_button-style-dropdown.json",
+            "file": "filter/dropdown/button-style-dropdown.json",
             "filterLibraryTab": "dropdown_filter",
-            "preview": "previews/library_filter_dropdown_filter_button-style-dropdown.jpg"
+            "preview": "previews/button-style-dropdown.jpg"
         },
         {
             "id": "library_filter_dropdown_filter_dropdown-with-label",
@@ -75,9 +86,9 @@
             "scope": "filter_layout",
             "description": "Single dropdown filter module preset.",
             "tier": "free",
-            "file": "templates/library_filter_dropdown_filter_dropdown-with-label.json",
+            "file": "filter/dropdown/dropdown-with-label.json",
             "filterLibraryTab": "dropdown_filter",
-            "preview": "previews/library_filter_dropdown_filter_dropdown-with-label.jpg"
+            "preview": "previews/dropdown-with-label.jpg"
         },
         {
             "id": "library_filter_dropdown_filter_traditional-dropdown",
@@ -86,9 +97,31 @@
             "scope": "filter_layout",
             "description": "Single dropdown filter module preset.",
             "tier": "free",
-            "file": "templates/library_filter_dropdown_filter_traditional-dropdown.json",
+            "file": "filter/dropdown/traditional-dropdown.json",
             "filterLibraryTab": "dropdown_filter",
-            "preview": "previews/library_filter_dropdown_filter_traditional-dropdown.jpg"
+            "preview": "previews/traditional-dropdown.jpg"
+        },
+        {
+            "id": "library_filter_dropdown_filter_color-swatch-dropdown",
+            "title": "Color Swatch Dropdown",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single dropdown filter module preset.",
+            "tier": "free",
+            "file": "filter/dropdown/color-swatch-dropdown.json",
+            "filterLibraryTab": "dropdown_filter",
+            "preview": "previews/color-swatch-dropdown.jpg"
+        },
+        {
+            "id": "library_filter_range_slider_classic-range-slider",
+            "title": "Classic Range Slider",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Single range slider filter module preset.",
+            "tier": "free",
+            "file": "filter/range-slider/classic-range-slider.json",
+            "filterLibraryTab": "range_slider",
+            "preview": "previews/classic-range-slider.jpg"
         },
         {
             "id": "library_filter_full_filter_full-sidebar-filter",
@@ -97,9 +130,9 @@
             "scope": "filter_layout",
             "description": "Full filter area preset.",
             "tier": "free",
-            "file": "templates/library_filter_full_filter_full-sidebar-filter.json",
+            "file": "filter/full-filter/full-sidebar-filter.json",
             "filterLibraryTab": "full_filter",
-            "preview": "previews/library_filter_full_filter_full-sidebar-filter.jpg"
+            "preview": "previews/full-sidebar-filter.jpg"
         },
         {
             "id": "library_filter_full_filter_full-width-topbar",
@@ -108,9 +141,9 @@
             "scope": "filter_layout",
             "description": "Full filter area preset.",
             "tier": "free",
-            "file": "templates/library_filter_full_filter_full-width-topbar.json",
+            "file": "filter/full-filter/full-width-topbar.json",
             "filterLibraryTab": "full_filter",
-            "preview": "previews/library_filter_full_filter_full-width-topbar.jpg"
+            "preview": "previews/full-width-topbar.jpg"
         },
         {
             "id": "library_filter_full_filter_search-dropdown",
@@ -119,9 +152,31 @@
             "scope": "filter_layout",
             "description": "Full filter area preset.",
             "tier": "free",
-            "file": "templates/library_filter_full_filter_search-dropdown.json",
+            "file": "filter/full-filter/search-dropdown.json",
             "filterLibraryTab": "full_filter",
-            "preview": "previews/library_filter_full_filter_search-dropdown.jpg"
+            "preview": "previews/search-dropdown.jpg"
+        },
+        {
+            "id": "library_filter_full_filter_product-filter-sidebar",
+            "title": "Product Filter Sidebar",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Full filter area preset.",
+            "tier": "free",
+            "file": "filter/full-filter/product-filter-sidebar.json",
+            "filterLibraryTab": "full_filter",
+            "preview": "previews/product-filter-sidebar.jpg"
+        },
+        {
+            "id": "library_filter_full_filter_product-filter-topbar",
+            "title": "Product Filter Topbar",
+            "section": "filter",
+            "scope": "filter_layout",
+            "description": "Full filter area preset.",
+            "tier": "free",
+            "file": "filter/full-filter/product-filter-topbar.json",
+            "filterLibraryTab": "full_filter",
+            "preview": "previews/product-filter-topbar.jpg"
         },
         {
             "id": "library_filter_reset_reset-button-text",
@@ -130,9 +185,9 @@
             "scope": "filter_layout",
             "description": "Single reset module preset.",
             "tier": "free",
-            "file": "templates/library_filter_reset_reset-button-text.json",
+            "file": "filter/reset/reset-button-text.json",
             "filterLibraryTab": "reset",
-            "preview": "previews/library_filter_reset_reset-button-text.jpg"
+            "preview": "previews/reset-button-text.jpg"
         },
         {
             "id": "library_filter_reset_reset-button",
@@ -141,9 +196,9 @@
             "scope": "filter_layout",
             "description": "Single reset module preset.",
             "tier": "free",
-            "file": "templates/library_filter_reset_reset-button.json",
+            "file": "filter/reset/reset-button.json",
             "filterLibraryTab": "reset",
-            "preview": "previews/library_filter_reset_reset-button.jpg"
+            "preview": "previews/reset-button.jpg"
         },
         {
             "id": "library_filter_search_round-search-box",
@@ -152,9 +207,9 @@
             "scope": "filter_layout",
             "description": "Single search module preset.",
             "tier": "free",
-            "file": "templates/library_filter_search_round-search-box.json",
+            "file": "filter/search/round-search-box.json",
             "filterLibraryTab": "search",
-            "preview": "previews/library_filter_search_round-search-box.jpg"
+            "preview": "previews/round-search-box.jpg"
         },
         {
             "id": "library_filter_search_square-search-box",
@@ -163,29 +218,20 @@
             "scope": "filter_layout",
             "description": "Single search module preset.",
             "tier": "free",
-            "file": "templates/library_filter_search_square-search-box.json",
+            "file": "filter/search/square-search-box.json",
             "filterLibraryTab": "search",
-            "preview": "previews/library_filter_search_square-search-box.jpg"
+            "preview": "previews/square-search-box.jpg"
         },
         {
-            "id": "library_full_filter_layout_full-width-layout",
-            "title": "Full Width Layout",
+            "id": "library_full_filter_layout_boxed-title",
+            "title": "Boxed Title Layout",
             "section": "full_filter_layout",
             "scope": "full_layout",
             "description": "Complete filter, post, and preview settings preset.",
             "tier": "free",
-            "file": "templates/library_full_filter_layout_full-width-layout.json",
-            "preview": "previews/library_full_filter_layout_full-width-layout.jpg"
-        },
-        {
-            "id": "library_full_filter_layout_full-width-sidebar",
-            "title": "Full Width Sidebar",
-            "section": "full_filter_layout",
-            "scope": "full_layout",
-            "description": "Complete filter, post, and preview settings preset.",
-            "tier": "free",
-            "file": "templates/library_full_filter_layout_full-width-sidebar.json",
-            "preview": "previews/library_full_filter_layout_full-width-sidebar.jpg"
+            "file": "full-filter-layout/boxed-title.json",
+            "preview": "previews/boxed-title.jpg",
+            "demoUrl": "https://demo.trustyplugins.com/boxed-title-filter"
         },
         {
             "id": "library_full_filter_layout_full-width-with-search",
@@ -194,38 +240,97 @@
             "scope": "full_layout",
             "description": "Complete filter, post, and preview settings preset.",
             "tier": "free",
-            "file": "templates/library_full_filter_layout_full-width-with-search.json",
-            "preview": "previews/library_full_filter_layout_full-width-with-search.jpg"
+            "file": "full-filter-layout/full-width-with-search.json",
+            "preview": "previews/full-width-with-search.jpg",
+            "demoUrl": "https://demo.trustyplugins.com/full-width-with-search"
         },
         {
-            "id": "library_full_filter_layout_job-board-layout",
-            "title": "Job Board Layout",
+            "id": "library_full_filter_layout_glossy-look",
+            "title": "Glossy Look",
             "section": "full_filter_layout",
             "scope": "full_layout",
             "description": "Complete filter, post, and preview settings preset.",
             "tier": "free",
-            "file": "templates/library_full_filter_layout_job-board-layout.json",
-            "preview": "previews/library_full_filter_layout_job-board-layout.jpg"
+            "file": "full-filter-layout/glossy-look.json",
+            "preview": "previews/glossy-look.jpg",
+            "demoUrl": "https://demo.trustyplugins.com/glossy-look"
         },
         {
-            "id": "library_full_filter_layout_recipe-filter-layout",
-            "title": "Recipe Filter Layout",
+            "id": "library_full_filter_layout_job-board",
+            "title": "Job Board Filter",
             "section": "full_filter_layout",
             "scope": "full_layout",
             "description": "Complete filter, post, and preview settings preset.",
             "tier": "free",
-            "file": "templates/library_full_filter_layout_recipe-filter-layout.json",
-            "preview": "previews/library_full_filter_layout_recipe-filter-layout.jpg"
+            "file": "full-filter-layout/job-board.json",
+            "preview": "previews/job-board.jpg",
+            "demoUrl": "https://demo.trustyplugins.com/job-board-filter"
         },
         {
-            "id": "library_full_filter_layout_sidebar-filter-layout",
-            "title": "Sidebar Filter Layout",
+            "id": "library_full_filter_layout_products-sidebar-filter",
+            "title": "Products Sidebar Filter",
             "section": "full_filter_layout",
             "scope": "full_layout",
             "description": "Complete filter, post, and preview settings preset.",
             "tier": "free",
-            "file": "templates/library_full_filter_layout_sidebar-filter-layout.json",
-            "preview": "previews/library_full_filter_layout_sidebar-filter-layout.jpg"
+            "file": "full-filter-layout/products-sidebar-filter.json",
+            "preview": "previews/products-sidebar-filter.jpg",
+            "demoUrl": "https://demo.trustyplugins.com/products-sidebar-filter"
+        },
+        {
+            "id": "library_full_filter_layout_products-top-bar-filter",
+            "title": "Products Top Bar Filter",
+            "section": "full_filter_layout",
+            "scope": "full_layout",
+            "description": "Complete filter, post, and preview settings preset.",
+            "tier": "free",
+            "file": "full-filter-layout/products-top-bar-filter.json",
+            "preview": "previews/products-top-bar-filter.jpg",
+            "demoUrl": "https://demo.trustyplugins.com/products-topbar-filter"
+        },
+        {
+            "id": "library_full_filter_layout_recipe-filter",
+            "title": "Recipe Filter",
+            "section": "full_filter_layout",
+            "scope": "full_layout",
+            "description": "Complete filter, post, and preview settings preset.",
+            "tier": "free",
+            "file": "full-filter-layout/recipe-filter.json",
+            "preview": "previews/recipe-filter.jpg",
+            "demoUrl": "https://demo.trustyplugins.com/recipe-filter"
+        },
+        {
+            "id": "library_full_filter_layout_side-image-description",
+            "title": "Side Image & Description",
+            "section": "full_filter_layout",
+            "scope": "full_layout",
+            "description": "Complete filter, post, and preview settings preset.",
+            "tier": "free",
+            "file": "full-filter-layout/side-image-description.json",
+            "preview": "previews/side-image-description.jpg",
+            "demoUrl": "https://demo.trustyplugins.com/side-image-description"
+        },
+        {
+            "id": "library_full_filter_layout_simple-blogs-sidebar",
+            "title": "Simple Blogs Sidebar",
+            "section": "full_filter_layout",
+            "scope": "full_layout",
+            "description": "Complete filter, post, and preview settings preset.",
+            "tier": "free",
+            "file": "full-filter-layout/simple-blogs-sidebar.json",
+            "preview": "previews/simple-blogs-sidebar.jpg",
+            "demoUrl": "https://demo.trustyplugins.com/simple-blogs-sidebar"
+        },
+        {
+            "id": "library_full_filter_layout_top-dropdown-filter",
+            "title": "Top Dropdown Filter",
+            "section": "full_filter_layout",
+            "scope": "full_layout",
+            "description": "Complete filter, post, and preview settings preset.",
+            "tier": "free",
+            "file": "full-filter-layout/top-dropdown-filter.json",
+            "preview": "previews/top-dropdown-filter.jpg",
+            "demoUrl": "https://demo.trustyplugins.com/top-dropdown-filter"
         },
         {
             "id": "library_layout_settings_pagination_pagination-circle",
@@ -234,9 +339,9 @@
             "scope": "layout_settings",
             "description": "Layout settings preset.",
             "tier": "free",
-            "file": "templates/library_layout_settings_pagination_pagination-circle.json",
+            "file": "layout-settings/pagination/pagination-circle.json",
             "layoutSettingsLibraryTab": "pagination",
-            "preview": "previews/library_layout_settings_pagination_pagination-circle.jpg"
+            "preview": "previews/pagination-circle.jpg"
         },
         {
             "id": "library_layout_settings_pagination_pagination-square",
@@ -245,9 +350,9 @@
             "scope": "layout_settings",
             "description": "Layout settings preset.",
             "tier": "free",
-            "file": "templates/library_layout_settings_pagination_pagination-square.json",
+            "file": "layout-settings/pagination/pagination-square.json",
             "layoutSettingsLibraryTab": "pagination",
-            "preview": "previews/library_layout_settings_pagination_pagination-square.jpg"
+            "preview": "previews/pagination-square.jpg"
         },
         {
             "id": "library_layout_settings_pagination_pagination-text",
@@ -256,9 +361,19 @@
             "scope": "layout_settings",
             "description": "Layout settings preset.",
             "tier": "free",
-            "file": "templates/library_layout_settings_pagination_pagination-text.json",
+            "file": "layout-settings/pagination/pagination-text.json",
             "layoutSettingsLibraryTab": "pagination",
-            "preview": "previews/library_layout_settings_pagination_pagination-text.jpg"
+            "preview": "previews/pagination-text.jpg"
+        },
+        {
+            "id": "library_single_post_item_classic-product-item",
+            "title": "Classic Product Item",
+            "section": "single_post_item",
+            "scope": "post_layout",
+            "description": "Post card layout preset.",
+            "tier": "free",
+            "file": "single-post-item/classic-product-item.json",
+            "preview": "previews/classic-product-item.jpg"
         },
         {
             "id": "library_single_post_item_fancy-post-item",
@@ -267,8 +382,8 @@
             "scope": "post_layout",
             "description": "Post card layout preset.",
             "tier": "free",
-            "file": "templates/library_single_post_item_fancy-post-item.json",
-            "preview": "previews/library_single_post_item_fancy-post-item.jpg"
+            "file": "single-post-item/fancy-post-item.json",
+            "preview": "previews/fancy-post-item.jpg"
         },
         {
             "id": "library_single_post_item_full-width-post",
@@ -277,8 +392,8 @@
             "scope": "post_layout",
             "description": "Post card layout preset.",
             "tier": "free",
-            "file": "templates/library_single_post_item_full-width-post.json",
-            "preview": "previews/library_single_post_item_full-width-post.jpg"
+            "file": "single-post-item/full-width-post.json",
+            "preview": "previews/full-width-post.jpg"
         },
         {
             "id": "library_single_post_item_glossy-look-post-item",
@@ -287,8 +402,8 @@
             "scope": "post_layout",
             "description": "Post card layout preset.",
             "tier": "free",
-            "file": "templates/library_single_post_item_glossy-look-post-item.json",
-            "preview": "previews/library_single_post_item_glossy-look-post-item.jpg"
+            "file": "single-post-item/glossy-look-post-item.json",
+            "preview": "previews/glossy-look-post-item.jpg"
         },
         {
             "id": "library_single_post_item_single-post-item-simple",
@@ -297,8 +412,8 @@
             "scope": "post_layout",
             "description": "Post card layout preset.",
             "tier": "free",
-            "file": "templates/library_single_post_item_single-post-item-simple.json",
-            "preview": "previews/library_single_post_item_single-post-item-simple.jpg"
+            "file": "single-post-item/single-post-item-simple.json",
+            "preview": "previews/single-post-item-simple.jpg"
         }
     ]
 }

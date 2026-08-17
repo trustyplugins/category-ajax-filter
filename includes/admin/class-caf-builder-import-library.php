@@ -117,6 +117,21 @@ class CAF_Builder_Import_Library {
 	}
 
 	/**
+	 * Allow only https live-demo URLs from the manifest.
+	 *
+	 * @param string $url Raw demo URL.
+	 * @return string
+	 */
+	protected static function resolve_demo_url( $url ) {
+		$url = esc_url_raw( (string) $url );
+		if ( '' === $url || 0 !== stripos( $url, 'https://' ) ) {
+			return '';
+		}
+
+		return $url;
+	}
+
+	/**
 	 * @return array<int, array<string, mixed>>
 	 */
 	public static function get_templates() {
@@ -157,6 +172,12 @@ class CAF_Builder_Import_Library {
 					$row['preview'] = $preview;
 				}
 			}
+			if ( ! empty( $template['demoUrl'] ) ) {
+				$demo_url = self::resolve_demo_url( (string) $template['demoUrl'] );
+				if ( '' !== $demo_url ) {
+					$row['demoUrl'] = $demo_url;
+				}
+			}
 
 			$templates[] = $row;
 		}
@@ -165,11 +186,44 @@ class CAF_Builder_Import_Library {
 	}
 
 	/**
+	 * Unwrap a library JSON document into the import payload.
+	 *
+	 * @param mixed $decoded Decoded JSON.
+	 * @return array<string, mixed>|null
+	 */
+	protected static function extract_payload_from_decoded( $decoded ) {
+		if ( ! is_array( $decoded ) || empty( $decoded ) ) {
+			return null;
+		}
+
+		$payload = $decoded;
+		if ( isset( $decoded['payload'] ) && is_array( $decoded['payload'] ) && ! empty( $decoded['payload'] ) ) {
+			$payload = $decoded['payload'];
+			if ( isset( $payload['payload'] ) && is_array( $payload['payload'] ) && ! empty( $payload['payload'] ) ) {
+				$payload = $payload['payload'];
+			}
+		}
+
+		if (
+			isset( $payload['common_data'] )
+			|| isset( $payload['filter_layout_data'] )
+			|| isset( $payload['post_layout_data'] )
+			|| isset( $payload['module_data'] )
+			|| isset( $payload['_export_meta'] )
+		) {
+			return $payload;
+		}
+
+		return null;
+	}
+
+	/**
 	 * @param string $template_id Template ID.
 	 * @return array<string, mixed>|null
 	 */
 	public static function get_template( $template_id ) {
-		$template_id = sanitize_key( (string) $template_id );
+		$raw_id      = (string) $template_id;
+		$template_id = sanitize_key( $raw_id );
 		if ( '' === $template_id ) {
 			return null;
 		}
@@ -185,21 +239,36 @@ class CAF_Builder_Import_Library {
 			if ( ! is_array( $template ) ) {
 				continue;
 			}
-			$id = isset( $template['id'] ) ? sanitize_key( (string) $template['id'] ) : '';
-			if ( $id !== $template_id ) {
+			$entry_id = isset( $template['id'] ) ? (string) $template['id'] : '';
+			if ( sanitize_key( $entry_id ) !== $template_id && $entry_id !== $raw_id ) {
 				continue;
 			}
 			$meta     = $template;
-			$file_rel = isset( $template['file'] ) ? (string) $template['file'] : ( 'templates/' . $id . '.json' );
+			$file_rel = isset( $template['file'] ) ? (string) $template['file'] : '';
 			break;
 		}
 
-		if ( ! $meta || '' === $file_rel ) {
+		if ( ! $meta ) {
 			return null;
 		}
 
-		$path = self::resolve_library_path( $file_rel );
-		if ( '' === $path || ! is_readable( $path ) ) {
+		$candidates = array();
+		if ( '' !== $file_rel ) {
+			$candidates[] = $file_rel;
+		}
+		$candidates[] = 'templates/' . $template_id . '.json';
+		$candidates[] = 'full-filter-layout/' . preg_replace( '/^library_full_filter_layout_/', '', $template_id ) . '.json';
+
+		$path = '';
+		foreach ( array_unique( $candidates ) as $relative ) {
+			$resolved = self::resolve_library_path( $relative );
+			if ( '' !== $resolved && file_exists( $resolved ) ) {
+				$path = $resolved;
+				break;
+			}
+		}
+
+		if ( '' === $path ) {
 			return null;
 		}
 
@@ -212,19 +281,14 @@ class CAF_Builder_Import_Library {
 			$raw = substr( $raw, 3 );
 		}
 
-		$decoded = json_decode( $raw, true );
+		$flags   = defined( 'JSON_INVALID_UTF8_SUBSTITUTE' ) ? JSON_INVALID_UTF8_SUBSTITUTE : 0;
+		$decoded = json_decode( $raw, true, 2048, $flags );
 		if ( ! is_array( $decoded ) ) {
 			return null;
 		}
 
-		$payload = null;
-		if ( isset( $decoded['payload'] ) && is_array( $decoded['payload'] ) ) {
-			$payload = $decoded['payload'];
-		} elseif ( isset( $decoded['common_data'] ) || isset( $decoded['filter_layout_data'] ) || isset( $decoded['post_layout_data'] ) || isset( $decoded['module_data'] ) ) {
-			$payload = $decoded;
-		}
-
-		if ( ! is_array( $payload ) || empty( $payload ) ) {
+		$payload = self::extract_payload_from_decoded( $decoded );
+		if ( ! is_array( $payload ) ) {
 			return null;
 		}
 
@@ -250,6 +314,12 @@ class CAF_Builder_Import_Library {
 				$row['preview'] = $preview;
 			}
 		}
+		if ( ! empty( $meta['demoUrl'] ) ) {
+			$demo_url = self::resolve_demo_url( (string) $meta['demoUrl'] );
+			if ( '' !== $demo_url ) {
+				$row['demoUrl'] = $demo_url;
+			}
+		}
 
 		return $row;
 	}
@@ -258,7 +328,7 @@ class CAF_Builder_Import_Library {
 		check_ajax_referer( 'tc_caf_ajax_nonce', 'nonce' );
 
 		if ( ! current_user_can( 'edit_posts' ) ) {
-			wp_send_json_error( array( 'message' => 'Permission denied.' ), 403 );
+			wp_send_json_error( array( 'message' => 'Permission denied.' ) );
 		}
 
 		return true;
@@ -286,11 +356,20 @@ class CAF_Builder_Import_Library {
 	public static function ajax_get_template() {
 		self::verify_library_ajax_request();
 
-		$template_id = isset( $_POST['template_id'] ) ? sanitize_key( wp_unslash( $_POST['template_id'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$template_id = isset( $_POST['template_id'] ) ? wp_unslash( $_POST['template_id'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( '' === $template_id && isset( $_REQUEST['template_id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$template_id = wp_unslash( $_REQUEST['template_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		}
+		$template_id = sanitize_text_field( (string) $template_id );
 		$template    = self::get_template( $template_id );
 
-		if ( ! $template || empty( $template['payload'] ) ) {
-			wp_send_json_error( array( 'message' => 'Template payload is not available.' ), 404 );
+		if ( ! $template || empty( $template['payload'] ) || ! is_array( $template['payload'] ) ) {
+			wp_send_json_error(
+				array(
+					'message' => 'Template payload is not available.',
+					'id'      => sanitize_key( $template_id ),
+				)
+			);
 		}
 
 		wp_send_json_success( $template );
