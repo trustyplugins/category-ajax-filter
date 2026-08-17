@@ -247,13 +247,18 @@ AI Search (Pro) uses semantic, NLP-based matching so results reflect what a visi
 
 == Changelog ==
 
-= 3.0.0 = (07/07/2026)
+= 3.0.0 = (18/08/2026)
 * Major update — introduces the visual CAF Builder for designing AJAX filters and post layouts from the admin.
 * Added visual drag-and-drop filter builder in the admin.
 * New React-based builder UI for filter and post layout design.
 * Free tier includes core builder layouts, modules, and tier limits.
 * WordPress Plugin Check and coding standards improvements.
 * Security and escaping fixes for export and template output.
+
+= 2.9.1 = (17/08/2026)
+* Tested up to WordPress 7.1.
+* Fixed category/terms meta saving (term IDs are now sanitized as integers instead of CSS class strings).
+* Fixed broken conditional stylesheet URLs caused by accidental quote characters in asset paths.
 
 
 = 2.9.0 = (06/08/2026)
@@ -522,5 +527,5 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 
 == Upgrade Notice ==
 
-= 2.8.5 =
-Recommended update — includes admin design improvements and WordPress 7.0 compatibility.
+= 2.9.1 =
+Recommended update — tested with WordPress 7.1. Includes security hardenings, cache-safe AJAX nonce handling, and fixes for terms saving and stylesheet loading.

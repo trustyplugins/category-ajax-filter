@@ -110,9 +110,13 @@ class CAF_Meta_Boxes
             update_post_meta($post_id, 'caf_taxonomy', $tax_val);
         }
         if (isset($_POST['category-list'])) {
-            $terms = sanitize_html_class( wp_unslash( $_POST['category-list'] ) );
-
+            // category-list[] is an array of term IDs from checkboxes — not a CSS class string.
+            $terms = array_map('absint', (array) wp_unslash($_POST['category-list']));
+            $terms = array_values(array_filter($terms));
             update_post_meta($post_id, 'caf_terms', $terms);
+        } else {
+            // No terms submitted (all unchecked) — store empty list so frontend validation stays consistent.
+            update_post_meta($post_id, 'caf_terms', array());
         }
         if (isset($_POST['caf-post-orders-by'])) {
             $caf_post_orders_by = sanitize_text_field( wp_unslash( $_POST['caf-post-orders-by'] ) );
@@ -392,8 +396,9 @@ class CAF_load_scripts
                         $caf_filter_layout = get_post_meta($id, 'caf_filter_layout', true);
                     }
                     wp_enqueue_style('tc-caf-common-style', TC_CAF_URL . 'assets/css/common/common.min.css', '', TC_CAF_PLUGIN_VERSION);
-                    wp_enqueue_style('tc-caf-' . $caf_post_layout, TC_CAF_URL . 'assets/css/post/"' . $caf_post_layout . '".min.css', '', TC_CAF_PLUGIN_VERSION);
-                    wp_enqueue_style('tc-caf-' . $caf_filter_layout, TC_CAF_URL . 'assets/css/filter/"' . $caf_filter_layout . '".min.css', '', TC_CAF_PLUGIN_VERSION);
+                    wp_enqueue_style('tc-caf-' . $caf_post_layout, TC_CAF_URL . 'assets/css/post/' . $caf_post_layout . '.min.css', '', TC_CAF_PLUGIN_VERSION);
+                    wp_enqueue_style('tc-caf-' . $caf_filter_layout, TC_CAF_URL . 'assets/css/filter/' . $caf_filter_layout . '.min.css', '', TC_CAF_PLUGIN_VERSION);
+
                 }
                 $b = 1;
                 $handle = "tc-caf-dynamic-style-" . $caf_filter_layout;
