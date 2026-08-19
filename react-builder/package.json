@@ -1,0 +1,66 @@
+{
+  "name": "react-builder",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/icons": "^5.6.1",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/modifiers": "^9.0.0",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@monaco-editor/react": "^4.7.0",
+    "@reduxjs/toolkit": "^2.11.2",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "antd": "^6.3.5",
+    "axios": "^1.15.0",
+    "html-react-parser": "^5.0.7",
+    "lodash": "^4.17.21",
+    "opentype.js": "^2.0.0",
+    "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
+    "react-dom": "^18.2.0",
+    "react-draggable": "^4.5.0",
+    "react-redux": "^9.2.0",
+    "react-resizable": "^3.1.3",
+    "recharts": "^3.8.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "help": "node scripts/print-help.js",
+    "start": "wp-scripts start",
+    "build": "wp-scripts build",
+    "build:free": "cross-env CAF_BUILD_FREE=1 wp-scripts build && cross-env CAF_BUILD_OUT=free node scripts/sync-build-to-free.js",
+    "smoke:free": "node scripts/smoke-free-build.js",
+    "release:free": "cross-env CAF_BUILD_FREE=1 wp-scripts build && node scripts/sync-release-to-free.js && node scripts/stage-release-free.js && node scripts/smoke-free-build.js",
+    "release:pro": "wp-scripts build && node scripts/prepare-pro-release.js && node scripts/stage-release-pro.js",
+    "release:free:debug": "cross-env CAF_BUILD_FREE=1 CAF_DEBUG_BUILD=1 wp-scripts build && node scripts/sync-debug-release-to-free.js && node scripts/stage-release-free-debug.js",
+    "release:pro:debug": "cross-env CAF_DEBUG_BUILD=1 wp-scripts build && node scripts/prepare-pro-debug-release.js && node scripts/stage-release-pro-debug.js"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^31.8.0",
+    "cross-env": "^10.1.0"
+  }
+}

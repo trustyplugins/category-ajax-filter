@@ -169,10 +169,20 @@ Skip the design process — import professional, ready-made filter layouts in se
 
 == Source Code ==
 
-This plugin ships minified JavaScript for the admin filter builder. Per [WordPress plugin guideline #4](https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/#4-code-must-be-mostly-human-readable), human-readable source code is publicly maintained here:
+This plugin ships minified JavaScript for the admin filter builder. Per [WordPress plugin guideline #4](https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/#4-code-must-be-mostly-human-readable), human-readable source code and build tools are publicly maintained here:
 
-* **React builder source (admin UI):** https://github.com/trustyplugins/category-ajax-filter/tree/3.0 — see `react-builder/src/`
+* **React builder source (admin UI):** https://github.com/trustyplugins/category-ajax-filter/tree/3.0/react-builder/src
+* **Build tools:** https://github.com/trustyplugins/category-ajax-filter/tree/3.0/react-builder (`package.json`, `webpack.config.js`, `scripts/`) — see `react-builder/BUILD.md`
 * **PHP plugin source:** https://github.com/trustyplugins/category-ajax-filter/tree/3.0
+
+To rebuild the admin builder JavaScript:
+
+    git clone -b 3.0 https://github.com/trustyplugins/category-ajax-filter.git
+    cd category-ajax-filter/react-builder
+    npm install
+    npx cross-env CAF_BUILD_FREE=1 npx wp-scripts build
+
+The production plugin zip contains only the compiled files under `react-builder/build/`.
 
 == Installation ==
 
