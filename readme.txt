@@ -5,7 +5,7 @@ Plugin URI: https://wordpress.org/plugins/category-ajax-filter/
 Tags: ajax filter, product filter, woocommerce, category filter, taxonomy filter
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 3.0.0
+Stable tag: 3.0.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -279,6 +279,9 @@ Yes. The Layout Settings step includes a flex-based control for arranging the fi
 7. **Live Demos**: View real-world examples of filters with wordpress posts, woocommerce, custom post types, taxonomies and stunning layouts.
 
 == Changelog ==
+= 3.0.1 = (21/08/2026)
+* Restored the Pro lock overlay on prefix/suffix settings for post modules (title, author, date, comment count, button, and badges).
+
 = 3.0.0 = (20/08/2026)
 * Major update — introduces the visual CAF Builder for designing AJAX filters and post layouts from the admin.
 * Added visual drag-and-drop filter builder in the admin.
@@ -558,6 +561,9 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 * First version of plugin.
 
 == Upgrade Notice ==
+
+= 3.0.1 =
+Recommended update — restores the Pro lock overlay on prefix/suffix settings in the builder.
 
 = 3.0.0 =
 Major update — new drag-and-drop CAF Builder, WooCommerce product filtering, import library, and WordPress 7.1 compatibility. The Classic Panel remains fully supported.
