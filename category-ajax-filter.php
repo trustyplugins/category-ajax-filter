@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: Category AJAX Filter – Advanced Filter for Posts & Custom Post Types
+Plugin Name: Category AJAX Filter – Posts, Custom Post Types & Product Filter
 Description: Filter posts/custom post types by category without page reload. Easy to sort/filter and display posts on page with Ajax. It Supports Divi, Elementor and other page builders.
 Version: 3.0.0
 Author: Trusty Plugins

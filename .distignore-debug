@@ -7,6 +7,9 @@
 .cursor
 .vscode
 
+# WP.org Playground blueprint (commit to SVN assets/, not the plugin zip)
+.wordpress-org
+
 # Release output
 dist
 dist-debug
