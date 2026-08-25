@@ -14,11 +14,9 @@ AJAX filter & WooCommerce product filter. Instantly filter posts, custom post ty
 
 == Description ==
 
-= ONE FILTER PLUGIN FOR EVERYTHING: POSTS, CUSTOM POST TYPES & WOOCOMMERCE PRODUCTS. DRAG-AND-DROP BUILDER INCLUDED. =
+= THE COMPLETE FILTER SOLUTION: POSTS, CUSTOM POST TYPES & WOOCOMMERCE PRODUCTS. DRAG-AND-DROP BUILDER INCLUDED. =
 
-Category AJAX Filter (CAF) is a fast AJAX filter and product filter plugin for WordPress. Visitors can filter posts, custom post types, and WooCommerce products by categories, tags, attributes, and price and see results instantly, without a page reload. With the free drag-and-drop CAF Builder, every element is a module: search box, dropdowns, checkboxes, range slider, image, title, price, buttons, and more. Customize each module to your needs and position it exactly where you want. No coding required. Display anywhere with a shortcode.
-
-CAF also comes with full responsive controls: switch to tablet or mobile view and adjust the design of any module separately for each device, so your filters and layouts look perfect on every screen. [Category AJAX Filter Pro](https://trustyplugins.com/category-ajax-filter-pro/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) adds AI-powered search, advanced analytics, SEO controls, custom field filtering, attribute swatches, product badges, and a float button for mobile.
+Category AJAX Filter (CAF) is a fast AJAX filter and product filter plugin for WordPress. Visitors filter posts, custom post types and WooCommerce products by categories, tags, attributes and price, with results updating instantly and no page reload. In the free drag-and-drop CAF Builder every element is a module — search box, dropdowns, checkboxes, range slider, image, title, price, buttons and more — each fully customizable and positioned exactly where you want, with no coding and responsive controls to fine-tune every module for tablet and mobile. Display anywhere with a shortcode. [Category AJAX Filter Pro](https://trustyplugins.com/category-ajax-filter-pro/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) adds AI-powered search, advanced analytics, SEO controls, custom field filtering, attribute swatches, product badges, float button for mobile and more.
 
 ### 🔨 How the CAF Builder Works
 
@@ -44,9 +42,7 @@ CAF includes the core features you need to create professional, fully customized
 
 - **Drag-and-Drop 3-Step Builder**: The visual CAF Builder simplifies filter creation into three steps: Query & Filters to set filtering logic, Post Item Template to design post and product cards, Layout Settings to control columns, posts per page, gaps, sort order, filter position, and pagination.
 
-- **Works with Any Post Type**: Filter WordPress posts, custom post types, and WooCommerce products by categories, tags, attributes, or any custom taxonomy. Search, Dropdown, Checkbox, Range Slider modules work across all content types.
-
-- **WooCommerce Product Filtering**: Filter products by categories, tags, attributes, and price. Connect the filter to your existing shop layout, or design your own product listing with Product Image, Product Price, Add to Cart, and Badges modules.
+- **Works with Any Post Type & WooCommerce**: Filter posts, custom post types, and products by categories, tags, attributes, price, or any custom taxonomy using Search, Dropdown, Checkbox, and Range Slider modules. Connect the WooCommerce product filter to your existing shop layout, or build a product listing with Product Image, Price, Add to Cart, and Badges modules.
 
 - **Pre-Built Template Library**: Start with ready-made filter layouts and post item designs. Export your work as JSON to reuse across sites, or import templates from other filters you've built.
 
@@ -60,7 +56,7 @@ CAF includes the core features you need to create professional, fully customized
 
 - **Dropdown**: A single-select filter for any taxonomy (default or custom), brand, or product attribute, letting you choose exactly which terms to include, with term counts shown next to each one and an optional filter label. Display options as color swatches, and style the container, select field, and dropdown options independently.
 
-- **Range Slider**: A range filter for WooCommerce product price, with single or double handle, horizontal or vertical placement, configurable min, max, and step values, and an optional currency prefix. [Pro](https://trustyplugins.com/category-ajax-filter-pro/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) adds custom fields plus WooCommerce weight, length, height, and width.
+- **Range Slider**: A range filter for WooCommerce product price, with single or double handle, horizontal or vertical placement, configurable min, max, and step values, and an optional currency prefix. Pro adds custom fields plus WooCommerce weight, length, height, and width.
 
 - **Reset**: Clears all active filters with one click, with editable button text and full control over font, color, and size, including a hover state.
 
@@ -252,17 +248,9 @@ Yes. You can add multiple filters to the same page using their shortcodes.
 
 Filtering happens via AJAX, so only the results update, the page itself doesn't reload. The plugin is built to run efficiently on standard WordPress hosting.
 
-**Can I use the Classic Panel instead of the Builder?**
-
-Yes. The Classic Panel is still available for anyone who prefers the original setup screens over the visual builder.
-
 **Can I reuse a filter or layout on another site?**
 
 Yes. Use the export/import tools to move a full layout, a single filter, a module, a post item template, or just layout settings between sites.
-
-**Can I control how the filter bar and post grid are positioned?**
-
-Yes. The Layout Settings step includes a flex-based control for arranging the filter bar and post grid, top bar, sidebar, or a custom arrangement.
 
 **What does AI Search actually do?**
 
@@ -281,6 +269,8 @@ Yes. The Layout Settings step includes a flex-based control for arranging the fi
 == Changelog ==
 = 3.0.1 = (21/08/2026)
 * Restored the Pro lock overlay on prefix/suffix settings for post modules (title, author, date, comment count, button, and badges).
+* Builder list header: Support now opens the Trusty Plugins support page; Videos is hidden until the tutorial URL is ready.
+* Added a Pro badge on the header settings icon for custom global fonts.
 
 = 3.0.0 = (20/08/2026)
 * Major update — introduces the visual CAF Builder for designing AJAX filters and post layouts from the admin.
@@ -561,9 +551,6 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 * First version of plugin.
 
 == Upgrade Notice ==
-
-= 3.0.1 =
-Recommended update — restores the Pro lock overlay on prefix/suffix settings in the builder.
 
 = 3.0.0 =
 Major update — new drag-and-drop CAF Builder, WooCommerce product filtering, import library, and WordPress 7.1 compatibility. The Classic Panel remains fully supported.
