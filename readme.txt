@@ -14,109 +14,43 @@ AJAX filter & WooCommerce product filter. Instantly filter posts, custom post ty
 
 == Description ==
 
-= THE COMPLETE FILTER SOLUTION: POSTS, CUSTOM POST TYPES & WOOCOMMERCE PRODUCTS. DRAG-AND-DROP BUILDER INCLUDED. =
+= THE COMPLETE FILTER SOLUTION: POSTS, CUSTOM POST TYPES & WOOCOMMERCE PRODUCTS. DRAG & DROP BUILDER INCLUDED. =
 
-Category AJAX Filter (CAF) is a fast AJAX filter and product filter plugin for WordPress. Visitors filter posts, custom post types and WooCommerce products by categories, tags, attributes and price, with results updating instantly and no page reload. In the free drag-and-drop CAF Builder every element is a module — search box, dropdowns, checkboxes, range slider, image, title, price, buttons and more — each fully customizable and positioned exactly where you want, with no coding and responsive controls to fine-tune every module for tablet and mobile. Display anywhere with a shortcode. [Category AJAX Filter Pro](https://trustyplugins.com/category-ajax-filter-pro/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) adds AI-powered search, advanced analytics, SEO controls, custom field filtering, attribute swatches, product badges, float button for mobile and more.
+Category AJAX Filter (CAF) is a free filter plugin for WordPress posts, custom post types and WooCommerce products. Visitors filter by category, tag, taxonomy, attribute or price instantly, with no page reload. Build it visually with the drag & drop CAF Builder, where every element is a module: search box, dropdown, checkbox, range slider and more, all styled and placed however you want, with no coding and separate settings for desktop, tablet and mobile. Add it anywhere with a shortcode. The filter works with your existing layout in Elementor, Divi, WooCommerce shop pages and all major themes or you can create your own listing with drag & drop. [Category AJAX Filter Pro](https://trustyplugins.com/category-ajax-filter-pro/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) adds AI search, analytics, SEO controls, custom field filtering, attribute swatches, product badges and more.
 
-### 🔨 How the CAF Builder Works
-
-Building filters with CAF is straightforward. Follow 3 simple steps to create your complete filtering solution. Each step is independent, so you can focus on one part at a time. If you want to connect the filter to your existing product layout instead of building a listing, just create the filter in step 1 and skip the rest.
-
-**The 3-step builder flow**
-
-1. **Query & Filters**: Choose to build a query by taxonomy conditions with no filter UI, or design a visual filter using modules like Search, Dropdown, Checkbox, Range Slider, Reset, and Custom Text, each customizable for font, color, background, border, box shadow, and sizing, etc. For WooCommerce, filter products by categories, tags, attributes, and price.
-2. **Post Item Template**: Design how each post card looks using modules like Post Image, Post Title, Post Description, Post Date, Post Author, Comment Count, Terms, and Post Button, each customizable for font, color, background, border, box shadow, and sizing, etc. For WooCommerce products, add Product Image, Product Price, Add to Cart, and Badges modules.
-3. **Layout Settings**: Set number of columns, posts or products per page, vertical and horizontal gap, and default post order. Position your filter in sidebar, top, or bottom with full sizing control for filter and post layout. In Layout Controls, manage and customize pagination.
-
-**Row, column & module system**
-The builder is structured around Rows, Columns, and Modules. Each one has the same three tabs, Settings, Design, and Advanced. Learn it once and use it everywhere in the builder.
-
-**Classic Panel**
-The Classic Panel is still available and fully supported alongside the Builder, nothing is being taken away.
+https://www.youtube.com/watch?v=Mk3KDgUFBGU
 
 ### ⭐ Key Features
 
-CAF includes the core features you need to create professional, fully customized post and product filters. From instant AJAX filtering to pre-built templates, everything is designed for simplicity and power.
+CAF includes the core features you need to create professional, fully customized post or woocommerce product filters. From instant AJAX filtering to pre-built templates, everything is designed for simplicity and power.
 
-- **AJAX-Powered Instant Filtering**: Filters use AJAX to update results instantly without page reload. Visitors see filtered posts and products in real-time as they select categories, tags, or search anything across your content.
+- **AJAX-Powered Instant Filtering**: Filters use AJAX to update results instantly without page reload. Visitors see filtered posts and products in real-time as they select categories, tags or search anything across your content.
 
-- **Drag-and-Drop 3-Step Builder**: The visual CAF Builder simplifies filter creation into three steps: Query & Filters to set filtering logic, Post Item Template to design post and product cards, Layout Settings to control columns, posts per page, gaps, sort order, filter position, and pagination.
+- **Drag & Drop 3-Step Builder**: The visual CAF Builder simplifies filter creation into three steps: Query & Filters to set filtering logic, Post Item Template to design post and product cards, Layout Settings to control columns, posts per page, gaps, sort order, filter position and pagination.
 
-- **Works with Any Post Type & WooCommerce**: Filter posts, custom post types, and products by categories, tags, attributes, price, or any custom taxonomy using Search, Dropdown, Checkbox, and Range Slider modules. Connect the WooCommerce product filter to your existing shop layout, or build a product listing with Product Image, Price, Add to Cart, and Badges modules.
+- **Works with Any Post Type**: Blog posts, any custom post type and WooCommerce products - one filter for all your content.
 
-- **Pre-Built Template Library**: Start with ready-made filter layouts and post item designs. Export your work as JSON to reuse across sites, or import templates from other filters you've built.
-
-### 🧩 Filter, Post & Product Display Modules
-
-**Filter modules**
-
-- **Search**: A keyword search box that can search post titles, content, or all fields, with a customizable placeholder and search trigger.
-
-- **Checkbox**: A term filter for any taxonomy (default or custom), including WooCommerce categories, brands, and attributes. Toggle between single-select and multi-select behavior, show or hide the checkbox itself and term counts, display options as color swatches, add an optional filter label, and restyle the checkbox's shape, size, and colors to match any design.
-
-- **Dropdown**: A single-select filter for any taxonomy (default or custom), brand, or product attribute, letting you choose exactly which terms to include, with term counts shown next to each one and an optional filter label. Display options as color swatches, and style the container, select field, and dropdown options independently.
-
-- **Range Slider**: A range filter for WooCommerce product price, with single or double handle, horizontal or vertical placement, configurable min, max, and step values, and an optional currency prefix. Pro adds custom fields plus WooCommerce weight, length, height, and width.
-
-- **Reset**: Clears all active filters with one click, with editable button text and full control over font, color, and size, including a hover state.
-
-- **Custom Text**: Add your own text or label inside the filter using a simple content field.
-
-- **Rating [PRO]**: Lets visitors filter WooCommerce products by star rating, with two display options, Star List and Stars, and full control over star color and size.
-
-**Post item modules**
-
-- **Post Image**: Displays the featured image, with a choice of image size, a fallback placeholder image, and an optional link on the image. Fully customizable for width, height, spacing, border, and box shadow.
-
-- **Post Title**: Displays the post title, with an optional link to the full post and full control over font, size, color, and spacing, including a hover state.
-
-- **Post Description**: Displays the post excerpt, with a customizable word limit and the option to enable HTML.
-
-- **Post Date**: Displays the publish date, with a choice of date format and full control over font, spacing, background and border.
-
-- **Post Author**: Displays the author name, with full control over font, color, size and spacing, including a hover state.
-
-- **Comment Count**: Displays the number of comments, with a customizable suffix label and full control over font, color and size.
-
-- **Terms**: Displays taxonomy terms, and since each Terms module can be pointed at a different taxonomy, you can add several of them side by side to show categories, tags, or any other taxonomy at once, each with its own term limit, separator, link setting, and independent design.
-
-- **Post Button**: A button linking to the full post, with editable text, a choice of how the link opens and an optional suffix.
-
-- **Custom Field [PRO]**: Displays the value of any custom field on the post, with an optional prefix and suffix, each shown as text or an icon and full control over font, color, and size so any stored data can be presented in your post cards exactly how you want it.
-
-**Product modules (WooCommerce)**
-
-- **Product Image**: Displays the product image, with a choice of image size, a fallback image, and an optional link to the product (gallery view in Pro).
-
-- **Product Price**: Displays the product price, with the option to show lowest or highest prices for variable and grouped products, prefix and suffix text and full control over font, color, and size.
-
-- **Add to Cart**: A product button with two modes, open the product page or add the product to cart with AJAX (in Pro), including redirect actions to cart or checkout and custom button text for simple, variable, and grouped products, with full button styling and a hover state.
-
-- **Badges**: Displays Sale and Featured badges directly on the product card, with full design control. Pro adds New, Best Seller, stock status, stock quantity and discount badges with value or percentage display, each with its own conditional settings.
-
-- **Product Rating [PRO]**: Shows the product rating on the card in two styles, Stars or the average rating value with prefix and suffix text, with full size and color control.
-
-- **Attribute Swatches [PRO]**: Displays product attributes as selectable text, color or image swatches directly on the product card, each fully styleable, so shoppers can pick a variation and add it to cart without opening the product page.
+- **Pre-Built Template Library**: Start with ready-made filter layouts and post item designs. Export your work as JSON to reuse across sites or import templates from other filters you've built.
 
 ### 🔗 Supported Post Types & Compatibility
 
 **Post types & taxonomies**
 
-Filter default WordPress posts, any custom post type registered on your site, or WooCommerce products, using categories, tags, brands, attributes or any custom taxonomy you've created.
+Filter WordPress posts, any custom post type registered on your site or WooCommerce products - by category, tag, brand, attribute, price or any custom taxonomy you've created, using Search, Dropdown, Checkbox and Range Slider modules.
 
 **WooCommerce**
 
-Full support for simple, variable, and grouped products. Connect the filter to your existing shop layout, or build a complete custom product listing with the builder's product modules.
+Full support for simple, variable and grouped products. Connect the filter to your existing shop layout or build a complete product listing with Product Image, Product Price, Add to Cart, Badges modules and more.
 
 **Page builder & plugin compatibility**
 
-Works with all major page builders including Elementor, Divi, and WP Bakery. Compatible with popular custom post type and custom field plugins like ACF, CPT UI and Meta Box. Elementor Loop Builder support is available as a Pro feature.
+Works with all major page builders including Elementor, Divi and WP Bakery. Compatible with popular custom post type and custom field plugins like ACF, CPT UI and Meta Box. Elementor Loop Builder support is available.
 
 ### 🎬 Free Live Demos
 
-Explore CAF in action across WordPress posts, custom post types, and WooCommerce products — every demo runs the free version, filtering instantly with no page reload.
+Explore CAF in action across WordPress posts, custom post types and WooCommerce products — every demo runs the free version, filtering instantly with no page reload.
 
-- [Products Top Bar Filter](https://demo.trustyplugins.com/products-topbar-filter/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) — WooCommerce
+- [Products Top Bar Filter](https://demo.trustyplugins.com/products-topbar-filter/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) - WooCommerce
 - [Products Sidebar Filter](https://demo.trustyplugins.com/products-sidebar-filter/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) — WooCommerce
 - [Full Width with Search Demo](https://demo.trustyplugins.com/full-width-with-search/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) — WordPress Posts
 - [Side Image & Description Demo](https://demo.trustyplugins.com/side-image-description/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) — WordPress Posts
@@ -129,29 +63,33 @@ Explore CAF in action across WordPress posts, custom post types, and WooCommerce
 
 ### 👑 Category AJAX Filter Pro
 
-Take your filters to the next level with the separate [Category AJAX Filter Pro](https://trustyplugins.com/category-ajax-filter-pro/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) plugin. It adds advanced filtering, deeper customization, and extra integrations. From AI-powered search to WooCommerce swatches and smart badges, Pro gives you the tools to build filtering experiences that match your exact vision.
+Take your filters to the next level with [Category AJAX Filter Pro](https://trustyplugins.com/category-ajax-filter-pro/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) plugin. It adds advanced filtering, deeper customization and extra integrations. From AI-powered search to WooCommerce swatches and smart badges, Pro gives you the tools to build filtering experiences that match your exact vision.
 
-- **[AI Search](https://trustyplugins.com/category-ajax-filter-pro/ai-search-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Semantic, intent-based search that matches what visitors mean against post content, taxonomy terms, and labels, not just exact keywords. Works on posts and any custom post type. For WooCommerce, shoppers can also search across brands, attributes, and price range, so a query like "red shoes under 50" finds the right products. See the [live AI Search demo](https://caf.trustyplugins.com/demos/ai-search-demo/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org).
+https://www.youtube.com/watch?v=TxAIjmsNV3g
 
-- **[Analytics](https://trustyplugins.com/category-ajax-filter-pro/analytics-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Get detailed insights into how visitors use your filters, including total filter clicks across categories, attributes, brands, and selected price ranges, which filter combinations return zero results, clicks broken down by device type, and a complete list of search keywords visitors used, all viewable across custom time periods to identify trends and gaps in your content and store.
+- **[AI Search](https://trustyplugins.com/category-ajax-filter-pro/ai-search-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: A visitor types "red shoes under 50" and gets the right products. AI Search understands what people mean, matching intent against your content, taxonomy terms, brands, attributes and price - not just exact keywords. Works on posts, custom post types and WooCommerce products. See the [live AI Search demo](https://caf.trustyplugins.com/demos/ai-search-demo/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org).
+
+- **[Custom Fields in Filters](https://trustyplugins.com/category-ajax-filter-pro/custom-fields-filters-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Extend filtering beyond taxonomies by letting visitors filter with custom fields, including all WooCommerce product custom fields, using Checkbox, Dropdown, Range Slider or Search modules, with the ability to target the search box to specific custom fields for more focused searching.
+
+- **[Sort Filter Terms](https://trustyplugins.com/category-ajax-filter-pro/sort-filter-terms-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Manually reorder categories, taxonomies, brands, attributes or custom field terms in Checkbox and Dropdown filters using drag & drop, instead of relying on alphabetical or count-based ordering.
+
+- **Icons & Images on Filters**: Add an icon or image to any filter term alongside the label or in place of it. Use brand logos, colour swatches or category icons on checkbox and dropdown filters and on custom field terms.
+
+- **[Voice Search](https://trustyplugins.com/category-ajax-filter-pro/voice-search-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Let visitors search hands-free using voice input, with a customizable microphone icon you can position left or right and control the listening state feedback they see while speaking, making filtering more accessible and convenient.
 
 - **[SEO Controls](https://trustyplugins.com/category-ajax-filter-pro/seo-controls-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Keep filtered pages crawlable and indexable with Filter With URL support and schema markup, so search engines understand your filtered content.
 
-- **[Sort Filter Terms](https://trustyplugins.com/category-ajax-filter-pro/sort-filter-terms-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Manually reorder categories, taxonomies, brands, attributes, or custom field terms in Checkbox and Dropdown filters using drag-and-drop, instead of relying on alphabetical or count-based ordering.
+- **[Advanced Layout Controls](https://trustyplugins.com/category-ajax-filter-pro/advance-layout-controls-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Place advanced pagination options like Load More, sorting dropdowns, selected filters and result counts exactly where you want them across four flexible positions: above filters, below filters, above the post grid or below the post grid, with drag & drop control that lets you arrange them however you need, even stacking multiple modules in the same position.
 
-- **[Prefix and Suffix Options](https://trustyplugins.com/category-ajax-filter-pro/prefix-suffix-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Add custom text or icons before and after data throughout your layout in key modules like Post Title, Custom Field, Post Button, Product Price, Add to Cart, and Badges, as well as result counts in your layout controls, so every piece of information displays exactly how you want it with complete customization over presentation.
+- **[Analytics](https://trustyplugins.com/category-ajax-filter-pro/analytics-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Get detailed insights into how visitors use your filters, including total filter clicks across categories, attributes, brands and selected price ranges, which filter combinations return zero results, clicks broken down by device type and a complete list of search keywords visitors used, all viewable across custom time periods to identify trends and gaps in your content and store.
 
-- **[Voice Search](https://trustyplugins.com/category-ajax-filter-pro/voice-search-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Let visitors search hands-free using voice input, with a customizable microphone icon you can position left or right, and control the listening state feedback they see while speaking, making filtering more accessible and convenient.
+- **[Prefix and Suffix Options](https://trustyplugins.com/category-ajax-filter-pro/prefix-suffix-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: In listing add custom text or icons before and after data throughout your layout in key modules like Post Title, Custom Field, Post Button, Product Price, Add to Cart and Badges, as well as result counts in your layout controls, so every piece of information displays exactly how you want it with complete customization over presentation.
 
-- **[Advanced Layout Controls](https://trustyplugins.com/category-ajax-filter-pro/advance-layout-controls-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Place advanced pagination options like Load More, sorting dropdowns, selected filters, and result counts exactly where you want them across four flexible positions: above filters, below filters, above the post grid, or below the post grid, with drag-and-drop control that lets you arrange them however you need, even stacking multiple modules in the same position.
+- **[Float Button](https://trustyplugins.com/category-ajax-filter-pro/float-button-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Take full control of how your filter appears on every device. Keep it inline or in a sidebar on desktop and show the same filter as a floating button on mobile and tablet, with full customization of the button text, icon, panel animation direction and overlay color.
 
-- **[Custom Fields in Filters](https://trustyplugins.com/category-ajax-filter-pro/custom-fields-filters-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Extend filtering beyond taxonomies by letting visitors filter with custom fields, including all WooCommerce product custom fields, using Checkbox, Dropdown, Range Slider, or Search modules, with the ability to target the search box to specific custom fields for more focused searching.
+- **[Product Attribute Swatches](https://trustyplugins.com/category-ajax-filter-pro/product-swatches-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: In listing show product attributes as selectable text, color or image swatches directly on product cards, each fully styleable. Shoppers pick their size or color and add the exact variation to cart without opening the product page, turning your filtered grid into a fast, one-stop shopping experience.
 
-- **[Float Button](https://trustyplugins.com/category-ajax-filter-pro/float-button-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Take full control of how your filter appears on every device. Keep it inline or in a sidebar on desktop, and show the same filter as a floating button on mobile and tablet, with full customization of the button text, icon, panel animation direction, and overlay color.
-
-- **[Product Attribute Swatches](https://trustyplugins.com/category-ajax-filter-pro/product-swatches-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: In listing show product attributes as selectable text, color, or image swatches directly on product cards, each fully styleable. Shoppers pick their size or color and add the exact variation to cart without opening the product page, turning your filtered grid into a fast, one-stop shopping experience.
-
-- **[Smart Product Badges](https://trustyplugins.com/category-ajax-filter-pro/smart-product-badges-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: Go beyond the standard Sale badge with New, Best Seller, stock status, stock quantity, and discount badges. Each badge comes with its own conditional logic, set a Low Stock Threshold to trigger a badge when inventory runs low, show discounts as an exact value or a percentage off, and combine these options to build flexible badges that appear exactly when they should.
+- **[Smart Product Badges](https://trustyplugins.com/category-ajax-filter-pro/smart-product-badges-feature/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org)**: In listing go beyond the standard Sale badge with New, Best Seller, stock status, stock quantity and discount badges. Each badge comes with its own conditional logic, set a Low Stock Threshold to trigger a badge when inventory runs low, show discounts as an exact value or a percentage off and combine these options to build flexible badges that appear exactly when they should.
 
 **More Pro features**:
 
@@ -159,7 +97,7 @@ Dynamic Term Counts, Extended revision history, Custom fonts upload, Global font
 
 ### 🎯 Pro Demos
 
-Explore CAF Pro in action with our live demo sites, showcasing advanced features, custom fields, WooCommerce product filtering, and Pro-exclusive functionality:
+Explore CAF Pro in action with our live demo sites, showcasing advanced features, custom fields, WooCommerce product filtering and Pro-exclusive functionality:
 
 - [Sidebar Products Filter](https://caf.trustyplugins.com/demos/sidebar-products-filter/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) — WooCommerce
 - [Right Sidebar Products Filter](https://caf.trustyplugins.com/demos/right-sidebar-products-filter/?utm_source=wprepo&utm_medium=referral&utm_campaign=wordpress_org) — WooCommerce
@@ -177,12 +115,14 @@ Explore CAF Pro in action with our live demo sites, showcasing advanced features
 
 ### 📚 Quick Import Library
 
-Skip the design process — import professional, ready-made filter layouts in seconds:
+Skip the design process and import professional, ready-made filter layouts in seconds:
 
 1. Create a new filter and select your post type or products.
 2. Click the **Import/Export** icon at the top right of the builder and open the **Import** tab.
-3. Click **Import From Library** and pick a category — Full Filter Layout, Filter, Single Post Item, or Layout Settings — then browse the ready-made designs.
+3. Click **Import From Library** and pick a category — Full Filter Layout, Filter, Single Post Item or Layout Settings. Under Filter you can also import a single type, like a checkbox or a dropdown.
 4. Select any template and click **Import** — the complete design with all modules and styling loads instantly.
+
+https://www.youtube.com/watch?v=qov6jSRrEEM
 
 == Source Code ==
 
@@ -212,21 +152,21 @@ The production plugin zip contains only the compiled files under `react-builder/
 = Manual installation =
 
 1. Download the plugin zip file.
-2. Upload the plugin files to the `wp-content/plugins/` directory, or install the zip through Plugins > Add New > Upload Plugin.
+2. Upload the plugin files to the `wp-content/plugins/` directory or install the zip through Plugins > Add New > Upload Plugin.
 3. Activate the plugin through the Plugins screen in WordPress.
 
 = After activation =
 
 1. Go to the **Category Filter** menu in your dashboard.
-2. Choose the CAF Builder for the guided 3-step visual setup, or the Classic Panel for the original settings screens.
-3. Configure your Query & Filters, Post Item Template, and Layout Settings.
+2. Choose the CAF Builder for the guided 3-step visual setup or the Classic Panel for the original settings screens.
+3. Configure your Query & Filters, Post Item Template and Layout Settings.
 4. Place your finished filter on any page or section using the provided shortcode.
 
 == Frequently Asked Questions ==
 
 **Does it work with WooCommerce?**
 
-Yes, fully. Filter products by categories, tags, brands, attributes, and price. Connect the filter to your existing shop layout or build a complete custom product listing with the builder's product modules. Simple, variable, and grouped products are all supported. Star-rating filters are available in the separate Pro plugin.
+Yes, fully. Filter products by categories, tags, brands, attributes and price. Connect the filter to your existing shop layout or build a complete custom product listing with the builder's product modules. Simple, variable and grouped products are all supported. Star-rating filters are available in the separate Pro plugin.
 
 **Does this work with custom post types?**
 
@@ -234,9 +174,9 @@ Yes. You can target any registered post type, not just default WordPress posts, 
 
 **Will it work with my existing layout?**
 
-Yes. Just create your filter in step 1 and place the shortcode with your existing listing — no need to rebuild it.
+Yes. Just create your filter in step 1 and place the shortcode with your existing listing - no need to rebuild it.
 
-**Does this work with Divi, Elementor, and their product grid modules?**
+**Does this work with Divi, Elementor and their product grid modules?**
 
 Yes. CAF filters work with Divi and Elementor shop modules, so you can filter the product grids built with their widgets. You can also paste the CAF shortcode anywhere in any page builder.
 
@@ -250,7 +190,7 @@ Filtering happens via AJAX, so only the results update, the page itself doesn't 
 
 **Can I reuse a filter or layout on another site?**
 
-Yes. Use the export/import tools to move a full layout, a single filter, a module, a post item template, or just layout settings between sites.
+Yes. Use the export/import tools to move a full layout, a single filter, a module, a post item template or just layout settings between sites.
 
 **What does AI Search actually do?**
 
@@ -259,11 +199,11 @@ Yes. Use the export/import tools to move a full layout, a single filter, a modul
 == Screenshots ==
 
 1. **Create New Filter**: Select your post type to get started.
-2. **Add Filter Modules**: Choose from Search, Dropdown, Checkbox, Reset, and more filter types.
-3. **Customize Filter Design**: Control colors, backgrounds, borders, spacing, and styling for each filter module.
+2. **Add Filter Modules**: Choose from Search, Dropdown, Checkbox, Reset and more filter types.
+3. **Customize Filter Design**: Control colors, backgrounds, borders, spacing and styling for each filter module.
 4. **Enable Color Swatches**: Switch a Checkbox filter from plain checkboxes to color swatches with one toggle.
 5. **Customize Post/Product Items**: Add and style individual post modules like price, title, image, author, date, add to cart and more.
-6. **Responsive Design**: Switch between desktop, tablet, and mobile views to customize layouts for each device.
+6. **Responsive Design**: Switch between desktop, tablet and mobile views to customize layouts for each device.
 7. **Live Demos**: View real-world examples of filters with wordpress posts, woocommerce, custom post types, taxonomies and stunning layouts.
 
 == Changelog ==
@@ -553,4 +493,4 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 == Upgrade Notice ==
 
 = 3.0.0 =
-Major update — new drag-and-drop CAF Builder, WooCommerce product filtering, import library, and WordPress 7.1 compatibility. The Classic Panel remains fully supported.
+Major update — new drag & drop CAF Builder, WooCommerce product filtering, import library and WordPress 7.1 compatibility. The Classic Panel remains fully supported.
