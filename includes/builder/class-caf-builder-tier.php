@@ -459,12 +459,70 @@ class CAF_Builder_Tier {
 	}
 
 	/**
-	 * Reserve one front-end filter slot per page (free tier: first shortcode only).
+	 * Extra shortcode runs that must not consume the Free one-filter-per-page slot.
 	 *
-	 * @return bool False when a second filter shortcode should not render.
+	 * SEO plugins, excerpts, and feeds call do_shortcode while extracting text.
+	 * Those are not a second visible filter on the page.
+	 *
+	 * @return bool
+	 */
+	public static function is_secondary_content_pass() {
+		if ( is_feed() || is_embed() || is_robots() || is_trackback() ) {
+			return true;
+		}
+
+		if ( doing_filter( 'get_the_excerpt' ) || doing_filter( 'the_excerpt' ) || doing_filter( 'the_excerpt_rss' ) ) {
+			return true;
+		}
+
+		if ( doing_action( 'wp_head' ) ) {
+			return true;
+		}
+
+		$stack = isset( $GLOBALS['wp_current_filter'] ) ? (array) $GLOBALS['wp_current_filter'] : array();
+		$needles = array(
+			'slim_seo',
+			'wpseo_',
+			'rank_math',
+			'aioseo',
+			'seopress',
+			'the_seo_framework',
+		);
+		foreach ( $stack as $hook ) {
+			$hook = (string) $hook;
+			foreach ( $needles as $needle ) {
+				if ( false !== stripos( $hook, $needle ) ) {
+					return true;
+				}
+			}
+		}
+
+		return (bool) apply_filters( 'caf_is_secondary_filter_shortcode_pass', false );
+	}
+
+	/**
+	 * Keep CAF out of Slim SEO meta-description shortcode parsing.
+	 *
+	 * @param mixed $shortcodes Shortcode names Slim SEO should not execute.
+	 * @return array<int, string>
+	 */
+	public static function skip_seo_plugin_shortcodes( $shortcodes ) {
+		$shortcodes = is_array( $shortcodes ) ? $shortcodes : array();
+		$shortcodes[] = 'caf_filter';
+		return array_values( array_unique( $shortcodes ) );
+	}
+
+	/**
+	 * Reserve one front-end filter slot per page (free tier: first visible shortcode only).
+	 *
+	 * @return bool False when a second visible filter shortcode should not render.
 	 */
 	public static function reserve_page_filter_instance() {
 		if ( self::allows_multiple_filters_per_page() || is_admin() ) {
+			return true;
+		}
+
+		if ( self::is_secondary_content_pass() ) {
 			return true;
 		}
 
@@ -494,5 +552,7 @@ class CAF_Builder_Tier {
 		);
 	}
 }
+
+add_filter( 'slim_seo_skipped_shortcodes', array( 'CAF_Builder_Tier', 'skip_seo_plugin_shortcodes' ) );
 
 }

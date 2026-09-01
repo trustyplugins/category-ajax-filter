@@ -28,6 +28,10 @@ class CAF_shortcode_render
             return "<div class='error-of-missing-id error-caf'>" . esc_html__('Nothing Found, Missing id as an argument.', 'category-ajax-filter') . ' <a href="https://caf.trustyplugins.com/docs/documentation/getting-started/" target="_blank">' . esc_html__('See Documentation', 'category-ajax-filter') . "</a></div>";
         }
 
+        if ( class_exists( 'CAF_Builder_Tier' ) && CAF_Builder_Tier::is_secondary_content_pass() ) {
+            return '';
+        }
+
         if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::reserve_page_filter_instance() ) {
             return CAF_Builder_Tier::get_multiple_filters_per_page_message();
         }

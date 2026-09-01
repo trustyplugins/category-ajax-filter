@@ -5,7 +5,7 @@ Plugin URI: https://wordpress.org/plugins/category-ajax-filter/
 Tags: ajax filter, product filter, woocommerce, category filter, taxonomy filter
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -207,6 +207,9 @@ Yes. Use the export/import tools to move a full layout, a single filter, a modul
 7. **Live Demos**: View real-world examples of filters with wordpress posts, woocommerce, custom post types, taxonomies and stunning layouts.
 
 == Changelog ==
+= 3.0.2 = (01/09/2026)
+* Fixed a false "only one CAF filter shortcode is allowed per page" message when SEO plugins (including Slim SEO) or excerpts ran the shortcode while generating meta text.
+
 = 3.0.1 = (21/08/2026)
 * Restored the Pro lock overlay on prefix/suffix settings for post modules (title, author, date, comment count, button, and badges).
 * Builder list header: Support now opens the Trusty Plugins support page; Videos is hidden until the tutorial URL is ready.
@@ -491,6 +494,9 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 * First version of plugin.
 
 == Upgrade Notice ==
+
+= 3.0.2 =
+Recommended update — fixes a false one-shortcode-per-page message caused by SEO plugins such as Slim SEO.
 
 = 3.0.0 =
 Major update — new drag & drop CAF Builder, WooCommerce product filtering, import library and WordPress 7.1 compatibility. The Classic Panel remains fully supported.
