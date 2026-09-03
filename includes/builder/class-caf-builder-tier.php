@@ -117,6 +117,7 @@ class CAF_Builder_Tier {
 				'pagination_number2',
 				'pagination_load_more',
 				'dynamic_term_counts',
+				'auto_select_archive_term',
 				'query_restriction',
 				'woo_product_image_gallery',
 				'woo_product_price_display_modes',

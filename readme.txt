@@ -5,7 +5,7 @@ Plugin URI: https://wordpress.org/plugins/category-ajax-filter/
 Tags: ajax filter, product filter, woocommerce, category filter, taxonomy filter
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 3.0.2
+Stable tag: 3.0.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -93,7 +93,7 @@ https://www.youtube.com/watch?v=TxAIjmsNV3g
 
 **More Pro features**:
 
-Dynamic Term Counts, Extended revision history, Custom fonts upload, Global font settings, include/exclude posts/products, Icon library, Icons/images for terms & custom fields, Masonry layout, Loader styles, Elementor Loop Builder support, Quick backend navigation.
+Dynamic Term Counts, Auto-select current archive term, Extended revision history, Custom fonts upload, Global font settings, include/exclude posts/products, Icon library, Icons/images for terms & custom fields, Masonry layout, Loader styles, Elementor Loop Builder support, Quick backend navigation.
 
 ### 🎯 Pro Demos
 
@@ -207,6 +207,10 @@ Yes. Use the export/import tools to move a full layout, a single filter, a modul
 7. **Live Demos**: View real-world examples of filters with wordpress posts, woocommerce, custom post types, taxonomies and stunning layouts.
 
 == Changelog ==
+= 3.0.3 = (03/09/2026)
+* Fixed uninstall deleting all CAF filters and builder layouts when removing the Free plugin. User-created filter data is now preserved (including filters built with Pro).
+* Synced builder with the latest Pro free-tier release.
+
 = 3.0.2 = (01/09/2026)
 * Fixed a false "only one CAF filter shortcode is allowed per page" message when SEO plugins (including Slim SEO) or excerpts ran the shortcode while generating meta text.
 
@@ -494,6 +498,9 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 * First version of plugin.
 
 == Upgrade Notice ==
+
+= 3.0.3 =
+Important update — uninstalling Free no longer deletes your filters or builder layouts. Recommended for all sites.
 
 = 3.0.2 =
 Recommended update — fixes a false one-shortcode-per-page message caused by SEO plugins such as Slim SEO.
