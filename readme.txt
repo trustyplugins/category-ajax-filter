@@ -207,9 +207,10 @@ Yes. Use the export/import tools to move a full layout, a single filter, a modul
 7. **Live Demos**: View real-world examples of filters with wordpress posts, woocommerce, custom post types, taxonomies and stunning layouts.
 
 == Changelog ==
-= 3.0.3 = (03/09/2026)
+= 3.0.3 = (07/09/2026)
 * Fixed uninstall deleting all CAF filters and builder layouts when removing the Free plugin. User-created filter data is now preserved (including filters built with Pro).
-* Synced builder with the latest Pro free-tier release.
+* Updated the Pro features banner icons on the All Filters screen.
+* Fixed blank Pro badge panels on Reset and Custom Text icon settings so Free shows proper locked chrome.
 
 = 3.0.2 = (01/09/2026)
 * Fixed a false "only one CAF filter shortcode is allowed per page" message when SEO plugins (including Slim SEO) or excerpts ran the shortcode while generating meta text.
@@ -500,7 +501,7 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 == Upgrade Notice ==
 
 = 3.0.3 =
-Important update — uninstalling Free no longer deletes your filters or builder layouts. Recommended for all sites.
+Important update — uninstalling Free no longer deletes your filters or builder layouts. Also improves Free Pro-upsell banner icons and Reset/Custom Text locked icon settings.
 
 = 3.0.2 =
 Recommended update — fixes a false one-shortcode-per-page message caused by SEO plugins such as Slim SEO.

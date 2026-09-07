@@ -1150,7 +1150,9 @@ li.caf-terms-list-item.caf-attribute-swatch-term i {
     gap: 6px;
     pointer-events: auto;
 }
-
+a.caf-builder-module-main.caf-module-post.caf-module-type-button {
+    text-decoration: none;
+}
 .caf-builder-post-area .caf-module-type-woo_product_image .caf-woo-product-image-dot {
     display: block;
     flex: 0 0 auto;
