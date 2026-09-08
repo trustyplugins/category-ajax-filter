@@ -184,7 +184,6 @@ span.caf-inline-svg-icon svg {
     fill: currentColor;
 }
 
-
 span.label-icon-common {
     right: 0;
 }
@@ -440,32 +439,6 @@ li.selection-list-default i {
     cursor: pointer;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .caf-builder-template-preview-loader-container {
     position: absolute;
     top: 0;
@@ -553,7 +526,6 @@ li.selection-list-default i {
     display: flex;
     justify-content: space-between;
 }
-
 
 #left-area .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list,
 .entry-content .filter-layout-container .caf-builder-module-main.caf-module-filter ul.caf-terms-list,
@@ -1018,10 +990,6 @@ span.clear-icon.on-type {
     position: relative;
 }
 
-
-
-
-
 .caf-custom-dropdown-wrapper .caf-dropdown-opt-list {
     display: none;
 }
@@ -1043,8 +1011,6 @@ span.clear-icon.on-type {
     transform: translateY(0);
     pointer-events: auto;
 }
-
-
 
 /* .filter-layout-container .caf-builder-module-main.caf-module-filter .caf-filter-module-search-output.toggle_closed{
 display: none ;
@@ -1220,4 +1186,75 @@ a.caf-builder-module-main.caf-module-post.caf-module-type-button {
     .caf-hide-mobile {
         display: none !important;
     }
+}
+/* ==========================================================================
+   CAF term label tooltip (Label → Tooltip on color swatches)
+   Body-ported bubble — does NOT depend on module/layout overflow or Design CSS.
+   Keep this block at the END of this file only.
+   ========================================================================== */
+.caf-terms-list-item.caf-has-term-tooltip>.caf-term-tooltip {
+    display: none !important;
+}
+
+.caf-term-tooltip-portal {
+    position: fixed;
+    z-index: 2147483000;
+    max-width: min(240px, calc(100vw - 16px));
+    padding: 6px 10px;
+    border-radius: 3px;
+    background: #1d1d1d;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, calc(-100% - 10px));
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    transition: opacity 0.12s ease, visibility 0.12s ease;
+}
+
+.caf-term-tooltip-portal.is-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.caf-term-tooltip-portal::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    margin-left: -6px;
+    border: 6px solid transparent;
+    border-top-color: #1d1d1d;
+}
+
+.caf-term-tooltip-portal.is-flipped {
+    transform: translate(-50%, 10px);
+}
+
+.caf-term-tooltip-portal.is-flipped::after {
+    top: auto;
+    bottom: 100%;
+    border-top-color: transparent;
+    border-bottom-color: #1d1d1d;
+}
+
+.caf-builder-container.caf-builder-post-type-unavailable {
+    padding: 16px 20px;
+    box-sizing: border-box;
+}
+
+.caf-builder-unavailable-notice {
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid #f0d9a8;
+    border-radius: 6px;
+    background: #fff8e8;
+    color: #5c4a1f;
+    font-size: 14px;
+    line-height: 1.45;
 }
