@@ -228,6 +228,7 @@ function caf_builder_clamp_public_ajax_args_for_tier( $args, $data_handler = nul
 	}
 
 	// Sorting UI / misc sorting is Pro-only on Free — ignore client orderby overrides.
+	// Trusted layout Sort By / Sort Order are restored after clamp in harden().
 	if ( ! CAF_Builder_Tier::can_use_feature( 'sorting' ) ) {
 		unset(
 			$args['orderby'],
@@ -251,7 +252,8 @@ function caf_builder_clamp_public_ajax_args_for_tier( $args, $data_handler = nul
  *
  * Keeps tax_query / Free-allowed meta_query / search / paged intact so filtering still works.
  * Forces publish + layout post_type + layout posts_per_page (including -1 "show all").
- * Free tier: clamps meta keys + strips Pro-only client sort (see clamp helper).
+ * Free tier: clamps meta keys + strips Pro-only client sort (see clamp helper),
+ * then restores trusted layout Sort By / Sort Order so AJAX matches page load.
  *
  * @param array       $args         Query args.
  * @param object|null $data_handler Layout data handler (CAF_Builder_Data or compatible).
@@ -308,7 +310,21 @@ function caf_builder_harden_public_ajax_query_args( $args, $data_handler = null 
 		$args['posts_per_page'] = ( -1 === $ppp ) ? -1 : max( 1, absint( $ppp ) );
 	}
 
-	return caf_builder_clamp_public_ajax_args_for_tier( $args, $data_handler );
+	$args = caf_builder_clamp_public_ajax_args_for_tier( $args, $data_handler );
+
+	// Free blocks the Pro sorting UI, but layout Sort By / Sort Order are Free settings.
+	// Clamp removes client orderby/order; restore trusted defaults so term/pagination AJAX
+	// matches initial page load (otherwise WP_Query falls back to date DESC).
+	if (
+		is_object( $data_handler )
+		&& method_exists( $data_handler, 'apply_default_sort_to_query_args' )
+		&& class_exists( 'CAF_Builder_Tier' )
+		&& ! CAF_Builder_Tier::can_use_feature( 'sorting' )
+	) {
+		$args = $data_handler->apply_default_sort_to_query_args( $args );
+	}
+
+	return $args;
 }
 
 /**

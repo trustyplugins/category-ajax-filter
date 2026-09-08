@@ -227,7 +227,8 @@ class CAF_Builder_Data {
 	}
 
 	/**
-	 * Apply post grid default sort when query args omit sorting (initial page load only).
+	 * Apply post grid default sort when query args omit sorting.
+	 * Used on initial page load and after Free AJAX tier clamp restores layout defaults.
 	 *
 	 * @param array $args Query args.
 	 * @return array
