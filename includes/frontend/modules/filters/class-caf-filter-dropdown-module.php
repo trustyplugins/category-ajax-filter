@@ -276,13 +276,12 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 						$html = '';
 
 						$position = ! empty( $term->icons->position ) ? (string) $term->icons->position : 'before';
-						if ( ! empty( $settings->show_icon ) && 'true' === (string) $settings->show_icon && 'before' === $position ) {
+						if ( ! empty( $settings->show_icon ) && 'true' === (string) $settings->show_icon && ( 'before' === $position || empty( $term->icons->position ) ) ) {
 							$html .= $this->render_term_visual_markup( $settings, isset( $term->icons ) ? $term->icons : null, 'filter-before-icon' );
 						}
 
-						if ( ! $this->should_hide_term_label( $settings ) ) {
-							$html .= esc_html( $term->value );
-						}
+						// Selectbox always shows the label; list Show/Hide is separate.
+						$html .= esc_html( $term->value );
 
 						if ( ! empty( $settings->show_icon ) && 'true' === (string) $settings->show_icon && 'after' === $position ) {
 							$html .= $this->render_term_visual_markup( $settings, isset( $term->icons ) ? $term->icons : null, 'filter-after-icon' );
