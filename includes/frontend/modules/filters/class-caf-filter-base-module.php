@@ -553,22 +553,32 @@ abstract class CAF_Filter_Base_Module {
 
 	/**
 	 * Whether the visible term label should be hidden (Hide or Tooltip).
+	 * Color swatch mode only, and only while Show Icon / Color Swatch is enabled.
 	 *
 	 * @param object $settings Module settings.
 	 * @return bool
 	 */
 	protected function should_hide_term_label( $settings ) {
+		if ( ! is_object( $settings ) || empty( $settings->show_icon ) || 'true' !== (string) $settings->show_icon ) {
+			return false;
+		}
+
 		return $this->is_term_visual_color( $settings )
 			&& 'show' !== $this->resolve_term_label_display( $settings );
 	}
 
 	/**
 	 * Whether the term label should appear as a fancy hover tooltip.
+	 * Color swatch mode only, and only while Show Icon / Color Swatch is enabled.
 	 *
 	 * @param object $settings Module settings.
 	 * @return bool
 	 */
 	protected function should_show_term_label_as_tooltip( $settings ) {
+		if ( ! is_object( $settings ) || empty( $settings->show_icon ) || 'true' !== (string) $settings->show_icon ) {
+			return false;
+		}
+
 		return $this->is_term_visual_color( $settings )
 			&& 'tooltip' === $this->resolve_term_label_display( $settings );
 	}

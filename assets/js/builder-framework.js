@@ -1070,14 +1070,37 @@ jQuery(function ($) {
                 return;
             }
 
+            // Selectbox always keeps the term name (+ swatch/icon). Color Swatch
+            // Show/Hide only affects the open list (where .trm-name may be omitted).
+            const resolveDropdownSelectboxLabel = ($item) => {
+                const fromName = $.trim(
+                    $item.find(".trm-name, .cf-value-name, .caf-term-label").first().text()
+                );
+                if (fromName) {
+                    return fromName;
+                }
+                return String(
+                    $item.attr("data-caf-term-label")
+                    || $item.attr("data-caf-tooltip")
+                    || $item.attr("title")
+                    || ""
+                ).trim();
+            };
+
             if ($activeItems.length === 1) {
                 const $item = $activeItems.first();
                 const termId = String($item.attr("term-id") || "");
 
                 if (termId !== "0" && termId !== "all") {
-                    const termName = $.trim($item.find(".trm-name, .cf-value-name").first().text());
-                    const termIcon = $item.find("i, svg").first().prop("outerHTML") || "";
-                    const finalHtml = termIcon + termName;
+                    const termName = resolveDropdownSelectboxLabel($item);
+                    const safeName = $("<div>").text(termName).html();
+                    const $termVisual = $item
+                        .find(".caf-term-swatch, img.caf-inline-svg-icon, i, svg")
+                        .first();
+                    const termVisual = $termVisual.length ? $termVisual.prop("outerHTML") : "";
+                    const finalHtml = $termVisual.hasClass("filter-after-icon")
+                        ? safeName + termVisual
+                        : termVisual + safeName;
                     $selectedResult.html("<div class='caf-dropdown-selected-html'>" + finalHtml + "</div>");
                 } else {
                     $selectedResult.html($item.html());
@@ -1092,14 +1115,14 @@ jQuery(function ($) {
                 if (termId === "0" || termId === "all") {
                     return;
                 }
-                const termName = $.trim(
-                    $activeItem.find(".trm-name, .cf-value-name").first().text() || $activeItem.text()
-                );
+                const termName = resolveDropdownSelectboxLabel($activeItem);
                 if (termName) {
                     labels.push(termName);
                 }
             });
-            $selectedResult.html(labels.join(", "));
+            $selectedResult.html(
+                $("<div>").text(labels.join(", ")).html()
+            );
         }
     };
 
