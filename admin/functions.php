@@ -64,6 +64,7 @@ class CAF_Embed_Admin_Css_Js
             ));
             //wp_enqueue_style( 'wp-color-picker' );
             wp_localize_script('tc-caf-script', 'tc_caf_ajax', array('ajax_url' => admin_url('admin-ajax.php'), 'nonce' => wp_create_nonce('tc_caf_ajax_nonce')));
+            wp_enqueue_script( 'tc-caf-builder-script', TC_CAF_URL . 'admin/js/custom-builder.js', array( 'jquery', 'wp-element' ), TC_CAF_PLUGIN_VERSION, true );
         }
     }
 }
