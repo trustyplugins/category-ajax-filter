@@ -483,6 +483,7 @@ class CAF_Builder_Tier {
 		$stack = isset( $GLOBALS['wp_current_filter'] ) ? (array) $GLOBALS['wp_current_filter'] : array();
 		$needles = array(
 			'slim_seo',
+			'surerank',
 			'wpseo_',
 			'rank_math',
 			'aioseo',
@@ -511,6 +512,23 @@ class CAF_Builder_Tier {
 		$shortcodes = is_array( $shortcodes ) ? $shortcodes : array();
 		$shortcodes[] = 'caf_filter';
 		return array_values( array_unique( $shortcodes ) );
+	}
+
+	/**
+	 * Strip [caf_filter] before SureRank (and page-builder SEO bridges) expand content for meta.
+	 *
+	 * SureRank resolves %content% on the `wp` action — before wp_head — and may call
+	 * do_shortcode via builder integrations. That must not burn Free's one-filter slot.
+	 *
+	 * @param mixed $content Post content used for meta variables.
+	 * @return mixed
+	 */
+	public static function strip_caf_filter_for_surerank_meta( $content ) {
+		if ( ! is_string( $content ) || '' === $content || false === stripos( $content, '[caf_filter' ) ) {
+			return $content;
+		}
+
+		return (string) preg_replace( '/\[caf_filter\b[^\]]*\]/i', '', $content );
 	}
 
 	/**
@@ -555,5 +573,6 @@ class CAF_Builder_Tier {
 }
 
 add_filter( 'slim_seo_skipped_shortcodes', array( 'CAF_Builder_Tier', 'skip_seo_plugin_shortcodes' ) );
+add_filter( 'surerank_meta_variable_post_content', array( 'CAF_Builder_Tier', 'strip_caf_filter_for_surerank_meta' ), 1 );
 
 }
