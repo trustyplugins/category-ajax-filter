@@ -3285,6 +3285,14 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 		if ( ! CAF_Builder_Tier::can_use_feature( 'auto_select_archive_term' ) ) {
 			$layout_data->filter_layout_data->extra_data->auto_select_archive_term = 'false';
 		}
+		if ( ! CAF_Builder_Tier::can_use_feature( 'category_term_page_mode' ) ) {
+			$layout_data->filter_layout_data->extra_data->category_term_page_mode = (object) array(
+				'enabled'           => 'false',
+				'reset_returns_to'  => 'current_term',
+				'include_children'  => 'false',
+			);
+			$layout_data->filter_layout_data->extra_data->auto_select_archive_term = 'false';
+		}
 		if ( ! CAF_Builder_Tier::can_use_feature( 'query_restriction' ) ) {
 			$layout_data->filter_layout_data->extra_data->query_restriction = (object) array(
 				'enabled' => 'false',
