@@ -93,7 +93,7 @@ https://www.youtube.com/watch?v=TxAIjmsNV3g
 
 **More Pro features**:
 
-Dynamic Term Counts, Auto-select current archive term, Extended revision history, Custom fonts upload, Global font settings, include/exclude posts/products, Icon library, Icons/images for terms & custom fields, Masonry layout, Loader styles, Elementor Loop Builder support, Quick backend navigation.
+Dynamic Term Counts, Category / Term Page Mode, Extended revision history, Custom fonts upload, Global font settings, include/exclude posts/products, Icon library, Icons/images for terms & custom fields, Masonry layout, Loader styles, Elementor Loop Builder support, Quick backend navigation.
 
 ### 🎯 Pro Demos
 
@@ -211,6 +211,7 @@ Yes. Use the export/import tools to move a full layout, a single filter, a modul
 * Dropdown Color Swatch label control is now Show/Hide only (Tooltip tab removed). The closed select always shows the term name; Hide still applies to the open list.
 * Fixed a false "only one CAF filter shortcode is allowed per page" message when SureRank generated meta from page content.
 * Fixed Classic Panel new-filter screens not auto-filling Title and Post Type from the layout URL.
+* Added locked Category / Term Page Mode controls in Filter Settings.
 
 = 3.0.4 = (08/09/2026)
 * Fixed Sort By and Sort Order on filter and pagination AJAX so results match the layout settings instead of falling back to date.
