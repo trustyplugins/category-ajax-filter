@@ -598,7 +598,8 @@ class CAF_Free_Woo {
 		} elseif ( is_object( $data ) ) {
 			$cf_row = $data;
 		}
-		$meta_type = ( $cf_row && isset( $cf_row->meta_type ) ) ? (string) $cf_row->meta_type : 'NUMERIC';
+		// Force decimal-safe cast for range sliders (integers still match). Do not trust saved CHAR/NUMERIC.
+		$meta_type = 'DECIMAL(16,6)';
 
 		$slider = isset( $module_settings->range_slider ) ? $module_settings->range_slider : new stdClass();
 		$min    = isset( $slider->min ) ? (float) $slider->min : 0;

@@ -11,6 +11,68 @@ jQuery(function ($) {
     const CAF_RANGE_SLIDER_MODULE_SELECTOR =
         ".caf-module-filter.caf-module-type-range_slider";
 
+    /** Decimal places from layout min/max/step (data-decimal-places); used to round float noise. */
+    function cafRangeSliderDecimalPlaces($slider) {
+        const n = parseInt(String($slider.attr("data-decimal-places") || "0"), 10);
+        return Number.isFinite(n) && n > 0 ? Math.min(n, 12) : 0;
+    }
+
+    /** Raw setting texts for exact display match (keeps typed "0.540", avoids step-padding "15.500"). */
+    function cafRangeSliderPreferredTexts($slider) {
+        if (!$slider || !$slider.length) {
+            return [];
+        }
+        return [
+            $slider.attr("data-min-text"),
+            $slider.attr("data-max-text"),
+            $slider.attr("data-start-min-text"),
+            $slider.attr("data-start-max-text")
+        ]
+            .map((t) => String(t == null ? "" : t).trim())
+            .filter(Boolean);
+    }
+
+    /**
+     * Format range number for labels/URL.
+     * - If value equals a typed setting text, keep that text (trailing zeros preserved).
+     * - Else round with decimalPlaces then strip useless trailing zeros (no step padding).
+     */
+    function cafFormatRangeSliderNumber(value, decimalPlaces, preferredTexts) {
+        const n = Number(value);
+        if (!Number.isFinite(n)) {
+            return String(value ?? "");
+        }
+        const prefs = Array.isArray(preferredTexts) ? preferredTexts : [];
+        for (let i = 0; i < prefs.length; i += 1) {
+            const t = String(prefs[i] ?? "").trim();
+            if (t !== "" && Number(t) === n) {
+                return t;
+            }
+        }
+        if (decimalPlaces > 0) {
+            let s = n.toFixed(decimalPlaces);
+            if (s.indexOf(".") !== -1) {
+                s = s.replace(/0+$/, "").replace(/\.$/, "");
+            }
+            return s;
+        }
+        return String(n);
+    }
+
+    function cafFormatRangeSliderLabel($slider, value) {
+        const prefixEnabled = String($slider.attr("data-prefix-enable") || "false") === "true";
+        const suffixEnabled = String($slider.attr("data-suffix-enable") || "false") === "true";
+        const prefixText = prefixEnabled ? String($slider.attr("data-prefix-text") || "") : "";
+        const suffixText = suffixEnabled ? String($slider.attr("data-suffix-text") || "") : "";
+        const places = cafRangeSliderDecimalPlaces($slider);
+        const formatted = cafFormatRangeSliderNumber(
+            value,
+            places,
+            cafRangeSliderPreferredTexts($slider)
+        );
+        return `${prefixText}${formatted}${suffixText}`;
+    }
+
     function cafGetRangeSliderModules($root) {
         if ($root.is(CAF_RANGE_SLIDER_MODULE_SELECTOR)) {
             return $root;
@@ -718,6 +780,21 @@ jQuery(function ($) {
             };
         },
 
+        /**
+         * WP meta_query "NUMERIC" casts to SIGNED (integer) and truncates decimals (0.540 → 0).
+         * Range sliders always need a decimal-safe cast; bare "DECIMAL" also truncates — use precision.
+         */
+        resolveRangeSliderMetaQueryType(rawType) {
+            const normalized = String(rawType || "")
+                .trim()
+                .toUpperCase()
+                .replace(/\s+/g, "");
+            if (/^DECIMAL\(\d+,\d+\)$/.test(normalized)) {
+                return normalized;
+            }
+            return "DECIMAL(16,6)";
+        },
+
         collectRangeSliderMeta($builder) {
             const clauses = [];
 
@@ -729,6 +806,7 @@ jQuery(function ($) {
                 }
 
                 const rangeType = String($slider.attr("data-range-type") || "double").toLowerCase();
+                const metaType = this.resolveRangeSliderMetaQueryType($slider.attr("data-meta-type"));
                 const rangeMinBound = Number($slider.attr("data-min"));
                 const rangeMaxBound = Number($slider.attr("data-max"));
                 const minVal = Number($slider.attr("data-current-min"));
@@ -760,7 +838,7 @@ jQuery(function ($) {
                         key,
                         value: safeMax,
                         compare: "<=",
-                        type: "NUMERIC"
+                        type: metaType
                     });
                     return;
                 }
@@ -769,7 +847,7 @@ jQuery(function ($) {
                     key,
                     value: [safeMin, safeMax],
                     compare: "BETWEEN",
-                    type: "NUMERIC"
+                    type: metaType
                 });
             });
 
@@ -1273,7 +1351,7 @@ jQuery(function ($) {
                     key: metaKey,
                     value: [parseFloat(between[1]), parseFloat(between[2])],
                     compare: "BETWEEN",
-                    type: "NUMERIC"
+                    type: CAFQueryBuilder.resolveRangeSliderMetaQueryType()
                 };
             }
 
@@ -1283,7 +1361,7 @@ jQuery(function ($) {
                     key: metaKey,
                     value: parseFloat(lte[1]),
                     compare: "<=",
-                    type: "NUMERIC"
+                    type: CAFQueryBuilder.resolveRangeSliderMetaQueryType()
                 };
             }
 
@@ -1500,13 +1578,30 @@ jQuery(function ($) {
                     return;
                 }
 
+                const metaKey = String(clause.key);
+                const formatRangeUrlNumber = (value) => {
+                    let places = 0;
+                    let preferred = [];
+                    const $slider = $builder.find(".caf-range-slider-ui").filter(function () {
+                        return String($(this).attr("data-meta-key") || "") === metaKey;
+                    }).first();
+                    if ($slider.length) {
+                        places = cafRangeSliderDecimalPlaces($slider);
+                        preferred = cafRangeSliderPreferredTexts($slider);
+                    }
+                    return cafFormatRangeSliderNumber(value, places, preferred);
+                };
+
                 if (clause.compare === "BETWEEN" && Array.isArray(clause.value) && clause.value.length >= 2) {
-                    entries.push([`${prefix}range_${clause.key}`, `${clause.value[0]}-${clause.value[1]}`]);
+                    entries.push([
+                        `${prefix}range_${metaKey}`,
+                        `${formatRangeUrlNumber(clause.value[0])}-${formatRangeUrlNumber(clause.value[1])}`
+                    ]);
                     return;
                 }
 
                 if (clause.compare === "<=" && clause.value != null) {
-                    entries.push([`${prefix}range_${clause.key}`, `<=${clause.value}`]);
+                    entries.push([`${prefix}range_${metaKey}`, `<=${formatRangeUrlNumber(clause.value)}`]);
                     return;
                 }
 
@@ -1514,7 +1609,7 @@ jQuery(function ($) {
                     const values = Array.isArray(clause.value) ? clause.value : [clause.value];
                     values.forEach((value) => {
                         if (value != null && String(value) !== "") {
-                            entries.push([`${prefix}cf_${clause.key}`, String(value)]);
+                            entries.push([`${prefix}cf_${metaKey}`, String(value)]);
                         }
                     });
                 }
@@ -1992,15 +2087,11 @@ jQuery(function ($) {
                 }
 
                 const $output = $slider.closest(".caf-range-slider-output");
-                const prefixEnabled = String($slider.attr("data-prefix-enable") || "false") === "true";
-                const suffixEnabled = String($slider.attr("data-suffix-enable") || "false") === "true";
-                const prefixText = prefixEnabled ? String($slider.attr("data-prefix-text") || "") : "";
-                const suffixText = suffixEnabled ? String($slider.attr("data-suffix-text") || "") : "";
-                const formattedMax = `${prefixText}${safeMax}${suffixText}`;
+                const formattedMax = cafFormatRangeSliderLabel($slider, safeMax);
                 if (rangeType === "single") {
                     $output.find(".caf-range-slider-min").text(formattedMax);
                 } else {
-                    $output.find(".caf-range-slider-min").text(`${prefixText}${safeMin}${suffixText}`);
+                    $output.find(".caf-range-slider-min").text(cafFormatRangeSliderLabel($slider, safeMin));
                     $output.find(".caf-range-slider-max").text(formattedMax);
                 }
                 });
@@ -2359,15 +2450,11 @@ jQuery(function ($) {
                 }
 
                 const $output = $slider.closest(".caf-range-slider-output");
-                const prefixEnabled = String($slider.attr("data-prefix-enable") || "false") === "true";
-                const suffixEnabled = String($slider.attr("data-suffix-enable") || "false") === "true";
-                const prefixText = prefixEnabled ? String($slider.attr("data-prefix-text") || "") : "";
-                const suffixText = suffixEnabled ? String($slider.attr("data-suffix-text") || "") : "";
                 if (rangeType === "single") {
-                    $output.find(".caf-range-slider-min").text(`${prefixText}${newMax}${suffixText}`);
+                    $output.find(".caf-range-slider-min").text(cafFormatRangeSliderLabel($slider, newMax));
                 } else {
-                    $output.find(".caf-range-slider-min").text(`${prefixText}${newMin}${suffixText}`);
-                    $output.find(".caf-range-slider-max").text(`${prefixText}${newMax}${suffixText}`);
+                    $output.find(".caf-range-slider-min").text(cafFormatRangeSliderLabel($slider, newMin));
+                    $output.find(".caf-range-slider-max").text(cafFormatRangeSliderLabel($slider, newMax));
                 }
                 rangeSliderMatchCount += 1;
             });
@@ -3540,13 +3627,7 @@ jQuery(function ($) {
         initRangeSliders($scope) {
             const $root = $scope && $scope.length ? $scope : $(document);
 
-            const formatRangeText = ($slider, value) => {
-                const prefixEnabled = String($slider.attr("data-prefix-enable") || "false") === "true";
-                const suffixEnabled = String($slider.attr("data-suffix-enable") || "false") === "true";
-                const prefixText = prefixEnabled ? String($slider.attr("data-prefix-text") || "") : "";
-                const suffixText = suffixEnabled ? String($slider.attr("data-suffix-text") || "") : "";
-                return `${prefixText}${value}${suffixText}`;
-            };
+            const formatRangeText = ($slider, value) => cafFormatRangeSliderLabel($slider, value);
 
             $root.find(".caf-range-slider-ui").each(function () {
                 const $slider = $(this);
@@ -4058,9 +4139,11 @@ jQuery(function ($) {
                     return;
                 }
 
+                const places = cafRangeSliderDecimalPlaces($slider);
+                const preferred = cafRangeSliderPreferredTexts($slider);
                 const valueLabel = rangeType === "single"
-                    ? `${safeCurrentMax}`
-                    : `${safeCurrentMin} - ${safeCurrentMax}`;
+                    ? cafFormatRangeSliderNumber(safeCurrentMax, places, preferred)
+                    : `${cafFormatRangeSliderNumber(safeCurrentMin, places, preferred)} - ${cafFormatRangeSliderNumber(safeCurrentMax, places, preferred)}`;
                 const moduleLabel = $.trim(
                     $module.find(".caf-filter-label-common .caf-builder-filter-label, .caf-filter-label-common .caf-builder-custom-field-label-inner").first().text() || ""
                 );

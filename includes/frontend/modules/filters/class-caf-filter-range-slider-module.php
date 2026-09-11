@@ -26,6 +26,7 @@ class CAF_Filter_Range_Slider_Module extends CAF_Filter_Base_Module {
 		$this->collect_css();
 
 		$slider = isset( $settings->range_slider ) ? $settings->range_slider : new stdClass();
+		$decimal_places = self::resolve_display_decimal_places( $slider );
 		$min    = isset( $slider->min ) ? (float) $slider->min : 0;
 		$max    = isset( $slider->max ) ? (float) $slider->max : 100;
 		$step   = isset( $slider->step ) ? (float) $slider->step : 1;
@@ -90,6 +91,20 @@ class CAF_Filter_Range_Slider_Module extends CAF_Filter_Base_Module {
 			}
 		}
 
+		$min_text         = isset( $slider->min ) ? trim( (string) $slider->min ) : '';
+		$max_text         = isset( $slider->max ) ? trim( (string) $slider->max ) : '';
+		$start_min_text   = ( isset( $slider->start_min ) && '' !== $slider->start_min && null !== $slider->start_min )
+			? trim( (string) $slider->start_min )
+			: '';
+		$start_max_text   = ( isset( $slider->start_max ) && '' !== $slider->start_max && null !== $slider->start_max )
+			? trim( (string) $slider->start_max )
+			: '';
+		$pref_display_min = $defaults_enabled && '' !== $start_min_text ? $start_min_text : $min_text;
+		$pref_display_max = $defaults_enabled && '' !== $start_max_text ? $start_max_text : $max_text;
+
+		$display_start_min = self::format_display_number( $start_min, $decimal_places, $pref_display_min );
+		$display_start_max = self::format_display_number( $start_max, $decimal_places, $pref_display_max );
+
 		$html  = $this->render_label();
 		$toggle_closed_class = $this->get_toggle_closed_class();
 		$toggle_closed_style = '' !== $toggle_closed_class ? 'display:none;' : 'display:flex;';
@@ -101,13 +116,13 @@ class CAF_Filter_Range_Slider_Module extends CAF_Filter_Base_Module {
 		$html .= '<div class="' . esc_attr( $output_class ) . '" style="' . esc_attr( $toggle_closed_style ) . '">';
 		if ( 'single' === $type ) {
 			$html .= '<div class="caf-range-slider-values caf-range-slider-values--single">';
-			$html .= '<span class="caf-range-slider-min">' . esc_html( $prefix_text . $start_max . $suffix_text ) . '</span>';
+			$html .= '<span class="caf-range-slider-min">' . esc_html( $prefix_text . $display_start_max . $suffix_text ) . '</span>';
 			$html .= '</div>';
 		} else {
 			$html .= '<div class="caf-range-slider-values">';
-			$html .= '<span class="caf-range-slider-min">' . esc_html( $prefix_text . $start_min . $suffix_text ) . '</span>';
+			$html .= '<span class="caf-range-slider-min">' . esc_html( $prefix_text . $display_start_min . $suffix_text ) . '</span>';
 			$html .= '<span class="caf-range-slider-sep">-</span>';
-			$html .= '<span class="caf-range-slider-max">' . esc_html( $prefix_text . $start_max . $suffix_text ) . '</span>';
+			$html .= '<span class="caf-range-slider-max">' . esc_html( $prefix_text . $display_start_max . $suffix_text ) . '</span>';
 			$html .= '</div>';
 		}
 		$html .= '<div class="caf-range-slider-ui-wrapper caf-range-slider-placement-' . esc_attr( $placement ) . '">';
@@ -117,6 +132,11 @@ class CAF_Filter_Range_Slider_Module extends CAF_Filter_Base_Module {
 		$html .= ' data-step="' . esc_attr( $step ) . '"';
 		$html .= ' data-start-min="' . esc_attr( $start_min ) . '"';
 		$html .= ' data-start-max="' . esc_attr( $start_max ) . '"';
+		$html .= ' data-min-text="' . esc_attr( $min_text ) . '"';
+		$html .= ' data-max-text="' . esc_attr( $max_text ) . '"';
+		$html .= ' data-start-min-text="' . esc_attr( $start_min_text ) . '"';
+		$html .= ' data-start-max-text="' . esc_attr( $start_max_text ) . '"';
+		$html .= ' data-decimal-places="' . esc_attr( (string) $decimal_places ) . '"';
 		$html .= ' data-range-type="' . esc_attr( $type ) . '"';
 		$html .= ' data-placement="' . esc_attr( $placement ) . '"';
 		$html .= ' data-prefix-enable="' . esc_attr( $prefix_enabled ? 'true' : 'false' ) . '"';
@@ -124,12 +144,76 @@ class CAF_Filter_Range_Slider_Module extends CAF_Filter_Base_Module {
 		$html .= ' data-suffix-enable="' . esc_attr( $suffix_enabled ? 'true' : 'false' ) . '"';
 		$html .= ' data-suffix-text="' . esc_attr( $suffix_text ) . '"';
 		$html .= ' data-meta-key="' . esc_attr( $custom_field_key ) . '"';
-		$html .= ' data-meta-type="NUMERIC"';
+		// DECIMAL(p,s): WP "NUMERIC" → SIGNED truncates decimals (0.540 → 0). Bare DECIMAL also truncates.
+		$html .= ' data-meta-type="DECIMAL(16,6)"';
 		$html .= '></div>';
 		$html .= '</div>';
 		$html .= '</div>';
 
 		return $html;
+	}
+
+	/**
+	 * Count typed decimal places in a raw setting (e.g. "0.540" → 3).
+	 *
+	 * @param mixed $raw Raw setting value.
+	 * @return int
+	 */
+	protected static function count_decimal_places( $raw ) {
+		if ( null === $raw || '' === $raw ) {
+			return 0;
+		}
+		$s = trim( (string) $raw );
+		$dot = strpos( $s, '.' );
+		if ( false === $dot ) {
+			return 0;
+		}
+		return strlen( substr( $s, $dot + 1 ) );
+	}
+
+	/**
+	 * Max decimal places across min/max/step/defaults for float rounding.
+	 *
+	 * @param object $slider Range slider settings.
+	 * @return int
+	 */
+	protected static function resolve_display_decimal_places( $slider ) {
+		if ( ! is_object( $slider ) ) {
+			return 0;
+		}
+		$places = 0;
+		foreach ( array( 'min', 'max', 'step', 'start_min', 'start_max' ) as $key ) {
+			if ( isset( $slider->$key ) ) {
+				$places = max( $places, self::count_decimal_places( $slider->$key ) );
+			}
+		}
+		return min( $places, 12 );
+	}
+
+	/**
+	 * Format a number for range slider labels.
+	 * Prefer exact typed setting text when values match; otherwise round then strip padding zeros.
+	 *
+	 * @param float|int $num       Numeric value.
+	 * @param int       $places    Decimal places for rounding.
+	 * @param string    $preferred Typed setting text (optional).
+	 * @return string
+	 */
+	protected static function format_display_number( $num, $places, $preferred = '' ) {
+		$preferred = trim( (string) $preferred );
+		if ( '' !== $preferred && is_numeric( $preferred ) && (float) $preferred === (float) $num ) {
+			return $preferred;
+		}
+		$places = (int) $places;
+		if ( $places > 0 ) {
+			$s = number_format( (float) $num, $places, '.', '' );
+			if ( false !== strpos( $s, '.' ) ) {
+				$s = rtrim( $s, '0' );
+				$s = rtrim( $s, '.' );
+			}
+			return $s;
+		}
+		return (string) ( 0 + (float) $num );
 	}
 
 	/**
