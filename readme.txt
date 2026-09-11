@@ -212,6 +212,7 @@ Yes. Use the export/import tools to move a full layout, a single filter, a modul
 * Fixed a false "only one CAF filter shortcode is allowed per page" message when SureRank generated meta from page content.
 * Fixed Classic Panel new-filter screens not auto-filling Title and Post Type from the layout URL.
 * Added locked Category / Term Page Mode controls in Filter Settings.
+* Fixed range slider decimal values (including WooCommerce price) being truncated to whole numbers. Typed values like 0.540 stay as typed in labels.
 
 = 3.0.4 = (08/09/2026)
 * Fixed Sort By and Sort Order on filter and pagination AJAX so results match the layout settings instead of falling back to date.
@@ -511,7 +512,7 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 == Upgrade Notice ==
 
 = 3.0.5 =
-Recommended update — dropdown Color Swatch closed select always shows the term name, SureRank no longer trips the one-filter limit, and Classic Panel title/post type auto-fill works again.
+Recommended update — dropdown Color Swatch closed select always shows the term name, range slider decimals no longer truncate, SureRank no longer trips the one-filter limit, and Classic Panel title/post type auto-fill works again.
 
 = 3.0.4 =
 Recommended update — restores layout Sort By / Sort Order on AJAX and hides term counts from the closed dropdown select.
