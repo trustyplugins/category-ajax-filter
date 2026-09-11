@@ -5,7 +5,7 @@ Plugin URI: https://wordpress.org/plugins/category-ajax-filter/
 Tags: ajax filter, product filter, woocommerce, category filter, taxonomy filter
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 3.0.4
+Stable tag: 3.0.5
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -207,6 +207,11 @@ Yes. Use the export/import tools to move a full layout, a single filter, a modul
 7. **Live Demos**: View real-world examples of filters with wordpress posts, woocommerce, custom post types, taxonomies and stunning layouts.
 
 == Changelog ==
+= 3.0.5 = (10/09/2026)
+* Dropdown Color Swatch label control is now Show/Hide only (Tooltip tab removed). The closed select always shows the term name; Hide still applies to the open list.
+* Fixed a false "only one CAF filter shortcode is allowed per page" message when SureRank generated meta from page content.
+* Fixed Classic Panel new-filter screens not auto-filling Title and Post Type from the layout URL.
+
 = 3.0.4 = (08/09/2026)
 * Fixed Sort By and Sort Order on filter and pagination AJAX so results match the layout settings instead of falling back to date.
 * Fixed the closed dropdown showing term counts in the builder preview. Counts still appear in the open list when Show count is on.
@@ -503,6 +508,9 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 * First version of plugin.
 
 == Upgrade Notice ==
+
+= 3.0.5 =
+Recommended update — dropdown Color Swatch closed select always shows the term name, SureRank no longer trips the one-filter limit, and Classic Panel title/post type auto-fill works again.
 
 = 3.0.4 =
 Recommended update — restores layout Sort By / Sort Order on AJAX and hides term counts from the closed dropdown select.
