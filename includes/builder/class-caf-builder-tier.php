@@ -126,7 +126,6 @@ class CAF_Builder_Tier {
 				'woo_badge_types',
 				'woo_rating_filter',
 				'woo_product_filters',
-				'multiple_filters_per_page',
 				'gradient_colors',
 			),
 		);
