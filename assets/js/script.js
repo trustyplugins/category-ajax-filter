@@ -94,11 +94,9 @@ jQuery(function (t) {
     }
 
     function initFilters() {
-        t(".caf-post-layout-container").each(function (index) {
-            // Preserve legacy behavior: load the first shortcode instance on page load.
-            if (0 === index) {
-                get_posts(buildParams(1, t(this).attr("data-target-div")));
-            }
+        // Load every old-panel shortcode on page load (same approach as Pro).
+        t(".caf-post-layout-container").each(function () {
+            get_posts(buildParams(1, t(this).attr("data-target-div")));
         });
     }
 
