@@ -366,30 +366,42 @@ class CAF_load_scripts
                 // echo "<center style='color:red'>Error : CAF PRO's license is not activated. Please activate the license from admin panel or deactivate the PRO version.</center>"; 
             }
         } else {
-            $shortcode_found = false; // use this flag to see if styles and scripts need to be enqueued
+            // Collect every old-panel [caf_filter] in document order so each
+            // instance gets head CSS scoped to data-target-div{N} (matches shortcode $b).
             $short_id = array();
             foreach ($posts as $post) {
-                //var_dump($post->post_content);
-                //echo stripos($post->post_content,'[caf_filter');
-                //$html = str_get_html($post->post_content);
-                if (stripos($post->post_content, '[caf_filter') !== false) {
-                    //echo "yes";
-                    $str = get_string_between($post->post_content, "[caf_filter id=", "]");
-                    if ($str) {
-                        $short_ids = trim(str_replace(array("'", '"'), '', $str));
-                        if ('' !== $short_ids) {
-                            $short_id[] = $short_ids;
-                            $shortcode_found = true; // bingo!
-                            break;
-                        }
+                if (empty($post->post_content) || false === stripos($post->post_content, '[caf_filter')) {
+                    continue;
+                }
+                if (!preg_match_all('/\[caf_filter\b[^\]]*?\bid\s*=\s*(?:\'([^\']+)\'|"([^"]+)"|([^\s\]]+))/i', $post->post_content, $matches, PREG_SET_ORDER)) {
+                    continue;
+                }
+                foreach ($matches as $match) {
+                    $sid = '';
+                    if (!empty($match[1])) {
+                        $sid = $match[1];
+                    } elseif (!empty($match[2])) {
+                        $sid = $match[2];
+                    } elseif (!empty($match[3])) {
+                        $sid = trim($match[3], "\"'");
                     }
+                    $sid = trim((string) $sid);
+                    if ('' === $sid) {
+                        continue;
+                    }
+                    // Builder ids (caf_N) do not consume old-panel $b.
+                    if (0 === strpos($sid, 'caf_')) {
+                        continue;
+                    }
+                    $short_id[] = $sid;
                 }
             }
 
-            if ($shortcode_found) {
-                $caf_post_layout = 'post-layout1';
-                $caf_filter_layout = 'filter-layout1';
+            if (!empty($short_id)) {
+                $b = 1;
                 foreach ($short_id as $id) {
+                    $caf_post_layout = 'post-layout1';
+                    $caf_filter_layout = 'filter-layout1';
                     if (get_post_meta($id, 'caf_post_layout')) {
                         $caf_post_layout = get_post_meta($id, 'caf_post_layout', true);
                     }
@@ -400,12 +412,12 @@ class CAF_load_scripts
                     wp_enqueue_style('tc-caf-' . $caf_post_layout, TC_CAF_URL . 'assets/css/post/' . $caf_post_layout . '.min.css', '', TC_CAF_PLUGIN_VERSION);
                     wp_enqueue_style('tc-caf-' . $caf_filter_layout, TC_CAF_URL . 'assets/css/filter/' . $caf_filter_layout . '.min.css', '', TC_CAF_PLUGIN_VERSION);
 
+                    $handle = 'tc-caf-dynamic-style-' . $caf_filter_layout;
+                    wp_enqueue_style($handle, TC_CAF_URL . 'assets/css/dynamic-styles.css', '', TC_CAF_PLUGIN_VERSION);
+                    setDynamicFilterCssFree($id, $handle, $caf_filter_layout, $b, 'conditional');
+                    setDynamicFilterCssFree($id, $handle, $caf_post_layout, $b, 'conditional');
+                    $b++;
                 }
-                $b = 1;
-                $handle = "tc-caf-dynamic-style-" . $caf_filter_layout;
-                wp_enqueue_style($handle, TC_CAF_URL . 'assets/css/dynamic-styles.css', '', TC_CAF_PLUGIN_VERSION);
-                setDynamicFilterCssFree($id, $handle, $caf_filter_layout, $b, 'conditional');
-                setDynamicFilterCssFree($id, $handle, $caf_post_layout, $b, 'conditional');
                 wp_enqueue_style('tc-caf-font-awesome-style', TC_CAF_URL . 'assets/css/fontawesome/css/font-awesome.min.css', '', TC_CAF_PLUGIN_VERSION, 'all');
                 wp_enqueue_script('jquery');
                 wp_enqueue_script('tc-caf-frontend-scripts', TC_CAF_URL . 'assets/js/script.min.js', array('jquery'), TC_CAF_PLUGIN_VERSION, array(
