@@ -1066,6 +1066,13 @@ display: none ;
     cursor: pointer;
 }
 
+/* Real mobile: keep page scroll from stealing jQuery UI handle drag */
+.caf-range-slider-ui,
+.caf-range-slider-ui .ui-slider-handle {
+    touch-action: none;
+    -ms-touch-action: none;
+}
+
 .caf-range-slider-output .ui-slider-vertical {
     width: 16px;
     height: 130px;
