@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-custom-fonts.php';
+require_once TC_CAF_PATH . 'includes/frontend/caf-builder-post-excerpt.php';
 require_once TC_CAF_PATH . 'includes/builder/class-caf-builder-tier.php';
 require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-import-library.php';
 add_action( 'wp_ajax_get_caf_builder_posts', 'get_caf_builder_posts' );
@@ -877,6 +878,7 @@ function load_builder_ajax_dependencies() {
 	require_once $base . 'class-caf-builder-style-generator.php';
 	require_once $base . 'class-caf-builder-query.php';
 	require_once $base . 'caf-builder-uploaded-icon.php';
+	require_once $base . 'caf-builder-post-excerpt.php';
 	require_once $base . 'modules/filters/class-caf-filter-base-module.php';
 	require_once $base . 'modules/filters/class-caf-filter-search-module.php';
 	require_once $base . 'modules/filters/class-caf-filter-reset-module.php';
@@ -2305,7 +2307,7 @@ function caf_get_preview_posts( $request ) {
 			'id'            => $post_id,
 			'key'           => $post_id,
 			'title'         => get_the_title(),
-			'description'   => get_the_content(),
+			'description'   => caf_builder_preview_post_description( $post_id ),
 			'excerpt'       => $excerpt,
 			'url'           => $post_url,
 			'image'         => $imageurl,
@@ -4366,7 +4368,7 @@ function caf_get_posts_list( $data ) {
 			'id'            => $item_id,
 			'key'           => $item_id,
 			'title'         => get_the_title(),
-			'description'   => get_the_content(),
+			'description'   => caf_builder_preview_post_description( $post_id ),
 			'excerpt'       => $excerpt,
 			'url'           => $post_url,
 			'image'         => $imageurl,
