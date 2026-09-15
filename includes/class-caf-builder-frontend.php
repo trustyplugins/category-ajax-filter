@@ -382,17 +382,36 @@ class CAF_Builder_Frontend {
 
 		// Never load builder-framework.js inside Elementor editor/AJAX — it blanks the canvas.
 		if ( ! $is_elementor_canvas ) {
+			wp_enqueue_script( 'jquery-ui-slider' );
+
+			$touch_punch = TC_CAF_PATH . 'assets/js/jquery.ui.touch-punch.js';
+			if ( file_exists( $touch_punch ) && ! wp_script_is( 'tc-caf-jquery-ui-touch-punch', 'registered' ) ) {
+				wp_register_script(
+					'tc-caf-jquery-ui-touch-punch',
+					TC_CAF_URL . 'assets/js/jquery.ui.touch-punch.js',
+					array( 'jquery', 'jquery-ui-slider' ),
+					(string) filemtime( $touch_punch ),
+					true
+				);
+			}
+			if ( wp_script_is( 'tc-caf-jquery-ui-touch-punch', 'registered' ) ) {
+				wp_enqueue_script( 'tc-caf-jquery-ui-touch-punch' );
+			}
+
 			if ( ! wp_script_is( 'tc-caf-builder-front-script', 'registered' ) ) {
 				$builder_js = TC_CAF_PATH . 'assets/js/builder-framework.js';
+				$front_deps = array( 'jquery', 'jquery-ui-slider', 'tc-caf-builder-ajax-config' );
+				if ( wp_script_is( 'tc-caf-jquery-ui-touch-punch', 'registered' ) ) {
+					$front_deps[] = 'tc-caf-jquery-ui-touch-punch';
+				}
 				wp_register_script(
 					'tc-caf-builder-front-script',
 					TC_CAF_URL . 'assets/js/builder-framework.js',
-					array( 'jquery', 'jquery-ui-slider', 'tc-caf-builder-ajax-config' ),
+					$front_deps,
 					file_exists( $builder_js ) ? (string) filemtime( $builder_js ) : TC_CAF_PLUGIN_VERSION,
 					true
 				);
 			}
-			wp_enqueue_script( 'jquery-ui-slider' );
 			wp_enqueue_script( 'tc-caf-builder-front-script' );
 		}
 
