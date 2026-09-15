@@ -880,30 +880,16 @@ class CAF_Builder_Post_Renderer {
 			$excerpt_length = (int) $settings->excerptLength;
 		}
 
-		$post = get_post( $post_id );
+		$html_source = function_exists( 'caf_builder_get_post_excerpt_html_source' )
+			? caf_builder_get_post_excerpt_html_source( $post_id )
+			: (string) get_the_excerpt( $post_id );
 
 		if ( $html_render ) {
-			$html_source = '';
-			if ( $post && '' !== trim( (string) $post->post_content ) ) {
-				$html_source = (string) $post->post_content;
-				$html_source = strip_shortcodes( $html_source );
-				if ( function_exists( 'excerpt_remove_blocks' ) ) {
-					$html_source = excerpt_remove_blocks( $html_source );
-				}
-			}
-			if ( '' === trim( wp_strip_all_tags( $html_source ) ) ) {
-				$html_source = (string) get_the_excerpt( $post_id );
-			}
-
 			$trimmed = $this->trim_html_excerpt_to_words( $html_source, $excerpt_length );
 			return wp_kses_post( $trimmed );
 		}
 
-		$raw_excerpt = wp_strip_all_tags( (string) get_the_excerpt( $post_id ) );
-		$description = $post ? wp_strip_all_tags( (string) $post->post_content ) : '';
-		$source_text = '' !== trim( $raw_excerpt ) ? $raw_excerpt : $description;
-
-		return esc_html( $this->trim_excerpt_to_words( $source_text, $excerpt_length ) );
+		return esc_html( $this->trim_excerpt_to_words( wp_strip_all_tags( $html_source ), $excerpt_length ) );
 	}
 
 	/**
