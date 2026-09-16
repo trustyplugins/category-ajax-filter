@@ -3299,15 +3299,18 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 			$layout_data->filter_layout_data->extra_data->query_restriction = (object) array(
 				'enabled' => 'false',
 				'include' => (object) array(
-					'by'        => '',
-					'taxonomy'  => '',
-					'term_data' => array(),
+					'by'         => '',
+					'taxonomies' => array(),
+					'taxonomy'   => '',
+					'term_data'  => array(),
+					'post_data'  => array(),
 				),
 				'exclude' => (object) array(
-					'by'        => '',
-					'taxonomy'  => '',
-					'term_data' => array(),
-					'post_data' => array(),
+					'by'         => '',
+					'taxonomies' => array(),
+					'taxonomy'   => '',
+					'term_data'  => array(),
+					'post_data'  => array(),
 				),
 			);
 		}
