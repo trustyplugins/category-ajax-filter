@@ -209,6 +209,7 @@ Yes. Use the export/import tools to move a full layout, a single filter, a modul
 == Changelog ==
 = 3.0.5 = (10/09/2026)
 * Dropdown Color Swatch label control is now Show/Hide only (Tooltip tab removed). The closed select always shows the term name; Hide still applies to the open list.
+* Multiple CAF filter shortcodes can now render on the same page (the one-shortcode Free limit is removed).
 * Fixed a false "only one CAF filter shortcode is allowed per page" message when SureRank generated meta from page content.
 * Fixed Classic Panel new-filter screens not auto-filling Title and Post Type from the layout URL.
 * Added locked Category / Term Page Mode controls in Filter Settings.
@@ -512,7 +513,7 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 == Upgrade Notice ==
 
 = 3.0.5 =
-Recommended update — dropdown Color Swatch closed select always shows the term name, range slider decimals no longer truncate, SureRank no longer trips the one-filter limit, and Classic Panel title/post type auto-fill works again.
+Recommended update — multiple CAF filter shortcodes can render on the same page, dropdown Color Swatch closed select always shows the term name, range slider decimals no longer truncate, SureRank no longer executes the filter shortcode for meta, and Classic Panel title/post type auto-fill works again.
 
 = 3.0.4 =
 Recommended update — restores layout Sort By / Sort Order on AJAX and hides term counts from the closed dropdown select.
