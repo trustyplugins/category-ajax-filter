@@ -207,12 +207,19 @@ Yes. Use the export/import tools to move a full layout, a single filter, a modul
 7. **Live Demos**: View real-world examples of filters with wordpress posts, woocommerce, custom post types, taxonomies and stunning layouts.
 
 == Changelog ==
-= 3.0.5 = (10/09/2026)
+= 3.0.5 = (16/09/2026)
 * Dropdown Color Swatch label control is now Show/Hide only (Tooltip tab removed). The closed select always shows the term name; Hide still applies to the open list.
+* Multiple CAF filter shortcodes can now render on the same page (the one-shortcode Free limit is removed).
 * Fixed a false "only one CAF filter shortcode is allowed per page" message when SureRank generated meta from page content.
 * Fixed Classic Panel new-filter screens not auto-filling Title and Post Type from the layout URL.
 * Added locked Category / Term Page Mode controls in Filter Settings.
 * Fixed range slider decimal values (including WooCommerce price) being truncated to whole numbers. Typed values like 0.540 stay as typed in labels.
+* Fixed Divi shortcodes stripping Description module text in the builder preview and frontend.
+* Fixed the range slider not dragging on mobile and tablet (touch support).
+* Fixed Classic Panel layouts when more than one CAF filter shortcode is on the same page.
+* Query Restriction locked UI now matches Pro’s section layout (feature remains Pro-only).
+* Fixed Query Only Taxonomy / Custom Field source boxes stretching out of alignment.
+* Fixed Add to Cart Button Behaviour so the Pro lock covers Ajax Add to Cart only.
 
 = 3.0.4 = (08/09/2026)
 * Fixed Sort By and Sort Order on filter and pagination AJAX so results match the layout settings instead of falling back to date.
@@ -512,7 +519,7 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 == Upgrade Notice ==
 
 = 3.0.5 =
-Recommended update — dropdown Color Swatch closed select always shows the term name, range slider decimals no longer truncate, SureRank no longer trips the one-filter limit, and Classic Panel title/post type auto-fill works again.
+Recommended update — multiple CAF filter shortcodes can render on the same page, dropdown Color Swatch closed select always shows the term name, range slider decimals no longer truncate, SureRank no longer executes the filter shortcode for meta, Classic Panel title/post type auto-fill works again, Divi description text no longer disappears, and the range slider works on touch devices.
 
 = 3.0.4 =
 Recommended update — restores layout Sort By / Sort Order on AJAX and hides term counts from the closed dropdown select.
