@@ -1672,6 +1672,50 @@ function caf_builder_layout_init_fun() {
 	);
 	register_rest_route(
 		'caf-custom-builder/v1',
+		'/get-taxo-picker-bootstrap',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_taxo_picker_bootstrap',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-taxo-picker-roots',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_taxo_picker_roots',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-taxo-picker-search',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_taxo_picker_search',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
+		'/get-taxo-picker-all-terms-lite',
+		array(
+			'methods'             => 'GET',
+			'callback'            => 'caf_get_taxo_picker_all_terms_lite',
+			'permission_callback' => function () {
+				return current_user_can( 'manage_options' );
+			},
+		)
+	);
+	register_rest_route(
+		'caf-custom-builder/v1',
 		'/get-cf-field-value/',
 		array(
 			'methods'             => 'POST',
@@ -4565,6 +4609,8 @@ function build_term_tree_with_counts( $terms, $taxonomy_name ,$post_type) {
 	}
 	return $output;
 }
+
+require_once __DIR__ . '/caf-taxo-picker-api.php';
 
 /* start api for testing puspose*/
 add_action(
