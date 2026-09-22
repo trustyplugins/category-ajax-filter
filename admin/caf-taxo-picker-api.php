@@ -12,7 +12,7 @@ function caf_taxo_picker_limits() {
 	return array(
 		'root_limit'  => 50,
 		'child_limit' => 50,
-		'search_limit'=> 40,
+		'search_limit'=> 10,
 	);
 }
 
