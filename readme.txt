@@ -5,7 +5,7 @@ Plugin URI: https://wordpress.org/plugins/category-ajax-filter/
 Tags: ajax filter, product filter, woocommerce, category filter, taxonomy filter
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 3.0.5
+Stable tag: 3.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -207,6 +207,12 @@ Yes. Use the export/import tools to move a full layout, a single filter, a modul
 7. **Live Demos**: View real-world examples of filters with wordpress posts, woocommerce, custom post types, taxonomies and stunning layouts.
 
 == Changelog ==
+= 3.1 = (23/09/2026)
+* Locked Category / Term Page Mode and Query Restriction now appear in Misc Settings (same placement as Pro; features remain Pro-only).
+* Checkbox and Dropdown taxonomy pickers paginate roots, support search, and load more instead of fetching the full tree.
+* Clearing a term icon no longer re-applies the default tag icon.
+* Builder lists no longer show bullet markers.
+
 = 3.0.5 = (16/09/2026)
 * Dropdown Color Swatch label control is now Show/Hide only (Tooltip tab removed). The closed select always shows the term name; Hide still applies to the open list.
 * Multiple CAF filter shortcodes can now render on the same page (the one-shortcode Free limit is removed).
@@ -517,6 +523,9 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 * First version of plugin.
 
 == Upgrade Notice ==
+
+= 3.1 =
+Recommended update — locked Category / Term Page Mode and Query Restriction now sit in Misc Settings, and Checkbox/Dropdown taxonomy pickers paginate and search on large catalogs.
 
 = 3.0.5 =
 Recommended update — multiple CAF filter shortcodes can render on the same page, dropdown Color Swatch closed select always shows the term name, range slider decimals no longer truncate, SureRank no longer executes the filter shortcode for meta, Classic Panel title/post type auto-fill works again, Divi description text no longer disappears, and the range slider works on touch devices.
