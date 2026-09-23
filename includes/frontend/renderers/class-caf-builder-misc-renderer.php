@@ -101,6 +101,9 @@ class CAF_Builder_Misc_Renderer {
 
 			$icon = ! empty( $loader_data->icon_data->icon ) ? $loader_data->icon_data->icon : '';
 			if ( ! empty( $icon ) ) {
+				if ( function_exists( 'caf_builder_normalize_fa_icon_classes_for_frontend' ) ) {
+					$icon = caf_builder_normalize_fa_icon_classes_for_frontend( $icon );
+				}
 				$html .= '<i class="' . esc_attr( $icon ) . '"></i>';
 			}
 		} elseif ( ! empty( $loader_data->icon_data->source ) && 'upload' === $loader_data->icon_data->source ) {

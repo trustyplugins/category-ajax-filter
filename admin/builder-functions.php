@@ -878,6 +878,7 @@ function load_builder_ajax_dependencies() {
 	require_once $base . 'class-caf-builder-style-generator.php';
 	require_once $base . 'class-caf-builder-query.php';
 	require_once $base . 'caf-builder-uploaded-icon.php';
+	require_once $base . 'caf-builder-fa-icons.php';
 	require_once $base . 'caf-builder-post-excerpt.php';
 	require_once $base . 'modules/filters/class-caf-filter-base-module.php';
 	require_once $base . 'modules/filters/class-caf-filter-search-module.php';
@@ -3203,6 +3204,12 @@ function caf_sanitize_free_dnd_column_data( $dnd_column_data ) {
 				if (
 					'load-more' === $pagination_type
 					&& ! CAF_Builder_Tier::can_use_feature( 'pagination_load_more' )
+				) {
+					$item->settings->pagination_type = 'number';
+				}
+				if (
+					'infinite-scroll' === $pagination_type
+					&& ! CAF_Builder_Tier::can_use_feature( 'pagination_infinite_scroll' )
 				) {
 					$item->settings->pagination_type = 'number';
 				}
