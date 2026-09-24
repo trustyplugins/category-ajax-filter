@@ -514,6 +514,41 @@ li.selection-list-default i {
     align-items: center;
 }
 
+.caf-builder-container .caf-builder-preview-infinite-scroll-sentinel {
+    display: block;
+    width: 100%;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.caf-builder-container .caf-builder-preview-infinite-scroll-wrap {
+    display: block;
+    width: 100%;
+}
+
+.caf-builder-container .caf-builder-preview-infinite-scroll-loader {
+    display: none;
+    width: 100%;
+    padding: 16px 0;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.caf-builder-container .caf-builder-preview-infinite-scroll-loader.is-active {
+    display: flex;
+}
+
+.caf-builder-container .caf-builder-preview-infinite-scroll-loader i {
+    font-size: 22px;
+    line-height: 1;
+    color: #666666;
+}
+
 .caf-builder-container .caf-builder-preview-pages {
     display: flex;
 }
@@ -1264,4 +1299,8 @@ a.caf-builder-module-main.caf-module-post.caf-module-type-button {
     color: #5c4a1f;
     font-size: 14px;
     line-height: 1.45;
+}
+
+.caf-builder-container ul li {
+    list-style: none !important;
 }
