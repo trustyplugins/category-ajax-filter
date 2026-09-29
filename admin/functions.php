@@ -414,8 +414,8 @@ class CAF_load_scripts
 
                     $handle = 'tc-caf-dynamic-style-' . $caf_filter_layout;
                     wp_enqueue_style($handle, TC_CAF_URL . 'assets/css/dynamic-styles.css', '', TC_CAF_PLUGIN_VERSION);
-                    setDynamicFilterCssFree($id, $handle, $caf_filter_layout, $b, 'conditional');
-                    setDynamicFilterCssFree($id, $handle, $caf_post_layout, $b, 'conditional');
+                    caf_set_dynamic_filter_css_free($id, $handle, $caf_filter_layout, $b, 'conditional');
+                    caf_set_dynamic_filter_css_free($id, $handle, $caf_post_layout, $b, 'conditional');
                     $b++;
                 }
                 wp_enqueue_style('tc-caf-font-awesome-style', TC_CAF_URL . 'assets/css/fontawesome/css/font-awesome.min.css', '', TC_CAF_PLUGIN_VERSION, 'all');
@@ -525,7 +525,7 @@ function caf_get_image_sizes($size = '')
     return $sizes;
 }
 
-function get_string_between($string, $start, $end)
+function caf_get_string_between($string, $start, $end)
 {
     $string = ' ' . $string;
     $ini = strpos($string, $start);
@@ -538,7 +538,7 @@ function get_string_between($string, $start, $end)
     return substr($string, $ini, $len);
 }
 
-function setDynamicFilterCssFree($id, $handle, $caf_layout, $b, $type)
+function caf_set_dynamic_filter_css_free($id, $handle, $caf_layout, $b, $type)
 {
     include TC_CAF_PATH . 'includes/caf-legacy-variable-defaults-bootstrap.php';
     include TC_CAF_PATH . 'includes/front-variables.php';

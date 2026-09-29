@@ -76,7 +76,7 @@ class CAF_shortcode_render
         wp_enqueue_style('tc-caf-font-awesome-style');
         $handle = "tc-caf-dynamic-style-" . $caf_filter_layout;
         wp_enqueue_style($handle, TC_CAF_URL . '/assets/css/dynamic-styles.css', '', TC_CAF_PLUGIN_VERSION);
-        setDynamicFilterCssFree($id, $handle, $caf_filter_layout, $b, 'shortcode');
+        caf_set_dynamic_filter_css_free($id, $handle, $caf_filter_layout, $b, 'shortcode');
         if (($id && !empty($id) && get_post_type($id) == 'caf_posts')) {
             if ($caf_filter_layout == 'filter-layout3') {$cl = 'sidebar';} else { $cl = '';}
             //var_dump($tax);
@@ -95,7 +95,7 @@ class CAF_shortcode_render
                     }
                 }
             }
-            setDynamicFilterCssFree($id, $handle, $caf_post_layout, $b, 'shortcode');
+            caf_set_dynamic_filter_css_free($id, $handle, $caf_post_layout, $b, 'shortcode');
             echo "<div id='manage-ajax-response' class='caf-row'>";
             if ($caf_post_layout && strlen($caf_post_layout) > 11) {
                 echo '<div class="status"><i class="fa fa-spinner" aria-hidden="true"></i></div>';
