@@ -3662,7 +3662,7 @@ function caf_generate_unique_title( $original_title, $post_type ) {
 
 
 
-function duplicate_post( $post_id ) {
+function caf_duplicate_post( $post_id ) {
 	$post = get_post( $post_id );
 	if ( ! $post ) {
 		return;
@@ -3710,7 +3710,7 @@ function duplicate_post( $post_id ) {
 
 function caf_clone_layout( $request ) {
 	$post_id     = intval( $request['post_id'] );
-	$new_post_id = duplicate_post( $post_id );
+	$new_post_id = caf_duplicate_post( $post_id );
 	if ( $new_post_id ) {
 		return array(
 				'status'  => 'success',
