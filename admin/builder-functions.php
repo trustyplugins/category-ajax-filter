@@ -7,10 +7,10 @@ require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-custom-fonts.php';
 require_once TC_CAF_PATH . 'includes/frontend/caf-builder-post-excerpt.php';
 require_once TC_CAF_PATH . 'includes/builder/class-caf-builder-tier.php';
 require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-import-library.php';
-add_action( 'wp_ajax_get_caf_builder_posts', 'get_caf_builder_posts' );
-add_action( 'wp_ajax_nopriv_get_caf_builder_posts', 'get_caf_builder_posts' );
+add_action( 'wp_ajax_get_caf_builder_posts', 'caf_get_builder_posts' );
+add_action( 'wp_ajax_nopriv_get_caf_builder_posts', 'caf_get_builder_posts' );
 add_filter( 'posts_search', 'caf_builder_apply_keyword_source_search', 10, 2 );
-function clean_query_args( $args ) {
+function caf_clean_query_args( $args ) {
 	if ( isset( $args['meta_query'] ) && is_array( $args['meta_query'] ) ) {
 		$meta_clause_count = 0;
 		foreach ( $args['meta_query'] as $key => $value ) {
@@ -726,7 +726,7 @@ function caf_builder_apply_keyword_source_search( $search, $wp_query ) {
  
 	return $search_sql;
 }
-function get_caf_builder_posts() {
+function caf_get_builder_posts() {
 	if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'tc_caf_ajax_nonce' ) ) {
 		wp_send_json_error(
 			array(
@@ -746,7 +746,7 @@ function get_caf_builder_posts() {
 			)
 		);
 	}
-	load_builder_ajax_dependencies();
+	caf_load_builder_ajax_dependencies();
 	$layout_bundle = CAF_Builder_Ajax_Performance::get_layout_bundle( $shortindex );
 	if ( empty( $layout_bundle ) ) {
 		wp_send_json_error(
@@ -756,7 +756,7 @@ function get_caf_builder_posts() {
 		);
 	}
 	$builder_data = $layout_bundle['builder_data'];
-	$args         = clean_query_args( $args );
+	$args         = caf_clean_query_args( $args );
 	$data_handler = new CAF_Builder_Data( $builder_data, $shortindex );
 	$layout_post_type = $data_handler->get_post_type();
 	if ( ! caf_builder_layout_post_type_is_queryable( $layout_post_type ) ) {
@@ -870,7 +870,7 @@ function get_caf_builder_posts() {
  *
  * @return void
  */
-function load_builder_ajax_dependencies() {
+function caf_load_builder_ajax_dependencies() {
 	$base = TC_CAF_PATH . 'includes/frontend/';
 	require_once $base . 'class-caf-builder-ajax-performance.php';
 	require_once $base . 'class-caf-builder-data.php';
@@ -1122,7 +1122,7 @@ function caf_save_filter_rest_option( $data ) {
 		);
 }
 
-function StyledTermData( $out, $taxo ) {
+function caf_styled_term_data( $out, $taxo ) {
 
 	$dom = new DOMDocument();
 	$dom->loadHTML( $out );
@@ -1230,7 +1230,7 @@ function caf_get_taxonomy( $data ) {
 				'style'              => 'list',
 			)
 		);
-		$res    = StyledTermData( $out, $taxo );
+		$res    = caf_styled_term_data( $out, $taxo );
 		if ( $res != '0' ) {
 			$data1 .= $res;
 		} else {
@@ -2131,10 +2131,10 @@ function caf_get_cf_field_value( $request ) {
 	// return array("status" => "error", "excerpt" => "", "message" => "Required Parameters are Missing");
 	// }
 	// if ($status === true) {
-	// $desc = get_html_excerpt_without_divi_shortcodes($post_id, $length);
+	// $desc = caf_get_html_excerpt_without_divi_shortcodes($post_id, $length);
 	// return array("status" => "success", "excerpt" => $desc);
 	// } else {
-	// $text = get_excerpt_by_words($post_id, $length);
+	// $text = caf_get_excerpt_by_words($post_id, $length);
 	// return array("status" => "success", "excerpt" => $text);
 	// }
 }
@@ -2152,7 +2152,7 @@ function caf_get_date( $data ) {
 		);
 }
 
-function get_excerpt_by_words( $post_id = null, $word_count = 20 ) {
+function caf_get_excerpt_by_words( $post_id = null, $word_count = 20 ) {
 	// if (!$post_id) {
 	// $post_id = get_the_ID();
 	// }
@@ -2187,7 +2187,7 @@ function get_excerpt_by_words( $post_id = null, $word_count = 20 ) {
 		return $excerpt;
 }
 
-function get_html_excerpt_without_divi_shortcodes( $post_id = null, $word_limit = 20 ) {
+function caf_get_html_excerpt_without_divi_shortcodes( $post_id = null, $word_limit = 20 ) {
 	if ( ! $post_id ) {
 		$post_id = get_the_ID();
 	}
@@ -2250,13 +2250,13 @@ function caf_get_content_length( $request ) {
 			);
 	}
 	if ( $status === true ) {
-		$desc = get_html_excerpt_without_divi_shortcodes( $post_id, $length );
+		$desc = caf_get_html_excerpt_without_divi_shortcodes( $post_id, $length );
 		return array(
 				'status'  => 'success',
 				'excerpt' => $desc,
 			);
 	} else {
-		$text = get_excerpt_by_words( $post_id, $length );
+		$text = caf_get_excerpt_by_words( $post_id, $length );
 		return array(
 				'status'  => 'success',
 				'excerpt' => $text,
@@ -2315,7 +2315,7 @@ function caf_get_preview_posts( $request ) {
 		unset( $query_args['order'] );
 	}
 
-	$query_args = clean_query_args( $query_args );
+	$query_args = caf_clean_query_args( $query_args );
 	$query_args = caf_builder_validate_query_args( $query_args );
 
 	$query      = new WP_Query( $query_args );
@@ -2365,7 +2365,7 @@ function caf_get_preview_posts( $request ) {
 			'meta_fields'   => $meta_fields,
 			'customtext'    => 'Custom text',
 			'commentcount'  => get_comments_number(),
-			'author_avatar' => get_author_avatar_url( $post_id ),
+			'author_avatar' => caf_get_author_avatar_url( $post_id ),
 		);
 
 		$entry_post_type = get_post_type( $post_id );
@@ -3825,7 +3825,7 @@ function caf_clone_builder_layout( $request ) {
 			// $new_layout_name = $layout_label . $copy_suffix;
 			$new_layout_name = caf_generate_unique_layout_name( $layout_label );
 			// return ;
-			$layout_key = save_new_layout_list( $new_layout_name );
+			$layout_key = caf_save_new_layout_list( $new_layout_name );
 
 			$prifix                                      = 'caf_';
 			$new_layout_key                              = $prifix . $layout_key['key'];
@@ -4144,7 +4144,7 @@ function caf_get_trash_layouts_list( $data ) {
 function caf_save_builder_layout_option( $data ) {
 	$layout_data                            = caf_normalize_builder_layout_data( json_decode( $data['layout_data'] ) );
 	$layout_name                            = $layout_data->common_data->layout_name;
-	$layout_key                             = save_new_layout_list( $layout_name );
+	$layout_key                             = caf_save_new_layout_list( $layout_name );
 	if ( is_wp_error( $layout_key ) ) {
 		return array(
 				'status'  => 'error',
@@ -4179,7 +4179,7 @@ function caf_builder_invalidate_layout_cache( $shortindex ) {
 	require_once TC_CAF_PATH . 'includes/frontend/class-caf-builder-ajax-performance.php';
 	CAF_Builder_Ajax_Performance::invalidate_layout_cache( $shortindex );
 }
-function save_new_layout_list( $layout_name ) {
+function caf_save_new_layout_list( $layout_name ) {
 	ob_start();
 	if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_create_layout() ) {
 		return new WP_Error(
@@ -4430,7 +4430,7 @@ function caf_get_posts_list( $data ) {
 			'taxonomies'    => $taxo,
 			'categories'    => $trms,
 			'author'        => get_the_author(),
-			'author_avatar' => get_author_avatar_url( $item_id ),
+			'author_avatar' => caf_get_author_avatar_url( $item_id ),
 			'date'          => get_the_date( 'd-m-y' ),
 			'post_date'     => get_post() ? get_post()->post_date : '',
 			'meta_fields'   => $filterd_custom_fields,
@@ -4499,7 +4499,7 @@ function caf_get_taxo_data_with_recursive_method( $request ) {
 				);
 
 				if ( ! empty( $terms ) ) {
-					$term_data = build_term_tree_with_counts( $terms, $taxonomy->name ,$post_type);
+					$term_data = caf_build_term_tree_with_counts( $terms, $taxonomy->name ,$post_type);
 
 					$taxonomy_tree[] = array(
 						'key'       => $taxonomy->name,
@@ -4529,7 +4529,7 @@ function caf_get_taxo_data_with_recursive_method( $request ) {
 }
 
 
-function build_term_tree_with_counts( $terms, $taxonomy_name ,$post_type) {
+function caf_build_term_tree_with_counts( $terms, $taxonomy_name ,$post_type) {
 	if ( is_wp_error( $terms ) || empty( $terms ) ) {
 		return array();
 	}
@@ -4628,7 +4628,7 @@ add_action(
 			'/upload-icon/',
 			array(
 				'methods'             => 'POST',
-				'callback'            => 'handle_image_upload',
+				'callback'            => 'caf_handle_image_upload',
 				'permission_callback' => function () {
 					return current_user_can( 'manage_options' );
 				},
@@ -4637,7 +4637,7 @@ add_action(
 	}
 );
 // phpcs:disable
-function handle_image_upload($data)
+function caf_handle_image_upload($data)
 {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return new WP_Error( 'caf_upload_forbidden', 'Unauthorized request.', array( 'status' => 403 ) );
@@ -4802,7 +4802,7 @@ add_filter( 'submenu_file', 'caf_force_filters_submenu_active', 100 );
 
 /* For Testing Purpose */
 
-function get_posts_with_both_terms() {
+function caf_get_posts_with_both_terms() {
 	$args = array(
 		'post_type'      => 'post', // Replace with your custom post type if needed
 		'posts_per_page' => -1,
@@ -4840,9 +4840,9 @@ function get_posts_with_both_terms() {
 	return $output;
 }
 
-add_shortcode( 'custom_tax_query_posts', 'get_posts_with_both_terms' );
+add_shortcode( 'custom_tax_query_posts', 'caf_get_posts_with_both_terms' );
 
-function get_author_avatar_url( $postid ) {
+function caf_get_author_avatar_url( $postid ) {
 
 	$author_id = get_post_field( 'post_author', $postid );
 
@@ -4855,4 +4855,4 @@ function get_author_avatar_url( $postid ) {
 	return esc_url_raw( $avatar_url );
 }
 
-// add_shortcode( 'author_avatar_url', 'get_author_avatar_url_shortcode' );
+// add_shortcode( 'author_avatar_url', 'caf_get_author_avatar_url_shortcode' );

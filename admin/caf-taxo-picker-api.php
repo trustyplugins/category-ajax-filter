@@ -510,7 +510,7 @@ add_action(
 			'/upload-icon/',
 			array(
 				'methods'             => 'POST',
-				'callback'            => 'handle_image_upload',
+				'callback'            => 'caf_handle_image_upload',
 				'permission_callback' => 'caf_pro_rest_permission_manage_options',
 			)
 		);

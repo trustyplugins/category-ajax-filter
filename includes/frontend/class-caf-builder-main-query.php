@@ -1388,8 +1388,8 @@ class CAF_Builder_Main_Query {
 
 		self::bind_layout_to_request( $shortindex );
 
-		if ( function_exists( 'load_builder_ajax_dependencies' ) ) {
-			load_builder_ajax_dependencies();
+		if ( function_exists( 'caf_load_builder_ajax_dependencies' ) ) {
+			caf_load_builder_ajax_dependencies();
 		}
 
 		$limit = isset( $_POST['limit'] ) ? absint( $_POST['limit'] ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -1433,8 +1433,8 @@ class CAF_Builder_Main_Query {
 
 		// Prefer client-posted filter params (same shape as CAF builder AJAX).
 		$posted = isset( $_POST['params'] ) && is_array( $_POST['params'] ) ? wp_unslash( $_POST['params'] ) : array(); // phpcs:ignore WordPress.Security.NonceVerification.Missing,WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		if ( ! empty( $posted ) && function_exists( 'clean_query_args' ) ) {
-			$posted = clean_query_args( $posted );
+		if ( ! empty( $posted ) && function_exists( 'caf_clean_query_args' ) ) {
+			$posted = caf_clean_query_args( $posted );
 		} elseif ( ! empty( $posted ) && class_exists( 'CAF_Builder_Query' ) ) {
 			// Fallback light sanitize when helper is unavailable.
 			$posted = self::sanitize_posted_query_args( $posted );
@@ -1662,7 +1662,7 @@ class CAF_Builder_Main_Query {
 	}
 
 	/**
-	 * Light sanitize for posted query args when clean_query_args() is unavailable.
+	 * Light sanitize for posted query args when caf_clean_query_args() is unavailable.
 	 *
 	 * @param array<string, mixed> $args Posted args.
 	 * @return array<string, mixed>
