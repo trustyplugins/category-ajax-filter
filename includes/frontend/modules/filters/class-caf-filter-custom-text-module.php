@@ -27,7 +27,8 @@ class CAF_Filter_Custom_Text_Module extends CAF_Filter_Base_Module {
 		$this->collect_css();
 
 		$html  = $this->render_custom_text_icon( $icon_data, 'before-customtext', 'margin-right:5px;' );
-		$html .= '<div class="caf-filter-custom-text-content">' . wp_kses_post( (string) $custom_text ) . '</div>';
+		// Sanitize author HTML first; then expand shortcodes. Preview stays string-only (React).
+		$html .= '<div class="caf-filter-custom-text-content">' . do_shortcode( wp_kses_post( (string) $custom_text ) ) . '</div>';
 		$html .= $this->render_custom_text_icon( $icon_data, 'after-customtext', 'margin-left:5px;' );
 
 		return $html;
