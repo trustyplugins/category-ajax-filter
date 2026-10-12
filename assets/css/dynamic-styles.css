@@ -329,6 +329,16 @@ li.selection-list-default i {
     border-radius: 0;
 }
 
+/*
+ * Divi (and similar themes) inject an arrow via a.button:after inside .woocommerce
+ * pages. CAF ATC must keep Woo .button classes for AJAX, so neutralize only the
+ * theme pseudo-icon on CAF ATC — not Read More / native theme Woo buttons.
+ */
+.caf-builder-container a.caf-builder-module-main.caf-module-type-woo_add_to_cart.button::after
+{
+    display: none !important;
+}
+
 .caf-builder-module-main.caf-module-type-title .caf-builder-title-value {
     margin: 0;
     padding: 0;
