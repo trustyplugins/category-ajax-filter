@@ -1869,7 +1869,7 @@ function caf_get_builder_custom_field_keys_for_post_type( $post_type ) {
 	if ( 'product' === $post_type && class_exists( 'CAF_Free_Woo' ) ) {
 		$keys = array_values(
 			array_unique(
-				array_merge( $keys, CAF_Free_Woo::get_range_slider_meta_keys() )
+				array_merge( $keys, CAF_Free_Woo::get_builder_visible_woo_meta_keys() )
 			)
 		);
 	}

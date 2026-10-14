@@ -15,6 +15,9 @@ class CAF_Free_Woo {
 
 	const WOO_PRICE_META_KEY = '_price';
 
+	/** Product SKU meta — text CF only (not a range-slider numeric key). */
+	const WOO_SKU_META_KEY = '_sku';
+
 	/**
 	 * Register the free WooCommerce integration.
 	 *
@@ -403,6 +406,8 @@ class CAF_Free_Woo {
 	}
 
 	/**
+	 * Numeric Woo meta keys used by range slider (Free: price only).
+	 *
 	 * @return array<int, string>
 	 */
 	public static function get_range_slider_meta_keys() {
@@ -413,11 +418,31 @@ class CAF_Free_Woo {
 	}
 
 	/**
+	 * Woo meta keys visible in builder CF pickers (range keys + text keys like SKU).
+	 *
+	 * @return array<int, string>
+	 */
+	public static function get_builder_visible_woo_meta_keys() {
+		if ( ! self::is_woocommerce_available() ) {
+			return array();
+		}
+
+		return array_values(
+			array_unique(
+				array_merge(
+					self::get_range_slider_meta_keys(),
+					array( self::WOO_SKU_META_KEY )
+				)
+			)
+		);
+	}
+
+	/**
 	 * @param string $meta_key Meta key.
 	 * @return bool
 	 */
 	public static function is_allowed_builder_meta_key( $meta_key ) {
-		return in_array( (string) $meta_key, self::get_range_slider_meta_keys(), true );
+		return in_array( (string) $meta_key, self::get_builder_visible_woo_meta_keys(), true );
 	}
 
 	/**
