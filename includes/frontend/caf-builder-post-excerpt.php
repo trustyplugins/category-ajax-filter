@@ -11,9 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! function_exists( 'caf_builder_strip_divi_shortcodes_keep_text' ) ) {
 	/**
-	 * Remove Divi et_pb_* shortcode tags while keeping inner text.
+	 * Remove page-builder shortcode tags (Divi et_pb_* / WPBakery vc_*) while keeping
+	 * surrounding / inner text. Runs before word-trim so frontend and preview share
+	 * a clean source.
 	 *
 	 * Also handles texturized / entity-encoded attribute quotes from get_the_excerpt().
+	 * VC matching is bounded (no HTML tag swallow) so truncated excerpt leftovers
+	 * cannot eat neighboring markup.
 	 *
 	 * @param string $html Source HTML or excerpt text.
 	 * @return string
@@ -24,12 +28,22 @@ if ( ! function_exists( 'caf_builder_strip_divi_shortcodes_keep_text' ) ) {
 			return '';
 		}
 
-		// Decode entities so texturized quotes (&#8221; / &#8243;) still match et_pb tags.
+		// Decode entities so texturized quotes (&#8221; / &#8243;) still match builder tags.
 		$working = html_entity_decode( $html, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 
 		$stripped = preg_replace( '/\[\/?et_pb[^\]]*\]/', '', $working );
 		$working  = is_string( $stripped ) ? $stripped : $working;
-		$working  = strip_shortcodes( $working );
+
+		// WPBakery / Visual Composer: complete tags, or truncated leftovers ending in "...".
+		// Do not allow < > inside the match (prevents Read More / layout HTML swallow).
+		$stripped = preg_replace(
+			'/\[\/?vc_[a-zA-Z0-9_-]{1,80}(?:\s[^\[\]<>]{0,2000})?(?:\]|\.{2,})/',
+			'',
+			$working
+		);
+		$working = is_string( $stripped ) ? $stripped : $working;
+
+		$working = strip_shortcodes( $working );
 
 		if ( function_exists( 'excerpt_remove_blocks' ) ) {
 			$without_blocks = excerpt_remove_blocks( $working );
@@ -54,8 +68,13 @@ if ( ! function_exists( 'caf_builder_excerpt_source_has_text' ) ) {
 		if ( '' === $plain ) {
 			return false;
 		}
-		// Reject leftover shortcode-looking soup (e.g. texturized Divi tags).
-		if ( false !== strpos( $plain, '[et_pb' ) || false !== strpos( $plain, '[/et_pb' ) ) {
+		// Reject leftover shortcode-looking soup (Divi / WPBakery).
+		if (
+			false !== strpos( $plain, '[et_pb' ) ||
+			false !== strpos( $plain, '[/et_pb' ) ||
+			false !== strpos( $plain, '[vc_' ) ||
+			false !== strpos( $plain, '[/vc_' )
+		) {
 			return false;
 		}
 		return true;
@@ -66,9 +85,9 @@ if ( ! function_exists( 'caf_builder_get_post_excerpt_html_source' ) ) {
 	/**
 	 * Resolve HTML excerpt source for ModuleExcerpt (preview + frontend).
 	 *
-	 * Strips Divi et_pb_* tags before strip_shortcodes so inner text survives when
-	 * Divi shortcodes are not executed. Falls back when empty (product short
-	 * description / cleaned get_the_excerpt) without leaking raw Divi tags.
+	 * Strips Divi et_pb_* / WPBakery vc_* tags before strip_shortcodes so inner text
+	 * survives when those shortcodes are not executed. Falls back when empty (product
+	 * short description / cleaned get_the_excerpt) without leaking raw builder tags.
 	 *
 	 * @param int|null $post_id Post ID.
 	 * @return string
@@ -85,7 +104,7 @@ if ( ! function_exists( 'caf_builder_get_post_excerpt_html_source' ) ) {
 
 		$html_source = '';
 		if ( '' !== trim( (string) $post->post_content ) ) {
-			// Keep inner text when Divi shortcodes are not executed (builder preview / some frontends).
+			// Keep inner text when builder shortcodes are not executed (preview / some frontends).
 			$html_source = caf_builder_strip_divi_shortcodes_keep_text( (string) $post->post_content );
 		}
 
@@ -103,7 +122,7 @@ if ( ! function_exists( 'caf_builder_get_post_excerpt_html_source' ) ) {
 		}
 
 		if ( ! caf_builder_excerpt_source_has_text( $html_source ) ) {
-			// Last resort: WP excerpt, but strip Divi again (fallback previously leaked tags).
+			// Last resort: WP excerpt, but strip builder tags again (fallback previously leaked tags).
 			$candidate = caf_builder_strip_divi_shortcodes_keep_text( (string) get_the_excerpt( $post_id ) );
 			$html_source = caf_builder_excerpt_source_has_text( $candidate ) ? $candidate : '';
 		}
