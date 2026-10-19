@@ -93,7 +93,7 @@ https://www.youtube.com/watch?v=TxAIjmsNV3g
 
 **More Pro features**:
 
-Dynamic Term Counts, Category / Term Page Mode, Extended revision history, Custom fonts upload, Global font settings, include/exclude posts/products, Icon library, Icons/images for terms & custom fields, Masonry layout, Loader styles, Elementor Loop Builder support, Quick backend navigation.
+Filter by Author (any post type), Dynamic Term Counts, Category / Term Page Mode, Extended revision history, Custom fonts upload, Global font settings, include/exclude posts/products, Icon library, Icons/images for terms & custom fields, Masonry layout, Loader styles, Elementor Loop Builder support, Quick backend navigation.
 
 ### 🎯 Pro Demos
 
