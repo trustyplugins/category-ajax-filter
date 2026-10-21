@@ -179,9 +179,11 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 		$html .= '<li class="caf-terms-list-item-wrraper" term-value="all" term-id="0">';
 		$html .= '<div class="caf-selected-term-main' . ( empty( $settings->predefined_terms ) ? ' caf-all-selected' : '' ) . '">';
 		$layout_classes = $this->get_dropdown_layout_classes( $settings );
-		$html          .= '<div class="result caf-layout-' . esc_attr( $layout_classes['select'] ) . '"><div class="manage-text-lbl caf-layout-' . esc_attr( $layout_classes['selected_text'] ) . '">';
-		$html          .= $this->render_taxonomy_selected_label( $settings, $all_option_value );
-		$html          .= '</div></div>';
+		// Preview parity: icon/swatch is a sibling of .manage-text-lbl under .result
+		// so Design → Select Field flex-flow (e.g. row-reverse) can reorder them.
+		$html          .= '<div class="result caf-layout-' . esc_attr( $layout_classes['select'] ) . '">';
+		$html          .= $this->render_taxonomy_selected_label( $settings, $all_option_value, $layout_classes['selected_text'] );
+		$html          .= '</div>';
 		$html .= '<span class="selected-icon"><i class="fas fa-chevron-down"></i></span>';
 
 		$html .= '</div>';
@@ -254,13 +256,41 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 	}
 
 	/**
-	 * Render taxonomy selected label.
+	 * Closed-select label wrapper (text only). Icon stays a sibling under .result.
 	 *
-	 * @param object $settings         Module settings.
-	 * @param string $all_option_value All option text.
+	 * @param string $text                 Label text.
+	 * @param string $selected_text_layout caf-layout-* suffix for .manage-text-lbl.
 	 * @return string
 	 */
-	protected function render_taxonomy_selected_label( $settings, $all_option_value ) {
+	protected function wrap_closed_select_label( $text, $selected_text_layout ) {
+		return '<div class="manage-text-lbl caf-layout-' . esc_attr( (string) $selected_text_layout ) . '"><span class="trm-name">' . esc_html( (string) $text ) . '</span></div>';
+	}
+
+	/**
+	 * Compose closed-select .result children: icon + label (preview DOM order).
+	 *
+	 * @param string $label_html  .manage-text-lbl markup.
+	 * @param string $icon_markup Icon/swatch HTML (may be empty).
+	 * @param bool   $is_after    Whether icon follows the label in DOM.
+	 * @return string
+	 */
+	protected function compose_closed_select_result( $label_html, $icon_markup, $is_after ) {
+		$icon_markup = (string) $icon_markup;
+		if ( '' === $icon_markup ) {
+			return (string) $label_html;
+		}
+		return $is_after ? (string) $label_html . $icon_markup : $icon_markup . (string) $label_html;
+	}
+
+	/**
+	 * Render taxonomy closed-select .result inner HTML (icon sibling + text label).
+	 *
+	 * @param object $settings             Module settings.
+	 * @param string $all_option_value     All option text.
+	 * @param string $selected_text_layout Layout class suffix for .manage-text-lbl.
+	 * @return string
+	 */
+	protected function render_taxonomy_selected_label( $settings, $all_option_value, $selected_text_layout = 'flex-start' ) {
 		if ( ! empty( $settings->predefined_terms ) && ! empty( $settings->predefined_terms[0] ) ) {
 			foreach ( $settings->taxonomy_data as $taxonomy ) {
 				if ( empty( $taxonomy->term_data ) ) {
@@ -273,27 +303,19 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 					}
 
 					if ( $this->is_taxonomy_term_predefined_single( $settings, $taxonomy->key, $term->key ) ) {
-						$html = '';
+						$position  = ! empty( $term->icons->position ) ? (string) $term->icons->position : 'before';
+						$is_after  = ( 'after' === $position );
+						$icon_cls  = $is_after ? 'filter-after-icon' : 'filter-before-icon';
+						$icon_html = $this->render_term_visual_markup( $settings, isset( $term->icons ) ? $term->icons : null, $icon_cls );
+						$label     = $this->wrap_closed_select_label( $term->value, $selected_text_layout );
 
-						$position = ! empty( $term->icons->position ) ? (string) $term->icons->position : 'before';
-						if ( ! empty( $settings->show_icon ) && 'true' === (string) $settings->show_icon && ( 'before' === $position || empty( $term->icons->position ) ) ) {
-							$html .= $this->render_term_visual_markup( $settings, isset( $term->icons ) ? $term->icons : null, 'filter-before-icon' );
-						}
-
-						// Selectbox always shows the label; list Show/Hide is separate.
-						$html .= esc_html( $term->value );
-
-						if ( ! empty( $settings->show_icon ) && 'true' === (string) $settings->show_icon && 'after' === $position ) {
-							$html .= $this->render_term_visual_markup( $settings, isset( $term->icons ) ? $term->icons : null, 'filter-after-icon' );
-						}
-
-						return $html;
+						return $this->compose_closed_select_result( $label, $icon_html, $is_after );
 					}
 				}
 			}
 		}
 
-		return $this->render_all_option_with_icons( $settings, $all_option_value );
+		return $this->render_all_option_with_icons( $settings, $all_option_value, $selected_text_layout );
 	}
 
 	/**
@@ -388,33 +410,33 @@ class CAF_Filter_Dropdown_Module extends CAF_Filter_Base_Module {
 	}
 
 	/**
-	 * Render all option with optional icons.
+	 * Render All-option closed-select .result inner HTML (icon sibling + text label).
 	 *
-	 * @param object $settings         Module settings.
-	 * @param string $all_option_value All option value.
+	 * @param object $settings             Module settings.
+	 * @param string $all_option_value     All option value.
+	 * @param string $selected_text_layout Layout class suffix for .manage-text-lbl.
 	 * @return string
 	 */
-	protected function render_all_option_with_icons( $settings, $all_option_value ) {
-		$html = '';
-
+	protected function render_all_option_with_icons( $settings, $all_option_value, $selected_text_layout = 'flex-start' ) {
+		$label            = $this->wrap_closed_select_label( $all_option_value, $selected_text_layout );
 		$all_option_icons = isset( $settings->dropdown_data->all_option->icons ) ? $settings->dropdown_data->all_option->icons : null;
 		$show_icon        = ! empty( $settings->show_icon ) && 'true' === $settings->show_icon;
 		if ( class_exists( 'CAF_Builder_Tier' ) && ! CAF_Builder_Tier::can_use_feature( 'filter_show_icon' ) ) {
 			$show_icon = false;
 		}
-		$icon_visible     = $this->is_truthy( isset( $all_option_icons->visibility ) ? $all_option_icons->visibility : false ) && $show_icon;
-		$icon_position    = isset( $all_option_icons->position ) ? (string) $all_option_icons->position : 'before-option';
-		$icon_markup      = $this->render_icon_markup( $all_option_icons, 'filter-before-icon' );
-		if ( $icon_visible && 'before-option' === $icon_position ) {
-			$html .= $icon_markup;
+		$icon_visible  = $this->is_truthy( isset( $all_option_icons->visibility ) ? $all_option_icons->visibility : false ) && $show_icon;
+		$icon_position = isset( $all_option_icons->position ) ? (string) $all_option_icons->position : 'before-option';
+		$is_after      = ( 'after-option' === $icon_position );
+
+		if ( ! $icon_visible ) {
+			return $label;
 		}
 
-		$html .= esc_html( $all_option_value );
+		$icon_markup = $this->render_icon_markup(
+			$all_option_icons,
+			$is_after ? 'filter-after-icon' : 'filter-before-icon'
+		);
 
-		if ( $icon_visible && 'after-option' === $icon_position ) {
-			$html .= str_replace( 'filter-before-icon', 'filter-after-icon', $icon_markup );
-		}
-
-		return $html;
+		return $this->compose_closed_select_result( $label, $icon_markup, $is_after );
 	}
 }

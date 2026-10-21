@@ -1141,12 +1141,37 @@ jQuery(function ($) {
         },
 
         updateDropdownSelectedLabel($termsList, $dropdownChild) {
-            const $selectedResult = $termsList.find(".caf-selected-term-main .result .manage-text-lbl");
+            // Write into .result (preview parity): icon/swatch as sibling of .manage-text-lbl
+            // so Design → Select Field flex-flow can reorder icon vs text.
+            const $result = $termsList.find(".caf-selected-term-main .result").first();
             const $activeItems = $dropdownChild.find(".caf-terms-list-item.active");
 
-            if (!$activeItems.length) {
+            if (!$result.length || !$activeItems.length) {
                 return;
             }
+
+            const resolveManageTextLayoutClass = () => {
+                const existing = String(
+                    $result.find("> .manage-text-lbl").first().attr("class") || ""
+                ).trim();
+                if (existing) {
+                    return existing;
+                }
+                return "manage-text-lbl";
+            };
+
+            const buildClosedSelectLabelHtml = (labelText) => {
+                const safeName = $("<div>").text(String(labelText || "")).html();
+                return `<div class="${resolveManageTextLayoutClass()}"><span class="trm-name">${safeName}</span></div>`;
+            };
+
+            const composeClosedSelectResultHtml = (labelHtml, termVisualHtml, isAfter) => {
+                const visual = String(termVisualHtml || "");
+                if (!visual) {
+                    return labelHtml;
+                }
+                return isAfter ? labelHtml + visual : visual + labelHtml;
+            };
 
             // Selectbox always keeps the term name (+ swatch/icon). Color Swatch
             // Show/Hide only affects the open list (where .trm-name may be omitted).
@@ -1168,21 +1193,22 @@ jQuery(function ($) {
             if ($activeItems.length === 1) {
                 const $item = $activeItems.first();
                 const termId = String($item.attr("term-id") || "");
-
-                if (termId !== "0" && termId !== "all") {
-                    const termName = resolveDropdownSelectboxLabel($item);
-                    const safeName = $("<div>").text(termName).html();
-                    const $termVisual = $item
-                        .find(".caf-term-swatch, img.caf-inline-svg-icon, i, svg")
-                        .first();
-                    const termVisual = $termVisual.length ? $termVisual.prop("outerHTML") : "";
-                    const finalHtml = $termVisual.hasClass("filter-after-icon")
-                        ? safeName + termVisual
-                        : termVisual + safeName;
-                    $selectedResult.html("<div class='caf-dropdown-selected-html'>" + finalHtml + "</div>");
-                } else {
-                    $selectedResult.html($item.html());
-                }
+                const termName = termId === "0" || termId === "all"
+                    ? resolveDropdownSelectboxLabel($item)
+                        || String($termsList.attr("data-all-option-label") || "All")
+                    : resolveDropdownSelectboxLabel($item);
+                const $termVisual = $item
+                    .find(".caf-term-swatch, img.caf-inline-svg-icon, i.filter-before-icon, i.filter-after-icon, i, svg")
+                    .first();
+                const termVisual = $termVisual.length ? $termVisual.prop("outerHTML") : "";
+                const isAfter = $termVisual.hasClass("filter-after-icon");
+                $result.html(
+                    composeClosedSelectResultHtml(
+                        buildClosedSelectLabelHtml(termName),
+                        termVisual,
+                        isAfter
+                    )
+                );
                 return;
             }
 
@@ -1198,9 +1224,7 @@ jQuery(function ($) {
                     labels.push(termName);
                 }
             });
-            $selectedResult.html(
-                $("<div>").text(labels.join(", ")).html()
-            );
+            $result.html(buildClosedSelectLabelHtml(labels.join(", ")));
         }
     };
 
@@ -3160,16 +3184,19 @@ jQuery(function ($) {
             const $termsList = $dropdownChild.closest(".caf-terms-list");
             const $allOption = this.findDropdownAllOptionItem($dropdownChild);
             const $selectedMain = $module.find(".caf-selected-term-main").first();
-            const $selectedLabel = $module.find(".caf-selected-term-main .result .manage-text-lbl");
+            const $result = $module.find(".caf-selected-term-main .result").first();
 
             $dropdownChild.find(".caf-terms-list-item").removeClass("active caf-selected");
             if ($allOption.length) {
                 $allOption.addClass("active");
                 CAFQueryBuilder.updateDropdownSelectedLabel($termsList, $dropdownChild);
-            } else if ($selectedLabel.length) {
+            } else if ($result.length) {
                 const allLabel = String($termsList.attr("data-all-option-label") || "All");
-                $selectedLabel.html(
-                    `<div class="manage-text-lbl"><span class="trm-name">${$("<div>").text(allLabel).html()}</span></div>`
+                const existingClass = String(
+                    $result.find("> .manage-text-lbl").first().attr("class") || "manage-text-lbl"
+                ).trim();
+                $result.html(
+                    `<div class="${existingClass}"><span class="trm-name">${$("<div>").text(allLabel).html()}</span></div>`
                 );
             }
 
