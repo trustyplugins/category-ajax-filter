@@ -270,6 +270,8 @@ function caf_builder_harden_public_ajax_query_args( $args, $data_handler = null 
 		'author_name',
 		'author__in',
 		'author__not_in',
+		// Pro-only trusted author filter payload — Free never applies it.
+		'caf_author__in',
 		'perm',
 		'has_password',
 		'post_password',
@@ -2861,6 +2863,36 @@ function caf_sanitize_free_checkbox_dropdown_module_settings( $settings ) {
 
 	if ( ! CAF_Builder_Tier::can_use_feature( 'filter_custom_field' ) && isset( $settings->custom_field_data ) ) {
 		$settings->custom_field_data = array();
+	}
+
+	// Strip Pro-only virtual taxonomy groups (Woo product filters + Author).
+	if ( isset( $settings->taxonomy_data ) && is_array( $settings->taxonomy_data ) ) {
+		$strip_woo_virtual = ! CAF_Builder_Tier::can_use_feature( 'woo_product_filters' );
+		$strip_author      = ! CAF_Builder_Tier::can_use_feature( 'filter_author' );
+		if ( $strip_woo_virtual || $strip_author ) {
+			$settings->taxonomy_data = array_values(
+				array_filter(
+					$settings->taxonomy_data,
+					static function ( $row ) use ( $strip_woo_virtual, $strip_author ) {
+						$row = is_object( $row ) ? $row : (object) $row;
+						$key = isset( $row->key ) ? (string) $row->key : '';
+						if ( $strip_author && ( ! empty( $row->is_author_virtual ) || '__caf_author' === $key ) ) {
+							return false;
+						}
+						if (
+							$strip_woo_virtual
+							&& (
+								! empty( $row->is_woo_virtual )
+								|| 0 === strpos( $key, '__caf_woo_' )
+							)
+						) {
+							return false;
+						}
+						return true;
+					}
+				)
+			);
+		}
 	}
 
 	$settings = caf_strip_filter_label_icons( $settings );
