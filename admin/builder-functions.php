@@ -7,6 +7,9 @@ require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-custom-fonts.php';
 require_once TC_CAF_PATH . 'includes/frontend/caf-builder-post-excerpt.php';
 require_once TC_CAF_PATH . 'includes/builder/class-caf-builder-tier.php';
 require_once TC_CAF_PATH . 'includes/admin/class-caf-builder-import-library.php';
+if ( file_exists( TC_CAF_PATH . 'includes/admin/class-caf-mcp.php' ) ) {
+	require_once TC_CAF_PATH . 'includes/admin/class-caf-mcp.php';
+}
 add_action( 'wp_ajax_get_caf_builder_posts', 'caf_get_builder_posts' );
 add_action( 'wp_ajax_nopriv_get_caf_builder_posts', 'caf_get_builder_posts' );
 add_filter( 'posts_search', 'caf_builder_apply_keyword_source_search', 10, 2 );
@@ -3261,7 +3264,7 @@ function caf_sanitize_free_dnd_column_data( $dnd_column_data ) {
 	return $dnd_column_data;
 }
 
-function caf_normalize_builder_layout_data( $layout_data ) {
+function caf_normalize_builder_layout_data( $layout_data, $args = array() ) {
 	if ( ! is_object( $layout_data ) ) {
 		$layout_data = new stdClass();
 	}
@@ -3466,7 +3469,113 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 		caf_walk_and_flatten_gradient_colors( $layout_data );
 	}
 
+	$assign_node_ids = true;
+	if ( is_array( $args ) && array_key_exists( 'assign_node_ids', $args ) ) {
+		$assign_node_ids = (bool) $args['assign_node_ids'];
+	}
+	if ( $assign_node_ids ) {
+		caf_ensure_layout_document_node_ids( $layout_data );
+		if ( (int) $layout_data->common_data->layout_schema_version < 5 ) {
+			$layout_data->common_data->layout_schema_version = 5;
+		}
+	}
+
 	return $layout_data;
+}
+
+/**
+ * 8-char hex id for a row, column, or module.
+ *
+ * @param array<string, bool> $used Used ids.
+ * @return string
+ */
+function caf_new_layout_node_id( &$used ) {
+	$guard = 0;
+	do {
+		$id = bin2hex( random_bytes( 4 ) );
+		$guard++;
+	} while ( isset( $used[ $id ] ) && $guard < 32 );
+	$used[ $id ] = true;
+	return $id;
+}
+
+/**
+ * @param mixed $value Value.
+ * @return bool
+ */
+function caf_is_layout_node_id( $value ) {
+	return is_string( $value ) && (bool) preg_match( '/^[a-zA-Z0-9_-]{4,32}$/', $value );
+}
+
+/**
+ * Fill missing or duplicate ids on a layout tree node.
+ *
+ * @param mixed               $node    Node.
+ * @param array<string, bool> $used    Used ids.
+ * @param bool                $force   Always mint new ids.
+ * @param int                 $changed Number of ids written.
+ */
+function caf_ensure_layout_node_ids( &$node, &$used, $force = false, &$changed = 0 ) {
+	if ( is_array( $node ) ) {
+		$is_list = empty( $node ) || array_keys( $node ) === range( 0, count( $node ) - 1 );
+		if ( $is_list ) {
+			foreach ( $node as &$child ) {
+				caf_ensure_layout_node_ids( $child, $used, $force, $changed );
+			}
+			unset( $child );
+			return;
+		}
+		$type = isset( $node['type'] ) ? (string) $node['type'] : '';
+		if ( in_array( $type, array( 'row', 'column', 'module' ), true ) ) {
+			$current = isset( $node['id'] ) ? $node['id'] : '';
+			if ( $force || ! caf_is_layout_node_id( $current ) || isset( $used[ $current ] ) ) {
+				$node['id'] = caf_new_layout_node_id( $used );
+				$changed++;
+			} else {
+				$used[ $current ] = true;
+			}
+		}
+		if ( isset( $node['data'] ) ) {
+			caf_ensure_layout_node_ids( $node['data'], $used, $force, $changed );
+		}
+		return;
+	}
+	if ( ! is_object( $node ) ) {
+		return;
+	}
+	$type = isset( $node->type ) ? (string) $node->type : '';
+	if ( in_array( $type, array( 'row', 'column', 'module' ), true ) ) {
+		$current = isset( $node->id ) ? $node->id : '';
+		if ( $force || ! caf_is_layout_node_id( $current ) || isset( $used[ $current ] ) ) {
+			$node->id = caf_new_layout_node_id( $used );
+			$changed++;
+		} else {
+			$used[ $current ] = true;
+		}
+	}
+	if ( isset( $node->data ) ) {
+		caf_ensure_layout_node_ids( $node->data, $used, $force, $changed );
+	}
+}
+
+/**
+ * @param object $layout_data Layout.
+ * @param bool   $force       Always mint new ids.
+ * @return int Number of ids written.
+ */
+function caf_ensure_layout_document_node_ids( $layout_data, $force = false ) {
+	if ( ! is_object( $layout_data ) ) {
+		return 0;
+	}
+	$used    = array();
+	$changed = 0;
+	if ( isset( $layout_data->filter_layout_data->initial_data ) ) {
+		caf_ensure_layout_node_ids( $layout_data->filter_layout_data->initial_data, $used, $force, $changed );
+	}
+	if ( isset( $layout_data->post_layout_data->initial_data ) ) {
+		caf_ensure_layout_node_ids( $layout_data->post_layout_data->initial_data, $used, $force, $changed );
+	}
+	return $changed;
 }
 
 function caf_rename_builder_layout_label( $data ) {

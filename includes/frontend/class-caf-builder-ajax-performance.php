@@ -75,7 +75,7 @@ class CAF_Builder_Ajax_Performance {
 		}
 
 		if ( function_exists( 'caf_normalize_builder_layout_data' ) ) {
-			$builder_data = caf_normalize_builder_layout_data( $builder_data );
+			$builder_data = caf_normalize_builder_layout_data( $builder_data, array( 'assign_node_ids' => false ) );
 		}
 
 		$bundle = array(

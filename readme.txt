@@ -32,6 +32,8 @@ CAF includes the core features you need to create professional, fully customized
 
 - **Pre-Built Template Library**: Start with ready-made filter layouts and post item designs. Export your work as JSON to reuse across sites or import templates from other filters you've built.
 
+- **AI agent builder (MCP)**: Connect Cursor, Claude, or Codex to the same Free builder. Agents can create and edit Free layouts (checkbox, dropdown, search, reset, range, post card) through Filters → CAF MCP. Pro-only builder features are not included.
+
 ### 🔗 Supported Post Types & Compatibility
 
 **Post types & taxonomies**
@@ -93,7 +95,7 @@ https://www.youtube.com/watch?v=TxAIjmsNV3g
 
 **More Pro features**:
 
-Filter by Author (any post type), Dynamic Term Counts, Category / Term Page Mode, Extended revision history, Custom fonts upload, Global font settings, include/exclude posts/products, Icon library, Icons/images for terms & custom fields, Masonry layout, Loader styles, Elementor Loop Builder support, Quick backend navigation.
+Filter by Author (any post type), Dynamic Term Counts, Category / Term Page Mode, Extended revision history, Custom fonts upload, Global font settings, include/exclude posts/products, Icon library, Icons/images for terms & custom fields, Masonry layout, Loader styles, Elementor Loop Builder support, Quick backend navigation. Pro MCP also covers off-canvas filters, active-filter chips, sorting, query restriction and custom-field filters.
 
 ### 🎯 Pro Demos
 
