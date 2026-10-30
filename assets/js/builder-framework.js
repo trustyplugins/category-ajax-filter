@@ -5440,6 +5440,10 @@ jQuery(function ($) {
 
         /**
          * Replace / insert / remove .woocommerce-pagination after Main Query AJAX.
+         *
+         * Divi/Woo often put `.woocommerce` on <body>. Never append the pager there —
+         * after a 1-page filter removes the theme pager, re-insert must sit after
+         * `ul.products` or pagination looks "missing".
          */
         syncMainQueryAjaxPagination($builder, data, canReplace) {
             const paginationHtml = String((data && data.pagination_html) || "");
@@ -5449,14 +5453,11 @@ jQuery(function ($) {
                 "nav.elementor-pagination",
                 ".elementor-pagination"
             ];
-            const livePager = this.findExternalResultsNode($(document), pagerSelectors);
-
-            if (paginationHtml) {
-                if (livePager.$node.length && canReplace(livePager.$node)) {
-                    this.replaceListingNode(livePager.$node, paginationHtml);
-                    return;
-                }
-                // Insert after products / result area when pager was missing (e.g. first filter).
+            const isBodyOrHtml = (el) => {
+                const tag = (el && el.tagName ? el.tagName : "").toLowerCase();
+                return tag === "body" || tag === "html";
+            };
+            const resolveProductsAnchor = () => {
                 const $ul = this.findExternalResultsNode(
                     $(document),
                     this.getMainQueryResultsSelectors($builder).concat(["ul.products"])
@@ -5468,16 +5469,32 @@ jQuery(function ($) {
                         $anchor = inner;
                     }
                 }
-                const $woo = $anchor.closest(".woocommerce");
-                if ($woo.length) {
-                    $woo.append($(paginationHtml));
-                } else if ($anchor.length) {
-                    $anchor.after($(paginationHtml));
+                return $anchor;
+            };
+            const insertAfterProducts = (html) => {
+                const $anchor = resolveProductsAnchor();
+                if (!$anchor.length) {
+                    return;
                 }
+                $anchor.after($(html));
+            };
+            const livePager = this.findExternalResultsNode($(document), pagerSelectors);
+
+            if (paginationHtml) {
+                if (livePager.$node.length && canReplace(livePager.$node)) {
+                    const parentEl = livePager.$node.parent().get(0);
+                    // Misplaced (body append from older builds) → drop and insert correctly.
+                    if (!isBodyOrHtml(parentEl)) {
+                        this.replaceListingNode(livePager.$node, paginationHtml);
+                        return;
+                    }
+                    livePager.$node.remove();
+                }
+                insertAfterProducts(paginationHtml);
                 return;
             }
 
-            // No pages left â€” drop stale pager from previous unfiltered state.
+            // No pages left — drop stale pager from previous unfiltered state.
             if (livePager.$node.length && canReplace(livePager.$node)) {
                 livePager.$node.remove();
             }
