@@ -3367,6 +3367,9 @@ function caf_normalize_builder_layout_data( $layout_data ) {
 		if ( ! CAF_Builder_Tier::can_use_feature( 'dynamic_term_counts' ) ) {
 			$layout_data->filter_layout_data->extra_data->dynamic_term_counts = 'false';
 		}
+		if ( ! CAF_Builder_Tier::can_use_feature( 'filter_apply_mode' ) ) {
+			$layout_data->filter_layout_data->extra_data->filter_apply_mode = 'false';
+		}
 		if ( ! CAF_Builder_Tier::can_use_feature( 'auto_select_archive_term' ) ) {
 			$layout_data->filter_layout_data->extra_data->auto_select_archive_term = 'false';
 		}
