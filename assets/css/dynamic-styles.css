@@ -449,6 +449,13 @@ li.selection-list-default i {
     cursor: pointer;
 }
 
+.caf-builder-module-main.caf-module-type-apply_button i,
+.caf-builder-module-main.caf-module-type-apply_button .caf-builder-apply-label,
+.caf-builder-module-main.caf-module-type-apply i,
+.caf-builder-module-main.caf-module-type-apply .caf-builder-apply-label {
+    cursor: pointer;
+}
+
 .caf-builder-template-preview-loader-container {
     position: absolute;
     top: 0;
@@ -1131,6 +1138,14 @@ li.caf-terms-list-item.caf-attribute-swatch-term i {
 .caf-builder-module-main.caf-module-type-reset,
 .caf-filter-module-reset-output {
     cursor: pointer;
+}
+
+.caf-builder-module-main.caf-module-type-apply_button,
+.caf-builder-module-main.caf-module-type-apply {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 /* !important: module design CSS sets display:flex on .caf-range-slider-output with higher specificity */

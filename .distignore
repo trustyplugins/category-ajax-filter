@@ -29,6 +29,11 @@ Thumbs.db
 # Source maps
 *.map
 
+# Cursor stdio adapter (Free MCP is PHP HTTP)
+mcp/node_modules
+mcp/.env
+mcp/package-lock.json
+
 # React dev (shipped: react-builder/build/ only)
 react-builder/node_modules
 react-builder/src
