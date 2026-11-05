@@ -95,7 +95,7 @@ https://www.youtube.com/watch?v=TxAIjmsNV3g
 
 **More Pro features**:
 
-Filter by Author (any post type), Dynamic Term Counts, Category / Term Page Mode, Extended revision history, Custom fonts upload, Global font settings, include/exclude posts/products, Icon library, Icons/images for terms & custom fields, Masonry layout, Loader styles, Elementor Loop Builder support, Quick backend navigation. Pro MCP also covers off-canvas filters, active-filter chips, sorting, query restriction and custom-field filters.
+Filter by Author (any post type), Dynamic Term Counts, Apply button (results after click), Category / Term Page Mode, Extended revision history, Custom fonts upload, Global font settings, include/exclude posts/products, Icon library, Icons/images for terms & custom fields, Masonry layout, Loader styles, Elementor Loop Builder support, Quick backend navigation. Pro MCP also covers off-canvas filters, active-filter chips, sorting, query restriction and custom-field filters.
 
 ### 🎯 Pro Demos
 

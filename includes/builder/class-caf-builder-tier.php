@@ -118,6 +118,7 @@ class CAF_Builder_Tier {
 				'pagination_load_more',
 				'pagination_infinite_scroll',
 				'dynamic_term_counts',
+				'filter_apply_mode',
 				'auto_select_archive_term',
 				'category_term_page_mode',
 				'query_restriction',
