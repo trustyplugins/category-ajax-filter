@@ -244,8 +244,10 @@ function caf_taxo_picker_breadcrumb( $term_id, $lookup ) {
 function caf_taxo_picker_build_taxonomy_payload( $taxonomy, $post_type, $root_offset, $root_limit, $child_limit ) {
 	$terms = caf_taxo_picker_get_terms( $taxonomy->name );
 	$is_pa = ( 0 === strpos( $taxonomy->name, 'pa_' ) );
+	// Keep empty Woo attributes + shipping classes visible (bind before terms exist).
+	$allow_empty = $is_pa || 'product_shipping_class' === $taxonomy->name;
 
-	if ( empty( $terms ) && ! $is_pa ) {
+	if ( empty( $terms ) && ! $allow_empty ) {
 		return null;
 	}
 

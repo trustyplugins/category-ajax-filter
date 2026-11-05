@@ -4642,15 +4642,27 @@ function caf_get_taxo_data_with_recursive_method( $request ) {
 					)
 				);
 
-				if ( ! empty( $terms ) ) {
-					$term_data = caf_build_term_tree_with_counts( $terms, $taxonomy->name ,$post_type);
-
-					$taxonomy_tree[] = array(
-						'key'       => $taxonomy->name,
-						'label'     => caf_get_builder_taxonomy_label( $taxonomy ),
-						'term_data' => $term_data,
-					);
+				if ( is_wp_error( $terms ) ) {
+					$terms = array();
 				}
+
+				$is_product_attribute = ( 0 === strpos( $taxonomy->name, 'pa_' ) );
+				// Keep empty Woo attributes + shipping classes visible (bind before terms exist).
+				$allow_empty = $is_product_attribute || 'product_shipping_class' === $taxonomy->name;
+
+				if ( empty( $terms ) && ! $allow_empty ) {
+					continue;
+				}
+
+				$term_data = empty( $terms )
+					? array()
+					: caf_build_term_tree_with_counts( $terms, $taxonomy->name, $post_type );
+
+				$taxonomy_tree[] = array(
+					'key'       => $taxonomy->name,
+					'label'     => caf_get_builder_taxonomy_label( $taxonomy ),
+					'term_data' => $term_data,
+				);
 			}
 			return array(
 					'status'        => 'success',
