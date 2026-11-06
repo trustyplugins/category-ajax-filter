@@ -1032,6 +1032,8 @@ span.clear-icon.on-type {
 .caf-terms-list-item.caf-selected .caf-checkbox-box::after,
 .caf-custom-field-list-item.caf-selected .caf-checkbox-box::after {
     content: '';
+    /* content-box: Design input font-size (often 22px) must not eat the em tick via border-box */
+    box-sizing: content-box;
     width: 35%;
     height: 60%;
     border: solid currentColor;

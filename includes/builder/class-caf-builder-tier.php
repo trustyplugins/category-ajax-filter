@@ -130,6 +130,7 @@ class CAF_Builder_Tier {
 				'woo_product_filters',
 				'filter_author',
 				'gradient_colors',
+				'alphabet_filter',
 			),
 		);
 	}
@@ -174,6 +175,7 @@ class CAF_Builder_Tier {
 		$aliases = array(
 			'checkbox_filter' => 'checkbox',
 			'dropdown_filter' => 'dropdown',
+			'alphabet_filter' => 'alphabet',
 		);
 		$key = (string) $module_key;
 
