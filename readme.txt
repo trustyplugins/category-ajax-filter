@@ -32,7 +32,7 @@ CAF includes the core features you need to create professional, fully customized
 
 - **Pre-Built Template Library**: Start with ready-made filter layouts and post item designs. Export your work as JSON to reuse across sites or import templates from other filters you've built.
 
-- **AI agent builder (MCP)**: Connect Cursor, Claude, or Codex to the same Free builder. Agents can create and edit Free layouts (checkbox, dropdown, search, reset, range, post card) through Filters → CAF MCP. Pro-only builder features are not included.
+- **AI agent builder (MCP)**: Connect Cursor, Claude, or Codex to the same Free builder. Agents can create and edit Free layouts (checkbox, dropdown, search, reset, range, post card) through Filters → MCP. Pro-only builder features are not included.
 
 ### 🔗 Supported Post Types & Compatibility
 

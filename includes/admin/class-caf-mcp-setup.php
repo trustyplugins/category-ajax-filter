@@ -1,6 +1,6 @@
 <?php
 /**
- * Filters → CAF MCP. Enable access, pick a client, generate a paste-into-AI prompt.
+ * Filters → MCP. Enable access, pick a client, generate a paste-into-AI prompt.
  *
  * @package Category_Ajax_Filter
  */
@@ -45,8 +45,8 @@ class CAF_MCP_Setup {
 	public static function register_admin_page() {
 		add_submenu_page(
 			'edit.php?post_type=caf_posts',
-			__( 'CAF MCP', 'category-ajax-filter' ),
-			__( 'CAF MCP', 'category-ajax-filter' ),
+			__( 'MCP', 'category-ajax-filter' ),
+			__( 'MCP', 'category-ajax-filter' ),
 			'manage_options',
 			self::PAGE,
 			array( __CLASS__, 'render' ),
