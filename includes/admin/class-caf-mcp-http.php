@@ -72,7 +72,7 @@ class CAF_MCP_Http {
 		if ( ! self::is_enabled() ) {
 			return new WP_Error(
 				'caf_mcp_disabled',
-				__( 'CAF MCP is turned off. Enable it under Filters → CAF MCP.', 'category-ajax-filter' ),
+				__( 'CAF MCP is turned off. Enable it under Filters → MCP.', 'category-ajax-filter' ),
 				array( 'status' => 403 )
 			);
 		}

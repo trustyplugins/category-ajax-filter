@@ -4886,6 +4886,49 @@ function caf_free_register_caf_admin_submenus() {
 			$submenu['edit.php?post_type=caf_posts'][ $key ][2] = $builder_url;
 		}
 	}
+
+	caf_free_order_mcp_after_filters();
+}
+
+/**
+ * Filters first, MCP second, remaining CAF submenus after that.
+ *
+ * @return void
+ */
+function caf_free_order_mcp_after_filters() {
+	global $submenu;
+
+	$parent = 'edit.php?post_type=caf_posts';
+	if ( empty( $submenu[ $parent ] ) || ! is_array( $submenu[ $parent ] ) ) {
+		return;
+	}
+
+	$filters = null;
+	$mcp     = null;
+	$rest    = array();
+
+	foreach ( $submenu[ $parent ] as $menu_item ) {
+		$slug = isset( $menu_item[2] ) ? (string) $menu_item[2] : '';
+		if ( 'edit.php?post_type=caf_posts&builder=1' === $slug ) {
+			$filters = $menu_item;
+			continue;
+		}
+		if ( 'caf-mcp' === $slug ) {
+			$mcp = $menu_item;
+			continue;
+		}
+		$rest[] = $menu_item;
+	}
+
+	$ordered = array();
+	if ( null !== $filters ) {
+		$ordered[] = $filters;
+	}
+	if ( null !== $mcp ) {
+		$ordered[] = $mcp;
+	}
+
+	$submenu[ $parent ] = array_merge( $ordered, $rest );
 }
 add_action( 'admin_menu', 'caf_free_register_caf_admin_submenus', 99998 );
 

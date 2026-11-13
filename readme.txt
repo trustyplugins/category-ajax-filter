@@ -5,7 +5,7 @@ Plugin URI: https://wordpress.org/plugins/category-ajax-filter/
 Tags: ajax filter, product filter, woocommerce, category filter, taxonomy filter
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 3.1.2
+Stable tag: 3.1.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -32,7 +32,7 @@ CAF includes the core features you need to create professional, fully customized
 
 - **Pre-Built Template Library**: Start with ready-made filter layouts and post item designs. Export your work as JSON to reuse across sites or import templates from other filters you've built.
 
-- **AI agent builder (MCP)**: Connect Cursor, Claude, or Codex to the same Free builder. Agents can create and edit Free layouts (checkbox, dropdown, search, reset, range, post card) through Filters → CAF MCP. Pro-only builder features are not included.
+- **AI agent builder (MCP)**: Connect Cursor, Claude, or Codex to the same Free builder. Agents can create and edit Free layouts (checkbox, dropdown, search, reset, range, post card) through Filters → MCP. Pro-only builder features are not included.
 
 ### 🔗 Supported Post Types & Compatibility
 
@@ -95,7 +95,7 @@ https://www.youtube.com/watch?v=TxAIjmsNV3g
 
 **More Pro features**:
 
-Filter by Author (any post type), Dynamic Term Counts, Apply button (results after click), Category / Term Page Mode, Extended revision history, Custom fonts upload, Global font settings, include/exclude posts/products, Icon library, Icons/images for terms & custom fields, Masonry layout, Loader styles, Elementor Loop Builder support, Quick backend navigation. Pro MCP also covers off-canvas filters, active-filter chips, sorting, query restriction and custom-field filters.
+Filter by Author (any post type), Alphabet Filter, Dynamic Term Counts, Apply button (results after click), Category / Term Page Mode, Extended revision history, Custom fonts upload, Global font settings, include/exclude posts/products, Icon library, Icons/images for terms & custom fields, Masonry layout, Loader styles, Elementor Loop Builder support, Quick backend navigation. Pro MCP also covers off-canvas filters, active-filter chips, sorting, query restriction and custom-field filters.
 
 ### 🎯 Pro Demos
 
@@ -209,6 +209,16 @@ Yes. Use the export/import tools to move a full layout, a single filter, a modul
 7. **Live Demos**: View real-world examples of filters with wordpress posts, woocommerce, custom post types, taxonomies and stunning layouts.
 
 == Changelog ==
+= 3.1.3 = (13/11/2026)
+* Checkbox and Dropdown can bind WooCommerce shipping classes.
+* Search can target product SKU.
+* Fixed pagination on the WooCommerce shop page.
+* Fixed Add to Cart prefix/suffix hide and button styling.
+* Fixed dropdown select icon position and spacing.
+* Fixed WPBakery stripping Description module text on the frontend.
+* MCP submenu is now labeled MCP and sits directly under Filters.
+* MCP writes prefer native Design settings; custom CSS is kept only when Design cannot express the rule.
+
 = 3.1.2 = (06/10/2026)
 * Fixed a crash on the post preview design tab when a style value was missing, including on the sorting screen.
 
@@ -532,6 +542,9 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 * First version of plugin.
 
 == Upgrade Notice ==
+
+= 3.1.3 =
+Recommended update — WooCommerce shipping-class filters, product SKU search, shop pagination, Add to Cart and dropdown styling, WPBakery description text, and MCP (submenu after Filters, Design-first CSS).
 
 = 3.1.2 =
 Recommended update — the post preview design tab no longer crashes when a style value is missing, including on the sorting screen.
