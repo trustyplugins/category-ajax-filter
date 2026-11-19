@@ -5,7 +5,7 @@ Plugin URI: https://wordpress.org/plugins/category-ajax-filter/
 Tags: ajax filter, product filter, woocommerce, category filter, taxonomy filter
 Requires at least: 6.0
 Tested up to: 7.1
-Stable tag: 3.1.3
+Stable tag: 3.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -209,15 +209,16 @@ Yes. Use the export/import tools to move a full layout, a single filter, a modul
 7. **Live Demos**: View real-world examples of filters with wordpress posts, woocommerce, custom post types, taxonomies and stunning layouts.
 
 == Changelog ==
-= 3.1.3 = (13/11/2026)
+= 3.2 = (13/11/2026)
 * Checkbox and Dropdown can bind WooCommerce shipping classes.
 * Search can target product SKU.
 * Fixed pagination on the WooCommerce shop page.
 * Fixed Add to Cart prefix/suffix hide and button styling.
 * Fixed dropdown select icon position and spacing.
 * Fixed WPBakery stripping Description module text on the frontend.
-* MCP submenu is now labeled MCP and sits directly under Filters.
-* MCP writes prefer native Design settings; custom CSS is kept only when Design cannot express the rule.
+* Introduced CAF MCP (first release). Connect Cursor, Claude, or Codex to the Free builder from Filters → MCP (second menu item after Filters).
+* Agents can create and edit Free layouts (checkbox, dropdown, search, reset, range, post card). Pro-only builder features are not included.
+* MCP writes prefer native Design settings. Custom CSS is used only when Design cannot express the rule.
 
 = 3.1.2 = (06/10/2026)
 * Fixed a crash on the post preview design tab when a style value was missing, including on the sorting screen.
@@ -543,8 +544,8 @@ This version is compatible with PRO that has the feature of multiple taxonomy se
 
 == Upgrade Notice ==
 
-= 3.1.3 =
-Recommended update — WooCommerce shipping-class filters, product SKU search, shop pagination, Add to Cart and dropdown styling, WPBakery description text, and MCP (submenu after Filters, Design-first CSS).
+= 3.2 =
+Recommended update — first release of CAF MCP (Cursor / Claude / Codex, Filters → MCP), plus WooCommerce shipping-class filters, product SKU search, shop pagination, and Add to Cart / dropdown / WPBakery fixes.
 
 = 3.1.2 =
 Recommended update — the post preview design tab no longer crashes when a style value is missing, including on the sorting screen.
